@@ -1,0 +1,13 @@
+# Packages
+node_modules/
+yarn.lock
+
+# Log files
+logs/
+*.log
+
+# Miscellaneous
+.tmp/
+.vscode/
+docs/docs.json
+webpack/

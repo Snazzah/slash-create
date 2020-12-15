@@ -22,8 +22,8 @@ In order to use a specific webserver, you will need to install the dependency as
 
 #### Creating a SlashCreator
 ```js
-const { SlashCreator } = require('slash-create');
-const creator = new SlashCreator({
+const { Creator } = require('slash-create');
+const creator = new Creator({
   applicationID: '12345678901234567',
   publicKey: 'CLIENT_PUBLIC_KEY',
   token: 'BOT_TOKEN_HERE',

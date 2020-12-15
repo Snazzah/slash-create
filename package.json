@@ -27,7 +27,7 @@
     "lint": "npx eslint --ext .ts ./src",
     "lint:fix": "npx eslint --ext .ts ./src --fix",
     "gpr": "ts-node scripts/gpr",
-    "prepublishOnly": "npm run eslint:fix && npm run tslint:fix"
+    "prepublishOnly": "npm run lint:fix"
   },
   "husky": {
     "hooks": {

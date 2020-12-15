@@ -266,7 +266,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
    * @param server The server to use
    */
   withServer(server: Server) {
-    if (!this.server) throw new Error('A server was already set in this creator.');
+    if (this.server) throw new Error('A server was already set in this creator.');
     this.server = server;
 
     try {

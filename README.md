@@ -6,6 +6,7 @@ You can create commands similar to Discord.JS [Commando](https://github.com/disc
 > This package is indev and may not work properly.
 
 </center>
+
 ## Installation
 ```sh
 npm i slash-create

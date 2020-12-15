@@ -78,7 +78,7 @@ declare class SlashCommand {
      * @param ctx The context of the interaction
      * @private
      */
-    finalize(response: any, ctx: CommandContext): Promise<any> | undefined;
+    finalize(response: any, ctx: CommandContext): boolean | Promise<any> | undefined;
     static validateOptions(opts: SlashCommandOptions): void;
 }
 export default SlashCommand;

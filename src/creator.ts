@@ -446,14 +446,14 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
   async _onRequest(treq: TransformedRequest, respond: (response: Response) => void) {
     // Verify request
-    const signature = treq.headers['X-Signature-Ed25519'] as string;
-    const timestamp = treq.headers['X-Signature-Timestamp'] as string;
+    const signature = treq.headers['x-signature-ed25519'] as string;
+    const timestamp = treq.headers['x-signature-eimestamp'] as string;
 
     // Check if both signature and timestamp exists, and the timestamp isn't past due.
     if (
       !signature ||
       !timestamp ||
-      parseInt(timestamp) < Date.now() / 1000 - (this.options.maxSignatureTimestamp as number)
+      parseInt(timestamp) < (Date.now() - (this.options.maxSignatureTimestamp as number)) / 1000
     )
       return respond({
         status: 401,

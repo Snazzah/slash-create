@@ -109,6 +109,8 @@ interface SlashCreatorOptions {
     serverPort?: number;
     /** The host where the server will listen on. */
     serverHost?: string;
+    /** Whether to respond to an unknown command with an ephemeral message. */
+    unknownCommandResponse?: boolean;
     /** The default allowed mentions for all messages */
     allowedMentions?: MessageAllowedMentions;
     /** The default format to provide user avatars in. */

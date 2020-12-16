@@ -10,6 +10,7 @@ import {
   RawRequest,
   RequireAllOptions,
   InterationResponseType,
+  InteractionResponseFlags,
   PartialApplicationCommand
 } from './constants';
 import SlashCommand from './command';
@@ -119,6 +120,8 @@ interface SlashCreatorOptions {
   serverPort?: number;
   /** The host where the server will listen on. */
   serverHost?: string;
+  /** Whether to respond to an unknown command with an ephemeral message. */
+  unknownCommandResponse?: boolean;
   /** The default allowed mentions for all messages */
   allowedMentions?: MessageAllowedMentions;
   /** The default format to provide user avatars in. */
@@ -177,6 +180,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
         },
         defaultImageFormat: 'jpg',
         defaultImageSize: 128,
+        unknownCommandResponse: true,
         latencyThreshold: 30000,
         ratelimiterOffset: 0,
         requestTimeout: 15000,
@@ -314,7 +318,8 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
         if (command.guildID && !guildIDs.includes(command.guildID)) guildIDs.push(command.guildID);
       }
 
-      await this.syncGlobalCommands(options.deleteCommands);
+      if (this.commands.size && this.commands.find((command) => !command.guildID))
+        await this.syncGlobalCommands(options.deleteCommands);
 
       // Sync guild commands
       for (const guildID of guildIDs) {
@@ -351,7 +356,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     const handledCommands: string[] = [];
 
     for (const applicationCommand of commands) {
-      const partialCommand: PartialApplicationCommand = applicationCommand;
+      const partialCommand: PartialApplicationCommand = Object.assign({}, applicationCommand);
       const commandKey = `${guildID}_${partialCommand.name}`;
       delete (partialCommand as any).application_id;
       delete (partialCommand as any).id;
@@ -489,9 +494,24 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
             'debug',
             `Unknown command: ${interaction.data.name} (${interaction.data.id}, guild ${interaction.guild_id})`
           );
-          return respond({
-            status: 404
-          });
+          if (this.options.unknownCommandResponse)
+            return respond({
+              status: 200,
+              body: {
+                type: InterationResponseType.CHANNEL_MESSAGE,
+                data: {
+                  content: oneLine`
+                    This command no longer exists.
+                    This command should no longer show up in an hour if it has been deleted.
+                  `,
+                  flags: InteractionResponseFlags.EPHEMERAL
+                }
+              }
+            });
+          else
+            return respond({
+              status: 404
+            });
         } else {
           const ctx = new CommandContext(this, interaction, respond);
 

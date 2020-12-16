@@ -22,11 +22,14 @@ export interface EditMessageOptions {
   allowedMentions?: MessageAllowedMentions;
 }
 
-interface MessageOptions extends EditMessageOptions {
+interface FollowUpMessageOptions extends EditMessageOptions {
   /** Whether to use TTS for the content. */
   tts?: boolean;
   /** The flags to use in the message. */
   flags?: number;
+}
+
+interface MessageOptions extends FollowUpMessageOptions {
   /**
    * Whether or not the message should be ephemeral.
    * Ignored if `flags` is defined.
@@ -89,7 +92,7 @@ class CommandContext {
 
   /**
    * Sends a message, if it already made an initial response, this will create a follow-up message.
-   * This will return a boolean if it's an initial response, otherwise a {@see Message} will be returned.
+   * This will return a boolean if it's an initial response, otherwise a {@link Message} will be returned.
    * Note that when making a follow-up message, the `ephemeral` and `includeSource` are ignored.
    * @param content The content of the message
    * @param options The message options
@@ -130,20 +133,42 @@ class CommandContext {
       });
       this.initiallyResponded = true;
       return true;
-    } else {
-      const data = await this.creator.requestHandler.request(
-        'POST',
-        Endpoints.FOLLOWUP_MESSAGE(this.creator.options.applicationID, this.interactionToken),
-        true,
-        {
-          tts: options.tts,
-          content: options.content,
-          embeds: options.embeds,
-          allowed_mentions: allowedMentions
-        }
-      );
-      return new Message(data, this);
-    }
+    } else return this.sendFollowUp(content, options);
+  }
+
+  /**
+   * Sends a follow-up message.
+   * @param content The content of the message
+   * @param options The message options
+   */
+  async sendFollowUp(content: string | FollowUpMessageOptions, options?: FollowUpMessageOptions): Promise<Message> {
+    if (this.expired) throw new Error('This interaction has expired');
+
+    if (typeof content !== 'string') options = content;
+    else if (typeof options !== 'object') options = {};
+
+    if (typeof options !== 'object') throw new Error('Message options is not an object.');
+
+    if (!options.content) options.content = content as string;
+
+    if (!options.content && !options.embeds) throw new Error('Message content and embeds are both not given.');
+
+    const allowedMentions = options.allowedMentions
+      ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
+      : this.creator.allowedMentions;
+
+    const data = await this.creator.requestHandler.request(
+      'POST',
+      Endpoints.FOLLOWUP_MESSAGE(this.creator.options.applicationID, this.interactionToken),
+      true,
+      {
+        tts: options.tts,
+        content: options.content,
+        embeds: options.embeds,
+        allowed_mentions: allowedMentions
+      }
+    );
+    return new Message(data, this);
   }
 
   /**

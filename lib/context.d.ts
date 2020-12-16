@@ -15,11 +15,13 @@ export interface EditMessageOptions {
     /** The mentions allowed to be used in this message. */
     allowedMentions?: MessageAllowedMentions;
 }
-interface MessageOptions extends EditMessageOptions {
+interface FollowUpMessageOptions extends EditMessageOptions {
     /** Whether to use TTS for the content. */
     tts?: boolean;
     /** The flags to use in the message. */
     flags?: number;
+}
+interface MessageOptions extends FollowUpMessageOptions {
     /**
      * Whether or not the message should be ephemeral.
      * Ignored if `flags` is defined.
@@ -61,12 +63,18 @@ declare class CommandContext {
     get expired(): boolean;
     /**
      * Sends a message, if it already made an initial response, this will create a follow-up message.
-     * This will return a boolean if it's an initial response, otherwise a {@see Message} will be returned.
+     * This will return a boolean if it's an initial response, otherwise a {@link Message} will be returned.
      * Note that when making a follow-up message, the `ephemeral` and `includeSource` are ignored.
      * @param content The content of the message
      * @param options The message options
      */
     send(content: string | MessageOptions, options?: MessageOptions): Promise<boolean | Message>;
+    /**
+     * Sends a follow-up message.
+     * @param content The content of the message
+     * @param options The message options
+     */
+    sendFollowUp(content: string | FollowUpMessageOptions, options?: FollowUpMessageOptions): Promise<Message>;
     /**
      * Edits a message.
      * @param messageID The message's ID

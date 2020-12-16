@@ -26,6 +26,7 @@ yarn add slash-create
 In order to use a specific webserver, you will need to install the dependency associated with that server. The following server types require these dependencies:
 - `ExpressServer`: `express`
 - `FastifyServer`: `fastify`
+- `GatewayServer`: none, see [example](#using-a-discord-bot-with-create)
 
 ## Example
 

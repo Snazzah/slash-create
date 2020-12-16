@@ -200,7 +200,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
   /**
    * Registers a single command
    * @param command Either a Command instance, or a constructor for one
-   * @see {@link SlashCreator#registerCommands}
+   * @see SlashCreator#registerCommands
    */
   registerCommand(command: any) {
     if (typeof command === 'function') command = new command(this);
@@ -440,11 +440,11 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     }
   }
 
-  _getCommand(commandName: string, guildID: string) {
+  private _getCommand(commandName: string, guildID: string) {
     return this.commands.get(`${guildID}_${commandName}`) || this.commands.get(`global_${commandName}`);
   }
 
-  async _onRequest(treq: TransformedRequest, respond: RespondFunction) {
+  private async _onRequest(treq: TransformedRequest, respond: RespondFunction) {
     this.emit('debug', 'Got request');
 
     // Verify request
@@ -476,7 +476,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     return this._onInteraction(treq.body, respond, true);
   }
 
-  async _onInteraction(interaction: AllRequestData, respond: RespondFunction | null, webserverMode: boolean) {
+  private async _onInteraction(interaction: AllRequestData, respond: RespondFunction | null, webserverMode: boolean) {
     this.emit('debug', 'Got interaction');
 
     if (!respond || !webserverMode) respond = this._createGatewayRespond(interaction.id, interaction.token);

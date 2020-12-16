@@ -22,6 +22,8 @@
     "node_modules",
     "lib",
     "test",
-    "scripts"
+    "scripts",
+    "examples",
+    "docs"
   ]
 }

@@ -3,11 +3,11 @@ import TypedEmitter from 'typed-emitter';
 import Collection from '@discordjs/collection';
 import HTTPS from 'https';
 import { FormattedAllowedMentions, MessageAllowedMentions } from './util';
-import { ImageFormat, AllRequestData, RawRequest, RequireAllOptions } from './constants';
+import { ImageFormat, RawRequest, RequireAllOptions } from './constants';
 import SlashCommand from './command';
 import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
-import Server, { TransformedRequest, RespondFunction } from './server';
+import Server, { TransformedRequest } from './server';
 import CommandContext from './context';
 interface SlashCreatorEvents {
     /**
@@ -151,7 +151,7 @@ declare class SlashCreator extends SlashCreator_base {
     /**
      * Registers a single command
      * @param command Either a Command instance, or a constructor for one
-     * @see {@link SlashCreator#registerCommands}
+     * @see SlashCreator#registerCommands
      */
     registerCommand(command: any): this;
     /**
@@ -192,9 +192,9 @@ declare class SlashCreator extends SlashCreator_base {
      * @param deleteCommands Whether to delete command not found in the creator
      */
     syncGlobalCommands(deleteCommands?: boolean): Promise<void>;
-    _getCommand(commandName: string, guildID: string): SlashCommand | undefined;
-    _onRequest(treq: TransformedRequest, respond: RespondFunction): Promise<boolean | void | import("./structures/message").default | null>;
-    _onInteraction(interaction: AllRequestData, respond: RespondFunction | null, webserverMode: boolean): Promise<boolean | void | import("./structures/message").default | null>;
+    private _getCommand;
+    private _onRequest;
+    private _onInteraction;
     private _createGatewayRespond;
 }
 export default SlashCreator;

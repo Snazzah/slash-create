@@ -15,7 +15,7 @@ arr[1] =
   `
 ## [${currentVersion}] - ${new Date().toISOString().slice(0, 10)}
 ### Removed:
-- **[BREAKING]** ListName: description
+- **[BREAKING]** description
 ### Added:
 -
 ### Fixed:

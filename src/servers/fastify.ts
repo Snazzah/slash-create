@@ -18,6 +18,7 @@ class FastifyServer extends Server {
   /** @param app The fastify application, or the options for initialization */
   constructor(app?: Fastify.FastifyInstance | FastifyOpts, opts?: ServerOptions) {
     super(opts);
+    if (!fastify) throw new Error('You must have the `fastify` module installed before using this server.');
     if (!app) {
       app = fastify.default();
     } else if (!(Symbol('fastify.state') in app)) {
@@ -55,7 +56,7 @@ class FastifyServer extends Server {
           request: req,
           response: res
         },
-        (response) => {
+        async (response) => {
           res.status(response.status || 200);
           if (response.headers) res.headers(response.headers);
           res.send(response.body);

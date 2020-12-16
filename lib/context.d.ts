@@ -1,5 +1,5 @@
 import Member from './structures/member';
-import { Response } from './server';
+import { RespondFunction } from './server';
 import SlashCreator from './creator';
 import { CommandOption, InteractionRequestData } from './constants';
 import { MessageAllowedMentions } from './util';
@@ -37,7 +37,7 @@ declare class CommandContext {
     initiallyResponded: boolean;
     initialResponseDeleted: boolean;
     private _respond;
-    constructor(creator: SlashCreator, data: InteractionRequestData, respond: (response: Response) => void);
+    constructor(creator: SlashCreator, data: InteractionRequestData, respond: RespondFunction);
     /**
      * Sends a message, if it already made an initial response, this will create a follow-up message.
      * Note that when making a follow-up message, the `ephemeral` and `includeSource` are ignored.
@@ -56,7 +56,7 @@ declare class CommandContext {
      * @param includeSource Whether to include the source in the acknolegement.
      * @returns Whether the acknowledgement passed
      */
-    acknowledge(includeSource?: boolean): boolean;
+    acknowledge(includeSource?: boolean): Promise<boolean>;
     /** @private */
     static convertOptions(options: CommandOption[]): {
         [key: string]: ConvertedOption;

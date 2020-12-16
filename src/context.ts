@@ -1,5 +1,5 @@
 import Member from './structures/member';
-import { Response } from './server';
+import { RespondFunction } from './server';
 import SlashCreator from './creator';
 import {
   CommandOption,
@@ -43,9 +43,9 @@ class CommandContext {
   initiallyResponded = false;
   initialResponseDeleted = false;
 
-  private _respond: (response: Response) => void;
+  private _respond: RespondFunction;
 
-  constructor(creator: SlashCreator, data: InteractionRequestData, respond: (response: Response) => void) {
+  constructor(creator: SlashCreator, data: InteractionRequestData, respond: RespondFunction) {
     this.creator = creator;
     this.data = data;
     this._respond = respond;
@@ -71,9 +71,11 @@ class CommandContext {
    */
   async send(content: string | MessageOptions, options?: MessageOptions): Promise<boolean | any> {
     if (typeof content !== 'string') options = content;
-    else if (typeof options !== 'object') options = { content };
+    else if (typeof options !== 'object') options = {};
 
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
+
+    if (!options.content) options.content = content as string;
 
     if (!options.content && !options.embeds) throw new Error('Message content and embeds are both not given.');
 
@@ -84,7 +86,7 @@ class CommandContext {
       : this.creator.allowedMentions;
 
     if (!this.initiallyResponded) {
-      this._respond({
+      await this._respond({
         status: 200,
         body: {
           type: options.includeSource
@@ -132,9 +134,9 @@ class CommandContext {
    * @param includeSource Whether to include the source in the acknolegement.
    * @returns Whether the acknowledgement passed
    */
-  acknowledge(includeSource = false): boolean {
+  async acknowledge(includeSource = false): Promise<boolean> {
     if (!this.initiallyResponded) {
-      this._respond({
+      await this._respond({
         status: 200,
         body: {
           type: includeSource ? InterationResponseType.ACKNOWLEDGE_WITH_SOURCE : InterationResponseType.ACKNOWLEDGE

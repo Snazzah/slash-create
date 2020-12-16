@@ -16,7 +16,8 @@ export interface Response {
     };
     body?: any;
 }
-export declare type RequestHandler = (treq: TransformedRequest, respond: (response: Response) => void) => void;
+export declare type RespondFunction = (response: Response) => Promise<void>;
+export declare type RequestHandler = (treq: TransformedRequest, respond: RespondFunction) => void;
 declare class Server {
     alreadyListening: boolean;
     constructor(opts?: ServerOptions);

@@ -13,7 +13,8 @@ class ExpressServer extends Server {
   constructor(app?: Express.Application, opts?: ServerOptions) {
     super(opts);
     if (!app) {
-      app = (express as any)() as Express.Application;
+      if (!express) throw new Error('You must have the `express` module installed before using this server.');
+      app = ((express as unknown) as () => Express.Application)();
       app.use(express.json());
     }
     this.app = app;
@@ -53,7 +54,7 @@ class ExpressServer extends Server {
           request: req,
           response: res
         },
-        (response) => {
+        async (response) => {
           res.status(response.status || 200);
           if (response.headers) for (const key in response.headers) res.set(key, response.headers[key]);
           res.send(response.body);

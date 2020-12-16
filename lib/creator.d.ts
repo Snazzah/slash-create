@@ -7,7 +7,7 @@ import { ImageFormat, RawRequest, RequireAllOptions } from './constants';
 import SlashCommand from './command';
 import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
-import Server, { TransformedRequest, Response } from './server';
+import Server, { TransformedRequest, RespondFunction } from './server';
 import CommandContext from './context';
 interface SlashCreatorEvents {
     /**
@@ -131,8 +131,6 @@ interface SyncCommandOptions {
     deleteCommands?: boolean;
     /** Whether to sync guild-specific commands. */
     syncGuilds?: boolean;
-    /** Whether to return a promise. False by default for chaining purposes. */
-    returnPromise?: boolean;
     /**
      * Whether to skip over guild syncing errors.
      * Guild syncs most likely can error if that guild no longer exists.
@@ -181,7 +179,7 @@ declare class SlashCreator extends SlashCreator_base {
     /**
      * Sync all commands with Discord. This ensures that commands exist when handling them.
      */
-    syncCommands(opts?: SyncCommandOptions): this | (() => Promise<void>);
+    syncCommands(opts?: SyncCommandOptions): this;
     /**
      * Sync guild commands.
      * @param guildID The guild to sync
@@ -194,6 +192,6 @@ declare class SlashCreator extends SlashCreator_base {
      */
     syncGlobalCommands(deleteCommands?: boolean): Promise<void>;
     _getCommand(commandName: string, guildID: string): SlashCommand | undefined;
-    _onRequest(treq: TransformedRequest, respond: (response: Response) => void): Promise<any>;
+    _onRequest(treq: TransformedRequest, respond: RespondFunction): Promise<any>;
 }
 export default SlashCreator;

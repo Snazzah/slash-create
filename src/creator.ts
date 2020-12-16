@@ -15,7 +15,7 @@ import {
 import SlashCommand from './command';
 import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
-import Server, { TransformedRequest, Response } from './server';
+import Server, { TransformedRequest, RespondFunction } from './server';
 import CommandContext from './context';
 
 interface SlashCreatorEvents {
@@ -142,8 +142,6 @@ interface SyncCommandOptions {
   deleteCommands?: boolean;
   /** Whether to sync guild-specific commands. */
   syncGuilds?: boolean;
-  /** Whether to return a promise. False by default for chaining purposes. */
-  returnPromise?: boolean;
   /**
    * Whether to skip over guild syncing errors.
    * Guild syncs most likely can error if that guild no longer exists.
@@ -284,6 +282,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
     try {
       await this.server.listen(this.options.serverPort, this.options.serverHost);
+      this.emit('debug', 'Server started');
     } catch {
       this.emit(
         'warn',
@@ -302,7 +301,6 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       {
         deleteCommands: true,
         syncGuilds: true,
-        returnPromise: false,
         skipGuildErrors: true
       },
       opts
@@ -337,13 +335,10 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       this.emit('debug', 'Finished syncing commands');
     };
 
-    if (options.returnPromise) return promise;
-    else {
-      promise()
-        .then(() => this.emit('synced'))
-        .catch((err) => this.emit('error', err));
-      return this;
-    }
+    promise()
+      .then(() => this.emit('synced'))
+      .catch((err) => this.emit('error', err));
+    return this;
   }
 
   /**
@@ -408,7 +403,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     const handledCommands: string[] = [];
 
     for (const applicationCommand of commands) {
-      const partialCommand: PartialApplicationCommand = applicationCommand;
+      const partialCommand: PartialApplicationCommand = Object.assign({}, applicationCommand);
       const commandKey = `global_${partialCommand.name}`;
       delete (partialCommand as any).application_id;
       delete (partialCommand as any).id;
@@ -444,10 +439,12 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     return this.commands.get(`${guildID}_${commandName}`) || this.commands.get(`global_${commandName}`);
   }
 
-  async _onRequest(treq: TransformedRequest, respond: (response: Response) => void) {
+  async _onRequest(treq: TransformedRequest, respond: RespondFunction) {
+    this.emit('debug', 'Got request');
+
     // Verify request
     const signature = treq.headers['x-signature-ed25519'] as string;
-    const timestamp = treq.headers['x-signature-eimestamp'] as string;
+    const timestamp = treq.headers['x-signature-timestamp'] as string;
 
     // Check if both signature and timestamp exists, and the timestamp isn't past due.
     if (
@@ -519,7 +516,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
           try {
             this.emit(
               'debug',
-              `Unknown command: ${interaction.data.name} (${interaction.data.id}, guild ${interaction.guild_id})`
+              `Running command: ${interaction.data.name} (${interaction.data.id}, guild ${interaction.guild_id})`
             );
             const promise = command.run(ctx);
             this.emit('commandRun', command, promise, ctx);

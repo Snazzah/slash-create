@@ -67,6 +67,8 @@ export interface RequestData {
 export interface PingRequestData {
     version: 1;
     type: InteractionType.PING;
+    token: string;
+    id: string;
 }
 export interface InteractionRequestData {
     version: 1;

@@ -55,7 +55,7 @@ class SlashCreatorAPI {
   }
 
   /**
-   * Delets a command,
+   * Deletes a command.
    * @param commandID The command ID to delete.
    * @param guildID The guild ID to delete the command. If undefined, the global command is deleted.
    */
@@ -65,6 +65,21 @@ class SlashCreatorAPI {
       guildID
         ? Endpoints.GUILD_COMMAND(this._creator.options.applicationID, guildID, commandID)
         : Endpoints.COMMAND(this._creator.options.applicationID, commandID)
+    );
+  }
+
+  /**
+   * Responds to an interaction.
+   * @param interactionID The interaction's ID.
+   * @param interactionToken The interaction's token.
+   * @param body The body to send.
+   */
+  interactionCallback(interactionID: string, interactionToken: string, body: any): Promise<unknown> {
+    return this._creator.requestHandler.request(
+      'POST',
+      Endpoints.INTERACTION_CALLBACK(interactionID, interactionToken),
+      true,
+      body
     );
   }
 }

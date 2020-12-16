@@ -70,6 +70,22 @@ creator
     .withServer(new ExpressServer(app, { alreadyListening: true }));
 ```
 
+#### Using a Discord Bot with /create
+```js
+const { GatewayServer } = require('slash-create');
+const Discord = require('discord.js');
+const client = new Discord.Client();
+
+creator
+  .withServer(
+    new GatewayServer(
+      (handler) => client.on('raw', (event) => {
+        if (event.t === 'INTERACTION_CREATE') handler(event.d);
+      })
+    )
+  );
+```
+
 ##### Resources & References
 This project borrows resources and references from the following repositories:
 - [dbots.js](https://github.com/dbots-pkg/dbots.js)

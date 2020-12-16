@@ -66,11 +66,13 @@ class CommandContext {
   initiallyResponded = false;
 
   private _respond: RespondFunction;
+  private webserverMode: boolean;
 
-  constructor(creator: SlashCreator, data: InteractionRequestData, respond: RespondFunction) {
+  constructor(creator: SlashCreator, data: InteractionRequestData, respond: RespondFunction, webserverMode: boolean) {
     this.creator = creator;
     this.data = data;
     this._respond = respond;
+    this.webserverMode = webserverMode;
 
     this.interactionToken = data.token;
     this.interactionID = data.id;
@@ -209,14 +211,16 @@ class CommandContext {
 
   /**
    * Edits the original message.
-   * This is put on a timeout of 100 ms to account for Discord recieving and processing the original response.
+   * This is put on a timeout of 150 ms for webservers to account for
+   * Discord recieving and processing the original response.
    * Note: This will error with ephemeral messages or acknowledgements.
    * @param content The content of the message
    * @param options The message options
    */
   editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions) {
+    if (!this.webserverMode) return this.edit('@original', content, options);
     return new Promise((resolve, reject) =>
-      setTimeout(() => this.edit('@original', content, options).then(resolve).catch(reject), 100)
+      setTimeout(() => this.edit('@original', content, options).then(resolve).catch(reject), 150)
     );
   }
 

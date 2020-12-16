@@ -58,7 +58,8 @@ declare class CommandContext {
     /** Whether the initial response was made */
     initiallyResponded: boolean;
     private _respond;
-    constructor(creator: SlashCreator, data: InteractionRequestData, respond: RespondFunction);
+    private webserverMode;
+    constructor(creator: SlashCreator, data: InteractionRequestData, respond: RespondFunction, webserverMode: boolean);
     /** Whether the interaction has expired. Interactions last 15 minutes. */
     get expired(): boolean;
     /**
@@ -84,7 +85,8 @@ declare class CommandContext {
     edit(messageID: string, content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message>;
     /**
      * Edits the original message.
-     * This is put on a timeout of 100 ms to account for Discord recieving and processing the original response.
+     * This is put on a timeout of 150 ms for webservers to account for
+     * Discord recieving and processing the original response.
      * Note: This will error with ephemeral messages or acknowledgements.
      * @param content The content of the message
      * @param options The message options

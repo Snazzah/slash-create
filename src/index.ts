@@ -14,6 +14,7 @@ import DiscordRESTError from './errors/DiscordRESTError';
 
 import ExpressServer from './servers/express';
 import FastifyServer from './servers/fastify';
+import GatewayServer from './servers/gateway';
 
 import Member from './structures/member';
 import Message from './structures/message';
@@ -32,14 +33,15 @@ export {
   Creator,
   DiscordHTTPError,
   DiscordRESTError,
+  ExpressServer,
+  FastifyServer,
+  GatewayServer,
   Member,
   Message,
   Permissions,
   RequestHandler,
   SequentialBucket,
   Server,
-  ExpressServer,
-  FastifyServer,
   User,
   UserFlags,
   Util,

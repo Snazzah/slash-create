@@ -16,16 +16,15 @@ import {
 import SlashCommand from './command';
 import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
-import Server, { TransformedRequest, RespondFunction } from './server';
+import Server, { TransformedRequest, RespondFunction, Response } from './server';
 import CommandContext from './context';
 
 interface SlashCreatorEvents {
   /**
    * Emitted when Discord pings the interaction endpoint.
    * @event SlashCreator#ping
-   * @param treq The request
    */
-  ping: (treq: TransformedRequest) => void;
+  ping: () => void;
   /**
    * Emitted when the creator successfully synced commands.
    */
@@ -70,9 +69,9 @@ interface SlashCreatorEvents {
   /**
    * Emitted when an unknown interaction type is encountered.
    * @event SlashCreator#unknownInteraction
-   * @param treq The request
+   * @param interaction The unhandled interaction
    */
-  unknownInteraction: (treq: TransformedRequest) => void;
+  unknownInteraction: (interaction: any) => void;
   /**
    * Emitted when a command is registered.
    * @event SlashCreator#commandRegister
@@ -272,7 +271,9 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     this.server = server;
 
     try {
-      this.server.createEndpoint(this.options.endpointPath as string, this._onRequest.bind(this));
+      if (this.server.isWebserver)
+        this.server.createEndpoint(this.options.endpointPath as string, this._onRequest.bind(this));
+      else this.server.handleInteraction((interaction) => this._onInteraction(interaction, null, false));
     } catch {}
 
     return this;
@@ -318,8 +319,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
         if (command.guildID && !guildIDs.includes(command.guildID)) guildIDs.push(command.guildID);
       }
 
-      if (this.commands.size && this.commands.find((command) => !command.guildID))
-        await this.syncGlobalCommands(options.deleteCommands);
+      await this.syncGlobalCommands(options.deleteCommands);
 
       // Sync guild commands
       for (const guildID of guildIDs) {
@@ -473,12 +473,18 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       });
     }
 
-    const interaction: AllRequestData = treq.body;
+    return this._onInteraction(treq.body, respond, true);
+  }
+
+  async _onInteraction(interaction: AllRequestData, respond: RespondFunction | null, webserverMode: boolean) {
+    this.emit('debug', 'Got interaction');
+
+    if (!respond || !webserverMode) respond = this._createGatewayRespond(interaction.id, interaction.token);
 
     switch (interaction.type) {
       case InteractionType.PING: {
         this.emit('debug', 'Ping recieved');
-        this.emit('ping', treq);
+        this.emit('ping');
         return respond({
           status: 200,
           body: {
@@ -513,7 +519,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
               status: 404
             });
         } else {
-          const ctx = new CommandContext(this, interaction, respond);
+          const ctx = new CommandContext(this, interaction, respond, webserverMode);
 
           // Ensure the user has permission to use the command
           const hasPermission = command.hasPermission(ctx);
@@ -565,12 +571,18 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       default: {
         // @ts-ignore
         this.emit('debug', `Unknown interaction type recieved: ${interaction.type}`);
-        this.emit('unknownInteraction', treq);
+        this.emit('unknownInteraction', interaction);
         return respond({
           status: 400
         });
       }
     }
+  }
+
+  private _createGatewayRespond(interactionID: string, token: string): RespondFunction {
+    return async (response: Response) => {
+      await this.api.interactionCallback(interactionID, token, response.body);
+    };
   }
 }
 

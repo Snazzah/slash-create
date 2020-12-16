@@ -22,10 +22,17 @@ declare class SlashCreatorAPI {
      */
     updateCommand(commandID: string, command: PartialApplicationCommand, guildID?: string): Promise<ApplicationCommand>;
     /**
-     * Delets a command,
+     * Deletes a command.
      * @param commandID The command ID to delete.
      * @param guildID The guild ID to delete the command. If undefined, the global command is deleted.
      */
     deleteCommand(commandID: string, guildID?: string): Promise<unknown>;
+    /**
+     * Responds to an interaction.
+     * @param interactionID The interaction's ID.
+     * @param interactionToken The interaction's token.
+     * @param body The body to send.
+     */
+    interactionCallback(interactionID: string, interactionToken: string, body: any): Promise<unknown>;
 }
 export default SlashCreatorAPI;

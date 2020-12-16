@@ -3,7 +3,7 @@ import TypedEmitter from 'typed-emitter';
 import Collection from '@discordjs/collection';
 import HTTPS from 'https';
 import { FormattedAllowedMentions, MessageAllowedMentions } from './util';
-import { ImageFormat, RawRequest, RequireAllOptions } from './constants';
+import { ImageFormat, AllRequestData, RawRequest, RequireAllOptions } from './constants';
 import SlashCommand from './command';
 import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
@@ -13,9 +13,8 @@ interface SlashCreatorEvents {
     /**
      * Emitted when Discord pings the interaction endpoint.
      * @event SlashCreator#ping
-     * @param treq The request
      */
-    ping: (treq: TransformedRequest) => void;
+    ping: () => void;
     /**
      * Emitted when the creator successfully synced commands.
      */
@@ -60,9 +59,9 @@ interface SlashCreatorEvents {
     /**
      * Emitted when an unknown interaction type is encountered.
      * @event SlashCreator#unknownInteraction
-     * @param treq The request
+     * @param interaction The unhandled interaction
      */
-    unknownInteraction: (treq: TransformedRequest) => void;
+    unknownInteraction: (interaction: any) => void;
     /**
      * Emitted when a command is registered.
      * @event SlashCreator#commandRegister
@@ -195,5 +194,7 @@ declare class SlashCreator extends SlashCreator_base {
     syncGlobalCommands(deleteCommands?: boolean): Promise<void>;
     _getCommand(commandName: string, guildID: string): SlashCommand | undefined;
     _onRequest(treq: TransformedRequest, respond: RespondFunction): Promise<boolean | void | import("./structures/message").default | null>;
+    _onInteraction(interaction: AllRequestData, respond: RespondFunction | null, webserverMode: boolean): Promise<boolean | void | import("./structures/message").default | null>;
+    private _createGatewayRespond;
 }
 export default SlashCreator;

@@ -1,39 +1,32 @@
-import { ImageFormat, CommandMember } from '../constants';
+import { CommandMember } from '../constants';
 import SlashCreator from '../creator';
 import Permissions from './permissions';
-import UserFlags from './userFlags';
+import User from './user';
 declare class Member {
+    /** The member's ID */
+    id: string;
     /** The member's nickname */
     nick?: string;
     /** The timestamp the member joined the guild */
     joinedAt: number;
     /** An array of role IDs that the user has. */
     roles: string[];
+    /** The time of when this member boosted the server. */
     premiumSince?: number;
     /** Whether the user is muted in voice channels */
     mute: boolean;
     /** Whether the user is deafened in voice channels */
     deaf: boolean;
-    id: string;
-    username: string;
-    discriminator: string;
-    avatar?: string;
+    /** The user object for this member */
+    user: User;
     private _creator;
     private _permissionsBitfield?;
     private _permissions;
-    private _userFlagsBitfield?;
-    private _userFlags;
     constructor(data: CommandMember, creator: SlashCreator);
     /** The permissions the member has. */
     get permissions(): Permissions;
-    /** The public flags for the user. */
-    get userFlags(): UserFlags;
     get mention(): string;
     toString(): string;
     get displayName(): string;
-    get defaultAvatar(): number;
-    get defaultAvatarURL(): string;
-    get avatarURL(): string;
-    dynamicAvatarURL(format?: ImageFormat, size?: number): string;
 }
 export default Member;

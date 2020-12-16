@@ -194,6 +194,6 @@ declare class SlashCreator extends SlashCreator_base {
      */
     syncGlobalCommands(deleteCommands?: boolean): Promise<void>;
     _getCommand(commandName: string, guildID: string): SlashCommand | undefined;
-    _onRequest(treq: TransformedRequest, respond: RespondFunction): Promise<any>;
+    _onRequest(treq: TransformedRequest, respond: RespondFunction): Promise<boolean | void | import("./structures/message").default | null>;
 }
 export default SlashCreator;

@@ -16,7 +16,9 @@ import ExpressServer from './servers/express';
 import FastifyServer from './servers/fastify';
 
 import Member from './structures/member';
+import Message from './structures/message';
 import Permissions from './structures/permissions';
+import User from './structures/user';
 import UserFlags from './structures/userFlags';
 
 const VERSION: string = require('../package').version;
@@ -31,12 +33,14 @@ export {
   DiscordHTTPError,
   DiscordRESTError,
   Member,
+  Message,
   Permissions,
   RequestHandler,
   SequentialBucket,
   Server,
   ExpressServer,
   FastifyServer,
+  User,
   UserFlags,
   Util,
   VERSION

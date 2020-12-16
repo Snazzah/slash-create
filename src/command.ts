@@ -126,7 +126,7 @@ class SlashCommand {
    * @param ctx Command context the command is running from
    */
   onError(err: Error, ctx: CommandContext) {
-    return ctx.send('An error occurred while running the command.', { ephemeral: true });
+    if (!ctx.expired) return ctx.send('An error occurred while running the command.', { ephemeral: true });
   }
 
   /**

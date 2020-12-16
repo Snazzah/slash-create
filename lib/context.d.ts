@@ -3,14 +3,22 @@ import { RespondFunction } from './server';
 import SlashCreator from './creator';
 import { CommandOption, InteractionRequestData } from './constants';
 import { MessageAllowedMentions } from './util';
+import Message from './structures/message';
 declare type ConvertedOption = {
     [key: string]: ConvertedOption;
 } | string | number | boolean;
-interface MessageOptions {
-    tts?: boolean;
+export interface EditMessageOptions {
+    /** The message content. */
     content?: string;
+    /** The embeds of the message. */
     embeds?: any[];
+    /** The mentions allowed to be used in this message. */
     allowedMentions?: MessageAllowedMentions;
+}
+interface MessageOptions extends EditMessageOptions {
+    /** Whether to use TTS for the content. */
+    tts?: boolean;
+    /** The flags to use in the message. */
     flags?: number;
     /**
      * Whether or not the message should be ephemeral.
@@ -21,34 +29,60 @@ interface MessageOptions {
     includeSource?: boolean;
 }
 declare class CommandContext {
+    /** The creator of the command */
     readonly creator: SlashCreator;
+    /** The full interaction data */
     readonly data: InteractionRequestData;
+    /** The interaction's token */
     readonly interactionToken: string;
+    /** The interaction's ID */
     readonly interactionID: string;
+    /** The channel ID that the command was invoked in */
     readonly channelID: string;
+    /** The guild ID that the command was invoked in */
     readonly guildID: string;
+    /** The member that invoked the command */
     readonly member: Member;
+    /** The command's name */
     readonly commandName: string;
+    /** The command's ID */
     readonly commandID: string;
+    /** The options given to the command */
     readonly options?: {
         [key: string]: ConvertedOption;
     };
+    /** The time when the context was created */
     readonly invokedAt: number;
+    /** Whether the initial response was made */
     initiallyResponded: boolean;
-    initialResponseDeleted: boolean;
     private _respond;
     constructor(creator: SlashCreator, data: InteractionRequestData, respond: RespondFunction);
+    /** Whether the interaction has expired. Interactions last 15 minutes. */
+    get expired(): boolean;
     /**
      * Sends a message, if it already made an initial response, this will create a follow-up message.
+     * This will return a boolean if it's an initial response, otherwise a {@see Message} will be returned.
      * Note that when making a follow-up message, the `ephemeral` and `includeSource` are ignored.
      * @param content The content of the message
      * @param options The message options
      */
-    send(content: string | MessageOptions, options?: MessageOptions): Promise<boolean | any>;
+    send(content: string | MessageOptions, options?: MessageOptions): Promise<boolean | Message>;
     /**
-     * Deletes a message. If the message ID was not defined, the original message is used.
+     * Edits a message.
+     * @param messageID The message's ID
      * @param content The content of the message
      * @param options The message options
+     */
+    edit(messageID: string, content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message>;
+    /**
+     * Edits the original message.
+     * @param content The content of the message
+     * @param options The message options
+     */
+    editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message>;
+    /**
+     * Deletes a message. If the message ID was not defined, the original message is used.
+     * @param messageID The message's ID
      */
     delete(messageID?: string): Promise<any>;
     /**

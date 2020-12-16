@@ -129,6 +129,10 @@ export interface CommandUser {
   public_flags: number;
 }
 
+export interface UserObject extends CommandUser {
+  bot?: boolean;
+}
+
 export interface CommandData {
   id: string;
   name: string;

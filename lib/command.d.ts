@@ -54,13 +54,13 @@ declare class SlashCommand {
      * - permission: `response` ({@link string}) to send
      * - throttling: `throttle` ({@link Object}), `remaining` ({@link number}) time in seconds
      */
-    onBlock(ctx: CommandContext, reason: string, data?: any): Promise<any> | null;
+    onBlock(ctx: CommandContext, reason: string, data?: any): Promise<boolean | import("./structures/message").default> | null;
     /**
      * Called when the command produces an error while running
      * @param err Error that was thrown
      * @param ctx Command context the command is running from
      */
-    onError(err: Error, ctx: CommandContext): Promise<any>;
+    onError(err: Error, ctx: CommandContext): Promise<boolean | import("./structures/message").default> | undefined;
     /**
      * Creates/obtains the throttle object for a user, if necessary
      * @param userID ID of the user to throttle for
@@ -78,7 +78,7 @@ declare class SlashCommand {
      * @param ctx The context of the interaction
      * @private
      */
-    finalize(response: any, ctx: CommandContext): Promise<any> | undefined;
+    finalize(response: any, ctx: CommandContext): Promise<boolean | import("./structures/message").default> | undefined;
     static validateOptions(opts: SlashCommandOptions): void;
 }
 export default SlashCommand;

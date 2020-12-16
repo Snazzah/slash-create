@@ -195,7 +195,7 @@ class CommandContext {
       : this.creator.allowedMentions;
 
     const data = await this.creator.requestHandler.request(
-      'PUT',
+      'PATCH',
       Endpoints.MESSAGE(this.creator.options.applicationID, this.interactionToken, messageID),
       true,
       {
@@ -209,11 +209,15 @@ class CommandContext {
 
   /**
    * Edits the original message.
+   * This is put on a timeout of 100 ms to account for Discord recieving and processing the original response.
+   * Note: This will error with ephemeral messages or acknowledgements.
    * @param content The content of the message
    * @param options The message options
    */
   editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions) {
-    return this.edit('@original', content, options);
+    return new Promise((resolve, reject) =>
+      setTimeout(() => this.edit('@original', content, options).then(resolve).catch(reject), 100)
+    );
   }
 
   /**
@@ -231,7 +235,7 @@ class CommandContext {
 
   /**
    * Acknowleges the interaction. Including source will send a message showing only the source.
-   * @param includeSource Whether to include the source in the acknolegement.
+   * @param includeSource Whether to include the source in the acknowledgement.
    * @returns Whether the acknowledgement passed
    */
   async acknowledge(includeSource = false): Promise<boolean> {

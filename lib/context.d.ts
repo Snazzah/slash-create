@@ -84,10 +84,12 @@ declare class CommandContext {
     edit(messageID: string, content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message>;
     /**
      * Edits the original message.
+     * This is put on a timeout of 100 ms to account for Discord recieving and processing the original response.
+     * Note: This will error with ephemeral messages or acknowledgements.
      * @param content The content of the message
      * @param options The message options
      */
-    editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message>;
+    editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<unknown>;
     /**
      * Deletes a message. If the message ID was not defined, the original message is used.
      * @param messageID The message's ID
@@ -95,7 +97,7 @@ declare class CommandContext {
     delete(messageID?: string): Promise<any>;
     /**
      * Acknowleges the interaction. Including source will send a message showing only the source.
-     * @param includeSource Whether to include the source in the acknolegement.
+     * @param includeSource Whether to include the source in the acknowledgement.
      * @returns Whether the acknowledgement passed
      */
     acknowledge(includeSource?: boolean): Promise<boolean>;

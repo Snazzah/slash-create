@@ -1,11 +1,19 @@
-<center>
+<div align="center">
 
 # /create
 Creator and handler for Discord's [slash commands](https://discord.com/developers/docs/interactions/slash-commands).
+
 You can create commands similar to Discord.JS [Commando](https://github.com/discordjs/Commando).
+
 > This package is indev and may not work properly.
 
-</center>
+</div>
+
+## Features
+- Multiple server support (Express, Fastify, etc.)
+- Command syncing - Sync commands with your creator automatically.
+- Load commands from a folder
+- Command throttling/cooldowns
 
 ## Installation
 ```sh

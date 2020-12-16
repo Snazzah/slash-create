@@ -1,4 +1,4 @@
-import * as Constants from './util';
+import * as Constants from './constants';
 import * as Util from './util';
 import API from './api';
 import BitField from './util/bitfield';
@@ -23,12 +23,14 @@ import User from './structures/user';
 import UserFlags from './structures/userFlags';
 
 const VERSION: string = require('../package').version;
+const CommandOptionType = Constants.CommandOptionType;
 
 export {
   API,
   BitField,
   Command,
   CommandContext,
+  CommandOptionType,
   Constants,
   Creator,
   DiscordHTTPError,

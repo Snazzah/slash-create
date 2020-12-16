@@ -14,6 +14,7 @@ interface SlashCommandOptions {
   requiredPermissions?: Array<string>;
   /** The command options */
   options?: ApplicationCommandOption[];
+  /** The throttling options for the command */
   throttling?: ThrottlingOptions;
 }
 

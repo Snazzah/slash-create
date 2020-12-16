@@ -1,4 +1,4 @@
-import * as Constants from './util';
+import * as Constants from './constants';
 import * as Util from './util';
 import API from './api';
 import BitField from './util/bitfield';
@@ -19,4 +19,5 @@ import Permissions from './structures/permissions';
 import User from './structures/user';
 import UserFlags from './structures/userFlags';
 declare const VERSION: string;
-export { API, BitField, Command, CommandContext, Constants, Creator, DiscordHTTPError, DiscordRESTError, ExpressServer, FastifyServer, GatewayServer, Member, Message, Permissions, RequestHandler, SequentialBucket, Server, User, UserFlags, Util, VERSION };
+declare const CommandOptionType: typeof Constants.CommandOptionType;
+export { API, BitField, Command, CommandContext, CommandOptionType, Constants, Creator, DiscordHTTPError, DiscordRESTError, ExpressServer, FastifyServer, GatewayServer, Member, Message, Permissions, RequestHandler, SequentialBucket, Server, User, UserFlags, Util, VERSION };

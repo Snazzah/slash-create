@@ -20,89 +20,17 @@ import Server, { TransformedRequest, RespondFunction, Response } from './server'
 import CommandContext from './context';
 
 interface SlashCreatorEvents {
-  /**
-   * Emitted when Discord pings the interaction endpoint.
-   * @event SlashCreator#ping
-   */
   ping: () => void;
-  /**
-   * Emitted when the creator successfully synced commands.
-   */
   synced: () => void;
-  /**
-   * Emitted when the Client's RequestHandler receives a response.
-   * @event SlashCreator#rawREST
-   * @prop {Object} [request] The data for the request
-   * @prop {Boolean} request.auth True if the request required an authorization token
-   * @prop {Object} [request.body] The request payload
-   * @prop {String} request.method Uppercase HTTP method
-   * @prop {IncomingMessage} request.resp The HTTP response to the request
-   * @prop {String} request.route The calculated ratelimiting route for the request
-   * @prop {Boolean} request.short Whether or not the request was prioritized in its ratelimiting queue
-   * @prop {String} request.url URL of the endpoint
-   */
   rawREST: (request: RawRequest) => void;
-  /**
-   * Emitted when a warning is given.
-   * @event SlashCreator#rawREST
-   * @param warning The warning
-   */
   warn: (warning: Error | string) => void;
-  /**
-   * Emitted when a debug message is given.
-   * @event SlashCreator#warn
-   * @param message The debug message
-   */
   debug: (message: string) => void;
-  /**
-   * Emitted when an error occurred
-   * @event SlashCreator#error
-   * @param err The error thrown
-   */
   error: (err: Error) => void;
-  /**
-   * Emitted when a request failed to be verified.
-   * @event SlashCreator#unverifiedRequest
-   * @param treq The unverified request
-   */
   unverifiedRequest: (treq: TransformedRequest) => void;
-  /**
-   * Emitted when an unknown interaction type is encountered.
-   * @event SlashCreator#unknownInteraction
-   * @param interaction The unhandled interaction
-   */
   unknownInteraction: (interaction: any) => void;
-  /**
-   * Emitted when a command is registered.
-   * @event SlashCreator#commandRegister
-   * @param command Command that was registered
-   * @param creator Creator that the command was registered to
-   */
   commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
-  /**
-   * Emitted when a command is blocked.
-   * @event SlashCreator#commandBlock
-   * @param command Command that was blocked
-   * @param ctx The context of the interaction
-   * @param reason Reason that the command was blocked
-   * @param data Additional data associated with the block.
-   */
   commandBlock: (command: SlashCommand, ctx: CommandContext, reason: string, data: any) => void;
-  /**
-   * Emitted when a command gave an error.
-   * @event SlashCreator#commandError
-   * @param command Command that gave an error
-   * @param err The error given
-   * @param ctx The context of the interaction
-   */
   commandError: (command: SlashCommand, err: Error, ctx: CommandContext) => void;
-  /**
-   * Emitted when a command is ran.
-   * @event SlashCreator#commandRun
-   * @param command Command that was ran
-   * @param promise Promise for the command result
-   * @param ctx The context of the interaction
-   */
   commandRun: (command: SlashCommand, promise: Promise<any>, ctx: CommandContext) => void;
 }
 
@@ -152,12 +80,22 @@ interface SyncCommandOptions {
 }
 
 class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<SlashCreatorEvents>) {
+  /** The options from constructing the creator */
   options: SlashCreatorOptions;
+  /** The request handler for the creator */
   readonly requestHandler: RequestHandler;
+  /** The API handler for the creator */
   readonly api: SlashCreatorAPI;
+  /** The commands loaded onto the creator */
   readonly commands = new Collection<string, SlashCommand>();
+  /**
+   * The path where the commands were loaded from
+   * @see #registerCommandsIn
+   */
   commandsPath?: string;
+  /** The server being used in the creator */
   server?: Server;
+  /** The formatted allowed mentions from the options */
   allowedMentions: FormattedAllowedMentions;
 
   constructor(opts: SlashCreatorOptions) {

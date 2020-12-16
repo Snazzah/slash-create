@@ -1,4 +1,8 @@
 import { IncomingMessage } from 'http';
+import SlashCommand from './command';
+import CommandContext from './context';
+import SlashCreator from './creator';
+import { TransformedRequest } from './server';
 
 export const API_VERSION = 8;
 export const INTERACTION_VERSION = 1;
@@ -220,3 +224,96 @@ export const Endpoints = {
   DEFAULT_USER_AVATAR: (userDiscriminator: string | number) => `/embed/avatars/${userDiscriminator}`,
   USER_AVATAR: (userID: string, userAvatar: string) => `/avatars/${userID}/${userAvatar}`
 };
+
+// SlashCreate events
+
+/**
+ * Emitted when Discord pings the interaction endpoint.
+ * @event
+ * @asMemberOf SlashCreator
+ */
+declare function ping(): void;
+/**
+ * Emitted when the creator successfully synced commands.
+ * @event
+ * @asMemberOf SlashCreator
+ */
+declare function synced(): void;
+/**
+ * Emitted when the Client's RequestHandler receives a response.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param request The data for the request
+ */
+declare function rawREST(request: RawRequest): void;
+/**
+ * Emitted when a warning is given.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param warning The warning
+ */
+declare function warn(warning: Error | string): void;
+/**
+ * Emitted when a debug message is given.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param message The debug message
+ */
+declare function debug(message: string): void;
+/**
+ * Emitted when an error occurred
+ * @event
+ * @asMemberOf SlashCreator
+ * @param err The error thrown
+ */
+declare function error(err: Error): void;
+/**
+ * Emitted when a request failed to be verified.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param treq The unverified request
+ */
+declare function unverifiedRequest(treq: TransformedRequest): void;
+/**
+ * Emitted when an unknown interaction type is encountered.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param interaction The unhandled interaction
+ */
+declare function unknownInteraction(interaction: any): void;
+/**
+ * Emitted when a command is registered.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param command Command that was registered
+ * @param creator Creator that the command was registered to
+ */
+declare function commandRegister(command: SlashCommand, creator: SlashCreator): void;
+/**
+ * Emitted when a command is blocked.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param command Command that was blocked
+ * @param ctx The context of the interaction
+ * @param reason Reason that the command was blocked
+ * @param data Additional data associated with the block.
+ */
+declare function commandBlock(command: SlashCommand, ctx: CommandContext, reason: string, data: any): void;
+/**
+ * Emitted when a command gave an error.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param command Command that gave an error
+ * @param err The error given
+ * @param ctx The context of the interaction
+ */
+declare function commandError(command: SlashCommand, err: Error, ctx: CommandContext): void;
+/**
+ * Emitted when a command is ran.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param command Command that was ran
+ * @param promise Promise for the command result
+ * @param ctx The context of the interaction
+ */
+declare function commandRun(command: SlashCommand, promise: Promise<any>, ctx: CommandContext): void;

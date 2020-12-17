@@ -64,7 +64,7 @@ class CommandContext {
   /** The command's ID. */
   readonly commandID: string;
   /** The options given to the command. */
-  readonly options?: { [key: string]: ConvertedOption };
+  readonly options: { [key: string]: ConvertedOption };
   /** The time when the context was created .*/
   readonly invokedAt: number = Date.now();
   /** Whether the initial response was made. */
@@ -95,7 +95,7 @@ class CommandContext {
 
     this.commandName = data.data.name;
     this.commandID = data.data.id;
-    if (data.data.options) this.options = CommandContext.convertOptions(data.data.options);
+    this.options = data.data.options ? CommandContext.convertOptions(data.data.options) : {};
   }
 
   /** Whether the interaction has expired. Interactions last 15 minutes. */

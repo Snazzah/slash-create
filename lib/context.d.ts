@@ -55,7 +55,7 @@ declare class CommandContext {
     /** The command's ID. */
     readonly commandID: string;
     /** The options given to the command. */
-    readonly options?: {
+    readonly options: {
         [key: string]: ConvertedOption;
     };
     /** The time when the context was created .*/

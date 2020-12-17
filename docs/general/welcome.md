@@ -1,6 +1,7 @@
 <div align="center">
 
-# /create
+<img src="/static/textlogo.png" height="50">
+
 [![NPM version](https://img.shields.io/npm/v/slash-create?maxAge=3600)](https://www.npmjs.com/package/slash-create) [![NPM downloads](https://img.shields.io/npm/dt/slash-create?maxAge=3600)](https://www.npmjs.com/package/slash-create) [![ESLint status](https://github.com/Snazzah/slash-create/workflows/ESLint/badge.svg)](https://github.com/Snazzah/slash-create/actions?query=workflow%3A%22ESLint%22) [![DeepScan grade](https://deepscan.io/api/teams/11596/projects/15103/branches/297399/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=11596&pid=15103&bid=297399)
 
 Creator and handler for Discord's [slash commands](https://discord.com/developers/docs/interactions/slash-commands).
@@ -11,7 +12,8 @@ You can create commands similar to Discord.JS [Commando](https://github.com/disc
 </div>
 
 ## Features
-- Multiple server support (Express, Fastify, etc.)
+- Multiple server support ([Express](http://expressjs.com/), [Fastify](https://fastify.io/), etc.)
+- Hook into an existing Discord bot client
 - Command syncing - Sync commands with your creator automatically.
 - Load commands from a folder
 - Command throttling/cooldowns
@@ -32,8 +34,8 @@ In order to use a specific webserver, you will need to install the dependency as
 
 #### Creating a SlashCreator
 ```js
-const { Creator } = require('slash-create');
-const creator = new Creator({
+const { SlashCreator } = require('slash-create');
+const creator = new SlashCreator({
   applicationID: '12345678901234567',
   publicKey: 'CLIENT_PUBLIC_KEY',
   token: 'BOT_TOKEN_HERE',
@@ -92,9 +94,9 @@ client.login('BOT_TOKEN_HERE');
 
 #### Example Command
 ```js
-const { Command } = require('slash-create');
+const { SlashCommand } = require('slash-create');
 
-module.exports = class HelloCommand extends Command {
+module.exports = class HelloCommand extends SlashCommand {
   constructor(creator) {
     super(creator, {
       name: 'hello',

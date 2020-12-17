@@ -72,7 +72,7 @@ class ExpressServer extends Server {
   }
 
   /** @private */
-  async listen(port = 80, host = 'localhost') {
+  async listen(port = 8030, host = 'localhost') {
     if (this.alreadyListening) return;
     this.app.listen(port, host);
   }

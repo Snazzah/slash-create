@@ -131,7 +131,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
         requestTimeout: 15000,
         maxSignatureTimestamp: 5000,
         endpointPath: '/interactions',
-        serverPort: 80,
+        serverPort: 8030,
         serverHost: 'localhost'
       },
       opts

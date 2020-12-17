@@ -88,8 +88,8 @@ class Server {
   }
 
   /** @private */
-  async listen(port = 80, host = 'localhost') {
-    throw new Error(`${this.constructor.name} doesn't have a listen method.`);
+  async listen(port = 8030, host = 'localhost') {
+    throw new Error(`${this.constructor.name} doesn't have a listen method. You should remove \`.startServer()\`.`);
   }
 }
 

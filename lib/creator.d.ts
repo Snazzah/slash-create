@@ -33,7 +33,10 @@ interface SlashCreatorOptions {
     applicationID: string;
     /** The public key for your application */
     publicKey: string;
-    /** The bot/client token for the application. Recommended to set. */
+    /**
+     * The bot/client token for the application.
+     * Recommended to set this in your config.
+     */
     token?: string;
     /** The path where the server will listen for interactions. */
     endpointPath?: string;
@@ -121,16 +124,21 @@ declare class SlashCreator extends SlashCreator_base {
     withServer(server: Server): this;
     /** Starts the server, if one was defined. */
     startServer(): Promise<void>;
-    /** Sync all commands with Discord. This ensures that commands exist when handling them. */
+    /**
+     * Sync all commands with Discord. This ensures that commands exist when handling them.
+     * <warn>This requires you to have your token set in the creator config.</warn>
+     */
     syncCommands(opts?: SyncCommandOptions): this;
     /**
      * Sync guild commands.
+     * <warn>This requires you to have your token set in the creator config.</warn>
      * @param guildID The guild to sync
      * @param deleteCommands Whether to delete command not found in the creator
      */
     syncCommandsIn(guildID: string, deleteCommands?: boolean): Promise<void>;
     /**
      * Sync global commands.
+     * <warn>This requires you to have your token set in the creator config.</warn>
      * @param deleteCommands Whether to delete command not found in the creator
      */
     syncGlobalCommands(deleteCommands?: boolean): Promise<void>;

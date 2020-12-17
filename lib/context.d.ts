@@ -58,6 +58,8 @@ declare class CommandContext {
     readonly options: {
         [key: string]: ConvertedOption;
     };
+    /** The subcommands the member used in order. */
+    readonly subcommands: string[];
     /** The time when the context was created .*/
     readonly invokedAt: number;
     /** Whether the initial response was made. */
@@ -120,5 +122,7 @@ declare class CommandContext {
     static convertOptions(options: CommandOption[]): {
         [key: string]: ConvertedOption;
     };
+    /** @private */
+    static getSubcommandArray(options: CommandOption[]): string[];
 }
 export default CommandContext;

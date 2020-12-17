@@ -65,6 +65,8 @@ class CommandContext {
   readonly commandID: string;
   /** The options given to the command. */
   readonly options: { [key: string]: ConvertedOption };
+  /** The subcommands the member used in order. */
+  readonly subcommands: string[];
   /** The time when the context was created .*/
   readonly invokedAt: number = Date.now();
   /** Whether the initial response was made. */
@@ -96,6 +98,7 @@ class CommandContext {
     this.commandName = data.data.name;
     this.commandID = data.data.id;
     this.options = data.data.options ? CommandContext.convertOptions(data.data.options) : {};
+    this.subcommands = data.data.options ? CommandContext.getSubcommandArray(data.data.options) : [];
   }
 
   /** Whether the interaction has expired. Interactions last 15 minutes. */
@@ -278,6 +281,16 @@ class CommandContext {
       else if (option.value) convertedOptions[option.name] = option.value;
     }
     return convertedOptions;
+  }
+
+  /** @private */
+  static getSubcommandArray(options: CommandOption[]) {
+    const result: string[] = [];
+    for (const option of options) {
+      if (option.options) result.push(option.name, ...CommandContext.getSubcommandArray(option.options));
+      else if (option.value && option.name) result.push(option.name);
+    }
+    return result;
   }
 }
 

@@ -65,6 +65,11 @@ creator
     .startServer();
 
 /**
+ * By default, this serves to `127.0.0.1:80/interactions`.
+ * You can change the `serverPort` and `endpointPath` to affect where to serve to.
+ */
+
+/**
  * You can also initialize the server with an existing application.
  * If you are doing this with express applications, the express application must already have `express.json()` as middleware.
  */

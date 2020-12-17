@@ -1,15 +1,18 @@
 import { ApplicationCommand, Endpoints, PartialApplicationCommand } from './constants';
 import SlashCreator from './creator';
 
+/** The API handler for {@link SlashCreator}. */
 class SlashCreatorAPI {
+  /** The parent creator. */
   private _creator: SlashCreator;
 
+  /** @param creator The instantiating creator. */
   constructor(creator: SlashCreator) {
     this._creator = creator;
   }
 
   /**
-   * Gets the commands from an applicaton
+   * Gets the commands from an applicaton.
    * @param guildID The guild ID to get commands from. If undefined, global commands are fetched.
    */
   getCommands(guildID?: string): Promise<ApplicationCommand[]> {
@@ -22,7 +25,7 @@ class SlashCreatorAPI {
   }
 
   /**
-   * Creates a command
+   * Creates a command.
    * @param command The command to create.
    * @param guildID The guild ID to put the command on. If undefined, the command is global.
    */
@@ -45,7 +48,7 @@ class SlashCreatorAPI {
    */
   updateCommand(commandID: string, command: PartialApplicationCommand, guildID?: string): Promise<ApplicationCommand> {
     return this._creator.requestHandler.request(
-      'PUT',
+      'PATCH',
       guildID
         ? Endpoints.GUILD_COMMAND(this._creator.options.applicationID, guildID, commandID)
         : Endpoints.COMMAND(this._creator.options.applicationID, commandID),

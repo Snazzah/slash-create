@@ -21,8 +21,9 @@ export const FLAGS: { [perm: string]: number } = {
   EARLY_VERIFIED_BOT_DEVELOPER: 1 << 17
 };
 
-class Permissions extends BitField {
+/** Data structure that makes it easy to interact with a {@link User#flags} bitfield. */
+class UserFlags extends BitField {
   static FLAGS = FLAGS;
 }
 
-export default Permissions;
+export default UserFlags;

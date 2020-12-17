@@ -2,12 +2,13 @@ export type BitFieldResolvable = string | number | BitField | Array<BitFieldReso
 
 /** Data structure that makes it easy to interact with a bitfield. */
 class BitField {
-  /** Bitfield of the packed bits */
+  /** Bitfield of the packed bits. */
   bitfield: number;
+  /** The flags for this bitfield. */
   static FLAGS: { [perm: string]: number } = {};
 
   /**
-   * @param bits Bit(s) to read from
+   * @param bits Bit(s) to read from.
    */
   constructor(bits: BitFieldResolvable = 0) {
     // @ts-ignore
@@ -24,7 +25,7 @@ class BitField {
   }
 
   /**
-   * Checks if this bitfield equals another
+   * Checks if this bitfield equals another.
    * @param bit Bit(s) to check for
    */
   equals(bit: BitFieldResolvable): boolean {
@@ -73,25 +74,29 @@ class BitField {
     return Object.keys(this.constructor.FLAGS).filter((bit) => this.has(bit));
   }
 
+  /** @private */
   toString() {
     return `[${this.constructor.name} ${this.bitfield}]`;
   }
 
+  /** @private */
   toJSON() {
     return this.bitfield;
   }
 
+  /** @private */
   valueOf() {
     return this.bitfield;
   }
 
+  /** @private */
   *[Symbol.iterator]() {
     yield* this.toArray();
   }
 
   /**
    * Resolves bitfields to their numeric form.
-   * @param bit bit(s) to resolve
+   * @param bit Bit(s) to resolve
    */
   static resolve(bit: BitFieldResolvable = 0): number {
     if (typeof bit === 'number' && bit >= 0) return bit;

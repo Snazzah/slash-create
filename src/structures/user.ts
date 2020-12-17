@@ -1,25 +1,30 @@
 import { CDN_URL, Endpoints, ImageFormat, ImageFormats, ImageSizeBoundaries, UserObject } from '../constants';
 import SlashCreator from '../creator';
-import Permissions from './permissions';
 import UserFlags from './userFlags';
 
+/** Represents a user on Discord. */
 class User {
-  /** The user's ID */
+  /** The user's ID. */
   id: string;
-  /** The user's username */
+  /** The user's username. */
   username: string;
-  /** The user's discriminator */
+  /** The user's discriminator. */
   discriminator: string;
-  /** The user's avatar hash */
+  /** The user's avatar hash. */
   avatar?: string;
-  /** Whether the user is a bot */
+  /** Whether the user is a bot. */
   bot: boolean;
 
+  /** The creator of the user class. */
   private _creator: SlashCreator;
 
   private _flagsBitfield?: UserFlags;
   private _flags: number;
 
+  /**
+   * @param data The data for the user
+   * @param creator The instantiating creator
+   */
   constructor(data: UserObject, creator: SlashCreator) {
     this._creator = creator;
 
@@ -33,30 +38,40 @@ class User {
 
   /** The public flags for the user. */
   get flags() {
-    if (!this._flagsBitfield) this._flagsBitfield = new Permissions(this._flags);
+    if (!this._flagsBitfield) this._flagsBitfield = new UserFlags(this._flags);
     return this._flagsBitfield;
   }
 
+  /** A string that mentions the user. */
   get mention() {
     return `<@${this.id}>`;
   }
 
+  /** @private */
   toString() {
     return `[User ${this.id}]`;
   }
 
+  /** The hash for the default avatar of a user if there is no avatar set. */
   get defaultAvatar() {
     return parseInt(this.discriminator) % 5;
   }
 
+  /** The URL of the user's default avatar. */
   get defaultAvatarURL() {
     return `${CDN_URL}${Endpoints.DEFAULT_USER_AVATAR(this.defaultAvatar)}.png`;
   }
 
+  /** The URL of the user's avatar. */
   get avatarURL() {
     return this.dynamicAvatarURL();
   }
 
+  /**
+   * Get the user's avatar with the given format and size.
+   * @param format The format of the avatar
+   * @param size The size of the avatar
+   */
   dynamicAvatarURL(format?: ImageFormat, size?: number) {
     if (!this.avatar) return this.defaultAvatarURL;
     if (!format || !ImageFormats.includes(format.toLowerCase())) {

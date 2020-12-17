@@ -28,28 +28,53 @@ export declare enum CommandOptionType {
     CHANNEL = 7,
     ROLE = 8
 }
+/**
+ * An partial application command in Discord.
+ * @private
+ */
 export interface PartialApplicationCommand {
+    /** The name of the command. */
     name: string;
+    /** The description of the command. */
     description: string;
+    /** The optoins for the command. */
     options?: ApplicationCommandOption[];
 }
+/**
+ * An application command in Discord.
+ * @private
+ */
 export interface ApplicationCommand extends PartialApplicationCommand {
+    /** The command's ID. */
     id: string;
+    /** The application's ID responsible for this command. */
     application_id: string;
 }
+/** An option in an application command. */
 export interface ApplicationCommandOption {
+    /** The type of option this one is. */
     type: CommandOptionType;
+    /** The name of the option. */
     name: string;
+    /** The description of the option. */
     description: string;
+    /** The first required option the user has to complete. */
     default?: boolean;
+    /** Whether the command is required. */
     required?: boolean;
+    /** The choices of the option. If set, these are the only values a user can pick from. */
     choices?: ApplicationCommandOptionChoice[];
+    /** The sub-options for the option. This can only be used for sub-commands and sub-command groups. */
     options?: ApplicationCommandOption[];
 }
+/** A choice for a user to pick from. */
 export interface ApplicationCommandOptionChoice {
+    /** The name of the choice. */
     name: string;
+    /** The value of the choice. */
     value: string | number;
 }
+/** @private */
 export interface RawRequest {
     method: string;
     url: string;
@@ -59,17 +84,29 @@ export interface RawRequest {
     short: boolean;
     resp: IncomingMessage;
 }
-export declare type AllRequestData = PingRequestData | InteractionRequestData;
+/** Any interaction request from Discord. */
+export declare type AnyRequestData = PingRequestData | InteractionRequestData;
+/** @private */
 export interface RequestData {
     version: 1;
     type: InteractionType;
+    token: string;
+    id: string;
 }
+/**
+ * A ping interaction.
+ * @private
+ */
 export interface PingRequestData {
     version: 1;
     type: InteractionType.PING;
     token: string;
     id: string;
 }
+/**
+ * A command interaction.
+ * @private
+ */
 export interface InteractionRequestData {
     version: 1;
     type: InteractionType.COMMAND;
@@ -80,6 +117,7 @@ export interface InteractionRequestData {
     member: CommandMember;
     data: CommandData;
 }
+/** @private */
 export interface CommandMember {
     user: CommandUser;
     roles: string[];
@@ -92,6 +130,7 @@ export interface CommandMember {
     nick?: string;
     joined_at: string;
 }
+/** @private */
 export interface CommandUser {
     id: string;
     username: string;
@@ -99,19 +138,25 @@ export interface CommandUser {
     discriminator: string;
     public_flags: number;
 }
+/** @private */
 export interface UserObject extends CommandUser {
+    /** Whether this user is a bot. */
     bot?: boolean;
 }
+/** @private */
 export interface CommandData {
     id: string;
     name: string;
     options?: CommandOption[];
 }
+/** @private */
 export interface CommandOption {
+    /** The name for the option. */
     name: string;
     value?: string | number | boolean;
     options?: CommandOption[];
 }
+/** @see https://www.npmjs.com/package/require-all#usage */
 export interface RequireAllOptions {
     dirname: string;
     filter?: ((name: string, path: string) => string | false | undefined) | RegExp;
@@ -120,6 +165,7 @@ export interface RequireAllOptions {
     resolve?: (module: any) => any;
     recursive?: true | false;
 }
+/** Any image format supported by Discord. */
 export declare type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif';
 export declare const ImageFormats: string[];
 export declare const ImageSizeBoundaries: {

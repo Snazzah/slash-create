@@ -9,6 +9,10 @@ import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
 import Server, { TransformedRequest } from './server';
 import CommandContext from './context';
+/**
+ * The events typings for the {@link SlashCreator}.
+ * @private
+ */
 interface SlashCreatorEvents {
     ping: () => void;
     synced: () => void;
@@ -23,6 +27,7 @@ interface SlashCreatorEvents {
     commandError: (command: SlashCommand, err: Error, ctx: CommandContext) => void;
     commandRun: (command: SlashCommand, promise: Promise<any>, ctx: CommandContext) => void;
 }
+/** The options for the {@link SlashCreator}. */
 interface SlashCreatorOptions {
     /** Your Application's ID */
     applicationID: string;
@@ -55,6 +60,7 @@ interface SlashCreatorOptions {
     /** A HTTP Agent used to proxy requests */
     agent?: HTTPS.Agent;
 }
+/** The options for {@link SlashCreator#syncCommands}. */
 interface SyncCommandOptions {
     /** Whether to delete commands that do not exist in the creator. */
     deleteCommands?: boolean;
@@ -67,6 +73,7 @@ interface SyncCommandOptions {
     skipGuildErrors?: boolean;
 }
 declare const SlashCreator_base: new () => TypedEmitter<SlashCreatorEvents>;
+/** The main class for using commands and interactions. */
 declare class SlashCreator extends SlashCreator_base {
     /** The options from constructing the creator */
     options: SlashCreatorOptions;
@@ -85,6 +92,7 @@ declare class SlashCreator extends SlashCreator_base {
     server?: Server;
     /** The formatted allowed mentions from the options */
     allowedMentions: FormattedAllowedMentions;
+    /** @param opts The options for the creator */
     constructor(opts: SlashCreatorOptions);
     /**
      * Registers a single command

@@ -2,9 +2,9 @@ import * as Constants from './constants';
 import * as Util from './util';
 import API from './api';
 import BitField from './util/bitfield';
-import Command from './command';
+import SlashCommand from './command';
 import CommandContext from './context';
-import Creator from './creator';
+import SlashCreator from './creator';
 import RequestHandler from './util/requestHandler';
 import SequentialBucket from './util/sequentialBucket';
 import Server from './server';
@@ -25,6 +25,11 @@ import UserFlags from './structures/userFlags';
 const VERSION: string = require('../package').version;
 const CommandOptionType = Constants.CommandOptionType;
 
+// Aliases
+const Creator = SlashCreator;
+const Context = CommandContext;
+const Command = SlashCommand;
+
 export {
   API,
   BitField,
@@ -32,6 +37,7 @@ export {
   CommandContext,
   CommandOptionType,
   Constants,
+  Context,
   Creator,
   DiscordHTTPError,
   DiscordRESTError,
@@ -44,6 +50,8 @@ export {
   RequestHandler,
   SequentialBucket,
   Server,
+  SlashCommand,
+  SlashCreator,
   User,
   UserFlags,
   Util,

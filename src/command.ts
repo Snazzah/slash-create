@@ -3,6 +3,7 @@ import CommandContext from './context';
 import SlashCreator from './creator';
 import { oneLine, validateOptions } from './util';
 
+/** The options for a {@link SlashCommand}. */
 interface SlashCommandOptions {
   /** The name of the command. */
   name: string;
@@ -18,6 +19,7 @@ interface SlashCommandOptions {
   throttling?: ThrottlingOptions;
 }
 
+/** The throttling options for a {@link SlashCommand}. */
 interface ThrottlingOptions {
   /** Maximum number of usages of the command allowed in the time frame. */
   usages: number;
@@ -25,25 +27,38 @@ interface ThrottlingOptions {
   duration: number;
 }
 
+/** @private */
 interface ThrottleObject {
   start: number;
   usages: number;
   timeout: any;
 }
 
+/** Represends a Discord slash command. */
 class SlashCommand {
+  /** The command's name. */
   commandName: string;
+  /** The command's description. */
   description: string;
+  /** The options for the command. */
   options?: ApplicationCommandOption[];
+  /** The guild ID for the command. */
   guildID?: string;
+  /** The permissions required to use this command. */
   requiredPermissions?: Array<string>;
+  /** The throttling options for this command.. */
   throttling?: ThrottlingOptions;
 
+  /** The creator responsible for this command. */
   readonly creator: SlashCreator;
 
-  /** Current throttle objects for the command, mapped by user ID */
+  /** Current throttle objects for the command, mapped by user ID. */
   private _throttles = new Map<string, ThrottleObject>();
 
+  /**
+   * @param creator The instantiating creator.
+   * @param opts The options for the command.
+   */
   constructor(creator: SlashCreator, opts: SlashCommandOptions) {
     if (this.constructor.name === 'SlashCommand') throw new Error('The base SlashCommand cannot be instantiated.');
     this.creator = creator;
@@ -58,6 +73,10 @@ class SlashCommand {
     this.throttling = opts.throttling;
   }
 
+  /**
+   * The JSON for using commands in Discord's API.
+   * @private
+   */
   get commandJSON(): PartialApplicationCommand {
     return {
       name: this.commandName,
@@ -66,7 +85,10 @@ class SlashCommand {
     };
   }
 
-  /** @private */
+  /**
+   * The internal key name for the command.
+   * @private
+   */
   get keyName() {
     return `${this.guildID || 'global'}_${this.commandName}`;
   }
@@ -176,6 +198,10 @@ class SlashCommand {
       return ctx.send(response);
   }
 
+  /**
+   * Validates {@link SlashCommandOptions}.
+   * @private
+   */
   static validateOptions(opts: SlashCommandOptions) {
     if (typeof opts.name !== 'string') throw new TypeError('Command name must be a string.');
     if (opts.name !== opts.name.toLowerCase()) throw new Error('Command name must be lowercase.');

@@ -9,11 +9,16 @@ import { ApplicationCommandOption } from './constants';
  * @returns Whether or not validation was successful
  */
 export declare function verifyKey(body: string, signature: string, timestamp: string, clientPublicKey: string): Promise<boolean>;
+/** The allowed mentions for a {@link Message}. */
 export interface MessageAllowedMentions {
     everyone: boolean;
     roles?: boolean | string[];
     users?: boolean | string[];
 }
+/**
+ * The formatted allowed_mentions for Discord.
+ * @private
+ */
 export interface FormattedAllowedMentions {
     parse: ('everyone' | 'roles' | 'users')[];
     roles?: string[];

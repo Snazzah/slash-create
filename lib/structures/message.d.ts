@@ -1,6 +1,7 @@
 import { UserObject } from '../constants';
 import CommandContext, { EditMessageOptions } from '../context';
 import User from './user';
+/** @private */
 interface MessageData {
     id: string;
     type: number;
@@ -19,6 +20,7 @@ interface MessageData {
     flags: number;
     webhook_id: string;
 }
+/** Represents a Discord message. */
 declare class Message {
     /** The message's ID */
     id: string;
@@ -50,7 +52,12 @@ declare class Message {
     flags: number;
     /** The message's webhook ID */
     webhookID: string;
+    /** The context that created the message class. */
     private _ctx;
+    /**
+     * @param data The data for the message
+     * @param ctx The instantiating context
+     */
     constructor(data: MessageData, ctx: CommandContext);
     /**
      * Edits this message.
@@ -58,9 +65,7 @@ declare class Message {
      * @param options The message options
      */
     edit(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message>;
-    /**
-     * Deletes this message.
-     */
+    /** Deletes this message. */
     delete(): Promise<any>;
 }
 export default Message;

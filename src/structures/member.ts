@@ -21,11 +21,16 @@ class Member {
   /** The user object for this member */
   user: User;
 
+  /** The creator of the member class. */
   private _creator: SlashCreator;
 
   private _permissionsBitfield?: Permissions;
   private _permissions: string;
 
+  /**
+   * @param data The data for the member
+   * @param creator The instantiating creator
+   */
   constructor(data: CommandMember, creator: SlashCreator) {
     this._creator = creator;
 
@@ -47,14 +52,17 @@ class Member {
     return this._permissionsBitfield;
   }
 
+  /** The string that mentions this member. */
   get mention() {
     return `<@!${this.id}>`;
   }
 
+  /** @private */
   toString() {
     return `[Member ${this.id}]`;
   }
 
+  /** The display name for this member. */
   get displayName() {
     return this.nick || this.user.username;
   }

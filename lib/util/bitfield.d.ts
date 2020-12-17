@@ -1,13 +1,14 @@
 export declare type BitFieldResolvable = string | number | BitField | Array<BitFieldResolvable>;
 /** Data structure that makes it easy to interact with a bitfield. */
 declare class BitField {
-    /** Bitfield of the packed bits */
+    /** Bitfield of the packed bits. */
     bitfield: number;
+    /** The flags for this bitfield. */
     static FLAGS: {
         [perm: string]: number;
     };
     /**
-     * @param bits Bit(s) to read from
+     * @param bits Bit(s) to read from.
      */
     constructor(bits?: BitFieldResolvable);
     /**
@@ -16,7 +17,7 @@ declare class BitField {
      */
     any(bit: BitFieldResolvable): boolean;
     /**
-     * Checks if this bitfield equals another
+     * Checks if this bitfield equals another.
      * @param bit Bit(s) to check for
      */
     equals(bit: BitFieldResolvable): boolean;
@@ -41,13 +42,17 @@ declare class BitField {
      * Gets an {@link Array} of bitfield names based on the bits available.
      */
     toArray(): string[];
+    /** @private */
     toString(): string;
+    /** @private */
     toJSON(): number;
+    /** @private */
     valueOf(): number;
+    /** @private */
     [Symbol.iterator](): Generator<string, void, undefined>;
     /**
      * Resolves bitfields to their numeric form.
-     * @param bit bit(s) to resolve
+     * @param bit Bit(s) to resolve
      */
     static resolve(bit?: BitFieldResolvable): number;
 }

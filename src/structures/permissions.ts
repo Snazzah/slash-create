@@ -34,6 +34,10 @@ export const FLAGS: { [perm: string]: number } = {
   MANAGE_EMOJIS: 1 << 30
 };
 
+/**
+ * Data structure that makes it easy to interact with a permission bitfield.
+ * All {@link Member}s have a set of permissions.
+ */
 class Permissions extends BitField {
   static FLAGS = FLAGS;
 }

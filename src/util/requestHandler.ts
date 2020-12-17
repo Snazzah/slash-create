@@ -6,6 +6,7 @@ import Zlib from 'zlib';
 import DiscordHTTPError from '../errors/DiscordHTTPError';
 import DiscordRESTError from '../errors/DiscordRESTError';
 
+/** @private */
 interface LatencyRef {
   latency: number;
   offset?: number;
@@ -15,18 +16,32 @@ interface LatencyRef {
   lastTimeOffsetCheck: number;
 }
 
+/**
+ * The request handler for REST requests.
+ * @private
+ */
 class RequestHandler {
+  /** The base URL for all requests. */
   baseURL: string;
+  /** The user agent for all requests. */
   userAgent: string;
+  /** The ratelimits per route. */
   ratelimits: { [route: string]: SequentialBucket };
+  /** The amount of time a request will timeout. */
   requestTimeout: number;
+  /** TheHTTP agent used in the request handler. */
   agent?: HTTPS.Agent;
+  /** The latency reference for the handler. */
   latencyRef: LatencyRef;
+  /** Whether the handler is globally blocked. */
   globalBlock: boolean;
+  /** The request queue. */
   readyQueue: any[];
 
+  /** The creator that initialized the handler. */
   private _creator: SlashCreator;
 
+  /** @param creator The instantiating creator. */
   constructor(creator: SlashCreator) {
     this._creator = creator;
     this.baseURL = API_BASE_URL;
@@ -46,6 +61,7 @@ class RequestHandler {
     this.readyQueue = [];
   }
 
+  /** Unblocks the request handler. */
   globalUnblock() {
     this.globalBlock = false;
     while (this.readyQueue.length > 0) {
@@ -59,7 +75,6 @@ class RequestHandler {
    * @param url URL of the endpoint
    * @param auth Whether to add the Authorization header and token or not
    * @param body Request payload
-   * @returns {Resolves with the returned JSON data
    */
   request(method: string, url: string, auth = true, body?: any, _route?: string, short = false): Promise<any> {
     const route = _route || this.routefy(url, method);

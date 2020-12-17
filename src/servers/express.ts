@@ -6,10 +6,17 @@ try {
   express = require('express');
 } catch {}
 
+/**
+ * A server for Express applications.
+ * @see http://expressjs.com
+ */
 class ExpressServer extends Server {
   private app: Express.Application;
 
-  /** @param app The express application. Must have express.json installed as a middleware. */
+  /**
+   * @param app The express application. Must have express.json installed as a middleware.
+   * @param opts The server options
+   */
   constructor(app?: Express.Application, opts?: ServerOptions) {
     super(opts);
     if (!app) {
@@ -29,7 +36,7 @@ class ExpressServer extends Server {
     return this;
   }
 
-  /** @see ExpressServer#addMiddleware */
+  /** Alias for {@link ExpressServer#addMiddleware} */
   use(middleware: Express.RequestHandler) {
     return this.addMiddleware(middleware);
   }
@@ -45,6 +52,7 @@ class ExpressServer extends Server {
     return this;
   }
 
+  /** @private */
   createEndpoint(path: string, handler: RequestHandler) {
     this.app.post(path, (req, res) =>
       handler(
@@ -63,6 +71,7 @@ class ExpressServer extends Server {
     );
   }
 
+  /** @private */
   async listen(port = 80, host = 'localhost') {
     if (this.alreadyListening) return;
     this.app.listen(port, host);

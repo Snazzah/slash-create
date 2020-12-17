@@ -1,6 +1,7 @@
 import { ApplicationCommandOption, PartialApplicationCommand } from './constants';
 import CommandContext from './context';
 import SlashCreator from './creator';
+/** The options for a {@link SlashCommand}. */
 interface SlashCommandOptions {
     /** The name of the command. */
     name: string;
@@ -15,30 +16,51 @@ interface SlashCommandOptions {
     /** The throttling options for the command */
     throttling?: ThrottlingOptions;
 }
+/** The throttling options for a {@link SlashCommand}. */
 interface ThrottlingOptions {
     /** Maximum number of usages of the command allowed in the time frame. */
     usages: number;
     /** Amount of time to count the usages of the command within (in seconds). */
     duration: number;
 }
+/** @private */
 interface ThrottleObject {
     start: number;
     usages: number;
     timeout: any;
 }
+/** Represends a Discord slash command. */
 declare class SlashCommand {
+    /** The command's name. */
     commandName: string;
+    /** The command's description. */
     description: string;
+    /** The options for the command. */
     options?: ApplicationCommandOption[];
+    /** The guild ID for the command. */
     guildID?: string;
+    /** The permissions required to use this command. */
     requiredPermissions?: Array<string>;
+    /** The throttling options for this command.. */
     throttling?: ThrottlingOptions;
+    /** The creator responsible for this command. */
     readonly creator: SlashCreator;
-    /** Current throttle objects for the command, mapped by user ID */
+    /** Current throttle objects for the command, mapped by user ID. */
     private _throttles;
+    /**
+     * @param creator The instantiating creator.
+     * @param opts The options for the command.
+     */
     constructor(creator: SlashCreator, opts: SlashCommandOptions);
+    /**
+     * The JSON for using commands in Discord's API.
+     * @private
+     */
     get commandJSON(): PartialApplicationCommand;
-    /** @private */
+    /**
+     * The internal key name for the command.
+     * @private
+     */
     get keyName(): string;
     /**
      * Checks whether the context member has permission to use the command
@@ -80,6 +102,10 @@ declare class SlashCommand {
      * @private
      */
     finalize(response: any, ctx: CommandContext): Promise<boolean | import("./structures/message").default> | undefined;
+    /**
+     * Validates {@link SlashCommandOptions}.
+     * @private
+     */
     static validateOptions(opts: SlashCommandOptions): void;
 }
 export default SlashCommand;

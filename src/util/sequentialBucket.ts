@@ -1,38 +1,43 @@
-export interface LatencyRef {
+/** @private */
+export interface MinimalLatencyRef {
+  /** Interval between consuming tokens. */
   latency: number;
   offset?: number;
 }
 
-/** Ratelimit requests and release in sequence */
-class SequentialBucket {
-  /** How many tokens the bucket can consume in the current interval */
-  limit: number;
-  /** Whether the queue is being processed */
-  processing: boolean;
-  /** How many tokens the bucket has left in the current interval */
-  remaining: number;
-  /** Timestamp of next reset */
-  reset: number;
+/** @private */
+type CallbackFunction = (callback: () => void) => unknown;
 
-  private latencyRef: LatencyRef;
-  private _queue: any[];
+/** Ratelimit requests and release in sequence. */
+class SequentialBucket {
+  /** How many tokens the bucket can consume in the current interval. */
+  limit: number;
+  /** Whether the queue is being processed. */
+  processing: boolean = false;
+  /** How many tokens the bucket has left in the current interval. */
+  remaining: number;
+  /** Timestamp of next reset. */
+  reset: number = 0;
+
+  private latencyRef: MinimalLatencyRef;
+  private _queue: CallbackFunction[] = [];
   private processingTimeout: any;
   private last?: number;
 
   /**
-   * Construct a SequentialBucket
-   * @arg {Number} limit The max number of tokens the bucket can consume per interval
-   * @arg {Object} [latencyRef] An object
-   * @arg {Number} latencyRef.latency Interval between consuming tokens
+   * @param limit The max number of tokens the bucket can consume per interval
+   * @param latencyRef The latency reference
    */
-  constructor(limit: number, latencyRef: LatencyRef = { latency: 0 }) {
+  constructor(limit: number, latencyRef: MinimalLatencyRef = { latency: 0 }) {
     this.limit = this.remaining = limit;
-    this.reset = 0;
-    this.processing = false;
     this.latencyRef = latencyRef;
     this._queue = [];
   }
 
+  /**
+   * Checks the bucket and runs through the functions.
+   * @param override Whether to override the processing property
+   */
   check(override = false) {
     if (this._queue.length === 0) {
       if (this.processing) {
@@ -60,7 +65,7 @@ class SequentialBucket {
     }
     --this.remaining;
     this.processing = true;
-    this._queue.shift()(() => {
+    (this._queue.shift() as CallbackFunction)(() => {
       if (this._queue.length > 0) {
         this.check(true);
       } else {
@@ -73,7 +78,7 @@ class SequentialBucket {
    * Queue something in the SequentialBucket
    * @param func A function to call when a token can be consumed. The function will be passed a callback argument, which must be called to allow the bucket to continue to work
    */
-  queue(func: Function, short = false) {
+  queue(func: CallbackFunction, short = false) {
     if (short) {
       this._queue.unshift(func);
     } else {

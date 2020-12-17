@@ -19,14 +19,22 @@ declare class Member {
     deaf: boolean;
     /** The user object for this member */
     user: User;
+    /** The creator of the member class. */
     private _creator;
     private _permissionsBitfield?;
     private _permissions;
+    /**
+     * @param data The data for the member
+     * @param creator The instantiating creator
+     */
     constructor(data: CommandMember, creator: SlashCreator);
     /** The permissions the member has. */
     get permissions(): Permissions;
+    /** The string that mentions this member. */
     get mention(): string;
+    /** @private */
     toString(): string;
+    /** The display name for this member. */
     get displayName(): string;
 }
 export default Member;

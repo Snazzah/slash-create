@@ -6,7 +6,7 @@ import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions
 import {
   ImageFormat,
   InteractionType,
-  AllRequestData,
+  AnyRequestData,
   RawRequest,
   RequireAllOptions,
   InterationResponseType,
@@ -19,6 +19,10 @@ import SlashCreatorAPI from './api';
 import Server, { TransformedRequest, RespondFunction, Response } from './server';
 import CommandContext from './context';
 
+/**
+ * The events typings for the {@link SlashCreator}.
+ * @private
+ */
 interface SlashCreatorEvents {
   ping: () => void;
   synced: () => void;
@@ -34,6 +38,7 @@ interface SlashCreatorEvents {
   commandRun: (command: SlashCommand, promise: Promise<any>, ctx: CommandContext) => void;
 }
 
+/** The options for the {@link SlashCreator}. */
 interface SlashCreatorOptions {
   /** Your Application's ID */
   applicationID: string;
@@ -67,6 +72,7 @@ interface SlashCreatorOptions {
   agent?: HTTPS.Agent;
 }
 
+/** The options for {@link SlashCreator#syncCommands}. */
 interface SyncCommandOptions {
   /** Whether to delete commands that do not exist in the creator. */
   deleteCommands?: boolean;
@@ -79,6 +85,7 @@ interface SyncCommandOptions {
   skipGuildErrors?: boolean;
 }
 
+/** The main class for using commands and interactions. */
 class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
@@ -98,6 +105,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
   /** The formatted allowed mentions from the options */
   allowedMentions: FormattedAllowedMentions;
 
+  /** @param opts The options for the creator */
   constructor(opts: SlashCreatorOptions) {
     // eslint-disable-next-line constructor-super
     super();
@@ -414,7 +422,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     return this._onInteraction(treq.body, respond, true);
   }
 
-  private async _onInteraction(interaction: AllRequestData, respond: RespondFunction | null, webserverMode: boolean) {
+  private async _onInteraction(interaction: AnyRequestData, respond: RespondFunction | null, webserverMode: boolean) {
     this.emit('debug', 'Got interaction');
 
     if (!respond || !webserverMode) respond = this._createGatewayRespond(interaction.id, interaction.token);

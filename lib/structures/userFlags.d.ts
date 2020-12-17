@@ -2,9 +2,10 @@ import BitField from '../util/bitfield';
 export declare const FLAGS: {
     [perm: string]: number;
 };
-declare class Permissions extends BitField {
+/** Data structure that makes it easy to interact with a {@link User#flags} bitfield. */
+declare class UserFlags extends BitField {
     static FLAGS: {
         [perm: string]: number;
     };
 }
-export default Permissions;
+export default UserFlags;

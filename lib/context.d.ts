@@ -4,9 +4,11 @@ import SlashCreator from './creator';
 import { CommandOption, InteractionRequestData } from './constants';
 import { MessageAllowedMentions } from './util';
 import Message from './structures/message';
+/** Command options converted for ease of use. */
 declare type ConvertedOption = {
     [key: string]: ConvertedOption;
 } | string | number | boolean;
+/** The options for {@link CommandContext#edit}. */
 export interface EditMessageOptions {
     /** The message content. */
     content?: string;
@@ -15,12 +17,14 @@ export interface EditMessageOptions {
     /** The mentions allowed to be used in this message. */
     allowedMentions?: MessageAllowedMentions;
 }
+/** The options for {@link CommandContext#sendFollowUp}. */
 interface FollowUpMessageOptions extends EditMessageOptions {
     /** Whether to use TTS for the content. */
     tts?: boolean;
     /** The flags to use in the message. */
     flags?: number;
 }
+/** The options for {@link CommandContext#send}. */
 interface MessageOptions extends FollowUpMessageOptions {
     /**
      * Whether or not the message should be ephemeral.
@@ -30,35 +34,44 @@ interface MessageOptions extends FollowUpMessageOptions {
     /** Whether or not to include the source of the interaction in the message. */
     includeSource?: boolean;
 }
+/** Context representing a command interaction. */
 declare class CommandContext {
-    /** The creator of the command */
+    /** The creator of the command. */
     readonly creator: SlashCreator;
-    /** The full interaction data */
+    /** The full interaction data. */
     readonly data: InteractionRequestData;
-    /** The interaction's token */
+    /** The interaction's token. */
     readonly interactionToken: string;
-    /** The interaction's ID */
+    /** The interaction's ID. */
     readonly interactionID: string;
-    /** The channel ID that the command was invoked in */
+    /** The channel ID that the command was invoked in. */
     readonly channelID: string;
-    /** The guild ID that the command was invoked in */
+    /** The guild ID that the command was invoked in. */
     readonly guildID: string;
-    /** The member that invoked the command */
+    /** The member that invoked the command. */
     readonly member: Member;
-    /** The command's name */
+    /** The command's name. */
     readonly commandName: string;
-    /** The command's ID */
+    /** The command's ID. */
     readonly commandID: string;
-    /** The options given to the command */
+    /** The options given to the command. */
     readonly options?: {
         [key: string]: ConvertedOption;
     };
-    /** The time when the context was created */
+    /** The time when the context was created .*/
     readonly invokedAt: number;
-    /** Whether the initial response was made */
+    /** Whether the initial response was made. */
     initiallyResponded: boolean;
+    /** The initial response function. */
     private _respond;
+    /** Whether the context is from a webserver. */
     private webserverMode;
+    /**
+     * @param creator The instantiating creator.
+     * @param data The interaction data for the context.
+     * @param respond The response function for the interaction.
+     * @param webserverMode Whether the interaction was from a webserver.
+     */
     constructor(creator: SlashCreator, data: InteractionRequestData, respond: RespondFunction, webserverMode: boolean);
     /** Whether the interaction has expired. Interactions last 15 minutes. */
     get expired(): boolean;

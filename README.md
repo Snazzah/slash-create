@@ -83,9 +83,7 @@ const client = new Discord.Client();
 creator
   .withServer(
     new GatewayServer(
-      (handler) => client.on('raw', (event) => {
-        if (event.t === 'INTERACTION_CREATE') handler(event.d);
-      })
+      (handler) => client.ws.on('INTERACTION_CREATE', handler)
     )
   );
 

@@ -118,7 +118,7 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
 
       if (option.choices.length > 10) throwError(Error, i, 'The choices exceed 10 commands/options!');
 
-      for (let ii = 0; i < option.choices.length; ii++) {
+      for (let ii = 0; ii < option.choices.length; ii++) {
         const choice = option.choices[ii];
 
         if (!choice.name || choice.name.length < 3 || choice.name.length > 32)

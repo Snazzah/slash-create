@@ -35,21 +35,21 @@ export enum InteractionResponseFlags {
 }
 
 export enum CommandOptionType {
-  // A sub-command for the application's command
+  /** A sub-command for the application's command */
   SUB_COMMAND = 1,
-  // A group of sub-commands
+  /** A group of sub-commands */
   SUB_COMMAND_GROUP = 2,
-  // A string
+  /** A string. */
   STRING = 3,
-  // An integer
+  /** An integer. */
   INTEGER = 4,
-  // A boolean
+  /** A boolean. */
   BOOLEAN = 5,
-  // A user, this would return the user's ID in the interaction
+  /** A user, this would return the user's ID in the interaction. */
   USER = 6,
-  // A channel, this would return the channel's ID in the interaction
+  /** A channel, this would return the channel's ID in the interaction. */
   CHANNEL = 7,
-  // A role, this would return the role's ID in the interaction
+  /** A role, this would return the role's ID in the interaction. */
   ROLE = 8
 }
 

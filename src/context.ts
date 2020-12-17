@@ -288,7 +288,7 @@ class CommandContext {
     const result: string[] = [];
     for (const option of options) {
       if (option.options) result.push(option.name, ...CommandContext.getSubcommandArray(option.options));
-      else if (option.value && option.name) result.push(option.name);
+      else if (option.value === undefined && option.name) result.push(option.name);
     }
     return result;
   }

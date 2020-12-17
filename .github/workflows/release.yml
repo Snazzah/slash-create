@@ -17,9 +17,35 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  docs:
+    name: Update docs
+    runs-on: ubuntu-18.04
+    needs: tag
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build documentation
+        run: npm run docs
+
+      - name: Deploy documentation
+        uses: dbots-pkg/action-docs@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   publish-npm:
     name: Publish on NPM
     runs-on: ubuntu-latest
+    needs: docs
 
     steps:
       - uses: actions/checkout@v2
@@ -37,6 +63,7 @@ jobs:
   publish-gpr:
     name: Publish on GPR
     runs-on: ubuntu-latest
+    needs: docs
 
     steps:
       - uses: actions/checkout@v2

@@ -4,6 +4,8 @@
       path: welcome.md
     - name: Changelog
       path: changelog.md
+    - name: CommandContext.options
+      path: context-options.md
 - name: Examples
   files:
     - name: Basic Example

@@ -226,28 +226,15 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     return this;
   }
 
-  /**
-   * Starts the server, if one was defined.
-   */
+  /** Starts the server, if one was defined. */
   async startServer() {
     if (!this.server) throw new Error('No server was set in this creator.');
 
-    try {
-      await this.server.listen(this.options.serverPort, this.options.serverHost);
-      this.emit('debug', 'Server started');
-    } catch {
-      this.emit(
-        'warn',
-        oneLine`
-          Attempted to start a server of whice cannot be started.
-          You may be able to remove \`.startServer()\`.`
-      );
-    }
+    await this.server.listen(this.options.serverPort, this.options.serverHost);
+    this.emit('debug', 'Server started');
   }
 
-  /**
-   * Sync all commands with Discord. This ensures that commands exist when handling them.
-   */
+  /** Sync all commands with Discord. This ensures that commands exist when handling them. */
   syncCommands(opts?: SyncCommandOptions) {
     const options = Object.assign(
       {

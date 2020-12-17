@@ -119,13 +119,9 @@ declare class SlashCreator extends SlashCreator_base {
      * @param server The server to use
      */
     withServer(server: Server): this;
-    /**
-     * Starts the server, if one was defined.
-     */
+    /** Starts the server, if one was defined. */
     startServer(): Promise<void>;
-    /**
-     * Sync all commands with Discord. This ensures that commands exist when handling them.
-     */
+    /** Sync all commands with Discord. This ensures that commands exist when handling them. */
     syncCommands(opts?: SyncCommandOptions): this;
     /**
      * Sync guild commands.

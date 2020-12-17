@@ -131,6 +131,7 @@ class CommandContext {
       : this.creator.allowedMentions;
 
     if (!this.initiallyResponded) {
+      this.initiallyResponded = true;
       await this._respond({
         status: 200,
         body: {
@@ -146,7 +147,6 @@ class CommandContext {
           }
         }
       });
-      this.initiallyResponded = true;
       return true;
     } else return this.sendFollowUp(content, options);
   }

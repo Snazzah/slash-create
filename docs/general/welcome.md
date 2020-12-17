@@ -32,7 +32,7 @@ In order to use a specific webserver, you will need to install the dependency as
 
 ## Example
 
-#### Creating a SlashCreator
+### Creating a SlashCreator
 ```js
 const { SlashCreator } = require('slash-create');
 const creator = new SlashCreator({
@@ -42,7 +42,7 @@ const creator = new SlashCreator({
 });
 ```
 
-#### Adding commands and syncing them
+### Adding commands and syncing them
 ```js
 const path = require('path');
 
@@ -54,7 +54,7 @@ creator
     .syncCommands();
 ```
 
-#### Adding a webserver
+### Adding a webserver
 ```js
 const { ExpressServer } = require('slash-create');
 const path = require('path');
@@ -79,7 +79,7 @@ creator
     .withServer(new ExpressServer(app, { alreadyListening: true }));
 ```
 
-#### Using a Discord Bot with /create
+### Using a Discord Bot with /create
 ```js
 const { GatewayServer } = require('slash-create');
 const Discord = require('discord.js');
@@ -95,7 +95,7 @@ creator
 client.login('BOT_TOKEN_HERE');
 ```
 
-#### Example Command
+### Example Command
 ```js
 const { SlashCommand } = require('slash-create');
 
@@ -112,6 +112,14 @@ module.exports = class HelloCommand extends SlashCommand {
   }
 }
 ```
+
+## Useful Links
+- [**Discord Documentation on Slash Commands**](https://discord.com/developers/docs/interactions/slash-commands)
+- [Website](https://slash-create.js.org/) ([source](https://github.com/Snazzah/slash-create-website))
+- [Documentation](#/docs/main/latest/general/welcome)
+- [Commands Template](https://github.com/Snazzah/slash-create-template)
+- [GitHub](https://github.com/Snazzah/slash-create)
+- [NPM](https://www.npmjs.com/package/slash-create)
 
 ##### Resources & References
 This project borrows resources and references from the following repositories:

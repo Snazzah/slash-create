@@ -5,6 +5,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.1.0] - 2020-12-17
+This release features mostly completed documentation and changes to the packages typings. If you are using TypeScript for this package, consider this a **breaking change**.
+### Changed:
+- **[SEMI-BREAKING]** Index changes
+  - `Command` -> `SlashCommand`
+  - `Creator` -> `SlashCreator`
+  - `CommandContext` is aliased as `Context`
+  - `SlashCommand` is aliased as `Command`
+  - `SlashCreator` is aliased as `Creator`
+  - If you are using any of the changed classes for typings, you must use its class name.
+    - i.e. `{ Creator }` must be `{ SlashCreator }`
+- (typings) Renamed `AllRequestData` to `AnyRequestData`
+- (typings) Renamed `FastifyOpts` to `FastifyOptions`
+- (typings) Renamed duplicate `LatencyRef` interface in SequentialBucket to `MinimalLatencyRef`
+- (typings) Added CallbackFunction type for SequentialBucket
+### Added:
+- Fastify typings for `FastifyServer#createEndpoint`
+### Fixed:
+- Changed HTTP method in `SlashCommandAPI#updateCommand` from `PUT` to `PATCH`
+- `User#flags` now actually uses `UserFlags`
+- Renamed UserFlags class to the name "UserFlags"
 ## [1.0.0] - 2020-12-16
 ### Removed:
 - **[BREAKING]** `Context.initialResponseDeleted`
@@ -39,7 +60,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v1.1.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
+[1.1.0]: https://github.com/Snazzah/slash-create/compare/v1.0.0...v1.1.0

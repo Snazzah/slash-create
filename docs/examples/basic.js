@@ -1,6 +1,6 @@
-const { Creator } = require('slash-create');
+const { SlashCreator } = require('slash-create');
 const path = require('path');
-const creator = new Creator({
+const creator = new SlashCreator({
   applicationID: '12345678901234567',
   publicKey: 'CLIENT_PUBLIC_KEY',
   token: 'BOT_TOKEN_HERE',

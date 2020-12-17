@@ -4,20 +4,34 @@ export declare const API_VERSION = 8;
 export declare const INTERACTION_VERSION = 1;
 export declare const API_BASE_URL: string;
 export declare const CDN_URL = "https://cdn.discordapp.com";
+/** The types of interactions. */
 export declare enum InteractionType {
+    /** A ping. */
     PING = 1,
+    /** A command invocation. */
     COMMAND = 2
 }
+/** The types of interaction responses. */
 export declare enum InterationResponseType {
+    /** Acknowledge a `PING`. */
     PONG = 1,
+    /** Acknowledge a command without sending a message. */
     ACKNOWLEDGE = 2,
+    /** Respond with a message. */
     CHANNEL_MESSAGE = 3,
+    /** Respond with a message, showing the user's input. */
     CHANNEL_MESSAGE_WITH_SOURCE = 4,
+    /** Acknowledge a command without sending a message, showing the user's input. */
     ACKNOWLEDGE_WITH_SOURCE = 5
 }
+/** Message flags for interaction responses. */
 export declare enum InteractionResponseFlags {
+    /** Sends a message back to the invoker, similar to messages by Clyde. */
     EPHEMERAL = 64
 }
+/**
+ * An object mapping the types a command option can use.
+ */
 export declare enum CommandOptionType {
     /** A sub-command for the application's command */
     SUB_COMMAND = 1,

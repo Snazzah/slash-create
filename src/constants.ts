@@ -9,31 +9,37 @@ export const INTERACTION_VERSION = 1;
 export const API_BASE_URL = `/api/v${API_VERSION}`;
 export const CDN_URL = 'https://cdn.discordapp.com';
 
+/** The types of interactions. */
 export enum InteractionType {
-  // A ping
+  /** A ping. */
   PING = 1,
-  // A command invocation
+  /** A command invocation. */
   COMMAND = 2
 }
 
+/** The types of interaction responses. */
 export enum InterationResponseType {
-  // Acknowledge a `PING`.
+  /** Acknowledge a `PING`. */
   PONG = 1,
-  // Acknowledge a command without sending a message.
+  /** Acknowledge a command without sending a message. */
   ACKNOWLEDGE = 2,
-  // Respond with a message.
+  /** Respond with a message. */
   CHANNEL_MESSAGE = 3,
-  // Respond with a message, showing the user's input.
+  /** Respond with a message, showing the user's input. */
   CHANNEL_MESSAGE_WITH_SOURCE = 4,
-  // Acknowledge a command without sending a message, showing the user's input.
+  /** Acknowledge a command without sending a message, showing the user's input. */
   ACKNOWLEDGE_WITH_SOURCE = 5
 }
 
+/** Message flags for interaction responses. */
 export enum InteractionResponseFlags {
-  // Sends a message back to the invoker, similar to messages by Clyde.
+  /** Sends a message back to the invoker, similar to messages by Clyde. */
   EPHEMERAL = 1 << 6
 }
 
+/**
+ * An object mapping the types a command option can use.
+ */
 export enum CommandOptionType {
   /** A sub-command for the application's command */
   SUB_COMMAND = 1,

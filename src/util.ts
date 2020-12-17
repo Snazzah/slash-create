@@ -89,7 +89,8 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
     if (option.name !== option.name.toLowerCase()) throwError(Error, i, 'Option name must be lowercase.');
     if (option.name.length < 3 || option.name.length > 32)
       throwError(RangeError, i, 'Option name must be between 3 and 32 characters.');
-
+    if (!/^[a-z_-]+$/.exec(option.name))
+      throwError(RangeError, i, 'Option name must lowercase characters, hyphens and underscores.');
     if (typeof option.description !== 'string') throwError(TypeError, i, 'Option description must be a string.');
     if (option.description.length < 1 || option.description.length > 100)
       throwError(RangeError, i, 'Option description must be under 100 characters.');
@@ -109,11 +110,15 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
     }
 
     if (option.choices) {
-      if (option.type === CommandOptionType.SUB_COMMAND || option.type === CommandOptionType.SUB_COMMAND_GROUP)
+      if (
+        option.type === CommandOptionType.SUB_COMMAND ||
+        option.type === CommandOptionType.SUB_COMMAND_GROUP ||
+        option.type === CommandOptionType.BOOLEAN
+      )
         throwError(
           Error,
           i,
-          'You cannot use the `choices` field in options that are sub-commands or sub-command groups!'
+          'You cannot use the `choices` field in options that are sub-commands, sub-command groups or booleans!'
         );
 
       if (option.choices.length > 10) throwError(Error, i, 'The choices exceed 10 commands/options!');

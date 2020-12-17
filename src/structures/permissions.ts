@@ -39,6 +39,7 @@ export const FLAGS: { [perm: string]: number } = {
  * All {@link Member}s have a set of permissions.
  */
 class Permissions extends BitField {
+  /** Permission flags. Check the source of this property for available permissions. */
   static FLAGS = FLAGS;
 }
 

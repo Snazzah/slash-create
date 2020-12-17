@@ -4,6 +4,7 @@ export declare const FLAGS: {
 };
 /** Data structure that makes it easy to interact with a {@link User#flags} bitfield. */
 declare class UserFlags extends BitField {
+    /** The flags for users. Check the source of this property for available flags. */
     static FLAGS: {
         [perm: string]: number;
     };

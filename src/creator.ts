@@ -196,13 +196,14 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
    */
   registerCommandsIn(options: RequireAllOptions | string) {
     const obj: { [key: string]: any } = require('require-all')(options);
-    const commands = [];
-    for (const group of Object.values(obj)) {
-      for (let command of Object.values<any>(group)) {
-        if (typeof command.default === 'function') command = command.default;
-        commands.push(command);
+    const commands: any[] = [];
+    function iterate(obj: any) {
+      for (const command of Object.values(obj)) {
+        if (typeof command === 'function') commands.push(command);
+        else if (typeof command === 'object') iterate(command);
       }
     }
+    iterate(obj);
     if (typeof options === 'string' && !this.commandsPath) this.commandsPath = options;
     else if (typeof options === 'object' && !this.commandsPath) this.commandsPath = options.dirname;
     return this.registerCommands(commands, true);

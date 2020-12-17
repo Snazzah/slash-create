@@ -15,8 +15,7 @@ declare class FastifyServer extends Server {
     constructor(app?: Fastify.FastifyInstance | FastifyOptions, opts?: ServerOptions);
     /**
      * Adds middleware to the Fastify server.
-     * <warn>This requires you to have 'middie' registered to the server before using.</warn>
-     * to the server before using.
+     * <warn>This requires you to have the 'middie' module registered to the server before using.</warn>
      * @param middleware The middleware to add.
      * @see https://www.fastify.io/docs/latest/Middleware/
      */

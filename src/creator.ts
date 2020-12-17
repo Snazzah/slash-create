@@ -511,7 +511,11 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
             return command.finalize(retVal, ctx);
           } catch (err) {
             this.emit('commandError', command, err, ctx);
-            return command.onError(err, ctx);
+            try {
+              return command.onError(err, ctx);
+            } catch (secondErr) {
+              return this.emit('error', secondErr);
+            }
           }
         }
       }

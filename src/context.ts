@@ -257,13 +257,13 @@ class CommandContext {
    */
   async acknowledge(includeSource = false): Promise<boolean> {
     if (!this.initiallyResponded) {
+      this.initiallyResponded = true;
       await this._respond({
         status: 200,
         body: {
           type: includeSource ? InterationResponseType.ACKNOWLEDGE_WITH_SOURCE : InterationResponseType.ACKNOWLEDGE
         }
       });
-      this.initiallyResponded = true;
       return true;
     }
 

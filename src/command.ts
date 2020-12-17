@@ -191,8 +191,7 @@ class SlashCommand {
    * @private
    */
   finalize(response: any, ctx: CommandContext) {
-    // ctx.acknowledge handles initial responses internally
-    if (!response) return ctx.acknowledge();
+    if (!response && !ctx.initiallyResponded) return ctx.acknowledge();
 
     if (typeof response === 'string' || (response.constructor && response.constructor.name === 'Object'))
       return ctx.send(response);

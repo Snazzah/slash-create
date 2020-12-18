@@ -11,10 +11,12 @@ interface SlashCommandOptions {
     guildID?: string;
     /** The required permission(s) for this command. */
     requiredPermissions?: Array<string>;
-    /** The command options */
+    /** The command's options. */
     options?: ApplicationCommandOption[];
-    /** The throttling options for the command */
+    /** The throttling options for the command. */
     throttling?: ThrottlingOptions;
+    /** Whether this command is used for unknown commands. */
+    unknown?: boolean;
 }
 /** The throttling options for a {@link SlashCommand}. */
 interface ThrottlingOptions {
@@ -41,8 +43,10 @@ declare class SlashCommand {
     guildID?: string;
     /** The permissions required to use this command. */
     requiredPermissions?: Array<string>;
-    /** The throttling options for this command.. */
+    /** The throttling options for this command. */
     throttling?: ThrottlingOptions;
+    /** Whether this command is used for unknown commands. */
+    unknown: boolean;
     /**
      * The file path of the command.
      * Used for refreshing the require cache.

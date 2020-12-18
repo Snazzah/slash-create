@@ -46,9 +46,12 @@ interface SlashCreatorOptions {
     serverPort?: number;
     /** The host where the server will listen on. */
     serverHost?: string;
-    /** Whether to respond to an unknown command with an ephemeral message. */
+    /**
+     * Whether to respond to an unknown command with an ephemeral message.
+     * If an unknown command is registered, this is ignored.
+     */
     unknownCommandResponse?: boolean;
-    /** The default allowed mentions for all messages */
+    /** The default allowed mentions for all messages. */
     allowedMentions?: MessageAllowedMentions;
     /** The default format to provide user avatars in. */
     defaultImageFormat?: ImageFormat;
@@ -97,6 +100,8 @@ declare class SlashCreator extends SlashCreator_base {
     server?: Server;
     /** The formatted allowed mentions from the options */
     allowedMentions: FormattedAllowedMentions;
+    /** The command to run when an unknown command is used. */
+    unknownCommand?: SlashCommand;
     /** @param opts The options for the creator */
     constructor(opts: SlashCreatorOptions);
     /**
@@ -158,6 +163,7 @@ declare class SlashCreator extends SlashCreator_base {
     private _getCommand;
     private _onRequest;
     private _onInteraction;
+    private _runCommand;
     private _createGatewayRespond;
 }
 export default SlashCreator;

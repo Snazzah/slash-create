@@ -57,9 +57,12 @@ interface SlashCreatorOptions {
   serverPort?: number;
   /** The host where the server will listen on. */
   serverHost?: string;
-  /** Whether to respond to an unknown command with an ephemeral message. */
+  /**
+   * Whether to respond to an unknown command with an ephemeral message.
+   * If an unknown command is registered, this is ignored.
+   */
   unknownCommandResponse?: boolean;
-  /** The default allowed mentions for all messages */
+  /** The default allowed mentions for all messages. */
   allowedMentions?: MessageAllowedMentions;
   /** The default format to provide user avatars in. */
   defaultImageFormat?: ImageFormat;
@@ -109,6 +112,8 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
   server?: Server;
   /** The formatted allowed mentions from the options */
   allowedMentions: FormattedAllowedMentions;
+  /** The command to run when an unknown command is used. */
+  unknownCommand?: SlashCommand;
 
   /** @param opts The options for the creator */
   constructor(opts: SlashCreatorOptions) {
@@ -162,7 +167,11 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     // Make sure there aren't any conflicts
     if (this.commands.some((cmd) => cmd.keyName === command.keyName))
       throw new Error(`A command with the name "${command.commandName}" is already registered.`);
-    this.commands.set(command.keyName, command);
+
+    if (command.unknown && this.unknownCommand) throw new Error('An unknown command is already registered.');
+
+    if (command.unknown) this.unknownCommand = command;
+    else this.commands.set(command.keyName, command);
 
     this.emit('commandRegister', command, this);
     this.emit('debug', `Registered command ${command.keyName}.`);
@@ -225,10 +234,16 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
     if (!(command instanceof SlashCommand)) throw new Error(`Invalid command object to reregister: ${command}`);
 
-    if (command.commandName !== oldCommand.commandName) throw new Error('Command name cannot change.');
-    if (command.guildID !== oldCommand.guildID) throw new Error('Command guild ID cannot change.');
+    if (!command.unknown) {
+      if (command.commandName !== oldCommand.commandName) throw new Error('Command name cannot change.');
+      if (command.guildID !== oldCommand.guildID) throw new Error('Command guild ID cannot change.');
+      this.commands.set(command.keyName, command);
+    } else if (this.unknownCommand !== oldCommand) {
+      throw new Error('An unknown command is already registered.');
+    } else {
+      this.unknownCommand = command;
+    }
 
-    this.commands.set(command.keyName, command);
     this.emit('commandReregister', command, oldCommand);
     this.emit('debug', `Reregistered command ${command.keyName}.`);
   }
@@ -238,7 +253,8 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
    * @param command Command to unregister
    */
   unregisterCommand(command: SlashCommand) {
-    this.commands.delete(command.keyName);
+    if (this.unknownCommand === command) this.unknownCommand = undefined;
+    else this.commands.delete(command.keyName);
     this.emit('commandUnregister', command);
     this.emit('debug', `Unregistered command ${command.keyName}.`);
   }
@@ -473,7 +489,10 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
             'debug',
             `Unknown command: ${interaction.data.name} (${interaction.data.id}, guild ${interaction.guild_id})`
           );
-          if (this.options.unknownCommandResponse)
+          if (this.unknownCommand) {
+            const ctx = new CommandContext(this, interaction, respond, webserverMode);
+            return this._runCommand(this.unknownCommand, ctx);
+          } else if (this.options.unknownCommandResponse)
             return respond({
               status: 200,
               body: {
@@ -489,7 +508,10 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
             });
           else
             return respond({
-              status: 404
+              status: 200,
+              body: {
+                type: InterationResponseType.ACKNOWLEDGE
+              }
             });
         } else {
           const ctx = new CommandContext(this, interaction, respond, webserverMode);
@@ -513,37 +535,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
           // Run the command
           if (throttle) throttle.usages++;
-          try {
-            this.emit(
-              'debug',
-              `Running command: ${interaction.data.name} (${interaction.data.id}, guild ${interaction.guild_id})`
-            );
-            const promise = command.run(ctx);
-            this.emit('commandRun', command, promise, ctx);
-            const retVal = await promise;
-            if (
-              !(
-                retVal === undefined ||
-                retVal === null ||
-                typeof retVal === 'string' ||
-                (retVal && retVal.constructor && retVal.constructor.name === 'Object')
-              )
-            ) {
-              throw new TypeError(oneLine`
-                Command ${command.commandName}'s run() resolved with an unknown type
-                (${retVal !== null ? (retVal && retVal.constructor ? retVal.constructor.name : typeof retVal) : null}).
-                Command run methods must return a Promise that resolve with a string, Message options, or null/undefined.
-              `);
-            }
-            return command.finalize(retVal, ctx);
-          } catch (err) {
-            this.emit('commandError', command, err, ctx);
-            try {
-              return command.onError(err, ctx);
-            } catch (secondErr) {
-              return this.emit('error', secondErr);
-            }
-          }
+          return this._runCommand(command, ctx);
         }
       }
       default: {
@@ -553,6 +545,37 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
         return respond({
           status: 400
         });
+      }
+    }
+  }
+
+  private async _runCommand(command: SlashCommand, ctx: CommandContext) {
+    try {
+      this.emit('debug', `Running command: ${ctx.data.data.name} (${ctx.data.data.id}, guild ${ctx.data.guild_id})`);
+      const promise = command.run(ctx);
+      this.emit('commandRun', command, promise, ctx);
+      const retVal = await promise;
+      if (
+        !(
+          retVal === undefined ||
+          retVal === null ||
+          typeof retVal === 'string' ||
+          (retVal && retVal.constructor && retVal.constructor.name === 'Object')
+        )
+      ) {
+        throw new TypeError(oneLine`
+          Command ${command.commandName}'s run() resolved with an unknown type
+          (${retVal !== null ? (retVal && retVal.constructor ? retVal.constructor.name : typeof retVal) : null}).
+          Command run methods must return a Promise that resolve with a string, Message options, or null/undefined.
+        `);
+      }
+      return command.finalize(retVal, ctx);
+    } catch (err) {
+      this.emit('commandError', command, err, ctx);
+      try {
+        return command.onError(err, ctx);
+      } catch (secondErr) {
+        return this.emit('error', secondErr);
       }
     }
   }

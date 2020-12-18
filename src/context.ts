@@ -203,7 +203,7 @@ class CommandContext {
 
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
 
-    if (!options.content) options.content = content as string;
+    if (!options.content && typeof content === 'string') options.content = content;
 
     if (!options.content && !options.embeds && !options.allowedMentions)
       throw new Error('No valid options were given.');

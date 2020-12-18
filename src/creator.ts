@@ -504,7 +504,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
           // Throttle the command
           const throttle = command.throttle(ctx.member.id);
-          if (command.throttling && throttle && throttle.usages + 1 > command.throttling.usages) {
+          if (throttle && command.throttling && throttle.usages + 1 > command.throttling.usages) {
             const remaining = (throttle.start + command.throttling.duration * 1000 - Date.now()) / 1000;
             const data = { throttle, remaining };
             this.emit('commandBlock', command, ctx, 'throttling', data);
@@ -512,6 +512,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
           }
 
           // Run the command
+          if (throttle) throttle.usages++;
           try {
             this.emit(
               'debug',

@@ -123,7 +123,7 @@ class CommandContext {
 
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
 
-    if (!options.content) options.content = content as string;
+    if (!options.content && typeof content === 'string') options.content = content;
 
     if (!options.content && !options.embeds) throw new Error('Message content and embeds are both not given.');
 
@@ -167,7 +167,7 @@ class CommandContext {
 
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
 
-    if (!options.content) options.content = content as string;
+    if (!options.content && typeof content === 'string') options.content = content;
 
     if (!options.content && !options.embeds) throw new Error('Message content and embeds are both not given.');
 

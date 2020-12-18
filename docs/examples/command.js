@@ -11,6 +11,9 @@ module.exports = class HelloCommand extends SlashCommand {
         description: 'What food do you like?'
       }]
     });
+
+    // Not required, but recommended for unloading/reloading with a fresh file.
+    this.filePath = __filename;
   }
 
   async run(ctx) {

@@ -33,6 +33,8 @@ interface SlashCreatorEvents {
   unverifiedRequest: (treq: TransformedRequest) => void;
   unknownInteraction: (interaction: any) => void;
   commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
+  commandUnregister: (command: SlashCommand) => void;
+  commandReregister: (command: SlashCommand, oldCommand: SlashCommand) => void;
   commandBlock: (command: SlashCommand, ctx: CommandContext, reason: string, data: any) => void;
   commandError: (command: SlashCommand, err: Error, ctx: CommandContext) => void;
   commandRun: (command: SlashCommand, promise: Promise<any>, ctx: CommandContext) => void;
@@ -210,6 +212,35 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     if (typeof options === 'string' && !this.commandsPath) this.commandsPath = options;
     else if (typeof options === 'object' && !this.commandsPath) this.commandsPath = options.dirname;
     return this.registerCommands(commands, true);
+  }
+
+  /**
+   * Reregisters a command. (does not support changing name, or guild ID)
+   * @param command New command
+   * @param oldCommand Old command
+   */
+  reregisterCommand(command: any, oldCommand: SlashCommand) {
+    if (typeof command === 'function') command = new command(this);
+    else if (typeof command.default === 'function') command = new command.default(this);
+
+    if (!(command instanceof SlashCommand)) throw new Error(`Invalid command object to reregister: ${command}`);
+
+    if (command.commandName !== oldCommand.commandName) throw new Error('Command name cannot change.');
+    if (command.guildID !== oldCommand.guildID) throw new Error('Command guild ID cannot change.');
+
+    this.commands.set(command.keyName, command);
+    this.emit('commandReregister', command, oldCommand);
+    this.emit('debug', `Reregistered command ${command.keyName}.`);
+  }
+
+  /**
+   * Unregisters a command.
+   * @param command Command to unregister
+   */
+  unregisterCommand(command: SlashCommand) {
+    this.commands.delete(command.keyName);
+    this.emit('commandUnregister', command);
+    this.emit('debug', `Unregistered command ${command.keyName}.`);
   }
 
   /**

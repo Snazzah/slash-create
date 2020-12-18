@@ -48,6 +48,12 @@ class SlashCommand {
   requiredPermissions?: Array<string>;
   /** The throttling options for this command.. */
   throttling?: ThrottlingOptions;
+  /**
+   * The file path of the command.
+   * Used for refreshing the require cache.
+   * Set this to `__filename` in the constructor to enable cache clearing.
+   */
+  filePath?: string;
 
   /** The creator responsible for this command. */
   readonly creator: SlashCreator;
@@ -94,7 +100,7 @@ class SlashCommand {
   }
 
   /**
-   * Checks whether the context member has permission to use the command
+   * Checks whether the context member has permission to use the command.
    * @param ctx The triggering context
    * @return {boolean|string} Whether the member has permission, or an error message to respond with if they don't
    */
@@ -118,7 +124,7 @@ class SlashCommand {
   }
 
   /**
-   * Called when the command is prevented from running, The only reason is `permission` for now.
+   * Called when the command is prevented from running.
    * @param ctx Command context the command is running from
    * @param reason Reason that the command was blocked
    * (built-in reasons are `permission`, `throttling`)
@@ -144,7 +150,7 @@ class SlashCommand {
   }
 
   /**
-   * Called when the command produces an error while running
+   * Called when the command produces an error while running.
    * @param err Error that was thrown
    * @param ctx Command context the command is running from
    */
@@ -154,7 +160,7 @@ class SlashCommand {
   }
 
   /**
-   * Creates/obtains the throttle object for a user, if necessary
+   * Creates/obtains the throttle object for a user, if necessary.
    * @param userID ID of the user to throttle for
    * @private
    */
@@ -176,8 +182,21 @@ class SlashCommand {
     return throttle;
   }
 
+  /** Reloads the command. */
+  reload() {
+    if (!this.filePath) throw new Error('Cannot reload a command without a file path defined!');
+    const newCommand = require(this.filePath);
+    this.creator.reregisterCommand(newCommand, this);
+  }
+
+  /** Unloads the command. */
+  unload() {
+    if (this.filePath && require.cache[this.filePath]) delete require.cache[this.filePath];
+    this.creator.unregisterCommand(this);
+  }
+
   /**
-   * Runs the command
+   * Runs the command.
    * @param ctx The context of the interaction
    */
   async run(ctx: CommandContext): Promise<any> { // eslint-disable-line @typescript-eslint/no-unused-vars, prettier/prettier

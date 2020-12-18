@@ -23,6 +23,8 @@ interface SlashCreatorEvents {
     unverifiedRequest: (treq: TransformedRequest) => void;
     unknownInteraction: (interaction: any) => void;
     commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
+    commandUnregister: (command: SlashCommand) => void;
+    commandReregister: (command: SlashCommand, oldCommand: SlashCommand) => void;
     commandBlock: (command: SlashCommand, ctx: CommandContext, reason: string, data: any) => void;
     commandError: (command: SlashCommand, err: Error, ctx: CommandContext) => void;
     commandRun: (command: SlashCommand, promise: Promise<any>, ctx: CommandContext) => void;
@@ -117,6 +119,17 @@ declare class SlashCreator extends SlashCreator_base {
      * creator.registerCommandsIn(path.join(__dirname, 'commands'));
      */
     registerCommandsIn(options: RequireAllOptions | string): this;
+    /**
+     * Reregisters a command. (does not support changing name, or guild ID)
+     * @param command New command
+     * @param oldCommand Old command
+     */
+    reregisterCommand(command: any, oldCommand: SlashCommand): void;
+    /**
+     * Unregisters a command.
+     * @param command Command to unregister
+     */
+    unregisterCommand(command: SlashCommand): void;
     /**
      * Attaches a server to the creator.
      * @param server The server to use

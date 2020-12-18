@@ -343,6 +343,21 @@ declare function unknownInteraction(interaction: any): void;
  */
 declare function commandRegister(command: SlashCommand, creator: SlashCreator): void;
 /**
+ * Emitted when a command is unregistered
+ * @event
+ * @asMemberOf SlashCreator
+ * @param command Command that was unregistered
+ */
+declare function commandUnregister(command: SlashCommand): void;
+/**
+ * Emitted when a command is reregistered
+ * @event
+ * @asMemberOf SlashCreator
+ * @param newCommand New command
+ * @param oldCommand Old command
+ */
+declare function commandReregister(command: SlashCommand, oldCommand: SlashCommand): void;
+/**
  * Emitted when a command is blocked.
  * @event
  * @asMemberOf SlashCreator

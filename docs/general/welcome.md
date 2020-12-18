@@ -105,6 +105,7 @@ module.exports = class HelloCommand extends SlashCommand {
       name: 'hello',
       description: 'Says hello to you.'
     });
+    this.filePath = __filename;
   }
 
   async run(ctx) {

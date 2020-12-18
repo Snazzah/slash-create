@@ -1,5 +1,5 @@
 import { ApplicationCommandOption, PartialApplicationCommand, PermissionNames } from './constants';
-import CommandContext from './context';
+import CommandContext, { MessageOptions } from './context';
 import SlashCreator from './creator';
 import { oneLine, validateOptions } from './util';
 
@@ -199,7 +199,7 @@ class SlashCommand {
    * Runs the command.
    * @param ctx The context of the interaction
    */
-  async run(ctx: CommandContext): Promise<any> { // eslint-disable-line @typescript-eslint/no-unused-vars, prettier/prettier
+  async run(ctx: CommandContext): Promise<string|MessageOptions|void> { // eslint-disable-line @typescript-eslint/no-unused-vars, prettier/prettier
     throw new Error(`${this.constructor.name} doesn't have a run() method.`);
   }
 

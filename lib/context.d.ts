@@ -25,7 +25,7 @@ interface FollowUpMessageOptions extends EditMessageOptions {
     flags?: number;
 }
 /** The options for {@link CommandContext#send}. */
-interface MessageOptions extends FollowUpMessageOptions {
+export interface MessageOptions extends FollowUpMessageOptions {
     /**
      * Whether or not the message should be ephemeral.
      * Ignored if `flags` is defined.

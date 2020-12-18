@@ -1,5 +1,5 @@
 import { ApplicationCommandOption, PartialApplicationCommand } from './constants';
-import CommandContext from './context';
+import CommandContext, { MessageOptions } from './context';
 import SlashCreator from './creator';
 /** The options for a {@link SlashCommand}. */
 interface SlashCommandOptions {
@@ -104,7 +104,7 @@ declare class SlashCommand {
      * Runs the command.
      * @param ctx The context of the interaction
      */
-    run(ctx: CommandContext): Promise<any>;
+    run(ctx: CommandContext): Promise<string | MessageOptions | void>;
     /**
      * Finalizes the return output
      * @param response The response from the command

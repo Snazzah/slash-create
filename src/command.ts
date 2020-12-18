@@ -212,7 +212,7 @@ class SlashCommand {
   finalize(response: any, ctx: CommandContext) {
     if (!response && !ctx.initiallyResponded) return ctx.acknowledge();
 
-    if (typeof response === 'string' || (response.constructor && response.constructor.name === 'Object'))
+    if (typeof response === 'string' || (response && response.constructor && response.constructor.name === 'Object'))
       return ctx.send(response);
   }
 

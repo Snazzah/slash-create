@@ -24,7 +24,7 @@ console.log(ctx.options)
 ```
 
 ### Nested commands
-For commands with subcommands or subcommand groups, options go down the line of the subcommand it came from..
+For commands with subcommands or subcommand groups, options go down the line of the subcommand it came from.
 
 ```js
 options: [{
@@ -49,6 +49,33 @@ console.log(ctx.options)
       food: 'cheeseburger',
       drink: 'fanta'
     }
+  }
+*/
+```
+
+### Nested commands with no options
+If any nested command have optional options and the user provides nothing, an empty object will be in place.
+
+```js
+options: [{
+  type: CommandOptionType.SUBCOMMAND,
+  name: 'order',
+  description: 'Order some food.'
+  options: [{
+    type: CommandOptionType.STRING,
+    name: 'food',
+    description: 'What food do you want?'
+  }, {
+    type: CommandOptionType.STRING,
+    name: 'drink',
+    description: 'What drink do you want?'
+  }]
+}]
+
+console.log(ctx.options)
+/*
+  {
+    order: {}
   }
 */
 ```

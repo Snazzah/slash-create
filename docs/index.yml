@@ -16,3 +16,5 @@
       path: discord-bot.md
     - name: Example Command
       path: command.js
+    - name: Google Cloud Functions
+      path: gcf.md

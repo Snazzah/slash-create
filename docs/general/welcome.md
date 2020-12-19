@@ -28,7 +28,8 @@ yarn add slash-create
 In order to use a specific webserver, you will need to install the dependency associated with that server. The following server types require these dependencies:
 - `ExpressServer`: `express`
 - `FastifyServer`: `fastify`
-- `GatewayServer`: none, see [example](#using-a-discord-bot-with-create)
+- `GatewayServer`: none, see [example](#/docs/main/latest/examples/discord-bot)
+- `GCFServer`: none technically, meant for use with [`@google-cloud/functions-framework`](https://npm.im/@google-cloud/functions-framework), see [example](https://slash-create.js.org/#/docs/main/latest/examples/gcf)
 
 ## Example
 
@@ -117,7 +118,7 @@ module.exports = class HelloCommand extends SlashCommand {
 ## Useful Links
 - [**Discord Documentation on Slash Commands**](https://discord.com/developers/docs/interactions/slash-commands)
 - [Website](https://slash-create.js.org/) ([source](https://github.com/Snazzah/slash-create-website))
-- [Documentation](#/docs/main/latest/general/welcome)
+- [Documentation](https://slash-create.js.org/#/docs/main/latest/general/welcome)
 - [Commands Template](https://github.com/Snazzah/slash-create-template)
 - [GitHub](https://github.com/Snazzah/slash-create)
 - [NPM](https://www.npmjs.com/package/slash-create)

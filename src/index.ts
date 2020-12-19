@@ -15,6 +15,7 @@ import DiscordRESTError from './errors/DiscordRESTError';
 import ExpressServer from './servers/express';
 import FastifyServer from './servers/fastify';
 import GatewayServer from './servers/gateway';
+import GCFServer from './servers/gcf';
 
 import Member from './structures/member';
 import Message from './structures/message';
@@ -44,6 +45,7 @@ export {
   ExpressServer,
   FastifyServer,
   GatewayServer,
+  GCFServer,
   Member,
   Message,
   Permissions,

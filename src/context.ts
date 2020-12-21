@@ -67,15 +67,17 @@ class CommandContext {
   readonly options: { [key: string]: ConvertedOption };
   /** The subcommands the member used in order. */
   readonly subcommands: string[];
-  /** The time when the context was created .*/
+  /** The time when the context was created. */
   readonly invokedAt: number = Date.now();
   /** Whether the initial response was made. */
   initiallyResponded = false;
 
-  /** The initial response function. */
-  private _respond: RespondFunction;
   /** Whether the context is from a webserver. */
   private webserverMode: boolean;
+  /** The initial response function. */
+  private _respond: RespondFunction;
+  /** The timeout for the auto-response. */
+  private _timeout?: any;
 
   /**
    * @param creator The instantiating creator.
@@ -86,8 +88,8 @@ class CommandContext {
   constructor(creator: SlashCreator, data: InteractionRequestData, respond: RespondFunction, webserverMode: boolean) {
     this.creator = creator;
     this.data = data;
-    this._respond = respond;
     this.webserverMode = webserverMode;
+    this._respond = respond;
 
     this.interactionToken = data.token;
     this.interactionID = data.id;
@@ -99,6 +101,9 @@ class CommandContext {
     this.commandID = data.data.id;
     this.options = data.data.options ? CommandContext.convertOptions(data.data.options) : {};
     this.subcommands = data.data.options ? CommandContext.getSubcommandArray(data.data.options) : [];
+
+    // Auto-acknowledge if no response was given in 2.5 seconds
+    this._timeout = setTimeout(() => this.acknowledge(), 2500);
   }
 
   /** Whether the interaction has expired. Interactions last 15 minutes. */
@@ -135,6 +140,7 @@ class CommandContext {
 
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
+      clearTimeout(this._timeout);
       await this._respond({
         status: 200,
         body: {
@@ -261,6 +267,7 @@ class CommandContext {
   async acknowledge(includeSource = false): Promise<boolean> {
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
+      clearTimeout(this._timeout);
       await this._respond({
         status: 200,
         body: {

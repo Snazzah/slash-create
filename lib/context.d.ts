@@ -60,14 +60,16 @@ declare class CommandContext {
     };
     /** The subcommands the member used in order. */
     readonly subcommands: string[];
-    /** The time when the context was created .*/
+    /** The time when the context was created. */
     readonly invokedAt: number;
     /** Whether the initial response was made. */
     initiallyResponded: boolean;
-    /** The initial response function. */
-    private _respond;
     /** Whether the context is from a webserver. */
     private webserverMode;
+    /** The initial response function. */
+    private _respond;
+    /** The timeout for the auto-response. */
+    private _timeout?;
     /**
      * @param creator The instantiating creator.
      * @param data The interaction data for the context.

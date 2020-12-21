@@ -18,6 +18,7 @@ import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
 import Server, { TransformedRequest, RespondFunction, Response } from './server';
 import CommandContext from './context';
+import { isEqual } from 'lodash';
 
 /**
  * The events typings for the {@link SlashCreator}.
@@ -351,9 +352,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
       const command = this.commands.get(commandKey);
       if (command) {
-        const commandJSON = JSON.stringify(partialCommand);
-        // @TODO Should probably use a different method later
-        if (commandJSON !== JSON.stringify(command.commandJSON)) {
+        if (!isEqual(partialCommand, command.commandJSON)) {
           this.emit(
             'debug',
             `Updating guild command "${applicationCommand.name}" (${applicationCommand.id}, guild: ${guildID})`
@@ -404,8 +403,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
       const command = this.commands.get(commandKey);
       if (command) {
-        const commandJSON = JSON.stringify(partialCommand);
-        if (commandJSON !== JSON.stringify(command.commandJSON)) {
+        if (!isEqual(partialCommand, command.commandJSON)) {
           this.emit('debug', `Updating command "${applicationCommand.name}" (${applicationCommand.id})`);
           await this.api.updateCommand(applicationCommand.id, command.commandJSON);
         } else {

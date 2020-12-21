@@ -1,18 +1,22 @@
-export type BitFieldResolvable = string | number | BitField | Array<BitFieldResolvable>;
+/* global BigInt */
+export type BitFieldResolvable = string | number | bigint | BitField | Array<BitFieldResolvable>;
 
 /** Data structure that makes it easy to interact with a bitfield. */
 class BitField {
   /** Bitfield of the packed bits. */
-  bitfield: number;
+  bitfield: number | bigint = 0;
   /** The flags for this bitfield. */
-  static FLAGS: { [perm: string]: number } = {};
+  static FLAGS: { [perm: string]: number | bigint } = {};
 
-  /**
-   * @param bits Bit(s) to read from.
-   */
+  /** @param bits Bit(s) to read from. */
   constructor(bits: BitFieldResolvable = 0) {
     // @ts-ignore
     this.bitfield = this.constructor.resolve(bits);
+  }
+
+  /** @private */
+  get defaultBit() {
+    return typeof this.bitfield === 'bigint' ? 0n : 0;
   }
 
   /**
@@ -21,7 +25,7 @@ class BitField {
    */
   any(bit: BitFieldResolvable): boolean {
     // @ts-ignore
-    return (this.bitfield & this.constructor.resolve(bit)) !== 0;
+    return (this.bitfield & this.constructor.resolve(bit)) !== this.defaultBit;
   }
 
   /**
@@ -41,7 +45,8 @@ class BitField {
     if (Array.isArray(bit)) return bit.every((p) => this.has(p));
     // @ts-ignore
     bit = this.constructor.resolve(bit);
-    return (this.bitfield & (bit as number)) === bit;
+    // @ts-ignore
+    return (this.bitfield & bit) === bit;
   }
 
   /**
@@ -81,7 +86,7 @@ class BitField {
 
   /** @private */
   toJSON() {
-    return this.bitfield;
+    return typeof this.bitfield === 'number' ? this.bitfield : this.bitfield.toString();
   }
 
   /** @private */
@@ -98,11 +103,20 @@ class BitField {
    * Resolves bitfields to their numeric form.
    * @param bit Bit(s) to resolve
    */
-  static resolve(bit: BitFieldResolvable = 0): number {
-    if (typeof bit === 'number' && bit >= 0) return bit;
+  static resolve(bit?: BitFieldResolvable): number | bigint {
+    const defaultBit = this.name === 'Permissions' ? 0n : 0;
+    if (typeof bit === 'undefined') return defaultBit;
+
+    // Make sure bigint and numbers arent mixed
+    if (typeof bit === 'bigint' && typeof defaultBit === 'number') bit = parseInt(bit.toString());
+    else if (typeof bit === 'number' && typeof defaultBit === 'bigint') bit = BigInt(bit);
+
+    if ((typeof bit === 'number' || typeof bit === 'bigint') && bit >= defaultBit) return bit;
     if (bit instanceof BitField) return bit.bitfield;
     if (Array.isArray(bit))
-      return bit.map((p) => this.resolve(p)).reduce((prev, p) => (prev as number) | (p as number), 0);
+      return bit
+        .map((p) => this.resolve(p))
+        .reduce(<T extends number | bigint>(prev: T, p: T) => (prev as T) | (p as T), defaultBit);
     if (typeof bit === 'string' && typeof this.FLAGS[bit] !== 'undefined') return this.FLAGS[bit];
     throw new RangeError('BITFIELD_INVALID');
   }

@@ -1,6 +1,6 @@
 import BitField from '../util/bitfield';
 export declare const FLAGS: {
-    [perm: string]: number;
+    [perm: string]: bigint;
 };
 /**
  * Data structure that makes it easy to interact with a permission bitfield.
@@ -9,7 +9,7 @@ export declare const FLAGS: {
 declare class Permissions extends BitField {
     /** Permission flags. Check the source of this property for available permissions. */
     static FLAGS: {
-        [perm: string]: number;
+        [perm: string]: bigint;
     };
 }
 export default Permissions;

@@ -1,16 +1,16 @@
-export declare type BitFieldResolvable = string | number | BitField | Array<BitFieldResolvable>;
+export declare type BitFieldResolvable = string | number | bigint | BitField | Array<BitFieldResolvable>;
 /** Data structure that makes it easy to interact with a bitfield. */
 declare class BitField {
     /** Bitfield of the packed bits. */
-    bitfield: number;
+    bitfield: number | bigint;
     /** The flags for this bitfield. */
     static FLAGS: {
-        [perm: string]: number;
+        [perm: string]: number | bigint;
     };
-    /**
-     * @param bits Bit(s) to read from.
-     */
+    /** @param bits Bit(s) to read from. */
     constructor(bits?: BitFieldResolvable);
+    /** @private */
+    get defaultBit(): 0 | 0n;
     /**
      * Checks whether the bitfield has a bit, or any of multiple bits.
      * @param bit Bit(s) to check for
@@ -45,15 +45,15 @@ declare class BitField {
     /** @private */
     toString(): string;
     /** @private */
-    toJSON(): number;
+    toJSON(): string | number;
     /** @private */
-    valueOf(): number;
+    valueOf(): number | bigint;
     /** @private */
     [Symbol.iterator](): Generator<string, void, undefined>;
     /**
      * Resolves bitfields to their numeric form.
      * @param bit Bit(s) to resolve
      */
-    static resolve(bit?: BitFieldResolvable): number;
+    static resolve(bit?: BitFieldResolvable): number | bigint;
 }
 export default BitField;

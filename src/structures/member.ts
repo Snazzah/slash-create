@@ -1,3 +1,4 @@
+/* global BigInt */
 import { CommandMember } from '../constants';
 import SlashCreator from '../creator';
 import Permissions from './permissions';
@@ -48,7 +49,7 @@ class Member {
 
   /** The permissions the member has. */
   get permissions() {
-    if (!this._permissionsBitfield) this._permissionsBitfield = new Permissions(parseInt(this._permissions));
+    if (!this._permissionsBitfield) this._permissionsBitfield = new Permissions(BigInt(this._permissions));
     return this._permissionsBitfield;
   }
 

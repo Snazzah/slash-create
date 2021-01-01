@@ -143,20 +143,20 @@ export interface InteractionRequestData {
 export interface CommandMember {
     user: CommandUser;
     roles: string[];
-    premium_since?: string;
+    premium_since: string | null;
     permissions: string;
     pending: boolean;
     is_pending: boolean;
     mute: boolean;
     deaf: boolean;
-    nick?: string;
+    nick: string | null;
     joined_at: string;
 }
 /** @private */
 export interface CommandUser {
     id: string;
     username: string;
-    avatar?: string;
+    avatar: string | null;
     discriminator: string;
     public_flags: number;
 }

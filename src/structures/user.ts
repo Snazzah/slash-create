@@ -31,7 +31,7 @@ class User {
     this.id = data.id;
     this.username = data.username;
     this.discriminator = data.discriminator;
-    this.avatar = data.avatar;
+    if (data.avatar) this.avatar = data.avatar;
     this._flags = data.public_flags;
     this.bot = data.bot || false;
   }

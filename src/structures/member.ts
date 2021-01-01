@@ -37,7 +37,7 @@ class Member {
   constructor(data: CommandMember, creator: SlashCreator) {
     this._creator = creator;
 
-    this.nick = data.nick;
+    if (data.nick) this.nick = data.nick;
     this.joinedAt = Date.parse(data.joined_at);
     this.roles = data.roles;
     if (data.premium_since) this.premiumSince = Date.parse(data.premium_since);

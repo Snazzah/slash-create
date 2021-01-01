@@ -5,7 +5,7 @@ import { AnyCommandOption, InteractionRequestData } from './constants';
 import { MessageAllowedMentions } from './util';
 import Message from './structures/message';
 /** Command options converted for ease of use. */
-declare type ConvertedOption = {
+export declare type ConvertedOption = {
     [key: string]: ConvertedOption;
 } | string | number | boolean;
 /** The options for {@link CommandContext#edit}. */

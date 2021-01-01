@@ -12,7 +12,7 @@ import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions
 import Message from './structures/message';
 
 /** Command options converted for ease of use. */
-type ConvertedOption = { [key: string]: ConvertedOption } | string | number | boolean;
+export type ConvertedOption = { [key: string]: ConvertedOption } | string | number | boolean;
 
 /** The options for {@link CommandContext#edit}. */
 export interface EditMessageOptions {

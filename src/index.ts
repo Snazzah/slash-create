@@ -54,6 +54,8 @@ export {
   ImageFormat
 } from './constants';
 
+export type { ConvertedOption } from './context';
+
 export {
   API,
   BitField,

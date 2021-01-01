@@ -127,7 +127,6 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     super();
 
     if (!opts.applicationID) throw new Error('An application ID must be defined!');
-    if (!opts.publicKey) throw new Error('A public key must be defined!');
     if (opts.token && !opts.token.startsWith('Bot ') && !opts.token.startsWith('Bearer '))
       opts.token = 'Bot ' + opts.token;
 

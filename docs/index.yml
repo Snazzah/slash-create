@@ -6,6 +6,8 @@
       path: changelog.md
     - name: CommandContext.options
       path: context-options.md
+    - name: Unknown commands
+      path: unknown-command.md
 - name: Examples
   files:
     - name: Basic Example

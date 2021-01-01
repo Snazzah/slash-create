@@ -273,12 +273,10 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     if (this.server) throw new Error('A server was already set in this creator.');
     this.server = server;
 
-    try {
-      if (this.server.isWebserver) {
-        if (!this.options.publicKey) throw new Error('A public key is required to be set when using a webserver.');
-        this.server.createEndpoint(this.options.endpointPath as string, this._onRequest.bind(this));
-      } else this.server.handleInteraction((interaction) => this._onInteraction(interaction, null, false));
-    } catch {}
+    if (this.server.isWebserver) {
+      if (!this.options.publicKey) throw new Error('A public key is required to be set when using a webserver.');
+      this.server.createEndpoint(this.options.endpointPath as string, this._onRequest.bind(this));
+    } else this.server.handleInteraction((interaction) => this._onInteraction(interaction, null, false));
 
     return this;
   }

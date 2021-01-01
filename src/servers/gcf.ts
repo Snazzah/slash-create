@@ -1,4 +1,5 @@
 import Server, { RequestHandler } from '../server';
+// @ts-ignore
 import * as Express from 'express';
 
 /**

@@ -55,7 +55,7 @@ class ExpressServer extends Server {
 
   /** @private */
   createEndpoint(path: string, handler: RequestHandler) {
-    this.app.post(path, (req, res) =>
+    this.app.post(path, (req: Express.Request, res: Express.Response) =>
       handler(
         {
           headers: req.headers,

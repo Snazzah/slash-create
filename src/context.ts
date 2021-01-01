@@ -103,7 +103,7 @@ class CommandContext {
     this.subcommands = data.data.options ? CommandContext.getSubcommandArray(data.data.options) : [];
 
     // Auto-acknowledge if no response was given in 2.5 seconds
-    this._timeout = setTimeout(() => this.acknowledge(), 2500);
+    this._timeout = setTimeout(() => this.acknowledge(creator.options.autoAcknowledgeSource || false), 2500);
   }
 
   /** Whether the interaction has expired. Interactions last 15 minutes. */

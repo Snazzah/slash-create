@@ -63,6 +63,8 @@ interface SlashCreatorOptions {
    * If an unknown command is registered, this is ignored.
    */
   unknownCommandResponse?: boolean;
+  /** Whether to include source in the auto-acknowledgement timeout. */
+  autoAcknowledgeSource?: boolean;
   /** The default allowed mentions for all messages. */
   allowedMentions?: MessageAllowedMentions;
   /** The default format to provide user avatars in. */
@@ -137,6 +139,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
         defaultImageFormat: 'jpg',
         defaultImageSize: 128,
         unknownCommandResponse: true,
+        autoAcknowledgeSource: false,
         latencyThreshold: 30000,
         ratelimiterOffset: 0,
         requestTimeout: 15000,

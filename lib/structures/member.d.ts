@@ -17,6 +17,8 @@ declare class Member {
     mute: boolean;
     /** Whether the user is deafened in voice channels */
     deaf: boolean;
+    /** Whether the member is pending verification */
+    pending: boolean;
     /** The user object for this member */
     user: User;
     /** The creator of the member class. */

@@ -19,6 +19,8 @@ class Member {
   mute: boolean;
   /** Whether the user is deafened in voice channels */
   deaf: boolean;
+  /** Whether the member is pending verification */
+  pending: boolean;
   /** The user object for this member */
   user: User;
 
@@ -41,6 +43,7 @@ class Member {
     if (data.premium_since) this.premiumSince = Date.parse(data.premium_since);
     this.mute = data.mute;
     this.deaf = data.deaf;
+    this.pending = data.pending;
     this._permissions = data.permissions;
 
     this.id = data.user.id;

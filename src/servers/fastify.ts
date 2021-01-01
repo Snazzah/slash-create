@@ -1,7 +1,8 @@
 import Server, { RequestHandler, ServerOptions } from '../server';
+// @ts-ignore
 import * as Fastify from 'fastify';
 
-/** @private */
+/** @hidden */
 type FastifyOptions =
   | Fastify.FastifyServerOptions<any, Fastify.FastifyLoggerInstance>
   | Fastify.FastifyHttpsOptions<any, Fastify.FastifyLoggerInstance>

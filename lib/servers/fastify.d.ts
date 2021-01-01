@@ -1,6 +1,6 @@
 import Server, { RequestHandler, ServerOptions } from '../server';
 import * as Fastify from 'fastify';
-/** @private */
+/** @hidden */
 declare type FastifyOptions = Fastify.FastifyServerOptions<any, Fastify.FastifyLoggerInstance> | Fastify.FastifyHttpsOptions<any, Fastify.FastifyLoggerInstance> | Fastify.FastifyHttp2Options<any, Fastify.FastifyLoggerInstance> | Fastify.FastifyHttp2SecureOptions<any, Fastify.FastifyLoggerInstance>;
 /**
  * A server for Fastify applications.

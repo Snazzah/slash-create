@@ -1,4 +1,5 @@
 import Server, { RequestHandler, ServerOptions } from '../server';
+// @ts-ignore
 import * as Express from 'express';
 
 let express: typeof Express;

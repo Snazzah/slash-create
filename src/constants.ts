@@ -190,15 +190,24 @@ export interface UserObject extends CommandUser {
 export interface CommandData {
   id: string;
   name: string;
-  options?: CommandOption[];
+  options?: AnyCommandOption[];
 }
+
+/** @private */
+export type AnyCommandOption = CommandOption | CommandSubcommandOption;
 
 /** @private */
 export interface CommandOption {
   /** The name for the option. */
   name: string;
   value?: string | number | boolean;
-  options?: CommandOption[];
+}
+
+/** @private */
+export interface CommandSubcommandOption {
+  /** The name for the option. */
+  name: string;
+  options: CommandOption[];
 }
 
 /** @see https://www.npmjs.com/package/require-all#usage */

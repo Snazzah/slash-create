@@ -2,7 +2,7 @@ import Member from './structures/member';
 import { RespondFunction } from './server';
 import SlashCreator from './creator';
 import {
-  CommandOption,
+  AnyCommandOption,
   Endpoints,
   InteractionRequestData,
   InteractionResponseFlags,
@@ -281,20 +281,20 @@ class CommandContext {
   }
 
   /** @private */
-  static convertOptions(options: CommandOption[]) {
+  static convertOptions(options: AnyCommandOption[]) {
     const convertedOptions: { [key: string]: ConvertedOption } = {};
     for (const option of options) {
-      if (option.options) convertedOptions[option.name] = CommandContext.convertOptions(option.options);
+      if ('options' in option) convertedOptions[option.name] = CommandContext.convertOptions(option.options);
       else convertedOptions[option.name] = option.value !== undefined ? option.value : {};
     }
     return convertedOptions;
   }
 
   /** @private */
-  static getSubcommandArray(options: CommandOption[]) {
+  static getSubcommandArray(options: AnyCommandOption[]) {
     const result: string[] = [];
     for (const option of options) {
-      if (option.options) result.push(option.name, ...CommandContext.getSubcommandArray(option.options));
+      if ('options' in option) result.push(option.name, ...CommandContext.getSubcommandArray(option.options));
       else if (option.value === undefined && option.name) result.push(option.name);
     }
     return result;

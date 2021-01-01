@@ -1,13 +1,15 @@
 import * as Constants from './constants';
 import * as Util from './util';
+
 import API from './api';
-import BitField from './util/bitfield';
 import SlashCommand from './command';
 import CommandContext from './context';
 import SlashCreator from './creator';
+import Server from './server';
+
+import BitField from './util/bitfield';
 import RequestHandler from './util/requestHandler';
 import SequentialBucket from './util/sequentialBucket';
-import Server from './server';
 
 import DiscordHTTPError from './errors/DiscordHTTPError';
 import DiscordRESTError from './errors/DiscordRESTError';
@@ -24,7 +26,6 @@ import User from './structures/user';
 import UserFlags from './structures/userFlags';
 
 const VERSION: string = require('../package').version;
-const CommandOptionType = Constants.CommandOptionType;
 
 // Aliases
 const Creator = SlashCreator;
@@ -32,11 +33,32 @@ const Context = CommandContext;
 const Command = SlashCommand;
 
 export {
+  InteractionType,
+  InterationResponseType,
+  InteractionResponseFlags,
+  CommandOptionType,
+  PartialApplicationCommand,
+  ApplicationCommand,
+  ApplicationCommandOption,
+  ApplicationCommandOptionChoice,
+  RawRequest,
+  AnyRequestData,
+  PingRequestData,
+  InteractionRequestData,
+  CommandMember,
+  CommandUser,
+  CommandData,
+  AnyCommandOption,
+  CommandOption,
+  CommandSubcommandOption,
+  ImageFormat
+} from './constants';
+
+export {
   API,
   BitField,
   Command,
   CommandContext,
-  CommandOptionType,
   Constants,
   Context,
   Creator,

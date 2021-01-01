@@ -33,8 +33,11 @@ interface SlashCreatorEvents {
 interface SlashCreatorOptions {
     /** Your Application's ID */
     applicationID: string;
-    /** The public key for your application */
-    publicKey: string;
+    /**
+     * The public key for your application.
+     * Required for webservers.
+     */
+    publicKey?: string;
     /**
      * The bot/client token for the application.
      * Recommended to set this in your config.

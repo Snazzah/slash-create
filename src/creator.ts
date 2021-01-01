@@ -45,8 +45,11 @@ interface SlashCreatorEvents {
 interface SlashCreatorOptions {
   /** Your Application's ID */
   applicationID: string;
-  /** The public key for your application */
-  publicKey: string;
+  /**
+   * The public key for your application.
+   * Required for webservers.
+   */
+  publicKey?: string;
   /**
    * The bot/client token for the application.
    * Recommended to set this in your config.
@@ -272,9 +275,10 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     this.server = server;
 
     try {
-      if (this.server.isWebserver)
+      if (this.server.isWebserver) {
+        if (!this.options.publicKey) throw new Error('A public key is required to be set when using a webserver.');
         this.server.createEndpoint(this.options.endpointPath as string, this._onRequest.bind(this));
-      else this.server.handleInteraction((interaction) => this._onInteraction(interaction, null, false));
+      } else this.server.handleInteraction((interaction) => this._onInteraction(interaction, null, false));
     } catch {}
 
     return this;
@@ -452,7 +456,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
         body: 'Invalid signature'
       });
 
-    const verified = await verifyKey(JSON.stringify(treq.body), signature, timestamp, this.options.publicKey);
+    const verified = await verifyKey(JSON.stringify(treq.body), signature, timestamp, this.options.publicKey as string);
 
     if (!verified) {
       this.emit('debug', 'A request failed to be verified');

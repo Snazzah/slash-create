@@ -217,7 +217,7 @@ class RequestHandler {
                   `Missing ratelimit headers for SequentialBucket(${this.ratelimits[route].remaining}/${this.ratelimits[route].limit}) with non-default limit\n` +
                     `${resp.statusCode} ${resp.headers['content-type']}: ${method} ${route} | ${resp.headers['cf-ray']}\n` +
                     'content-type = ' +
-                    +'\n' +
+                    '\n' +
                     'x-ratelimit-remaining = ' +
                     resp.headers['x-ratelimit-remaining'] +
                     '\n' +

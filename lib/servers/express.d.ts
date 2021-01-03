@@ -5,7 +5,7 @@ import * as Express from 'express';
  * @see http://expressjs.com
  */
 declare class ExpressServer extends Server {
-    private app;
+    private readonly app;
     /**
      * @param app The express application. Must have express.json installed as a middleware.
      * @param opts The server options

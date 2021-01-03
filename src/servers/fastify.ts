@@ -19,7 +19,7 @@ try {
  * @see https://fastify.io
  */
 class FastifyServer extends Server {
-  private app: Fastify.FastifyInstance;
+  private readonly app: Fastify.FastifyInstance;
 
   /**
    * @param app The fastify application, or the options for initialization

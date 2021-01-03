@@ -34,19 +34,19 @@ interface ThrottleObject {
 /** Represends a Discord slash command. */
 declare class SlashCommand {
     /** The command's name. */
-    commandName: string;
+    readonly commandName: string;
     /** The command's description. */
-    description: string;
+    readonly description: string;
     /** The options for the command. */
-    options?: ApplicationCommandOption[];
+    readonly options?: ApplicationCommandOption[];
     /** The guild ID for the command. */
-    guildID?: string;
+    readonly guildID?: string;
     /** The permissions required to use this command. */
-    requiredPermissions?: Array<string>;
+    readonly requiredPermissions?: Array<string>;
     /** The throttling options for this command. */
-    throttling?: ThrottlingOptions;
+    readonly throttling?: ThrottlingOptions;
     /** Whether this command is used for unknown commands. */
-    unknown: boolean;
+    readonly unknown: boolean;
     /**
      * The file path of the command.
      * Used for refreshing the require cache.

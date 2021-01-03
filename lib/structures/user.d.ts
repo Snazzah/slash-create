@@ -4,17 +4,17 @@ import UserFlags from './userFlags';
 /** Represents a user on Discord. */
 declare class User {
     /** The user's ID. */
-    id: string;
+    readonly id: string;
     /** The user's username. */
-    username: string;
+    readonly username: string;
     /** The user's discriminator. */
-    discriminator: string;
+    readonly discriminator: string;
     /** The user's avatar hash. */
-    avatar?: string;
+    readonly avatar?: string;
     /** Whether the user is a bot. */
-    bot: boolean;
+    readonly bot: boolean;
     /** The creator of the user class. */
-    private _creator;
+    private readonly _creator;
     private _flagsBitfield?;
     private _flags;
     /**
@@ -26,7 +26,7 @@ declare class User {
     get flags(): UserFlags;
     /** A string that mentions the user. */
     get mention(): string;
-    /** @private */
+    /** @hidden */
     toString(): string;
     /** The hash for the default avatar of a user if there is no avatar set. */
     get defaultAvatar(): number;

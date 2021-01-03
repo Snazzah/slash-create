@@ -7,7 +7,7 @@ declare type FastifyOptions = Fastify.FastifyServerOptions<any, Fastify.FastifyL
  * @see https://fastify.io
  */
 declare class FastifyServer extends Server {
-    private app;
+    private readonly app;
     /**
      * @param app The fastify application, or the options for initialization
      * @param opts The server options

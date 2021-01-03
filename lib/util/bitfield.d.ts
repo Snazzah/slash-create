@@ -42,13 +42,13 @@ declare class BitField {
      * Gets an {@link Array} of bitfield names based on the bits available.
      */
     toArray(): string[];
-    /** @private */
+    /** @hidden */
     toString(): string;
-    /** @private */
+    /** @hidden */
     toJSON(): string | number;
-    /** @private */
+    /** @hidden */
     valueOf(): number | bigint;
-    /** @private */
+    /** @hidden */
     [Symbol.iterator](): Generator<string, void, undefined>;
     /**
      * Resolves bitfields to their numeric form.

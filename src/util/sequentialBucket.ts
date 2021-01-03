@@ -31,7 +31,6 @@ class SequentialBucket {
   constructor(limit: number, latencyRef: MinimalLatencyRef = { latency: 0 }) {
     this.limit = this.remaining = limit;
     this.latencyRef = latencyRef;
-    this._queue = [];
   }
 
   /**

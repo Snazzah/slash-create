@@ -4,25 +4,25 @@ import Permissions from './permissions';
 import User from './user';
 declare class Member {
     /** The member's ID */
-    id: string;
+    readonly id: string;
     /** The member's nickname */
-    nick?: string;
+    readonly nick?: string;
     /** The timestamp the member joined the guild */
-    joinedAt: number;
+    readonly joinedAt: number;
     /** An array of role IDs that the user has. */
-    roles: string[];
+    readonly roles: string[];
     /** The time of when this member boosted the server. */
-    premiumSince?: number;
+    readonly premiumSince?: number;
     /** Whether the user is muted in voice channels */
-    mute: boolean;
+    readonly mute: boolean;
     /** Whether the user is deafened in voice channels */
-    deaf: boolean;
+    readonly deaf: boolean;
     /** Whether the member is pending verification */
-    pending: boolean;
+    readonly pending: boolean;
     /** The user object for this member */
-    user: User;
+    readonly user: User;
     /** The creator of the member class. */
-    private _creator;
+    private readonly _creator;
     private _permissionsBitfield?;
     private _permissions;
     /**
@@ -34,7 +34,7 @@ declare class Member {
     get permissions(): Permissions;
     /** The string that mentions this member. */
     get mention(): string;
-    /** @private */
+    /** @hidden */
     toString(): string;
     /** The display name for this member. */
     get displayName(): string;

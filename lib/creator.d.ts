@@ -104,7 +104,7 @@ declare class SlashCreator extends SlashCreator_base {
     /** The server being used in the creator */
     server?: Server;
     /** The formatted allowed mentions from the options */
-    allowedMentions: FormattedAllowedMentions;
+    readonly allowedMentions: FormattedAllowedMentions;
     /** The command to run when an unknown command is used. */
     unknownCommand?: SlashCommand;
     /** @param opts The options for the creator */

@@ -4,7 +4,7 @@ import SlashCreator from './creator';
 /** The API handler for {@link SlashCreator}. */
 class SlashCreatorAPI {
   /** The parent creator. */
-  private _creator: SlashCreator;
+  private readonly _creator: SlashCreator;
 
   /** @param creator The instantiating creator. */
   constructor(creator: SlashCreator) {

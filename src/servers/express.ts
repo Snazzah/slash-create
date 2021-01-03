@@ -12,7 +12,7 @@ try {
  * @see http://expressjs.com
  */
 class ExpressServer extends Server {
-  private app: Express.Application;
+  private readonly app: Express.Application;
 
   /**
    * @param app The express application. Must have express.json installed as a middleware.

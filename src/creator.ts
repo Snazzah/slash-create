@@ -104,9 +104,9 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */
-  readonly requestHandler: RequestHandler = new RequestHandler(this);
+  readonly requestHandler: RequestHandler;
   /** The API handler for the creator */
-  readonly api: SlashCreatorAPI = new SlashCreatorAPI(this);
+  readonly api = new SlashCreatorAPI(this);
   /** The commands loaded onto the creator */
   readonly commands = new Collection<string, SlashCommand>();
   /**
@@ -154,6 +154,9 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     );
 
     this.allowedMentions = formatAllowedMentions(this.options.allowedMentions as MessageAllowedMentions);
+
+    this.requestHandler = new RequestHandler(this);
+    this.api = new SlashCreatorAPI(this);
   }
 
   /**

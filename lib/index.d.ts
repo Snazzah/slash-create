@@ -25,4 +25,5 @@ declare const Context: typeof CommandContext;
 declare const Command: typeof SlashCommand;
 export { InteractionType, InterationResponseType, InteractionResponseFlags, CommandOptionType, PartialApplicationCommand, ApplicationCommand, ApplicationCommandOption, ApplicationCommandOptionChoice, RawRequest, AnyRequestData, PingRequestData, InteractionRequestData, CommandMember, CommandUser, CommandData, AnyCommandOption, CommandOption, CommandSubcommandOption, ImageFormat } from './constants';
 export type { ConvertedOption } from './context';
+export { SlashCommandOptions } from './command';
 export { API, BitField, Command, CommandContext, Constants, Context, Creator, DiscordHTTPError, DiscordRESTError, ExpressServer, FastifyServer, GatewayServer, GCFServer, Member, Message, Permissions, RequestHandler, SequentialBucket, Server, SlashCommand, SlashCreator, User, UserFlags, Util, VERSION };

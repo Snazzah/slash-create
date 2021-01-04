@@ -56,6 +56,8 @@ export {
 
 export type { ConvertedOption } from './context';
 
+export { SlashCommandOptions } from './command';
+
 export {
   API,
   BitField,

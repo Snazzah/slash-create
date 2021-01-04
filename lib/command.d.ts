@@ -2,7 +2,7 @@ import { ApplicationCommandOption, PartialApplicationCommand } from './constants
 import CommandContext, { MessageOptions } from './context';
 import SlashCreator from './creator';
 /** The options for a {@link SlashCommand}. */
-interface SlashCommandOptions {
+export interface SlashCommandOptions {
     /** The name of the command. */
     name: string;
     /** The description of the command. */
@@ -19,19 +19,19 @@ interface SlashCommandOptions {
     unknown?: boolean;
 }
 /** The throttling options for a {@link SlashCommand}. */
-interface ThrottlingOptions {
+export interface ThrottlingOptions {
     /** Maximum number of usages of the command allowed in the time frame. */
     usages: number;
     /** Amount of time to count the usages of the command within (in seconds). */
     duration: number;
 }
 /** @private */
-interface ThrottleObject {
+export interface ThrottleObject {
     start: number;
     usages: number;
     timeout: any;
 }
-/** Represends a Discord slash command. */
+/** Represents a Discord slash command. */
 declare class SlashCommand {
     /** The command's name. */
     readonly commandName: string;

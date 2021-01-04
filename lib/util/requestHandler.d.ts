@@ -3,7 +3,7 @@ import SlashCreator from '../creator';
 import HTTPS from 'https';
 import SequentialBucket from './sequentialBucket';
 export declare const USER_AGENT: string;
-/** @private */
+/** @hidden */
 interface LatencyRef {
     latency: number;
     offset?: number;

@@ -41,16 +41,15 @@
   "lint-staged": {
     "*.ts": "eslint --fix"
   },
-  "funding":{
-    "url" : "https://github.com/sponsors/Snazzah"
+  "funding": {
+    "url": "https://github.com/sponsors/Snazzah"
   },
   "dependencies": {
     "@discordjs/collection": "^0.1.6",
     "eventemitter3": "^4.0.7",
     "lodash": "^4.17.20",
     "require-all": "^3.0.0",
-    "tweetnacl": "^1.0.3",
-    "typed-emitter": "^1.3.1"
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@sinonjs/fake-timers": "^6.0.1",

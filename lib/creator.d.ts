@@ -1,10 +1,10 @@
 /// <reference types="node" />
-import TypedEmitter from 'typed-emitter';
 import Collection from '@discordjs/collection';
 import HTTPS from 'https';
 import { FormattedAllowedMentions, MessageAllowedMentions } from './util';
 import { ImageFormat, RawRequest, RequireAllOptions } from './constants';
 import SlashCommand from './command';
+import TypedEmitter from './util/typedEmitter';
 import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
 import Server, { TransformedRequest } from './server';

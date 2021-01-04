@@ -10,7 +10,7 @@ export const USER_AGENT = `DiscordBot (https://github.com/Snazzah/slash-create, 
   require('../../package.json').version
 })`;
 
-/** @private */
+/** @hidden */
 interface LatencyRef {
   latency: number;
   offset?: number;

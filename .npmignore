@@ -23,4 +23,5 @@ docs/
 .github/
 .dependabot/
 test/
+testing/
 tsconfig.json

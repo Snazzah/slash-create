@@ -5,8 +5,7 @@
     "lib": [
       "es2017",
       "es7",
-      "es6",
-      "dom"
+      "es6"
     ],
     "declaration": true,
     "outDir": "lib",
@@ -22,6 +21,7 @@
     "node_modules",
     "lib",
     "test",
+    "testing",
     "scripts",
     "examples",
     "docs"

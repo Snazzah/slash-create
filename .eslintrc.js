@@ -30,5 +30,15 @@ module.exports = {
       }
     ],
     'spaced-comment': 'warn'
-  }
-}
+  },
+  overrides: [
+    {
+      files: ['test/**/*.ts'],
+      globals: {
+        describe: true,
+        it: true,
+        beforeEach: true
+      }
+    }
+  ]
+};

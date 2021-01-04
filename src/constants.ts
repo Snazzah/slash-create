@@ -180,7 +180,7 @@ export interface CommandUser {
   public_flags: number;
 }
 
-/** @private */
+/** @hidden */
 export interface UserObject extends CommandUser {
   /** Whether this user is a bot. */
   bot?: boolean;

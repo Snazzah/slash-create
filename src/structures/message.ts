@@ -2,8 +2,8 @@ import { UserObject } from '../constants';
 import CommandContext, { EditMessageOptions } from '../context';
 import User from './user';
 
-/** @private */
-interface MessageData {
+/** @hidden */
+export interface MessageData {
   id: string;
   type: number;
   content: string;
@@ -17,7 +17,7 @@ interface MessageData {
   mention_everyone: boolean;
   tts: boolean;
   timestamp: string;
-  edited_timestamp?: string;
+  edited_timestamp: string | null;
   flags: number;
   webhook_id: string;
 }

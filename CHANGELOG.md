@@ -5,6 +5,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.3.0] - 2021-01-04
+### Changed:
+- Permission bitfield now uses bigints
+- Command syncing now uses `lodash.isEqual` to check for
+- `publicKey` in creator options is now optional
+- Typing changes
+  - `CommandOption` in constants has split off into `CommandSubcommandOption` and `AnyCommandOption`, not allowing you to define options and a value.
+  - Typings for `User`, `Member` and `Message` have been set to read-only
+  - Most undocumented typings are hidden/privated
+- Export changes
+  - Some constant exports now exports to index: `InteractionType`, `InterationResponseType`, `InteractionResponseFlags`, `CommandOptionType`, `PartialApplicationCommand`, `ApplicationCommand`, `ApplicationCommandOption`, `ApplicationCommandOptionChoice`, `RawRequest`, `AnyRequestData`, `PingRequestData`, `InteractionRequestData`, `CommandMember`, `CommandUser`, `CommandData`, `AnyCommandOption`, `CommandOption`, `CommandSubcommandOption`, `ImageFormat`
+  - `ConvertedOption` now exports to index
+  - `SlashCommandOptions` now exports to index
+### Added:
+- Commands will automatically acknowledge after 3 seconds to avoid interaction invalidation
+  - You can also set `autoAcknowledgeSource` within creator options
+- Documentation for unknown commands
+- `Member#pending`
+### Fixed:
+- SlashCreator documentation
+- Option validation for unknown commands
+- Typings are ignored for `express` and `fastify`
 ## [1.2.0] - 2020-12-19
 ### Changed:
 - `ctx.options` are a bit more consistent with sub-commands. Check the [last heading in the documetation](https://slash-create.js.org/#/docs/main/v1.2.0/general/context-options) for an example.
@@ -107,7 +129,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v1.3.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -119,3 +141,4 @@ This release features mostly completed documentation and changes to the packages
 [1.1.5]: https://github.com/Snazzah/slash-create/compare/v1.1.4...v1.1.5
 [1.1.6]: https://github.com/Snazzah/slash-create/compare/v1.1.5...v1.1.6
 [1.2.0]: https://github.com/Snazzah/slash-create/compare/v1.1.6...v1.2.0
+[1.3.0]: https://github.com/Snazzah/slash-create/compare/v1.2.0...v1.3.0

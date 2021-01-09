@@ -9,3 +9,5 @@ creator
   .withServer(new GCFServer(module.exports))
   .registerCommandsIn(path.join(__dirname, 'commands'));
 ```
+
+If you want more examples of using Google services, check out [jasondamour/discord-gcloud-commands](https://github.com/jasondamour/discord-gcloud-commands).

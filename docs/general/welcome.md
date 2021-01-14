@@ -21,6 +21,9 @@ You can create commands similar to Discord.JS [Commando](https://github.com/disc
 ## Installation
 ```sh
 npm i slash-create
+```
+Or, using yarn:
+```sh
 yarn add slash-create
 ```
 

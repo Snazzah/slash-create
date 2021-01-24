@@ -28,7 +28,7 @@ For commands with subcommands or subcommand groups, options go down the line of 
 
 ```js
 options: [{
-  type: CommandOptionType.SUBCOMMAND,
+  type: CommandOptionType.SUB_COMMAND,
   name: 'order',
   description: 'Order some food.'
   options: [{
@@ -58,7 +58,7 @@ If any nested command have optional options and the user provides nothing, an em
 
 ```js
 options: [{
-  type: CommandOptionType.SUBCOMMAND,
+  type: CommandOptionType.SUB_COMMAND,
   name: 'order',
   description: 'Order some food.'
   options: [{

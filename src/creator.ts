@@ -10,7 +10,8 @@ import {
   RequireAllOptions,
   InterationResponseType,
   InteractionResponseFlags,
-  PartialApplicationCommand
+  PartialApplicationCommand,
+  BulkUpdateCommand
 } from './constants';
 import SlashCommand from './command';
 import TypedEmitter from './util/typedEmitter';
@@ -347,6 +348,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
   async syncCommandsIn(guildID: string, deleteCommands = true) {
     const commands = await this.api.getCommands(guildID);
     const handledCommands: string[] = [];
+    const updatePayload: BulkUpdateCommand[] = [];
 
     for (const applicationCommand of commands) {
       const partialCommand: PartialApplicationCommand = Object.assign({}, applicationCommand);
@@ -361,7 +363,10 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
             'debug',
             `Updating guild command "${applicationCommand.name}" (${applicationCommand.id}, guild: ${guildID})`
           );
-          await this.api.updateCommand(applicationCommand.id, command.commandJSON, guildID);
+          updatePayload.push({
+            id: applicationCommand.id,
+            ...command.commandJSON
+          });
         } else {
           this.emit(
             'debug',
@@ -379,6 +384,8 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
       handledCommands.push(commandKey);
     }
+
+    if (updatePayload.length) await this.api.updateCommands(updatePayload, guildID);
 
     const unhandledCommands = this.commands.filter(
       (command) => command.guildID === guildID && !handledCommands.includes(command.keyName)
@@ -398,6 +405,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
   async syncGlobalCommands(deleteCommands = true) {
     const commands = await this.api.getCommands();
     const handledCommands: string[] = [];
+    const updatePayload: BulkUpdateCommand[] = [];
 
     for (const applicationCommand of commands) {
       const partialCommand: PartialApplicationCommand = Object.assign({}, applicationCommand);
@@ -409,7 +417,10 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       if (command) {
         if (!isEqual(partialCommand, command.commandJSON)) {
           this.emit('debug', `Updating command "${applicationCommand.name}" (${applicationCommand.id})`);
-          await this.api.updateCommand(applicationCommand.id, command.commandJSON);
+          updatePayload.push({
+            id: applicationCommand.id,
+            ...command.commandJSON
+          });
         } else {
           this.emit('debug', `Command "${applicationCommand.name}" (${applicationCommand.id}) synced`);
         }
@@ -420,6 +431,8 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
       handledCommands.push(commandKey);
     }
+
+    if (updatePayload.length) this.api.updateCommands(updatePayload);
 
     const unhandledCommands = this.commands.filter(
       (command) => !command.guildID && !handledCommands.includes(command.keyName)

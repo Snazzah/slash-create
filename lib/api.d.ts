@@ -1,4 +1,4 @@
-import { ApplicationCommand, PartialApplicationCommand } from './constants';
+import { ApplicationCommand, BulkUpdateCommand, PartialApplicationCommand } from './constants';
 import SlashCreator from './creator';
 /** The API handler for {@link SlashCreator}. */
 declare class SlashCreatorAPI {
@@ -24,6 +24,12 @@ declare class SlashCreatorAPI {
      * @param guildID The guild ID to put the command on. If undefined, the global command is updated.
      */
     updateCommand(commandID: string, command: PartialApplicationCommand, guildID?: string): Promise<ApplicationCommand>;
+    /**
+     * Updates multiple commands.
+     * @param commands The payload to update the commands to.
+     * @param guildID The guild ID to put the command on. If undefined, the global command is updated.
+     */
+    updateCommands(commands: BulkUpdateCommand[], guildID?: string): Promise<ApplicationCommand>;
     /**
      * Deletes a command.
      * @param commandID The command ID to delete.

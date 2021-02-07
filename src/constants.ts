@@ -72,6 +72,12 @@ export interface PartialApplicationCommand {
   options?: ApplicationCommandOption[];
 }
 
+/** @hidden */
+export interface BulkUpdateCommand extends PartialApplicationCommand {
+  /** The command's ID. */
+  id?: string;
+}
+
 /**
  * An application command in Discord.
  * @private

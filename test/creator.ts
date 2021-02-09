@@ -131,7 +131,7 @@ describe('SlashCreator', () => {
     });
   });
 
-  describe('.registerCommand()', () => {
+  describe('.registerCommands()', () => {
     it('registers commands, filtering out non-command objects', () => {
       const creator = new SlashCreator({
         applicationID: '1'
@@ -204,7 +204,7 @@ describe('SlashCreator', () => {
 
       const commandClass = createBasicCommand();
       const commandClass2 = createBasicCommand({ name: 'other-command' });
-      const commandClass3 = createBasicCommand({ guildID: '1' });
+      const commandClass3 = createBasicCommand({ guildIDs: '1' });
       creator.registerCommand(commandClass);
       expect(creator.reregisterCommand.bind(creator, commandClass2, creator.commands.first()!)).to.throw();
       expect(creator.reregisterCommand.bind(creator, commandClass3, creator.commands.first()!)).to.throw();
@@ -250,7 +250,7 @@ describe('SlashCreator', () => {
       });
 
       creator
-        .registerCommand(createBasicCommand({ name: 'to-create-guild', guildID: '123' }))
+        .registerCommand(createBasicCommand({ name: 'to-create-guild', guildIDs: '123' }))
         .registerCommand(createBasicCommand({ name: 'to-update' }))
         .registerCommand(createBasicCommand({ name: 'to-leave-alone' }));
 
@@ -293,9 +293,9 @@ describe('SlashCreator', () => {
       });
 
       creator
-        .registerCommand(createBasicCommand({ name: 'to-create', guildID: '123' }))
-        .registerCommand(createBasicCommand({ name: 'to-update', guildID: '123' }))
-        .registerCommand(createBasicCommand({ name: 'to-leave-alone', guildID: '123' }));
+        .registerCommand(createBasicCommand({ name: 'to-create', guildIDs: '123' }))
+        .registerCommand(createBasicCommand({ name: 'to-update', guildIDs: '123' }))
+        .registerCommand(createBasicCommand({ name: 'to-leave-alone', guildIDs: '123' }));
 
       const cmdsScope = guildCommands(basicCommands),
         postScope = newGuildCommand({

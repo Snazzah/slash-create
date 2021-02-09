@@ -6,7 +6,7 @@ import SlashCreator from '../../src/creator';
 interface SlashCommandPartialOptions {
   name?: string;
   description?: string;
-  guildID?: string;
+  guildIDs?: string | string[];
   requiredPermissions?: Array<string>;
   options?: ApplicationCommandOption[];
   throttling?: ThrottlingOptions;

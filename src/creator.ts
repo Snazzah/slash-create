@@ -21,7 +21,7 @@ import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
 import Server, { TransformedRequest, RespondFunction, Response } from './server';
 import CommandContext from './context';
-import { isEqual } from 'lodash';
+import { isEqual, uniq } from 'lodash';
 
 /**
  * The events typings for the {@link SlashCreator}.
@@ -175,7 +175,14 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
     // Make sure there aren't any conflicts
     if (this.commands.some((cmd) => cmd.keyName === command.keyName))
-      throw new Error(`A command with the name "${command.commandName}" is already registered.`);
+      throw new Error(`A command with the name "${command.commandName}" (${command.keyName}) is already registered.`);
+    if (
+      command.guildIDs &&
+      this.commands.some(
+        (cmd) => !!(cmd.guildIDs && cmd.guildIDs.map((gid) => command.guildIDs.includes(gid)).includes(true))
+      )
+    )
+      throw new Error(`A command with the name "${command.commandName}" has a conflicting guild ID.`);
 
     if (command.unknown && this.unknownCommand) throw new Error('An unknown command is already registered.');
 
@@ -245,7 +252,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
     if (!command.unknown) {
       if (command.commandName !== oldCommand.commandName) throw new Error('Command name cannot change.');
-      if (command.guildID !== oldCommand.guildID) throw new Error('Command guild ID cannot change.');
+      if (isEqual(command.guildIDs, oldCommand.guildIDs)) throw new Error('Command guild IDs cannot change.');
       this.commands.set(command.keyName, command);
     } else if (this.unknownCommand !== oldCommand) {
       throw new Error('An unknown command is already registered.');
@@ -307,11 +314,11 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     ) as SyncCommandOptions;
 
     const promise = async () => {
-      const guildIDs: string[] = [];
+      let guildIDs: string[] = [];
 
       // Collect guild IDs with specific commands
       for (const [, command] of this.commands) {
-        if (command.guildID && !guildIDs.includes(command.guildID)) guildIDs.push(command.guildID);
+        if (command.guildIDs) guildIDs = uniq([...guildIDs, ...command.guildIDs]);
       }
 
       await this.syncGlobalCommands(options.deleteCommands);
@@ -354,11 +361,13 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
     for (const applicationCommand of commands) {
       const partialCommand: PartialApplicationCommand = Object.assign({}, applicationCommand);
-      const commandKey = `${guildID}_${partialCommand.name}`;
       delete (partialCommand as any).application_id;
       delete (partialCommand as any).id;
 
-      const command = this.commands.get(commandKey);
+      const command = this.commands.find(
+        (command) =>
+          !!(command.guildIDs && command.guildIDs.includes(guildID) && command.commandName === partialCommand.name)
+      );
       if (command) {
         if (!isEqual(partialCommand, command.commandJSON)) {
           this.emit(
@@ -375,6 +384,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
             `Guild command "${applicationCommand.name}" (${applicationCommand.id}) synced (guild: ${guildID})`
           );
         }
+        handledCommands.push(command.keyName);
       } else if (deleteCommands) {
         // Command is removed
         this.emit(
@@ -383,14 +393,13 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
         );
         await this.api.deleteCommand(applicationCommand.id, guildID);
       }
-
-      handledCommands.push(commandKey);
     }
 
     if (updatePayload.length) await this.api.updateCommands(updatePayload, guildID);
 
     const unhandledCommands = this.commands.filter(
-      (command) => command.guildID === guildID && !handledCommands.includes(command.keyName)
+      (command) =>
+        !!(command.guildIDs && command.guildIDs.includes(guildID) && !handledCommands.includes(command.keyName))
     );
 
     for (const [, command] of unhandledCommands) {
@@ -411,7 +420,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
     for (const applicationCommand of commands) {
       const partialCommand: PartialApplicationCommand = Object.assign({}, applicationCommand);
-      const commandKey = `global_${partialCommand.name}`;
+      const commandKey = `global:${partialCommand.name}`;
       delete (partialCommand as any).application_id;
       delete (partialCommand as any).id;
 
@@ -437,7 +446,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     if (updatePayload.length) this.api.updateCommands(updatePayload);
 
     const unhandledCommands = this.commands.filter(
-      (command) => !command.guildID && !handledCommands.includes(command.keyName)
+      (command) => !command.guildIDs && !handledCommands.includes(command.keyName)
     );
 
     for (const [, command] of unhandledCommands) {
@@ -448,9 +457,15 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
   private _getCommandFromInteraction(interaction: InteractionRequestData) {
     return 'guild_id' in interaction
-      ? this.commands.get(`${interaction.guild_id}_${interaction.data.name}`) ||
-          this.commands.get(`global_${interaction.data.name}`)
-      : this.commands.get(`global_${interaction.data.name}`);
+      ? this.commands.find(
+          (command) =>
+            !!(
+              command.guildIDs &&
+              command.guildIDs.includes(interaction.guild_id) &&
+              command.commandName === interaction.data.name
+            )
+        ) || this.commands.get(`global:${interaction.data.name}`)
+      : this.commands.get(`global:${interaction.data.name}`);
   }
 
   private async _onRequest(treq: TransformedRequest, respond: RespondFunction) {

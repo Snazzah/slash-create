@@ -9,8 +9,8 @@ export interface SlashCommandOptions {
   name: string;
   /** The description of the command. */
   description: string;
-  /** The guild ID that this command will be assigned to. */
-  guildID?: string;
+  /** The guild ID(s) that this command will be assigned to. */
+  guildIDs?: string | string[];
   /** The required permission(s) for this command. */
   requiredPermissions?: Array<string>;
   /** The command's options. */
@@ -44,8 +44,8 @@ class SlashCommand {
   readonly description: string;
   /** The options for the command. */
   readonly options?: ApplicationCommandOption[];
-  /** The guild ID for the command. */
-  readonly guildID?: string;
+  /** The guild ID(s) for the command. */
+  readonly guildIDs?: string[];
   /** The permissions required to use this command. */
   readonly requiredPermissions?: Array<string>;
   /** The throttling options for this command. */
@@ -78,7 +78,7 @@ class SlashCommand {
     this.commandName = opts.name;
     this.description = opts.description;
     this.options = opts.options;
-    this.guildID = opts.guildID;
+    if (opts.guildIDs) this.guildIDs = typeof opts.guildIDs == 'string' ? [opts.guildIDs] : opts.guildIDs;
     this.requiredPermissions = opts.requiredPermissions;
     this.throttling = opts.throttling;
     this.unknown = opts.unknown || false;
@@ -101,7 +101,8 @@ class SlashCommand {
    * @private
    */
   get keyName() {
-    return `${this.guildID || 'global'}_${this.commandName}`;
+    const prefix = this.guildIDs ? this.guildIDs.join(',') : 'global';
+    return `${prefix}:${this.commandName}`;
   }
 
   /**

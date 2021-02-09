@@ -44,6 +44,8 @@ export {
   RawRequest,
   AnyRequestData,
   PingRequestData,
+  DMInteractionRequestData,
+  GuildInteractionRequestData,
   InteractionRequestData,
   CommandMember,
   CommandUser,

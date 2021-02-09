@@ -4,6 +4,7 @@ import SlashCreator from './creator';
 import { AnyCommandOption, InteractionRequestData } from './constants';
 import { MessageAllowedMentions } from './util';
 import Message from './structures/message';
+import User from './structures/user';
 /** Command options converted for ease of use. */
 export declare type ConvertedOption = {
     [key: string]: ConvertedOption;
@@ -47,9 +48,11 @@ declare class CommandContext {
     /** The channel ID that the command was invoked in. */
     readonly channelID: string;
     /** The guild ID that the command was invoked in. */
-    readonly guildID: string;
+    readonly guildID?: string;
     /** The member that invoked the command. */
-    readonly member: Member;
+    readonly member?: Member;
+    /** The user that invoked the command. */
+    readonly user: User;
     /** The command's name. */
     readonly commandName: string;
     /** The command's ID. */

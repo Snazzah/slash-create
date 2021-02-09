@@ -110,7 +110,7 @@ class SlashCommand {
    * @return {boolean|string} Whether the member has permission, or an error message to respond with if they don't
    */
   hasPermission(ctx: CommandContext): boolean | string {
-    if (this.requiredPermissions) {
+    if (this.requiredPermissions && ctx.member) {
       const missing = ctx.member.permissions.missing(this.requiredPermissions);
       if (missing.length > 0) {
         if (missing.length === 1) {

@@ -11,7 +11,9 @@ import {
   InterationResponseType,
   InteractionResponseFlags,
   PartialApplicationCommand,
-  BulkUpdateCommand
+  BulkUpdateCommand,
+  CommandUser,
+  InteractionRequestData
 } from './constants';
 import SlashCommand from './command';
 import TypedEmitter from './util/typedEmitter';
@@ -26,7 +28,7 @@ import { isEqual } from 'lodash';
  * @private
  */
 interface SlashCreatorEvents {
-  ping: () => void;
+  ping: (user?: CommandUser) => void;
   synced: () => void;
   rawREST: (request: RawRequest) => void;
   warn: (warning: Error | string) => void;
@@ -444,8 +446,11 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     }
   }
 
-  private _getCommand(commandName: string, guildID: string) {
-    return this.commands.get(`${guildID}_${commandName}`) || this.commands.get(`global_${commandName}`);
+  private _getCommandFromInteraction(interaction: InteractionRequestData) {
+    return 'guild_id' in interaction
+      ? this.commands.get(`${interaction.guild_id}_${interaction.data.name}`) ||
+          this.commands.get(`global_${interaction.data.name}`)
+      : this.commands.get(`global_${interaction.data.name}`);
   }
 
   private async _onRequest(treq: TransformedRequest, respond: RespondFunction) {
@@ -488,7 +493,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     switch (interaction.type) {
       case InteractionType.PING: {
         this.emit('debug', 'Ping recieved');
-        this.emit('ping');
+        this.emit('ping', interaction.user);
         return respond({
           status: 200,
           body: {
@@ -497,12 +502,14 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
         });
       }
       case InteractionType.COMMAND: {
-        const command = this._getCommand(interaction.data.name, interaction.guild_id);
+        const command = this._getCommandFromInteraction(interaction);
 
         if (!command) {
           this.emit(
             'debug',
-            `Unknown command: ${interaction.data.name} (${interaction.data.id}, guild ${interaction.guild_id})`
+            `Unknown command: ${interaction.data.name} (${interaction.data.id}, ${
+              'guild_id' in interaction ? `guild ${interaction.guild_id}` : `user ${interaction.user.id}`
+            })`
           );
           if (this.unknownCommand) {
             const ctx = new CommandContext(this, interaction, respond, webserverMode);
@@ -540,7 +547,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
           }
 
           // Throttle the command
-          const throttle = command.throttle(ctx.member.id);
+          const throttle = command.throttle(ctx.user.id);
           if (throttle && command.throttling && throttle.usages + 1 > command.throttling.usages) {
             const remaining = (throttle.start + command.throttling.duration * 1000 - Date.now()) / 1000;
             const data = { throttle, remaining };
@@ -566,7 +573,12 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
   private async _runCommand(command: SlashCommand, ctx: CommandContext) {
     try {
-      this.emit('debug', `Running command: ${ctx.data.data.name} (${ctx.data.data.id}, guild ${ctx.data.guild_id})`);
+      this.emit(
+        'debug',
+        `Running command: ${ctx.data.data.name} (${ctx.data.data.id}, ${
+          'guild_id' in ctx.data ? `guild ${ctx.data.guild_id}` : `user ${ctx.data.user.id}`
+        })`
+      );
       const promise = command.run(ctx);
       this.emit('commandRun', command, promise, ctx);
       const retVal = await promise;

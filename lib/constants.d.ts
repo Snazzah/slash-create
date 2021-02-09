@@ -127,14 +127,28 @@ export interface RequestData {
 export interface PingRequestData {
     version: 1;
     type: InteractionType.PING;
+    user?: CommandUser;
     token: string;
     id: string;
 }
 /**
- * A command interaction.
+ * A command interaction within a direct message.
  * @private
  */
-export interface InteractionRequestData {
+export interface DMInteractionRequestData {
+    version: 1;
+    type: InteractionType.COMMAND;
+    token: string;
+    id: string;
+    channel_id: string;
+    user: CommandUser;
+    data: CommandData;
+}
+/**
+ * A command interaction within a guild.
+ * @private
+ */
+export interface GuildInteractionRequestData {
     version: 1;
     type: InteractionType.COMMAND;
     token: string;
@@ -144,6 +158,11 @@ export interface InteractionRequestData {
     member: CommandMember;
     data: CommandData;
 }
+/**
+ * Any command interaction.
+ * @private
+ */
+export declare type InteractionRequestData = DMInteractionRequestData | GuildInteractionRequestData;
 /** @private */
 export interface CommandMember {
     user: CommandUser;

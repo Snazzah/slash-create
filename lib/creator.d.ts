@@ -2,7 +2,7 @@
 import Collection from '@discordjs/collection';
 import HTTPS from 'https';
 import { FormattedAllowedMentions, MessageAllowedMentions } from './util';
-import { ImageFormat, RawRequest, RequireAllOptions } from './constants';
+import { ImageFormat, RawRequest, RequireAllOptions, CommandUser } from './constants';
 import SlashCommand from './command';
 import TypedEmitter from './util/typedEmitter';
 import RequestHandler from './util/requestHandler';
@@ -14,7 +14,7 @@ import CommandContext from './context';
  * @private
  */
 interface SlashCreatorEvents {
-    ping: () => void;
+    ping: (user?: CommandUser) => void;
     synced: () => void;
     rawREST: (request: RawRequest) => void;
     warn: (warning: Error | string) => void;
@@ -165,7 +165,7 @@ declare class SlashCreator extends SlashCreator_base {
      * @param deleteCommands Whether to delete command not found in the creator
      */
     syncGlobalCommands(deleteCommands?: boolean): Promise<void>;
-    private _getCommand;
+    private _getCommandFromInteraction;
     private _onRequest;
     private _onInteraction;
     private _runCommand;

@@ -10,6 +10,7 @@ import {
 } from './constants';
 import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from './util';
 import Message from './structures/message';
+import User from './structures/user';
 
 /** Command options converted for ease of use. */
 export type ConvertedOption = { [key: string]: ConvertedOption } | string | number | boolean;
@@ -56,9 +57,11 @@ class CommandContext {
   /** The channel ID that the command was invoked in. */
   readonly channelID: string;
   /** The guild ID that the command was invoked in. */
-  readonly guildID: string;
+  readonly guildID?: string;
   /** The member that invoked the command. */
-  readonly member: Member;
+  readonly member?: Member;
+  /** The user that invoked the command. */
+  readonly user: User;
   /** The command's name. */
   readonly commandName: string;
   /** The command's ID. */
@@ -94,8 +97,9 @@ class CommandContext {
     this.interactionToken = data.token;
     this.interactionID = data.id;
     this.channelID = data.channel_id;
-    this.guildID = data.guild_id;
-    this.member = new Member(data.member, this.creator);
+    this.guildID = 'guild_id' in data ? data.guild_id : undefined;
+    this.member = 'guild_id' in data ? new Member(data.member, this.creator) : undefined;
+    this.user = new User('guild_id' in data ? data.member.user : data.user, this.creator);
 
     this.commandName = data.data.name;
     this.commandID = data.data.id;

@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { API_BASE_URL, ApplicationCommand, Endpoints } from '../../src/constants';
+import { API_BASE_URL, ApplicationCommand, BulkUpdateCommand, Endpoints } from '../../src/constants';
 import { MOCK_TOKEN } from './constants';
 
 const DISCORD_URL = 'https://discord.com';
@@ -30,6 +30,11 @@ export const updateGlobalCommand = (id: string, command: ApplicationCommand) =>
     .patch(API_BASE_URL + Endpoints.COMMAND('1', id))
     .reply(200, command, NOCK_HEADERS);
 
+export const updateGlobalCommands = (commands: ApplicationCommand[]) =>
+  nock(DISCORD_URL)
+    .put(API_BASE_URL + Endpoints.COMMANDS('1'))
+    .reply(200, commands, NOCK_HEADERS);
+
 export const deleteGlobalCommand = (id: string) =>
   nock(DISCORD_URL)
     .delete(API_BASE_URL + Endpoints.COMMAND('1', id))
@@ -51,6 +56,11 @@ export const updateGuildCommand = (id: string, command: ApplicationCommand) =>
   nock(DISCORD_URL)
     .patch(API_BASE_URL + Endpoints.GUILD_COMMAND('1', '123', id))
     .reply(200, command, NOCK_HEADERS);
+
+export const updateGuildCommands = (commands: ApplicationCommand[] = []) =>
+  nock(DISCORD_URL)
+    .put(API_BASE_URL + Endpoints.GUILD_COMMANDS('1', '123'))
+    .reply(200, commands, NOCK_HEADERS);
 
 export const deleteGuildCommand = (id: string) =>
   nock(DISCORD_URL)

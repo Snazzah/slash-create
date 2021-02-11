@@ -130,7 +130,7 @@ declare class SlashCreator extends SlashCreator_base {
      */
     registerCommandsIn(options: RequireAllOptions | string): this;
     /**
-     * Reregisters a command. (does not support changing name, or guild ID)
+     * Reregisters a command. (does not support changing name, or guild IDs)
      * @param command New command
      * @param oldCommand Old command
      */

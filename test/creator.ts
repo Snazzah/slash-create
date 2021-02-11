@@ -20,7 +20,9 @@ import {
   newGlobalCommand,
   newGuildCommand,
   updateGlobalCommand,
-  updateGuildCommand
+  updateGlobalCommands,
+  updateGuildCommand,
+  updateGuildCommands
 } from './util/nock';
 
 describe('SlashCreator', () => {
@@ -258,25 +260,28 @@ describe('SlashCreator', () => {
         guildCmdsScope = guildCommands([]),
         postScope = newGuildCommand({
           id: '0',
-          name: 'to-create',
+          name: 'to-create-guild',
           description: 'description',
-          application_id: '1'
+          application_id: '1',
+          version: '1'
         }),
-        patchScope = updateGlobalCommand('1', {
-          id: '1',
-          name: 'to-update',
-          description: 'description',
-          application_id: '1'
-        }),
+        putScope = updateGlobalCommands([
+          {
+            id: '1',
+            name: 'to-update',
+            description: 'description',
+            application_id: '1',
+            version: '1'
+          }
+        ]),
         deleteScope = deleteGlobalCommand('2');
 
       creator.syncCommands();
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
-      await expect(patchScope, 'updates commands').to.have.been.requestedWith({
-        name: 'to-update',
-        description: 'description'
-      });
       await expect(deleteScope, 'deletes old commands').to.have.been.requested;
+      await expect(putScope, 'updates commands').to.have.been.requestedWith([
+        { id: '1', name: 'to-update', description: 'description' }
+      ]);
       await expect(guildCmdsScope, 'requests guild commands').to.have.been.requested;
       await expect(postScope, 'creates new guild commands').to.have.been.requestedWith({
         name: 'to-create-guild',
@@ -302,23 +307,32 @@ describe('SlashCreator', () => {
           id: '0',
           name: 'to-create',
           description: 'description',
-          application_id: '1'
+          guild_id: '123',
+          application_id: '1',
+          version: '1'
         }),
-        patchScope = updateGuildCommand('1', {
-          id: '1',
-          name: 'to-update',
-          description: 'description',
-          application_id: '1'
-        }),
+        putScope = updateGuildCommands([
+          {
+            id: '1',
+            name: 'to-update',
+            description: 'description',
+            guild_id: '123',
+            application_id: '1',
+            version: '1'
+          }
+        ]),
         deleteScope = deleteGuildCommand('2');
 
       const promise = expect(creator.syncCommandsIn('123')).to.be.fulfilled;
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
-      await expect(patchScope, 'updates commands').to.have.been.requestedWith({
-        name: 'to-update',
-        description: 'description'
-      });
       await expect(deleteScope, 'deletes old commands').to.have.been.requested;
+      await expect(putScope, 'updates commands').to.have.been.requestedWith([
+        {
+          id: '1',
+          name: 'to-update',
+          description: 'description'
+        }
+      ]);
       await expect(postScope, 'creates new commands').to.have.been.requestedWith({
         name: 'to-create',
         description: 'description'
@@ -344,23 +358,30 @@ describe('SlashCreator', () => {
           id: '0',
           name: 'to-create',
           description: 'description',
-          application_id: '1'
+          application_id: '1',
+          version: '1'
         }),
-        patchScope = updateGlobalCommand('1', {
-          id: '1',
-          name: 'to-update',
-          description: 'description',
-          application_id: '1'
-        }),
+        putScope = updateGlobalCommands([
+          {
+            id: '1',
+            name: 'to-update',
+            description: 'description',
+            application_id: '1',
+            version: '1'
+          }
+        ]),
         deleteScope = deleteGlobalCommand('2');
 
       const promise = expect(creator.syncGlobalCommands()).to.be.fulfilled;
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
-      await expect(patchScope, 'updates commands').to.have.been.requestedWith({
-        name: 'to-update',
-        description: 'description'
-      });
       await expect(deleteScope, 'deletes old commands').to.have.been.requested;
+      await expect(putScope, 'updates commands').to.have.been.requestedWith([
+        {
+          id: '1',
+          name: 'to-update',
+          description: 'description'
+        }
+      ]);
       await expect(postScope, 'creates new commands').to.have.been.requestedWith({
         name: 'to-create',
         description: 'description'

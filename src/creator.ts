@@ -186,7 +186,12 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     if (
       command.guildIDs &&
       this.commands.some(
-        (cmd) => !!(cmd.guildIDs && cmd.guildIDs.map((gid) => command.guildIDs.includes(gid)).includes(true))
+        (cmd) =>
+          !!(
+            cmd.commandName === command.commandName &&
+            cmd.guildIDs &&
+            cmd.guildIDs.map((gid) => command.guildIDs.includes(gid)).includes(true)
+          )
       )
     )
       throw new Error(`A command with the name "${command.commandName}" has a conflicting guild ID.`);
@@ -247,7 +252,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
   }
 
   /**
-   * Reregisters a command. (does not support changing name, or guild ID)
+   * Reregisters a command. (does not support changing name, or guild IDs)
    * @param command New command
    * @param oldCommand Old command
    */
@@ -259,7 +264,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
     if (!command.unknown) {
       if (command.commandName !== oldCommand.commandName) throw new Error('Command name cannot change.');
-      if (isEqual(command.guildIDs, oldCommand.guildIDs)) throw new Error('Command guild IDs cannot change.');
+      if (!isEqual(command.guildIDs, oldCommand.guildIDs)) throw new Error('Command guild IDs cannot change.');
       this.commands.set(command.keyName, command);
     } else if (this.unknownCommand !== oldCommand) {
       throw new Error('An unknown command is already registered.');

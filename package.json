@@ -29,7 +29,7 @@
     "docs": "typedoc --json .tmp/typedoc-out.json --plugin typedoc-plugin-as-member-of && ts-node scripts/docs",
     "lint": "npx eslint --ext .ts ./src",
     "lint:fix": "npx eslint --ext .ts ./src --fix",
-    "test": "mocha -r ts-node/register test/**/*.ts",
+    "test": "mocha -r ts-node/register --extension ts",
     "gpr": "ts-node scripts/gpr",
     "prepublishOnly": "npm run lint:fix"
   },

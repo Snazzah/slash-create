@@ -183,18 +183,21 @@ export const basicCommands: ApplicationCommand[] = [
     id: '1',
     name: 'to-update',
     description: 'old description',
-    application_id: '1'
+    application_id: '1',
+    version: '1'
   },
   {
     id: '2',
     name: 'to-delete',
     description: 'description',
-    application_id: '1'
+    application_id: '1',
+    version: '1'
   },
   {
     id: '3',
     name: 'to-leave-alone',
     description: 'description',
-    application_id: '1'
+    application_id: '1',
+    version: '1'
   }
 ];

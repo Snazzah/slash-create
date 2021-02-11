@@ -1,6 +1,6 @@
 {
   "name": "slash-create",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "description": "Creator and handler for Discord's slash commands",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",

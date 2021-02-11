@@ -1,7 +1,14 @@
 import EventEmitter from 'eventemitter3';
 import Collection from '@discordjs/collection';
 import HTTPS from 'https';
-import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions, oneLine, verifyKey } from './util';
+import {
+  formatAllowedMentions,
+  FormattedAllowedMentions,
+  MessageAllowedMentions,
+  objectKeySort,
+  oneLine,
+  verifyKey
+} from './util';
 import {
   ImageFormat,
   InteractionType,
@@ -362,14 +369,16 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     for (const applicationCommand of commands) {
       const partialCommand: PartialApplicationCommand = Object.assign({}, applicationCommand);
       delete (partialCommand as any).application_id;
+      delete (partialCommand as any).guild_id;
       delete (partialCommand as any).id;
+      delete (partialCommand as any).version;
 
       const command = this.commands.find(
         (command) =>
           !!(command.guildIDs && command.guildIDs.includes(guildID) && command.commandName === partialCommand.name)
       );
       if (command) {
-        if (!isEqual(partialCommand, command.commandJSON)) {
+        if (!isEqual(objectKeySort(partialCommand), objectKeySort(command.commandJSON))) {
           this.emit(
             'debug',
             `Updating guild command "${applicationCommand.name}" (${applicationCommand.id}, guild: ${guildID})`
@@ -423,10 +432,11 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       const commandKey = `global:${partialCommand.name}`;
       delete (partialCommand as any).application_id;
       delete (partialCommand as any).id;
+      delete (partialCommand as any).version;
 
       const command = this.commands.get(commandKey);
       if (command) {
-        if (!isEqual(partialCommand, command.commandJSON)) {
+        if (!isEqual(objectKeySort(partialCommand), objectKeySort(command.commandJSON))) {
           this.emit('debug', `Updating command "${applicationCommand.name}" (${applicationCommand.id})`);
           updatePayload.push({
             id: applicationCommand.id,

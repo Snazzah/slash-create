@@ -87,6 +87,10 @@ export interface ApplicationCommand extends PartialApplicationCommand {
   id: string;
   /** The application's ID responsible for this command. */
   application_id: string;
+  /** The guild ID this comamnd is exlusive to. */
+  guild_id?: string;
+  /** The version ID of the command. */
+  version: string;
 }
 
 /** An option in an application command. */

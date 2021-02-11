@@ -1,3 +1,4 @@
+/// <reference types="lodash" />
 import { ApplicationCommandOption } from './constants';
 /**
  * Validates a payload from Discord against its signature and key.
@@ -27,3 +28,4 @@ export interface FormattedAllowedMentions {
 export declare function formatAllowedMentions(allowed: MessageAllowedMentions, defaultMentions?: FormattedAllowedMentions): FormattedAllowedMentions;
 export declare function oneLine(strings: TemplateStringsArray, ..._: any[]): string;
 export declare function validateOptions(options: ApplicationCommandOption[], prefix?: string): void;
+export declare function objectKeySort(obj: any): import("lodash").Dictionary<unknown>;

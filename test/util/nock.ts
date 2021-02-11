@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { API_BASE_URL, ApplicationCommand, BulkUpdateCommand, Endpoints } from '../../src/constants';
+import { API_BASE_URL, ApplicationCommand, Endpoints } from '../../src/constants';
 import { MOCK_TOKEN } from './constants';
 
 const DISCORD_URL = 'https://discord.com';

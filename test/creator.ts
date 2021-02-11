@@ -19,9 +19,7 @@ import {
   guildCommands,
   newGlobalCommand,
   newGuildCommand,
-  updateGlobalCommand,
   updateGlobalCommands,
-  updateGuildCommand,
   updateGuildCommands
 } from './util/nock';
 

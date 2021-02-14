@@ -11,6 +11,10 @@ import {
 import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from './util';
 import Message from './structures/message';
 import User from './structures/user';
+import Collection from '@discordjs/collection';
+import Channel from './structures/channel';
+import Role from './structures/role';
+import ResolvedMember from './structures/resolvedMember';
 
 /** Command options converted for ease of use. */
 export type ConvertedOption = { [key: string]: ConvertedOption } | string | number | boolean;
@@ -62,6 +66,7 @@ class CommandContext {
   readonly member?: Member;
   /** The user that invoked the command. */
   readonly user: User;
+
   /** The command's name. */
   readonly commandName: string;
   /** The command's ID. */
@@ -74,6 +79,15 @@ class CommandContext {
   readonly invokedAt: number = Date.now();
   /** Whether the initial response was made. */
   initiallyResponded = false;
+
+  /** The resolved users of the interaction. */
+  readonly users = new Collection<string, User>();
+  /** The resolved members of the interaction. */
+  readonly members = new Collection<string, ResolvedMember>();
+  /** The resolved roles of the interaction. */
+  readonly roles = new Collection<string, Role>();
+  /** The resolved channels of the interaction. */
+  readonly channels = new Collection<string, Channel>();
 
   /** Whether the context is from a webserver. */
   private webserverMode: boolean;
@@ -105,6 +119,28 @@ class CommandContext {
     this.commandID = data.data.id;
     this.options = data.data.options ? CommandContext.convertOptions(data.data.options) : {};
     this.subcommands = data.data.options ? CommandContext.getSubcommandArray(data.data.options) : [];
+
+    if (data.data.resolved) {
+      if (data.data.resolved.users)
+        Object.keys(data.data.resolved.users).forEach((id) =>
+          this.users.set(id, new User(data.data.resolved!.users![id], this.creator))
+        );
+      if (data.data.resolved.members)
+        Object.keys(data.data.resolved.members).forEach((id) =>
+          this.members.set(
+            id,
+            new ResolvedMember(data.data.resolved!.members![id], data.data.resolved!.users![id], this.creator)
+          )
+        );
+      if (data.data.resolved.roles)
+        Object.keys(data.data.resolved.roles).forEach((id) =>
+          this.roles.set(id, new Role(data.data.resolved!.roles![id]))
+        );
+      if (data.data.resolved.channels)
+        Object.keys(data.data.resolved.channels).forEach((id) =>
+          this.channels.set(id, new Channel(data.data.resolved!.channels![id]))
+        );
+    }
 
     // Auto-acknowledge if no response was given in 2.5 seconds
     this._timeout = setTimeout(() => this.acknowledge(creator.options.autoAcknowledgeSource || false), 2500);

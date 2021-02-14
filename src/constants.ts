@@ -189,17 +189,21 @@ export interface GuildInteractionRequestData {
 export type InteractionRequestData = DMInteractionRequestData | GuildInteractionRequestData;
 
 /** @private */
-export interface CommandMember {
-  user: CommandUser;
+export interface ResolvedMember {
   roles: string[];
   premium_since: string | null;
-  permissions: string;
   pending: boolean;
   is_pending: boolean;
-  mute: boolean;
-  deaf: boolean;
   nick: string | null;
   joined_at: string;
+}
+
+/** @private */
+export interface CommandMember extends ResolvedMember {
+  user: CommandUser;
+  mute: boolean;
+  deaf: boolean;
+  permissions: string;
 }
 
 /** @private */
@@ -209,6 +213,26 @@ export interface CommandUser {
   avatar: string | null;
   discriminator: string;
   public_flags: number;
+}
+
+/** @private */
+export interface ResolvedRole {
+  color: number;
+  hoist: boolean;
+  id: string;
+  managed: boolean;
+  mentionable: boolean;
+  name: string;
+  permissions: string;
+  position: number;
+}
+
+/** @private */
+export interface ResolvedChannel {
+  id: string;
+  name: string;
+  permissions: string;
+  type: number;
 }
 
 /** @hidden */
@@ -222,6 +246,12 @@ export interface CommandData {
   id: string;
   name: string;
   options?: AnyCommandOption[];
+  resolved?: {
+    users?: { [id: string]: CommandUser };
+    members?: { [id: string]: ResolvedMember };
+    roles?: { [id: string]: ResolvedRole };
+    channels?: { [id: string]: ResolvedChannel };
+  };
 }
 
 /** @private */
@@ -231,6 +261,7 @@ export type AnyCommandOption = CommandOption | CommandSubcommandOption;
 export interface CommandOption {
   /** The name for the option. */
   name: string;
+  type: CommandOptionType;
   value?: string | number | boolean;
 }
 

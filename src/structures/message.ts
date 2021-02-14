@@ -95,6 +95,11 @@ class Message {
   delete() {
     return this._ctx.delete(this.id);
   }
+
+  /** @hidden */
+  toString() {
+    return `[Message ${this.id}]`;
+  }
 }
 
 export default Message;

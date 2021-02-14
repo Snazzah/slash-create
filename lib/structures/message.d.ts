@@ -67,5 +67,7 @@ declare class Message {
     edit(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message>;
     /** Deletes this message. */
     delete(): Promise<any>;
+    /** @hidden */
+    toString(): string;
 }
 export default Message;

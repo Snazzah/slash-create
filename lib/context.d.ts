@@ -5,6 +5,10 @@ import { AnyCommandOption, InteractionRequestData } from './constants';
 import { MessageAllowedMentions } from './util';
 import Message from './structures/message';
 import User from './structures/user';
+import Collection from '@discordjs/collection';
+import Channel from './structures/channel';
+import Role from './structures/role';
+import ResolvedMember from './structures/resolvedMember';
 /** Command options converted for ease of use. */
 export declare type ConvertedOption = {
     [key: string]: ConvertedOption;
@@ -67,6 +71,14 @@ declare class CommandContext {
     readonly invokedAt: number;
     /** Whether the initial response was made. */
     initiallyResponded: boolean;
+    /** The resolved users of the interaction. */
+    readonly users: Collection<string, User>;
+    /** The resolved members of the interaction. */
+    readonly members: Collection<string, ResolvedMember>;
+    /** The resolved roles of the interaction. */
+    readonly roles: Collection<string, Role>;
+    /** The resolved channels of the interaction. */
+    readonly channels: Collection<string, Channel>;
     /** Whether the context is from a webserver. */
     private webserverMode;
     /** The initial response function. */

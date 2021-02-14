@@ -17,6 +17,6 @@ module.exports = class HelloCommand extends SlashCommand {
   }
 
   async run(ctx) {
-    return ctx.options.food ? `You like ${ctx.options.food}? Nice!` : `Hello, ${ctx.member.displayName}!`;
+    return ctx.options.food ? `You like ${ctx.options.food}? Nice!` : `Hello, ${ctx.user.username}!`;
   }
 }

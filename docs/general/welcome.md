@@ -32,7 +32,7 @@ In order to use a specific webserver, you will need to install the dependency as
 - `ExpressServer`: `express`
 - `FastifyServer`: `fastify`
 - `GatewayServer`: none, see [example](#/docs/main/latest/examples/discord-bot)
-- `GCFServer`: none technically, meant for use with [`@google-cloud/functions-framework`](https://npm.im/@google-cloud/functions-framework), see [example](https://slash-create.js.org/#/docs/main/latest/examples/gcf)
+- `GCFServer`: none technically, meant for use with [`@google-cloud/functions-framework`](https://npm.im/@google-cloud/functions-framework), see [example](#/docs/main/latest/examples/gcf)
 
 ## Example
 
@@ -113,7 +113,7 @@ module.exports = class HelloCommand extends SlashCommand {
   }
 
   async run(ctx) {
-    return `Hello, ${ctx.member.displayName}!`;
+    return `Hello, ${ctx.user.username}!`;
   }
 }
 ```

@@ -113,7 +113,7 @@ module.exports = class HelloCommand extends SlashCommand {
   }
 
   async run(ctx) {
-    return `Hello, ${ctx.member.displayName}!`;
+    return `Hello, ${ctx.user.username}!`;
   }
 }
 ```

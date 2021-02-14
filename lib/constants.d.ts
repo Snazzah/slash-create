@@ -247,6 +247,7 @@ export interface CommandOption {
 export interface CommandSubcommandOption {
     /** The name for the option. */
     name: string;
+    type: CommandOptionType.SUB_COMMAND | CommandOptionType.SUB_COMMAND_GROUP;
     options: CommandOption[];
 }
 /** @see https://www.npmjs.com/package/require-all#usage */

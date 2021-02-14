@@ -1,4 +1,4 @@
-import { ApplicationCommand, InteractionRequestData, InteractionType } from '../../src/constants';
+import { ApplicationCommand, CommandOptionType, InteractionRequestData, InteractionType } from '../../src/constants';
 import SlashCreator from '../../src/creator';
 import { RespondFunction } from '../../src/server';
 import { MessageData } from '../../src/structures/message';
@@ -77,7 +77,8 @@ export const subCommandInteraction: InteractionRequestData = {
     name: 'sub-command',
     options: [
       {
-        name: 'sub-command'
+        name: 'sub-command',
+        type: CommandOptionType.SUB_COMMAND
       }
     ]
   }
@@ -91,9 +92,11 @@ export const subCommandGroupInteraction: InteractionRequestData = {
     options: [
       {
         name: 'sub-command-group',
+        type: CommandOptionType.SUB_COMMAND_GROUP,
         options: [
           {
-            name: 'sub-command'
+            name: 'sub-command',
+            type: CommandOptionType.SUB_COMMAND
           }
         ]
       }
@@ -109,14 +112,17 @@ export const optionsInteraction: InteractionRequestData = {
     options: [
       {
         name: 'string',
+        type: CommandOptionType.STRING,
         value: 'hi'
       },
       {
         name: 'int',
+        type: CommandOptionType.INTEGER,
         value: 2
       },
       {
         name: 'bool',
+        type: CommandOptionType.BOOLEAN,
         value: true
       }
     ]
@@ -131,17 +137,21 @@ export const subCommandOptionsInteraction: InteractionRequestData = {
     options: [
       {
         name: 'sub-command',
+        type: CommandOptionType.SUB_COMMAND,
         options: [
           {
             name: 'string',
+            type: CommandOptionType.STRING,
             value: 'hi'
           },
           {
             name: 'int',
+            type: CommandOptionType.INTEGER,
             value: 2
           },
           {
             name: 'bool',
+            type: CommandOptionType.BOOLEAN,
             value: true
           }
         ]

@@ -3,6 +3,7 @@ import { RespondFunction } from './server';
 import SlashCreator from './creator';
 import {
   AnyCommandOption,
+  CommandOptionType,
   Endpoints,
   InteractionRequestData,
   InteractionResponseFlags,
@@ -322,8 +323,9 @@ class CommandContext {
   static convertOptions(options: AnyCommandOption[]) {
     const convertedOptions: { [key: string]: ConvertedOption } = {};
     for (const option of options) {
-      if ('options' in option) convertedOptions[option.name] = CommandContext.convertOptions(option.options);
-      else convertedOptions[option.name] = option.value !== undefined ? option.value : {};
+      if (option.type === CommandOptionType.SUB_COMMAND || option.type === CommandOptionType.SUB_COMMAND_GROUP) {
+        if (option.options) convertedOptions[option.name] = CommandContext.convertOptions(option.options);
+      } else if ('value' in option) convertedOptions[option.name] = option.value !== undefined ? option.value : {};
     }
     return convertedOptions;
   }
@@ -332,8 +334,8 @@ class CommandContext {
   static getSubcommandArray(options: AnyCommandOption[]) {
     const result: string[] = [];
     for (const option of options) {
-      if ('options' in option) result.push(option.name, ...CommandContext.getSubcommandArray(option.options));
-      else if (option.value === undefined && option.name) result.push(option.name);
+      if (option.type === CommandOptionType.SUB_COMMAND || option.type === CommandOptionType.SUB_COMMAND_GROUP)
+        result.push(option.name, ...(option.options ? CommandContext.getSubcommandArray(option.options) : []));
     }
     return result;
   }

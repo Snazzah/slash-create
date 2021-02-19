@@ -53,6 +53,9 @@ export {
   AnyCommandOption,
   CommandOption,
   CommandSubcommandOption,
+  CommandStringOption,
+  CommandIntegerOption,
+  CommandBooleanOption,
   ImageFormat
 } from './constants';
 

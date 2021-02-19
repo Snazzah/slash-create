@@ -255,9 +255,16 @@ export interface CommandData {
 }
 
 /** @private */
-export type AnyCommandOption = CommandOption | CommandSubcommandOption;
+export type AnyCommandOption =
+  | CommandStringOption
+  | CommandIntegerOption
+  | CommandBooleanOption
+  | CommandSubcommandOption;
 
-/** @private */
+/**
+ * @private
+ * @deprecated
+ */
 export interface CommandOption {
   /** The name for the option. */
   name: string;
@@ -266,11 +273,35 @@ export interface CommandOption {
 }
 
 /** @private */
+export interface CommandStringOption {
+  /** The name for the option. */
+  name: string;
+  type: CommandOptionType.STRING | CommandOptionType.USER | CommandOptionType.CHANNEL | CommandOptionType.ROLE;
+  value: string;
+}
+
+/** @private */
+export interface CommandIntegerOption {
+  /** The name for the option. */
+  name: string;
+  type: CommandOptionType.INTEGER;
+  value: number;
+}
+
+/** @private */
+export interface CommandBooleanOption {
+  /** The name for the option. */
+  name: string;
+  type: CommandOptionType.BOOLEAN;
+  value: boolean;
+}
+
+/** @private */
 export interface CommandSubcommandOption {
   /** The name for the option. */
   name: string;
   type: CommandOptionType.SUB_COMMAND | CommandOptionType.SUB_COMMAND_GROUP;
-  options: CommandOption[];
+  options?: AnyCommandOption[];
 }
 
 /** @see https://www.npmjs.com/package/require-all#usage */

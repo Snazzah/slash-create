@@ -324,8 +324,8 @@ class CommandContext {
     const convertedOptions: { [key: string]: ConvertedOption } = {};
     for (const option of options) {
       if (option.type === CommandOptionType.SUB_COMMAND || option.type === CommandOptionType.SUB_COMMAND_GROUP) {
-        if (option.options) convertedOptions[option.name] = CommandContext.convertOptions(option.options);
-      } else if ('value' in option) convertedOptions[option.name] = option.value !== undefined ? option.value : {};
+        convertedOptions[option.name] = option.options ? CommandContext.convertOptions(option.options) : {};
+      } else convertedOptions[option.name] = 'value' in option && option.value !== undefined ? option.value : {};
     }
     return convertedOptions;
   }

@@ -243,7 +243,7 @@ class SlashCommand {
 
     if (opts.options) {
       if (!Array.isArray(opts.options)) throw new TypeError('Command options must be an Array of options.');
-      if (opts.options.length > 10) throw new RangeError('Command options cannot exceed 10 options.');
+      if (opts.options.length > 25) throw new RangeError('Command options cannot exceed 25 options.');
 
       validateOptions(opts.options);
     }

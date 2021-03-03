@@ -17,6 +17,8 @@ export interface SlashCommandOptions {
     throttling?: ThrottlingOptions;
     /** Whether this command is used for unknown commands. */
     unknown?: boolean;
+    /** Whether responses from this command should defer ephemeral messages. */
+    deferEphemeral?: boolean;
 }
 /** The throttling options for a {@link SlashCommand}. */
 export interface ThrottlingOptions {
@@ -47,6 +49,8 @@ declare class SlashCommand {
     readonly throttling?: ThrottlingOptions;
     /** Whether this command is used for unknown commands. */
     readonly unknown: boolean;
+    /** Whether responses from this command should defer ephemeral messages. */
+    readonly deferEphemeral: boolean;
     /**
      * The file path of the command.
      * Used for refreshing the require cache.

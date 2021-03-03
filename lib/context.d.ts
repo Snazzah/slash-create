@@ -36,8 +36,6 @@ export interface MessageOptions extends FollowUpMessageOptions {
      * Ignored if `flags` is defined.
      */
     ephemeral?: boolean;
-    /** Whether or not to include the source of the interaction in the message. */
-    includeSource?: boolean;
 }
 /** Context representing a command interaction. */
 declare class CommandContext {
@@ -69,8 +67,10 @@ declare class CommandContext {
     readonly subcommands: string[];
     /** The time when the context was created. */
     readonly invokedAt: number;
-    /** Whether the initial response was made. */
+    /** Whether the initial response was sent. */
     initiallyResponded: boolean;
+    /** Whether there is a deferred message available. */
+    deferred: boolean;
     /** The resolved users of the interaction. */
     readonly users: Collection<string, User>;
     /** The resolved members of the interaction. */
@@ -90,8 +90,9 @@ declare class CommandContext {
      * @param data The interaction data for the context.
      * @param respond The response function for the interaction.
      * @param webserverMode Whether the interaction was from a webserver.
+     * @param deferEphemeral Whether the context should auto-defer ephemeral messages.
      */
-    constructor(creator: SlashCreator, data: InteractionRequestData, respond: RespondFunction, webserverMode: boolean);
+    constructor(creator: SlashCreator, data: InteractionRequestData, respond: RespondFunction, webserverMode: boolean, deferEphemeral?: boolean);
     /** Whether the interaction has expired. Interactions last 15 minutes. */
     get expired(): boolean;
     /**
@@ -123,18 +124,19 @@ declare class CommandContext {
      * @param content The content of the message
      * @param options The message options
      */
-    editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<unknown>;
+    editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message>;
     /**
      * Deletes a message. If the message ID was not defined, the original message is used.
      * @param messageID The message's ID
      */
     delete(messageID?: string): Promise<any>;
     /**
-     * Acknowleges the interaction. Including source will send a message showing only the source.
-     * @param includeSource Whether to include the source in the acknowledgement.
-     * @returns Whether the acknowledgement passed
+     * Creates a deferred message. To users, this will show as
+     * "Bot is thinking..." until the deferred message is edited.
+     * @param ephemeral Whether to make the deferred message ephemeral.
+     * @returns Whether the deferred message passed
      */
-    acknowledge(includeSource?: boolean): Promise<boolean>;
+    defer(ephemeral?: boolean): Promise<boolean>;
     /** @private */
     static convertOptions(options: AnyCommandOption[]): {
         [key: string]: ConvertedOption;

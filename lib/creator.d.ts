@@ -54,8 +54,6 @@ interface SlashCreatorOptions {
      * If an unknown command is registered, this is ignored.
      */
     unknownCommandResponse?: boolean;
-    /** Whether to include source in the auto-acknowledgement timeout. */
-    autoAcknowledgeSource?: boolean;
     /** The default allowed mentions for all messages. */
     allowedMentions?: MessageAllowedMentions;
     /** The default format to provide user avatars in. */

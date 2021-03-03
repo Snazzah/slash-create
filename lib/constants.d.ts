@@ -15,14 +15,10 @@ export declare enum InteractionType {
 export declare enum InterationResponseType {
     /** Acknowledge a `PING`. */
     PONG = 1,
-    /** Acknowledge a command without sending a message. */
-    ACKNOWLEDGE = 2,
-    /** Respond with a message. */
-    CHANNEL_MESSAGE = 3,
     /** Respond with a message, showing the user's input. */
     CHANNEL_MESSAGE_WITH_SOURCE = 4,
-    /** Acknowledge a command without sending a message, showing the user's input. */
-    ACKNOWLEDGE_WITH_SOURCE = 5
+    /** Create a deferred message with source. */
+    DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = 5
 }
 /** Message flags for interaction responses. */
 export declare enum InteractionResponseFlags {

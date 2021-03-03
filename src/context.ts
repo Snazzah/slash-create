@@ -45,8 +45,6 @@ export interface MessageOptions extends FollowUpMessageOptions {
    * Ignored if `flags` is defined.
    */
   ephemeral?: boolean;
-  /** Whether or not to include the source of the interaction in the message. */
-  includeSource?: boolean;
 }
 
 /** Context representing a command interaction. */
@@ -78,8 +76,10 @@ class CommandContext {
   readonly subcommands: string[];
   /** The time when the context was created. */
   readonly invokedAt: number = Date.now();
-  /** Whether the initial response was made. */
+  /** Whether the initial response was sent. */
   initiallyResponded = false;
+  /** Whether there is a deferred message available. */
+  deferred = false;
 
   /** The resolved users of the interaction. */
   readonly users = new Collection<string, User>();
@@ -102,8 +102,15 @@ class CommandContext {
    * @param data The interaction data for the context.
    * @param respond The response function for the interaction.
    * @param webserverMode Whether the interaction was from a webserver.
+   * @param deferEphemeral Whether the context should auto-defer ephemeral messages.
    */
-  constructor(creator: SlashCreator, data: InteractionRequestData, respond: RespondFunction, webserverMode: boolean) {
+  constructor(
+    creator: SlashCreator,
+    data: InteractionRequestData,
+    respond: RespondFunction,
+    webserverMode: boolean,
+    deferEphemeral = false
+  ) {
     this.creator = creator;
     this.data = data;
     this.webserverMode = webserverMode;
@@ -143,8 +150,8 @@ class CommandContext {
         );
     }
 
-    // Auto-acknowledge if no response was given in 2.5 seconds
-    this._timeout = setTimeout(() => this.acknowledge(creator.options.autoAcknowledgeSource || false), 2500);
+    // Auto-defer if no response was given in 2.5 seconds
+    this._timeout = setTimeout(() => this.defer(deferEphemeral || false), 2500);
   }
 
   /** Whether the interaction has expired. Interactions last 15 minutes. */
@@ -183,9 +190,7 @@ class CommandContext {
       await this._respond({
         status: 200,
         body: {
-          type: options.includeSource
-            ? InterationResponseType.CHANNEL_MESSAGE_WITH_SOURCE
-            : InterationResponseType.CHANNEL_MESSAGE,
+          type: InterationResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             tts: options.tts,
             content: options.content,
@@ -196,7 +201,8 @@ class CommandContext {
         }
       });
       return true;
-    } else return this.sendFollowUp(content, options);
+    } else if (this.initiallyResponded && this.deferred) return this.editOriginal(content, options);
+    else return this.sendFollowUp(content, options);
   }
 
   /**
@@ -278,7 +284,8 @@ class CommandContext {
    * @param content The content of the message
    * @param options The message options
    */
-  editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions) {
+  editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message> {
+    this.deferred = false;
     if (!this.webserverMode) return this.edit('@original', content, options);
     return new Promise((resolve, reject) =>
       setTimeout(() => this.edit('@original', content, options).then(resolve).catch(reject), 150)
@@ -299,18 +306,23 @@ class CommandContext {
   }
 
   /**
-   * Acknowleges the interaction. Including source will send a message showing only the source.
-   * @param includeSource Whether to include the source in the acknowledgement.
-   * @returns Whether the acknowledgement passed
+   * Creates a deferred message. To users, this will show as
+   * "Bot is thinking..." until the deferred message is edited.
+   * @param ephemeral Whether to make the deferred message ephemeral.
+   * @returns Whether the deferred message passed
    */
-  async acknowledge(includeSource = false): Promise<boolean> {
-    if (!this.initiallyResponded) {
+  async defer(ephemeral = false): Promise<boolean> {
+    if (!this.initiallyResponded && !this.deferred) {
       this.initiallyResponded = true;
+      this.deferred = true;
       clearTimeout(this._timeout);
       await this._respond({
         status: 200,
         body: {
-          type: includeSource ? InterationResponseType.ACKNOWLEDGE_WITH_SOURCE : InterationResponseType.ACKNOWLEDGE
+          type: InterationResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            flags: ephemeral ? InteractionResponseFlags.EPHEMERAL : 0
+          }
         }
       });
       return true;

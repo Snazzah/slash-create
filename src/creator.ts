@@ -76,8 +76,6 @@ interface SlashCreatorOptions {
    * If an unknown command is registered, this is ignored.
    */
   unknownCommandResponse?: boolean;
-  /** Whether to include source in the auto-acknowledgement timeout. */
-  autoAcknowledgeSource?: boolean;
   /** The default allowed mentions for all messages. */
   allowedMentions?: MessageAllowedMentions;
   /** The default format to provide user avatars in. */
@@ -151,7 +149,6 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
         defaultImageFormat: 'jpg',
         defaultImageSize: 128,
         unknownCommandResponse: true,
-        autoAcknowledgeSource: false,
         latencyThreshold: 30000,
         ratelimiterOffset: 0,
         requestTimeout: 15000,
@@ -542,13 +539,19 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
             })`
           );
           if (this.unknownCommand) {
-            const ctx = new CommandContext(this, interaction, respond, webserverMode);
+            const ctx = new CommandContext(
+              this,
+              interaction,
+              respond,
+              webserverMode,
+              this.unknownCommand.deferEphemeral
+            );
             return this._runCommand(this.unknownCommand, ctx);
           } else if (this.options.unknownCommandResponse)
             return respond({
               status: 200,
               body: {
-                type: InterationResponseType.CHANNEL_MESSAGE,
+                type: InterationResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
                   content: oneLine`
                     This command no longer exists.
@@ -560,13 +563,10 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
             });
           else
             return respond({
-              status: 200,
-              body: {
-                type: InterationResponseType.ACKNOWLEDGE
-              }
+              status: 400
             });
         } else {
-          const ctx = new CommandContext(this, interaction, respond, webserverMode);
+          const ctx = new CommandContext(this, interaction, respond, webserverMode, command.deferEphemeral);
 
           // Ensure the user has permission to use the command
           const hasPermission = command.hasPermission(ctx);

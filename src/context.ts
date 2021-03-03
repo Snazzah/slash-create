@@ -161,8 +161,10 @@ class CommandContext {
 
   /**
    * Sends a message, if it already made an initial response, this will create a follow-up message.
+   * IF the context has created a deferred message, it will edit that deferred message,
+   * and future calls to this function create follow ups.
    * This will return a boolean if it's an initial response, otherwise a {@link Message} will be returned.
-   * Note that when making a follow-up message, the `ephemeral` and `includeSource` are ignored.
+   * Note that when making a follow-up message, the `ephemeral` option is ignored.
    * @param content The content of the message
    * @param options The message options
    */
@@ -280,7 +282,7 @@ class CommandContext {
    * Edits the original message.
    * This is put on a timeout of 150 ms for webservers to account for
    * Discord recieving and processing the original response.
-   * Note: This will error with ephemeral messages or acknowledgements.
+   * Note: This will error with ephemeral messages or deferred ephemeral messages.
    * @param content The content of the message
    * @param options The message options
    */

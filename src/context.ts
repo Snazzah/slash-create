@@ -9,7 +9,7 @@ import {
   InteractionResponseFlags,
   InterationResponseType
 } from './constants';
-import {formatAllowedMentions, FormattedAllowedMentions, isSubCommand, MessageAllowedMentions} from './util';
+import { formatAllowedMentions, FormattedAllowedMentions, isSubCommand, MessageAllowedMentions } from './util';
 import Message from './structures/message';
 import User from './structures/user';
 import Collection from '@discordjs/collection';

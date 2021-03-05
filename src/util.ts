@@ -1,4 +1,4 @@
-import {AnyCommandOption, ApplicationCommandOption, CommandOptionType, CommandSubcommandOption} from './constants';
+import { AnyCommandOption, ApplicationCommandOption, CommandOptionType } from './constants';
 import nacl from 'tweetnacl';
 import { fromPairs, sortBy, toPairs } from 'lodash';
 

@@ -3,7 +3,7 @@ import { RespondFunction } from './server';
 import SlashCreator from './creator';
 import {
   AnyCommandOption,
-  CommandOptionType, CommandSubcommandOption,
+  CommandSubcommandOption,
   Endpoints,
   InteractionRequestData,
   InteractionResponseFlags,

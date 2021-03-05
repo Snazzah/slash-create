@@ -78,7 +78,8 @@ export const subCommandInteraction: InteractionRequestData = {
     options: [
       {
         name: 'sub-command',
-        type: CommandOptionType.SUB_COMMAND
+        type: CommandOptionType.SUB_COMMAND,
+        options: []
       }
     ]
   }
@@ -96,7 +97,8 @@ export const subCommandGroupInteraction: InteractionRequestData = {
         options: [
           {
             name: 'sub-command',
-            type: CommandOptionType.SUB_COMMAND
+            type: CommandOptionType.SUB_COMMAND,
+            options: []
           }
         ]
       }

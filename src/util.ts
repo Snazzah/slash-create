@@ -1,4 +1,4 @@
-import { ApplicationCommandOption, CommandOptionType } from './constants';
+import {AnyCommandOption, ApplicationCommandOption, CommandOptionType, CommandSubcommandOption} from './constants';
 import nacl from 'tweetnacl';
 import { fromPairs, sortBy, toPairs } from 'lodash';
 
@@ -152,4 +152,8 @@ export function objectKeySort(obj: any) {
   });
 
   return fromPairs(pairs);
+}
+
+export function isSubCommand(option: AnyCommandOption) {
+  return 'options' in option;
 }

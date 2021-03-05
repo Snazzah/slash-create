@@ -3,13 +3,13 @@ import { RespondFunction } from './server';
 import SlashCreator from './creator';
 import {
   AnyCommandOption,
-  CommandOptionType,
+  CommandOptionType, CommandSubcommandOption,
   Endpoints,
   InteractionRequestData,
   InteractionResponseFlags,
   InterationResponseType
 } from './constants';
-import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from './util';
+import {formatAllowedMentions, FormattedAllowedMentions, isSubCommand, MessageAllowedMentions} from './util';
 import Message from './structures/message';
 import User from './structures/user';
 import Collection from '@discordjs/collection';
@@ -323,8 +323,9 @@ class CommandContext {
   static convertOptions(options: AnyCommandOption[]) {
     const convertedOptions: { [key: string]: ConvertedOption } = {};
     for (const option of options) {
-      if (option.type === CommandOptionType.SUB_COMMAND || option.type === CommandOptionType.SUB_COMMAND_GROUP) {
-        convertedOptions[option.name] = option.options ? CommandContext.convertOptions(option.options) : {};
+      if (isSubCommand(option)) {
+        const castedOption = option as CommandSubcommandOption;
+        convertedOptions[option.name] = castedOption.options ? CommandContext.convertOptions(castedOption.options) : {};
       } else convertedOptions[option.name] = 'value' in option && option.value !== undefined ? option.value : {};
     }
     return convertedOptions;
@@ -334,8 +335,13 @@ class CommandContext {
   static getSubcommandArray(options: AnyCommandOption[]) {
     const result: string[] = [];
     for (const option of options) {
-      if (option.type === CommandOptionType.SUB_COMMAND || option.type === CommandOptionType.SUB_COMMAND_GROUP)
-        result.push(option.name, ...(option.options ? CommandContext.getSubcommandArray(option.options) : []));
+      if (isSubCommand(option)) {
+        const castedOption = option as CommandSubcommandOption;
+        result.push(
+          castedOption.name,
+          ...(castedOption.options ? CommandContext.getSubcommandArray(castedOption.options) : [])
+        );
+      }
     }
     return result;
   }

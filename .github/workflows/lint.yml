@@ -9,6 +9,10 @@ on:
       - ".eslintrc.*"
       - ".prettierrc"
       - ".github/workflows/lint.yml"
+  pull_request:
+    branches:
+      - "*"
+      - "!docs"
   workflow_dispatch:
 
 jobs:

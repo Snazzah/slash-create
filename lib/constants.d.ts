@@ -239,35 +239,35 @@ export declare type AnyCommandOption = CommandStringOption | CommandIntegerOptio
 export interface CommandOption {
     /** The name for the option. */
     name: string;
-    type: CommandOptionType;
+    type?: CommandOptionType;
     value?: string | number | boolean;
 }
 /** @private */
 export interface CommandStringOption {
     /** The name for the option. */
     name: string;
-    type: CommandOptionType.STRING | CommandOptionType.USER | CommandOptionType.CHANNEL | CommandOptionType.ROLE;
+    type?: CommandOptionType.STRING | CommandOptionType.USER | CommandOptionType.CHANNEL | CommandOptionType.ROLE;
     value: string;
 }
 /** @private */
 export interface CommandIntegerOption {
     /** The name for the option. */
     name: string;
-    type: CommandOptionType.INTEGER;
+    type?: CommandOptionType.INTEGER;
     value: number;
 }
 /** @private */
 export interface CommandBooleanOption {
     /** The name for the option. */
     name: string;
-    type: CommandOptionType.BOOLEAN;
+    type?: CommandOptionType.BOOLEAN;
     value: boolean;
 }
 /** @private */
 export interface CommandSubcommandOption {
     /** The name for the option. */
     name: string;
-    type: CommandOptionType.SUB_COMMAND | CommandOptionType.SUB_COMMAND_GROUP;
+    type?: CommandOptionType.SUB_COMMAND | CommandOptionType.SUB_COMMAND_GROUP;
     options?: AnyCommandOption[];
 }
 /** @see https://www.npmjs.com/package/require-all#usage */

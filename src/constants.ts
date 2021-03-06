@@ -266,7 +266,7 @@ export type AnyCommandOption =
 export interface CommandOption {
   /** The name for the option. */
   name: string;
-  type: CommandOptionType;
+  type?: CommandOptionType;
   value?: string | number | boolean;
 }
 
@@ -274,7 +274,7 @@ export interface CommandOption {
 export interface CommandStringOption {
   /** The name for the option. */
   name: string;
-  type: CommandOptionType.STRING | CommandOptionType.USER | CommandOptionType.CHANNEL | CommandOptionType.ROLE;
+  type?: CommandOptionType.STRING | CommandOptionType.USER | CommandOptionType.CHANNEL | CommandOptionType.ROLE;
   value: string;
 }
 
@@ -282,7 +282,7 @@ export interface CommandStringOption {
 export interface CommandIntegerOption {
   /** The name for the option. */
   name: string;
-  type: CommandOptionType.INTEGER;
+  type?: CommandOptionType.INTEGER;
   value: number;
 }
 
@@ -290,7 +290,7 @@ export interface CommandIntegerOption {
 export interface CommandBooleanOption {
   /** The name for the option. */
   name: string;
-  type: CommandOptionType.BOOLEAN;
+  type?: CommandOptionType.BOOLEAN;
   value: boolean;
 }
 
@@ -298,7 +298,7 @@ export interface CommandBooleanOption {
 export interface CommandSubcommandOption {
   /** The name for the option. */
   name: string;
-  type: CommandOptionType.SUB_COMMAND | CommandOptionType.SUB_COMMAND_GROUP;
+  type?: CommandOptionType.SUB_COMMAND | CommandOptionType.SUB_COMMAND_GROUP;
   options?: AnyCommandOption[];
 }
 

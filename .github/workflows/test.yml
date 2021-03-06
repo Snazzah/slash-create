@@ -9,6 +9,10 @@ on:
       - "test/**"
       - "package.json"
       - ".github/workflows/test.yml"
+  pull_request:
+    branches:
+      - "*"
+      - "!docs"
   workflow_dispatch:
 
 jobs:

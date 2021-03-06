@@ -3,7 +3,6 @@ import { RespondFunction } from './server';
 import SlashCreator from './creator';
 import {
   AnyCommandOption,
-  CommandOptionType,
   Endpoints,
   InteractionRequestData,
   InteractionResponseFlags,
@@ -337,9 +336,9 @@ class CommandContext {
   static convertOptions(options: AnyCommandOption[]) {
     const convertedOptions: { [key: string]: ConvertedOption } = {};
     for (const option of options) {
-      if (option.type === CommandOptionType.SUB_COMMAND || option.type === CommandOptionType.SUB_COMMAND_GROUP) {
+      if ('options' in option)
         convertedOptions[option.name] = option.options ? CommandContext.convertOptions(option.options) : {};
-      } else convertedOptions[option.name] = 'value' in option && option.value !== undefined ? option.value : {};
+      else convertedOptions[option.name] = 'value' in option && option.value !== undefined ? option.value : {};
     }
     return convertedOptions;
   }
@@ -348,7 +347,7 @@ class CommandContext {
   static getSubcommandArray(options: AnyCommandOption[]) {
     const result: string[] = [];
     for (const option of options) {
-      if (option.type === CommandOptionType.SUB_COMMAND || option.type === CommandOptionType.SUB_COMMAND_GROUP)
+      if ('options' in option || !('value' in option))
         result.push(option.name, ...(option.options ? CommandContext.getSubcommandArray(option.options) : []));
     }
     return result;

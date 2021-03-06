@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [2.1.1] - 2021-03-06
+### Changed:
+- Types for most of the command options reflect on how reliable the `type` property is.
+### Fixed:
+- Removed checking the `type` property within options to check for subcommand array and options. Not all clients send this type and should not be reliable.
 ## [2.1.0] - 2021-02-19
 ### Changed:
 - Typings for command options have the `type` prop
@@ -156,7 +161,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v2.1.1...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -171,3 +176,4 @@ This release features mostly completed documentation and changes to the packages
 [1.3.0]: https://github.com/Snazzah/slash-create/compare/v1.2.0...v1.3.0
 [2.0.0]: https://github.com/Snazzah/slash-create/compare/v1.3.0...v2.0.0
 [2.1.0]: https://github.com/Snazzah/slash-create/compare/v2.0.0...v2.1.0
+[2.1.1]: https://github.com/Snazzah/slash-create/compare/v2.1.0...v2.1.1

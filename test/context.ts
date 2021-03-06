@@ -26,7 +26,7 @@ import {
 
 describe('CommandContext', () => {
   describe('constructor', () => {
-    it('auto-acknowledges on timeout', function (done) {
+    it('auto-defers on timeout', function (done) {
       this.timeout(10000);
       this.slow(6000);
       const clock = FakeTimers.install();
@@ -36,7 +36,8 @@ describe('CommandContext', () => {
         basicInteraction,
         async (treq) => {
           expect(treq.body).to.deep.equal({
-            type: InterationResponseType.ACKNOWLEDGE
+            type: InterationResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+            data: { flags: 0 }
           });
           expect(treq.status).to.equal(200);
           done();
@@ -88,45 +89,49 @@ describe('CommandContext', () => {
     });
   });
 
-  describe('.acknowledge()', () => {
-    it('sends regular acknowledgements', async () => {
+  describe('.defer()', () => {
+    it('sends regular deferred messages', async () => {
       const ctx = new CommandContext(
         creator,
         basicInteraction,
         async (treq) => {
           expect(treq.body).to.deep.equal({
-            type: InterationResponseType.ACKNOWLEDGE
+            type: InterationResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+            data: { flags: 0 }
           });
           expect(treq.status).to.equal(200);
         },
         false
       );
       expect(ctx.initiallyResponded).to.equal(false);
-      await expect(ctx.acknowledge()).to.eventually.equal(true);
+      await expect(ctx.defer()).to.eventually.equal(true);
       expect(ctx.initiallyResponded).to.equal(true);
+      expect(ctx.deferred).to.equal(true);
     });
 
-    it('sends sourced acknowledgements', async () => {
+    it('sends ephemeral deferred messages', async () => {
       const ctx = new CommandContext(
         creator,
         basicInteraction,
         async (treq) => {
           expect(treq.body).to.deep.equal({
-            type: InterationResponseType.ACKNOWLEDGE_WITH_SOURCE
+            type: InterationResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+            data: { flags: InteractionResponseFlags.EPHEMERAL }
           });
           expect(treq.status).to.equal(200);
         },
         false
       );
       expect(ctx.initiallyResponded).to.equal(false);
-      await expect(ctx.acknowledge(true)).to.eventually.equal(true);
+      await expect(ctx.defer(true)).to.eventually.equal(true);
       expect(ctx.initiallyResponded).to.equal(true);
+      expect(ctx.deferred).to.equal(true);
     });
 
-    it('returns false when already responded', async () => {
+    it('returns false when already deferred', async () => {
       const ctx = new CommandContext(creator, basicInteraction, noop, false);
-      await ctx.acknowledge();
-      await expect(ctx.acknowledge()).to.eventually.equal(false);
+      await ctx.defer();
+      await expect(ctx.defer()).to.eventually.equal(false);
     });
   });
 
@@ -137,7 +142,7 @@ describe('CommandContext', () => {
         basicInteraction,
         async (treq) => {
           expect(treq.body).to.deep.equal({
-            type: InterationResponseType.CHANNEL_MESSAGE,
+            type: InterationResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
               content: 'test content',
               allowed_mentions: {
@@ -163,7 +168,7 @@ describe('CommandContext', () => {
         basicInteraction,
         async (treq) => {
           expect(treq.body).to.deep.equal({
-            type: InterationResponseType.CHANNEL_MESSAGE,
+            type: InterationResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
               content: 'test content',
               allowed_mentions: {
@@ -183,37 +188,26 @@ describe('CommandContext', () => {
       expect(ctx.initiallyResponded).to.equal(true);
     });
 
-    it('sends sourced messages', async () => {
-      const ctx = new CommandContext(
-        creator,
-        basicInteraction,
-        async (treq) => {
-          expect(treq.body).to.deep.equal({
-            type: InterationResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-            data: {
-              content: 'test content',
-              allowed_mentions: {
-                parse: ['roles', 'users']
-              },
-              embeds: undefined,
-              flags: undefined,
-              tts: undefined
-            }
-          });
-          expect(treq.status).to.equal(200);
+    it('edits deferred message after sending deferred message', async () => {
+      const ctx = new CommandContext(creator, basicInteraction, noop, false);
+      const scope = editMessage('@original', followUpMessage);
+
+      await ctx.defer();
+      const promise = expect(ctx.send(followUpMessage.content)).to.eventually.be.an.instanceof(Message);
+      await expect(scope).to.have.been.requestedWith({
+        allowed_mentions: {
+          parse: ['roles', 'users']
         },
-        false
-      );
-      expect(ctx.initiallyResponded).to.equal(false);
-      await expect(ctx.send('test content', { includeSource: true })).to.eventually.equal(true);
-      expect(ctx.initiallyResponded).to.equal(true);
+        content: followUpMessage.content
+      });
+      return promise;
     });
 
     it('returns follow-up message after initial response', async () => {
       const ctx = new CommandContext(creator, basicInteraction, noop, false);
       const scope = createFollowUp(followUpMessage);
 
-      await ctx.acknowledge();
+      await ctx.send('111');
       const promise = expect(ctx.send(followUpMessage.content)).to.eventually.be.an.instanceof(Message);
       await expect(scope).to.have.been.requestedWith({
         allowed_mentions: {
@@ -230,7 +224,7 @@ describe('CommandContext', () => {
       const ctx = new CommandContext(creator, basicInteraction, noop, false);
       const scope = createFollowUp(followUpMessage);
 
-      await ctx.acknowledge();
+      await ctx.defer();
       const promise = expect(ctx.sendFollowUp(followUpMessage.content)).to.eventually.be.an.instanceof(Message);
       await expect(scope).to.have.been.requestedWith({
         allowed_mentions: {
@@ -243,7 +237,7 @@ describe('CommandContext', () => {
 
     it('throws if creator has no token', async () => {
       const ctx = new CommandContext(creatorNoToken, basicInteraction, noop, false);
-      await ctx.acknowledge();
+      await ctx.defer();
       return expect(ctx.sendFollowUp(followUpMessage.content)).to.be.rejected;
     });
   });
@@ -253,7 +247,7 @@ describe('CommandContext', () => {
       const ctx = new CommandContext(creator, basicInteraction, noop, false);
       const scope = editMessage('1234', editedMessage);
 
-      await ctx.acknowledge();
+      await ctx.defer();
       const promise = expect(ctx.edit('1234', editedMessage.content)).to.eventually.be.an.instanceof(Message);
       await expect(scope).to.have.been.requestedWith({
         allowed_mentions: {
@@ -270,7 +264,7 @@ describe('CommandContext', () => {
       const ctx = new CommandContext(creator, basicInteraction, noop, false);
       const scope = editMessage('@original', editedMessage);
 
-      await ctx.acknowledge();
+      await ctx.defer();
       const promise = expect(ctx.editOriginal(editedMessage.content)).to.eventually.be.an.instanceof(Message);
       await expect(scope).to.have.been.requestedWith({
         allowed_mentions: {
@@ -287,7 +281,7 @@ describe('CommandContext', () => {
       const ctx = new CommandContext(creator, basicInteraction, noop, false);
       const scope = deleteMessage('@original');
 
-      await ctx.acknowledge();
+      await ctx.defer();
       const promise = expect(ctx.delete()).to.eventually.be.fulfilled;
       await expect(scope).to.have.been.requested;
       return promise;
@@ -297,7 +291,7 @@ describe('CommandContext', () => {
       const ctx = new CommandContext(creator, basicInteraction, noop, false);
       const scope = deleteMessage('1234');
 
-      await ctx.acknowledge();
+      await ctx.defer();
       const promise = expect(ctx.delete('1234')).to.eventually.be.fulfilled;
       await expect(scope).to.have.been.requested;
       return promise;

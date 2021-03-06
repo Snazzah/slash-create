@@ -61,7 +61,6 @@ describe('SlashCreator', () => {
         defaultImageFormat: 'jpg',
         defaultImageSize: 128,
         unknownCommandResponse: true,
-        autoAcknowledgeSource: false,
         latencyThreshold: 30000,
         ratelimiterOffset: 0,
         requestTimeout: 15000,

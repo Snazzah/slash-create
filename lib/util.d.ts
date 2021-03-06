@@ -1,5 +1,5 @@
 /// <reference types="lodash" />
-import { AnyCommandOption, ApplicationCommandOption } from './constants';
+import { ApplicationCommandOption } from './constants';
 /**
  * Validates a payload from Discord against its signature and key.
  *
@@ -29,4 +29,3 @@ export declare function formatAllowedMentions(allowed: MessageAllowedMentions, d
 export declare function oneLine(strings: TemplateStringsArray, ..._: any[]): string;
 export declare function validateOptions(options: ApplicationCommandOption[], prefix?: string): void;
 export declare function objectKeySort(obj: any): import("lodash").Dictionary<unknown>;
-export declare function isSubCommand(option: AnyCommandOption): boolean;

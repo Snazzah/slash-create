@@ -149,8 +149,8 @@ class CommandContext {
         );
     }
 
-    // Auto-defer if no response was given in 2.5 seconds
-    this._timeout = setTimeout(() => this.defer(deferEphemeral || false), 2500);
+    // Auto-defer if no response was given in 2 seconds
+    this._timeout = setTimeout(() => this.defer(deferEphemeral || false), 2000);
   }
 
   /** Whether the interaction has expired. Interactions last 15 minutes. */

@@ -388,16 +388,16 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
             'debug',
             `Updating guild command "${applicationCommand.name}" (${applicationCommand.id}, guild: ${guildID})`
           );
-          updatePayload.push({
-            id: applicationCommand.id,
-            ...command.commandJSON
-          });
         } else {
           this.emit(
             'debug',
             `Guild command "${applicationCommand.name}" (${applicationCommand.id}) synced (guild: ${guildID})`
           );
         }
+        updatePayload.push({
+          id: applicationCommand.id,
+          ...command.commandJSON
+        });
         handledCommands.push(command.keyName);
       } else if (deleteCommands) {
         // Command is removed
@@ -443,13 +443,13 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       if (command) {
         if (!isEqual(objectKeySort(partialCommand), objectKeySort(command.commandJSON))) {
           this.emit('debug', `Updating command "${applicationCommand.name}" (${applicationCommand.id})`);
-          updatePayload.push({
-            id: applicationCommand.id,
-            ...command.commandJSON
-          });
         } else {
           this.emit('debug', `Command "${applicationCommand.name}" (${applicationCommand.id}) synced`);
         }
+        updatePayload.push({
+          id: applicationCommand.id,
+          ...command.commandJSON
+        });
       } else if (deleteCommands) {
         this.emit('debug', `Removing command "${applicationCommand.name}" (${applicationCommand.id})`);
         await this.api.deleteCommand(applicationCommand.id);

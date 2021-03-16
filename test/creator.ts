@@ -278,7 +278,8 @@ describe('SlashCreator', () => {
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
       await expect(deleteScope, 'deletes old commands').to.have.been.requested;
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
-        { id: '1', name: 'to-update', description: 'description' }
+        { id: '1', name: 'to-update', description: 'description' },
+        { id: '3', name: 'to-leave-alone', description: 'description' }
       ]);
       await expect(guildCmdsScope, 'requests guild commands').to.have.been.requested;
       await expect(postScope, 'creates new guild commands').to.have.been.requestedWith({
@@ -325,11 +326,8 @@ describe('SlashCreator', () => {
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
       await expect(deleteScope, 'deletes old commands').to.have.been.requested;
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
-        {
-          id: '1',
-          name: 'to-update',
-          description: 'description'
-        }
+        { id: '1', name: 'to-update', description: 'description' },
+        { id: '3', name: 'to-leave-alone', description: 'description' }
       ]);
       await expect(postScope, 'creates new commands').to.have.been.requestedWith({
         name: 'to-create',
@@ -374,11 +372,8 @@ describe('SlashCreator', () => {
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
       await expect(deleteScope, 'deletes old commands').to.have.been.requested;
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
-        {
-          id: '1',
-          name: 'to-update',
-          description: 'description'
-        }
+        { id: '1', name: 'to-update', description: 'description' },
+        { id: '3', name: 'to-leave-alone', description: 'description' }
       ]);
       await expect(postScope, 'creates new commands').to.have.been.requestedWith({
         name: 'to-create',

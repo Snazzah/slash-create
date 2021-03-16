@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [2.1.2] - 2021-03-16
+### Changed:
+- `Util.objectKeySort` is now deprecated.
+### Fixed:
+- Syncing commands had a major bug, sorry. ([#36](https://github.com/Snazzah/slash-create/pull/36))
 ## [2.1.1] - 2021-03-06
 ### Changed:
 - Types for most of the command options reflect on how reliable the `type` property is.
@@ -161,7 +166,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v2.1.1...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v2.1.2...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -177,3 +182,4 @@ This release features mostly completed documentation and changes to the packages
 [2.0.0]: https://github.com/Snazzah/slash-create/compare/v1.3.0...v2.0.0
 [2.1.0]: https://github.com/Snazzah/slash-create/compare/v2.0.0...v2.1.0
 [2.1.1]: https://github.com/Snazzah/slash-create/compare/v2.1.0...v2.1.1
+[2.1.2]: https://github.com/Snazzah/slash-create/compare/v2.1.1...v2.1.2

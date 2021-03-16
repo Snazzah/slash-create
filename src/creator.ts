@@ -1,14 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import Collection from '@discordjs/collection';
 import HTTPS from 'https';
-import {
-  formatAllowedMentions,
-  FormattedAllowedMentions,
-  MessageAllowedMentions,
-  objectKeySort,
-  oneLine,
-  verifyKey
-} from './util';
+import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions, oneLine, verifyKey } from './util';
 import {
   ImageFormat,
   InteractionType,
@@ -380,33 +373,24 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
           !!(command.guildIDs && command.guildIDs.includes(guildID) && command.commandName === partialCommand.name)
       );
       if (command) {
-        if (!isEqual(objectKeySort(partialCommand), objectKeySort(command.commandJSON))) {
-          this.emit(
-            'debug',
-            `Updating guild command "${applicationCommand.name}" (${applicationCommand.id}, guild: ${guildID})`
-          );
-          updatePayload.push({
-            id: applicationCommand.id,
-            ...command.commandJSON
-          });
-        } else {
-          this.emit(
-            'debug',
-            `Guild command "${applicationCommand.name}" (${applicationCommand.id}) synced (guild: ${guildID})`
-          );
-        }
+        this.emit(
+          'debug',
+          `Found guild command "${applicationCommand.name}" (${applicationCommand.id}, guild: ${guildID})`
+        );
+        updatePayload.push({
+          id: applicationCommand.id,
+          ...command.commandJSON
+        });
         handledCommands.push(command.keyName);
       } else if (deleteCommands) {
-        // Command is removed
         this.emit(
           'debug',
           `Removing guild command "${applicationCommand.name}" (${applicationCommand.id}, guild: ${guildID})`
         );
-        await this.api.deleteCommand(applicationCommand.id, guildID);
+      } else {
+        updatePayload.push(applicationCommand);
       }
     }
-
-    if (updatePayload.length) await this.api.updateCommands(updatePayload, guildID);
 
     const unhandledCommands = this.commands.filter(
       (command) =>
@@ -415,8 +399,12 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
     for (const [, command] of unhandledCommands) {
       this.emit('debug', `Creating guild command "${command.commandName}" (guild: ${guildID})`);
-      await this.api.createCommand(command.commandJSON, guildID);
+      updatePayload.push({
+        ...command.commandJSON
+      });
     }
+
+    if (updatePayload.length) await this.api.updateCommands(updatePayload, guildID);
   }
 
   /**
@@ -438,24 +426,19 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
       const command = this.commands.get(commandKey);
       if (command) {
-        if (!isEqual(objectKeySort(partialCommand), objectKeySort(command.commandJSON))) {
-          this.emit('debug', `Updating command "${applicationCommand.name}" (${applicationCommand.id})`);
-          updatePayload.push({
-            id: applicationCommand.id,
-            ...command.commandJSON
-          });
-        } else {
-          this.emit('debug', `Command "${applicationCommand.name}" (${applicationCommand.id}) synced`);
-        }
+        this.emit('debug', `Found command "${applicationCommand.name}" (${applicationCommand.id})`);
+        updatePayload.push({
+          id: applicationCommand.id,
+          ...command.commandJSON
+        });
       } else if (deleteCommands) {
         this.emit('debug', `Removing command "${applicationCommand.name}" (${applicationCommand.id})`);
-        await this.api.deleteCommand(applicationCommand.id);
+      } else {
+        updatePayload.push(applicationCommand);
       }
 
       handledCommands.push(commandKey);
     }
-
-    if (updatePayload.length) this.api.updateCommands(updatePayload);
 
     const unhandledCommands = this.commands.filter(
       (command) => !command.guildIDs && !handledCommands.includes(command.keyName)
@@ -463,8 +446,12 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
     for (const [, command] of unhandledCommands) {
       this.emit('debug', `Creating command "${command.commandName}"`);
-      await this.api.createCommand(command.commandJSON);
+      updatePayload.push({
+        ...command.commandJSON
+      });
     }
+
+    if (updatePayload.length) this.api.updateCommands(updatePayload);
   }
 
   private _getCommandFromInteraction(interaction: InteractionRequestData) {

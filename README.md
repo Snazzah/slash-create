@@ -18,6 +18,17 @@ You can create commands similar to Discord.JS [Commando](https://github.com/disc
 - Load commands from a folder
 - Command throttling/cooldowns
 
+## Quickstart
+If you want an easy start on getting slash commands on your bot, you can use the [Snazzah/slash-create-template] template.
+```sh
+npx degit Snazzah/slash-create-template slash-commands
+cd slash-commands
+npm i -g yarn
+yarn
+cp .env.example .env # this copies the .env file, edit variables in this file!
+```
+After installing, you can edit commands to your liking and start it up with `yarn start`.
+
 ## Installation
 ```sh
 npm i slash-create

@@ -302,7 +302,7 @@ class CommandContext {
    * @param includeSource Whether to include the source in the acknowledgement.
    * @returns Whether the acknowledgement passed
    */
-  async acknowledge(includeSource = false): Promise<boolean> {
+  async acknowledge(includeSource = true): Promise<boolean> {
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
       clearTimeout(this._timeout);

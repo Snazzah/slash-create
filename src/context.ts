@@ -27,10 +27,24 @@ export interface EditMessageOptions {
   embeds?: any[];
   /** The mentions allowed to be used in this message. */
   allowedMentions?: MessageAllowedMentions;
+  /**
+   * The attachment(s) to send with the message.
+   * Note that ephemeral messages and initial messages cannot have
+   * attachments.
+   */
+  file?: MessageFile | MessageFile[];
+}
+
+/** A file within {@link EditMessageOptions}. */
+export interface MessageFile {
+  /** The attachment to send. */
+  file: Buffer;
+  /** The name of the file. */
+  name: string;
 }
 
 /** The options for {@link CommandContext#sendFollowUp}. */
-interface FollowUpMessageOptions extends EditMessageOptions {
+export interface FollowUpMessageOptions extends EditMessageOptions {
   /** Whether to use TTS for the content. */
   tts?: boolean;
   /** The flags to use in the message. */
@@ -236,7 +250,8 @@ class CommandContext {
         content: options.content,
         embeds: options.embeds,
         allowed_mentions: allowedMentions
-      }
+      },
+      options.file
     );
     return new Message(data, this);
   }
@@ -272,7 +287,8 @@ class CommandContext {
         content: options.content,
         embeds: options.embeds,
         allowed_mentions: allowedMentions
-      }
+      },
+      options.file
     );
     return new Message(data, this);
   }

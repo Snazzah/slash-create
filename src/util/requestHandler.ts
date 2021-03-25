@@ -5,6 +5,7 @@ import SequentialBucket from './sequentialBucket';
 import Zlib from 'zlib';
 import DiscordHTTPError from '../errors/DiscordHTTPError';
 import DiscordRESTError from '../errors/DiscordRESTError';
+import MultipartData from './multipartData';
 
 export const USER_AGENT = `DiscordBot (https://github.com/Snazzah/slash-create, ${
   require('../../package.json').version
@@ -74,8 +75,17 @@ class RequestHandler {
    * @param url URL of the endpoint
    * @param auth Whether to add the Authorization header and token or not
    * @param body Request payload
+   * @param file The file(s) to send
    */
-  request(method: string, url: string, auth = true, body?: any, _route?: string, short = false): Promise<any> {
+  request(
+    method: string,
+    url: string,
+    auth = true,
+    body?: any,
+    file?: any,
+    _route?: string,
+    short = false
+  ): Promise<any> {
     const route = _route || this.routefy(url, method);
 
     const _stackHolder: { stack: string } = { stack: '' }; // Preserve async stack
@@ -90,7 +100,7 @@ class RequestHandler {
           'Accept-Encoding': 'gzip,deflate',
           'X-RateLimit-Precision': 'millisecond'
         };
-        let data;
+        let data: any;
         const finalURL = url;
 
         try {
@@ -98,7 +108,28 @@ class RequestHandler {
             if (!this._creator.options.token) throw new Error('No token was set in the SlashCreator.');
             headers.Authorization = this._creator.options.token;
           }
-          if (body) {
+          if (file) {
+            if (Array.isArray(file)) {
+              data = new MultipartData();
+              headers['Content-Type'] = 'multipart/form-data; boundary=' + data.boundary;
+              file.forEach((f) => {
+                if (!f.file) {
+                  return;
+                }
+                (data as MultipartData).attach(f.name, f.file, f.name);
+              });
+              if (body) data.attach('payload_json', body);
+              data = data.finish();
+            } else if (file.file) {
+              data = new MultipartData();
+              headers['Content-Type'] = 'multipart/form-data; boundary=' + data.boundary;
+              data.attach('file', file.file, file.name);
+              if (body) data.attach('payload_json', body);
+              data = data.finish();
+            } else {
+              throw new Error('Invalid file object');
+            }
+          } else if (body) {
             if (method !== 'GET' && method !== 'DELETE') {
               data = JSON.stringify(body);
               headers['Content-Type'] = 'application/json';
@@ -304,18 +335,18 @@ class RequestHandler {
                   if (retryAfter) {
                     setTimeout(() => {
                       cb();
-                      this.request(method, url, auth, body, route, true).then(resolve).catch(reject);
+                      this.request(method, url, auth, body, file, route, true).then(resolve).catch(reject);
                     }, retryAfter);
                     return;
                   } else {
                     cb();
-                    this.request(method, url, auth, body, route, true).then(resolve).catch(reject);
+                    this.request(method, url, auth, body, file, route, true).then(resolve).catch(reject);
                     return;
                   }
                 } else if (resp.statusCode === 502 && ++attempts < 4) {
                   this._creator.emit('debug', 'A wild 502 appeared! Thanks CloudFlare!');
                   setTimeout(() => {
-                    this.request(method, url, auth, body, route, true).then(resolve).catch(reject);
+                    this.request(method, url, auth, body, file, route, true).then(resolve).catch(reject);
                   }, Math.floor(Math.random() * 1900 + 100));
                   return cb();
                 }
@@ -368,7 +399,10 @@ class RequestHandler {
           req.abort();
         });
 
-        req.end(data);
+        if (Array.isArray(data)) {
+          for (const chunk of data) req.write(chunk);
+          req.end();
+        } else req.end(data);
       };
 
       if (this.globalBlock && auth) {

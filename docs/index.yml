@@ -2,6 +2,8 @@
   files:
     - name: Welcome
       path: welcome.md
+    - name: FAQ
+      path: faq.md
     - name: Changelog
       path: changelog.md
     - name: CommandContext.options

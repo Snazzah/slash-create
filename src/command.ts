@@ -143,7 +143,7 @@ class SlashCommand {
    * - permission: `response` ({@link string}) to send
    * - throttling: `throttle` ({@link Object}), `remaining` ({@link number}) time in seconds
    */
-  onBlock(ctx: CommandContext, reason: string, data?: any) {
+  onBlock(ctx: CommandContext, reason: string, data?: any): any {
     switch (reason) {
       case 'permission': {
         if (data.response) return ctx.send(data.response, { ephemeral: true });
@@ -165,7 +165,7 @@ class SlashCommand {
    * @param err Error that was thrown
    * @param ctx Command context the command is running from
    */
-  onError(err: Error, ctx: CommandContext) {
+  onError(err: Error, ctx: CommandContext): any {
     if (!ctx.expired && !ctx.initiallyResponded)
       return ctx.send('An error occurred while running the command.', { ephemeral: true });
   }

@@ -187,7 +187,7 @@ export interface GuildInteractionRequestData {
 export type InteractionRequestData = DMInteractionRequestData | GuildInteractionRequestData;
 
 /** @private */
-export interface ResolvedMember {
+export interface ResolvedMemberData {
   roles: string[];
   premium_since: string | null;
   pending: boolean;
@@ -197,7 +197,7 @@ export interface ResolvedMember {
 }
 
 /** @private */
-export interface CommandMember extends ResolvedMember {
+export interface CommandMember extends ResolvedMemberData {
   user: CommandUser;
   mute: boolean;
   deaf: boolean;
@@ -246,7 +246,7 @@ export interface CommandData {
   options?: AnyCommandOption[];
   resolved?: {
     users?: { [id: string]: CommandUser };
-    members?: { [id: string]: ResolvedMember };
+    members?: { [id: string]: ResolvedMemberData };
     roles?: { [id: string]: ResolvedRole };
     channels?: { [id: string]: ResolvedChannel };
   };

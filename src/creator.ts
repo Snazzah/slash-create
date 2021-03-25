@@ -496,7 +496,9 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       });
     }
 
-    return this._onInteraction(treq.body, respond, true);
+    try {
+      await this._onInteraction(treq.body, respond, true);
+    } catch (e) {}
   }
 
   private async _onInteraction(interaction: AnyRequestData, respond: RespondFunction | null, webserverMode: boolean) {

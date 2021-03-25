@@ -1,4 +1,4 @@
-import { CommandUser, ResolvedMember as ResolvedMemberData } from '../constants';
+import { CommandUser, ResolvedMemberData } from '../constants';
 import SlashCreator from '../creator';
 import User from './user';
 

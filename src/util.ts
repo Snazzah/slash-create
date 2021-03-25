@@ -133,23 +133,3 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
     }
   }
 }
-
-export function objectKeySort(obj: any) {
-  let pairs = sortBy(toPairs(obj), 0);
-
-  // Iterate through pairs to find objects in
-  pairs = pairs.map(([key, value]) => {
-    if (Array.isArray(value))
-      return [
-        key,
-        sortBy(value).map((arrobj) => {
-          if (typeof arrobj === 'object') return objectKeySort(arrobj);
-          else return arrobj;
-        })
-      ];
-    else if (typeof value === 'object') return [key, objectKeySort(value)];
-    else return [key, value];
-  });
-
-  return fromPairs(pairs);
-}

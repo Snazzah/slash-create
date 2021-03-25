@@ -5,6 +5,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [3.0.0] - 2021-03-25
+### Removed:
+- **[BREAKING]** `SlashCreatorOptions#autoAcknowledgeSource` has been removed.
+- **[BREAKING]** `MessageOptions#includeSource` is removed.
+- **[BREAKING]** `InteractionResponseType.ACKNOWLEDGE` and `InteractionResponseType.CHANNEL_MESSAGE` has been removed
+- `Util.objectKeySort` is now removed.
+
+### Changed:
+- **[BREAKING]** `CommandContext#acknowledge` -> `CommandContext#defer`
+  - Deferred messages are like acknowledgements, but editable and used for processing requests.
+  - `CommandContext#defer` has one argument (`ephemeral`) for if the deferred message should be ephemeral.
+- Docs now refer "auto-acknowledge" to "auto-defer"
+- Command option and subcommand limit has increased to 25
+- `CommandContext#send` now edits a deferred message if there was a deferred message sent.
+- **[BREAKING]** `InteractionResponseType.ACKNOWLEDGE_WITH_SOURCE` -> `InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE`
+
+### Added:
+- `SlashCommandOptions#deferEphemeral` - Whether auto-deferring should be an ephemeral message.
+- `CommandContext#deferred` - Whether the initial response has an available deferred message.
+- Ability to send attachments with `CommandContext#send`
+- Added FAQ page in documentation
+### Fixed:
+- Documentation for ResolvedMembers
+- `SlashCommand#onBlock` and `SlashCommand#onError` giving weird return types in documentation
 ## [2.1.2] - 2021-03-16
 ### Changed:
 - `Util.objectKeySort` is now deprecated.
@@ -166,7 +190,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v2.1.2...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v3.0.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -183,3 +207,4 @@ This release features mostly completed documentation and changes to the packages
 [2.1.0]: https://github.com/Snazzah/slash-create/compare/v2.0.0...v2.1.0
 [2.1.1]: https://github.com/Snazzah/slash-create/compare/v2.1.0...v2.1.1
 [2.1.2]: https://github.com/Snazzah/slash-create/compare/v2.1.1...v2.1.2
+[3.0.0]: https://github.com/Snazzah/slash-create/compare/v2.1.2...v3.0.0

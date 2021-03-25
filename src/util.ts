@@ -104,8 +104,8 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
           'You cannot use the `options` field in options that are not sub-commands or sub-command groups!'
         );
 
-      if (option.options.length > 10)
-        throwError(Error, i, 'The sub-command (group) options exceed 10 commands/options!');
+      if (option.options.length > 25)
+        throwError(Error, i, 'The sub-command (group) options exceed 25 commands/options!');
 
       validateOptions(option.options, `options[${i}].options`);
     }
@@ -122,7 +122,7 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
           'You cannot use the `choices` field in options that are sub-commands, sub-command groups or booleans!'
         );
 
-      if (option.choices.length > 10) throwError(Error, i, 'The choices exceed 10 commands/options!');
+      if (option.choices.length > 25) throwError(Error, i, 'The choices exceed 25 commands/options!');
 
       for (let ii = 0; ii < option.choices.length; ii++) {
         const choice = option.choices[ii];

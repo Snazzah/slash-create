@@ -67,7 +67,7 @@ describe('Message', () => {
       const message = new Message(followUpMessage, ctx);
       const scope = deleteMessage('1234');
 
-      await ctx.acknowledge();
+      await ctx.defer();
       const promise = expect(message.delete()).to.eventually.be.fulfilled;
       await expect(scope).to.have.been.requested;
       return promise;

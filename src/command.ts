@@ -19,6 +19,8 @@ export interface SlashCommandOptions {
   throttling?: ThrottlingOptions;
   /** Whether this command is used for unknown commands. */
   unknown?: boolean;
+  /** Whether responses from this command should defer ephemeral messages. */
+  deferEphemeral?: boolean;
 }
 
 /** The throttling options for a {@link SlashCommand}. */
@@ -52,6 +54,8 @@ class SlashCommand {
   readonly throttling?: ThrottlingOptions;
   /** Whether this command is used for unknown commands. */
   readonly unknown: boolean;
+  /** Whether responses from this command should defer ephemeral messages. */
+  readonly deferEphemeral: boolean;
   /**
    * The file path of the command.
    * Used for refreshing the require cache.
@@ -82,6 +86,7 @@ class SlashCommand {
     this.requiredPermissions = opts.requiredPermissions;
     this.throttling = opts.throttling;
     this.unknown = opts.unknown || false;
+    this.deferEphemeral = opts.deferEphemeral || false;
   }
 
   /**
@@ -216,7 +221,7 @@ class SlashCommand {
    * @private
    */
   finalize(response: any, ctx: CommandContext) {
-    if (!response && !ctx.initiallyResponded) return ctx.acknowledge();
+    if (!response && !ctx.initiallyResponded) return;
 
     if (typeof response === 'string' || (response && response.constructor && response.constructor.name === 'Object'))
       return ctx.send(response);
@@ -237,8 +242,8 @@ class SlashCommand {
       throw new RangeError('Command description must be under 100 characters.');
 
     if (opts.options) {
-      if (!Array.isArray(opts.options)) throw new TypeError('Command options must be an Array of options.');
-      if (opts.options.length > 10) throw new RangeError('Command options cannot exceed 10 options.');
+      if (!Array.isArray(opts.options)) throw new TypeError('Command options must be an array of options.');
+      if (opts.options.length > 25) throw new RangeError('Command options cannot exceed 25 options.');
 
       validateOptions(opts.options);
     }

@@ -21,14 +21,16 @@
     "wrapper"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "([ ! -d \"lib/\" ] || rm -r lib/*) && npx tsc",
+    "build:prepare": "[ -d \"lib/\" ] || npm run build",
     "changelog": "ts-node scripts/changelog",
     "docs": "typedoc --json .tmp/typedoc-out.json --plugin typedoc-plugin-as-member-of && ts-node scripts/docs",
     "lint": "npx eslint --ext .ts ./src",
     "lint:fix": "npx eslint --ext .ts ./src --fix",
     "test": "mocha -r ts-node/register --extension ts",
     "gpr": "ts-node scripts/gpr",
-    "prepublishOnly": "npm run lint:fix"
+    "prepare": "npx husky install && npm run build:prepare",
+    "prepublishOnly": "([ -d \"lib/\" ] || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
   },
   "lint-staged": {
     "*.ts": "eslint --fix"

@@ -3,4 +3,3 @@
 
 npx lint-staged
 npm run build
-git add lib

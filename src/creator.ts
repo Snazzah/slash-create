@@ -404,7 +404,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       });
     }
 
-    if (updatePayload.length) await this.api.updateCommands(updatePayload, guildID);
+    await this.api.updateCommands(updatePayload, guildID);
   }
 
   /**

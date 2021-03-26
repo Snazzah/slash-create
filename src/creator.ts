@@ -451,7 +451,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       });
     }
 
-    if (updatePayload.length) this.api.updateCommands(updatePayload);
+    this.api.updateCommands(updatePayload);
   }
 
   private _getCommandFromInteraction(interaction: InteractionRequestData) {

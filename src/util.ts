@@ -1,7 +1,5 @@
 import { ApplicationCommandOption, CommandOptionType } from './constants';
 import nacl from 'tweetnacl';
-import { fromPairs, sortBy, toPairs } from 'lodash';
-
 /**
  * Validates a payload from Discord against its signature and key.
  *

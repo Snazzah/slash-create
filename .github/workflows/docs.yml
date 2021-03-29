@@ -4,13 +4,6 @@ on:
     branches:
       - '*'
       - '!docs'
-    paths:
-      - 'src/**'
-      - 'docs/**'
-      - '.github/workflows/deployment.yml'
-      - 'scripts/docs.ts'
-      - 'package.json'
-      - 'README.md'
   workflow_dispatch:
 
 jobs:

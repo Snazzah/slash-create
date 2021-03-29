@@ -1,11 +1,13 @@
 - name: General
   files:
     - name: Welcome
-      path: welcome.md
+      path: ../../README.md
+      id: welcome
     - name: FAQ
       path: faq.md
     - name: Changelog
-      path: changelog.md
+      path: ../../CHANGELOG.md
+      id: changelog
     - name: CommandContext.options
       path: context-options.md
     - name: Unknown commands

@@ -1,6 +1,6 @@
 {
   "name": "slash-create",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Creator and handler for Discord's slash commands",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -23,12 +23,12 @@
   "scripts": {
     "build": "([ ! -d \"lib/\" ] || rm -r lib/*) && npx tsc",
     "build:prepare": "[ -d \"lib/\" ] || npm run build",
-    "changelog": "ts-node scripts/changelog",
-    "docs": "typedoc --json .tmp/typedoc-out.json --plugin typedoc-plugin-as-member-of && ts-node scripts/docs",
+    "changelog": "npx ts-node scripts/changelog",
+    "docs": "npx typedoc --json .tmp/typedoc-out.json --plugin typedoc-plugin-as-member-of && ts-node scripts/docs",
     "lint": "npx eslint --ext .ts ./src",
     "lint:fix": "npx eslint --ext .ts ./src --fix",
-    "test": "mocha -r ts-node/register --extension ts",
-    "gpr": "ts-node scripts/gpr",
+    "test": "npx mocha -r ts-node/register --extension ts",
+    "gpr": "npx ts-node scripts/gpr",
     "prepare": "npx husky install && npm run build:prepare",
     "prepublishOnly": "([ -d \"lib/\" ] || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
   },

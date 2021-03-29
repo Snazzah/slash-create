@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.0.1] - 2021-03-29
+### Fixed:
+- Updated command option validation
+  - Command names and option names use the documented regex pattern
+  - Choice name is now 1-32 characters
+  - Choice description is now 1-100 characters
+- Allow empty payloads when updating commands
+- Prevent webservers from auto-handling interaction errors
+
 ## [3.0.0] - 2021-03-25
 ### Removed:
 - **[BREAKING]** `SlashCreatorOptions#autoAcknowledgeSource` has been removed.
@@ -29,16 +39,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed:
 - Documentation for ResolvedMembers
 - `SlashCommand#onBlock` and `SlashCommand#onError` giving weird return types in documentation
+
 ## [2.1.2] - 2021-03-16
 ### Changed:
 - `Util.objectKeySort` is now deprecated.
 ### Fixed:
 - Syncing commands had a major bug, sorry. ([#36](https://github.com/Snazzah/slash-create/pull/36))
+
 ## [2.1.1] - 2021-03-06
 ### Changed:
 - Types for most of the command options reflect on how reliable the `type` property is.
 ### Fixed:
 - Removed checking the `type` property within options to check for subcommand array and options. Not all clients send this type and should not be reliable.
+
 ## [2.1.0] - 2021-02-19
 ### Changed:
 - Typings for command options have the `type` prop
@@ -50,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Note: `ResolvedMember`s in `CommandContext#members` do not have `mute`, `deaf` and `permissions` properties.
 ### Fixed:
 - Updated interaction data typings with the `type` prop
+
 ## [2.0.0] - 2021-02-11
 ### Changed:
 - The typings for `DMInteractionRequestData` and `GuildInteractionRequestData` is in the index.
@@ -66,6 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `CommandContext#user` can be used in DM and guild contexts.
 ### Fixed:
 - Unnessesary command updating while syncing.
+
 ## [1.3.0] - 2021-01-04
 ### Changed:
 - Permission bitfield now uses bigints
@@ -88,6 +103,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SlashCreator documentation
 - Option validation for unknown commands
 - Typings are ignored for `express` and `fastify`
+
 ## [1.2.0] - 2020-12-19
 ### Changed:
 - `ctx.options` are a bit more consistent with sub-commands. Check the [last heading in the documetation](https://slash-create.js.org/#/docs/main/v1.2.0/general/context-options) for an example.
@@ -106,12 +122,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Command finalization
 - Command throttling
 - Command options validation
+
 ## [1.1.6] - 2020-12-18
 ### Fixed:
 - Sending options as the first argument in `Context#send` & `Context#sendFollowUp`
+
 ## [1.1.5] - 2020-12-18
 ### Fixed:
 - Sending options as the first argument in `Context#edit`
+
 ## [1.1.4] - 2020-12-17
 ### Changed:
 - Added more validation for options
@@ -119,6 +138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CommandContext#subcommands`
 ### Fixed:
 - Option choices validation
+
 ## [1.1.3] - 2020-12-17
 ### Changed:
 - Errors in `SlashCreator#startServer` are no longer caught.
@@ -126,15 +146,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Some documentation clarifying things like tokens.
 ### Fixed:
 - Moved `typed-emitter` to dependencies, fixing typings
+
 ## [1.1.2] - 2020-12-17
 ### Fixed:
 - Race conditions for command finalization
 - Errors in `SlashCommand#onError` goes to `SlashCreator#error`
+
 ## [1.1.1] - 2020-12-17
 ### Changed:
 - `CommandContext#options` is now a non-null object
 ### Fixed:
 - Loading commands in a folder
+
 ## [1.1.0] - 2020-12-17
 This release features mostly completed documentation and changes to the packages typings. If you are using TypeScript for this package, consider this a **breaking change**.
 ### Changed:
@@ -156,6 +179,7 @@ This release features mostly completed documentation and changes to the packages
 - Changed HTTP method in `SlashCommandAPI#updateCommand` from `PUT` to `PATCH`
 - `User#flags` now actually uses `UserFlags`
 - Renamed UserFlags class to the name "UserFlags"
+
 ## [1.0.0] - 2020-12-16
 ### Removed:
 - **[BREAKING]** `Context.initialResponseDeleted`
@@ -176,6 +200,7 @@ This release features mostly completed documentation and changes to the packages
 ### Fixed:
 - Default error messages
 - Exports for Constants and CommandOptionType
+
 ## [0.2.0] - 2020-12-16
 ### Removed:
 - **[BREAKING]** `Context.acknowledge` now returns a promise
@@ -187,10 +212,11 @@ This release features mostly completed documentation and changes to the packages
 - `Context.send` erroring
 - Added/Updated debug emit lines
 - ExpressServer for TypeScript
+
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v3.0.1...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -208,3 +234,4 @@ This release features mostly completed documentation and changes to the packages
 [2.1.1]: https://github.com/Snazzah/slash-create/compare/v2.1.0...v2.1.1
 [2.1.2]: https://github.com/Snazzah/slash-create/compare/v2.1.1...v2.1.2
 [3.0.0]: https://github.com/Snazzah/slash-create/compare/v2.1.2...v3.0.0
+[3.0.1]: https://github.com/Snazzah/slash-create/compare/v3.0.0...v3.0.1

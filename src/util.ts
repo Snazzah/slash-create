@@ -86,10 +86,8 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
 
     if (typeof option.name !== 'string') throwError(TypeError, i, 'Option name must be a string.');
     if (option.name !== option.name.toLowerCase()) throwError(Error, i, 'Option name must be lowercase.');
-    if (option.name.length < 3 || option.name.length > 32)
-      throwError(RangeError, i, 'Option name must be between 3 and 32 characters.');
-    if (!/^[a-z0-9_-]+$/.exec(option.name))
-      throwError(RangeError, i, 'Option name must lowercase characters, numbers, hyphens and underscores.');
+    if (!/^[\w-]{1,32}$/.test(option.name))
+      throwError(RangeError, i, 'Option name must must be under 32 characters, matching this regex: /^[\\w-]{1,32}$/');
     if (typeof option.description !== 'string') throwError(TypeError, i, 'Option description must be a string.');
     if (option.description.length < 1 || option.description.length > 100)
       throwError(RangeError, i, 'Option description must be under 100 characters.');
@@ -125,8 +123,8 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
       for (let ii = 0; ii < option.choices.length; ii++) {
         const choice = option.choices[ii];
 
-        if (!choice.name || choice.name.length < 3 || choice.name.length > 32)
-          throwError(Error, i, 'The choice name must be between 3 and 32 characters!', `.choices[${ii}]`);
+        if (!choice.name || choice.name.length > 100)
+          throwError(RangeError, i, 'The choice name must be not exceed 100 characters!', `.choices[${ii}]`);
       }
     }
   }

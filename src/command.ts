@@ -234,8 +234,8 @@ class SlashCommand {
   static validateOptions(opts: SlashCommandOptions) {
     if (typeof opts.name !== 'string') throw new TypeError('Command name must be a string.');
     if (opts.name !== opts.name.toLowerCase()) throw new Error('Command name must be lowercase.');
-    if (opts.name.length < 3 || opts.name.length > 32)
-      throw new RangeError('Command name must be between 3 and 32 characters.');
+    if (/^[\w-]{1,32}$/.test(opts.name))
+      throw new RangeError('Command name must be under 32 characters, matching this regex: /^[\\w-]{1,32}$/');
 
     if (typeof opts.description !== 'string') throw new TypeError('Command description must be a string.');
     if (opts.description.length < 1 || opts.description.length > 100)

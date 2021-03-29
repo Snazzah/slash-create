@@ -295,15 +295,14 @@ class CommandContext {
 
   /**
    * Edits the original message.
-   * This is put on a timeout of 150 ms for webservers to account for
-   * Discord recieving and processing the original response.
+   * This is put on a timeout of 150 ms to account for
+   * Discord receiving and processing the original response.
    * Note: This will error with ephemeral messages or deferred ephemeral messages.
    * @param content The content of the message
    * @param options The message options
    */
   editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message> {
     this.deferred = false;
-    if (!this.webserverMode) return this.edit('@original', content, options);
     return new Promise((resolve, reject) =>
       setTimeout(() => this.edit('@original', content, options).then(resolve).catch(reject), 150)
     );

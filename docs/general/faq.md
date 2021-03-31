@@ -30,12 +30,43 @@ ctx.send({
 
 ### How can I get the client from my slash command?
 slash-create does not support passing a client through the command context, since the library is also used for webservers.
+You can do either of the following work-arounds:
+
+#### Extend the Command Class
+This requires you to manually register the command as `registerCommandsIn` will fail with commands with these constructor parameters.
+```js
+// bot.js
+const Discord = require('discord.js');
+const { SlashCreator, GatewayServer } = require('slash-create');
+const ClientCommand = require('./commands/command.js');
+
+const client = new Discord.Client({ /* ... */ });
+const creator = new SlashCreator({ /* ... */ });
+creator
+    .registerCommand(new ClientCommand(client, creator))
+    // ...
+```
+```js
+// commands/command.js
+const { SlashCommand } = require('slash-create');
+
+module.exports = class HelloCommand extends SlashCommand {
+    constructor(client, creator, opts) {
+        super(creator, opts);
+        this.client = client'
+    }
+
+    // now you can use this.client ...
+}
+```
+
+#### Requiring the client itself
 ```js
 // bot.js
 const Discord = require('discord.js');
 const { SlashCreator, GatewayServer } = require('slash-create');
 
-const client = new Discord.Client(/* ... */);
+const client = new Discord.Client({ /* ... */ });
 // ...
 
 module.exports = client;
@@ -43,7 +74,7 @@ module.exports = client;
 ```js
 // commands/command.js
 const { SlashCommand, CommandOptionType } = require('slash-create');
-const client = require("../bot.js");
+const client = require('../bot.js');
 
 module.exports = class HelloCommand extends SlashCommand {
   // ...
@@ -67,3 +98,8 @@ ctx.send([
   embeds: [embed.toJSON()]
 ])
 ```
+
+### My bot sent a message but it's still thinking.
+There is a pretty good chance you are **creating the message outside of the interaction**, which does not show that the interaction has been completed. (by editing the deferred message or using `ctx.send`)
+
+**Please make sure to use `ctx.send` or return a message (string or MessageOptions) when finishing your command interaction. Any `.send` functions outside of `ctx` will not finish the interaction.**

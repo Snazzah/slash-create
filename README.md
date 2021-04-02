@@ -19,7 +19,7 @@ You can create commands similar to Discord.JS [Commando](https://github.com/disc
 - Command throttling/cooldowns
 
 ## Quickstart
-If you want an easy start on getting slash commands on your bot, you can use the [Snazzah/slash-create-template] template.
+If you want an easy start on getting slash commands on your bot, you can use the [Snazzah/slash-create-template](https://github.com/Snazzah/slash-create-template) template.
 ```sh
 npx degit Snazzah/slash-create-template slash-commands
 cd slash-commands

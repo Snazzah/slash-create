@@ -303,10 +303,7 @@ class CommandContext {
    */
   editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message> {
     this.deferred = false;
-    if (!this.webserverMode) return this.edit('@original', content, options);
-    return new Promise((resolve, reject) =>
-      setTimeout(() => this.edit('@original', content, options).then(resolve).catch(reject), 150)
-    );
+    return this.edit('@original', content, options);
   }
 
   /**

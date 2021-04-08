@@ -68,6 +68,8 @@ export interface PartialApplicationCommand {
   description: string;
   /** The optoins for the command. */
   options?: ApplicationCommandOption[];
+  /** Whether to enable this command for everyone by default. */
+  default_permission?: boolean;
 }
 
 /** @hidden */

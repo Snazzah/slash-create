@@ -21,6 +21,8 @@ export interface SlashCommandOptions {
   unknown?: boolean;
   /** Whether responses from this command should defer ephemeral messages. */
   deferEphemeral?: boolean;
+  /** Whether to enable this command for everyone by default. `true` by default. */
+  defaultPermission?: boolean;
 }
 
 /** The throttling options for a {@link SlashCommand}. */
@@ -56,6 +58,8 @@ class SlashCommand {
   readonly unknown: boolean;
   /** Whether responses from this command should defer ephemeral messages. */
   readonly deferEphemeral: boolean;
+  /** Whether to enable this command for everyone by default. */
+  readonly defaultPermission: boolean;
   /**
    * The file path of the command.
    * Used for refreshing the require cache.
@@ -87,6 +91,7 @@ class SlashCommand {
     this.throttling = opts.throttling;
     this.unknown = opts.unknown || false;
     this.deferEphemeral = opts.deferEphemeral || false;
+    this.defaultPermission = typeof opts.defaultPermission === 'boolean' ? opts.defaultPermission : true;
   }
 
   /**
@@ -97,6 +102,7 @@ class SlashCommand {
     return {
       name: this.commandName,
       description: this.description,
+      default_permission: this.defaultPermission,
       ...(this.options ? { options: this.options } : {})
     };
   }
@@ -220,7 +226,7 @@ class SlashCommand {
    * @param ctx The context of the interaction
    * @private
    */
-  finalize(response: any, ctx: CommandContext) {
+  finalize(response: any, ctx: CommandContext): any {
     if (!response && !ctx.initiallyResponded) return;
 
     if (typeof response === 'string' || (response && response.constructor && response.constructor.name === 'Object'))

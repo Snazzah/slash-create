@@ -119,6 +119,27 @@ export interface ApplicationCommandOptionChoice {
   value: string | number;
 }
 
+export enum ApplicationCommandPermissionType {
+  ROLE = 1,
+  USER = 2
+}
+
+export interface ApplicationCommandPermissions {
+  id: string;
+  type: ApplicationCommandPermissionType;
+  permission: boolean;
+}
+
+export interface PartialApplicationCommandPermissions {
+  id: string;
+  permissions: ApplicationCommandPermissions[];
+}
+
+export interface GuildApplicationCommandPermissions extends PartialApplicationCommandPermissions {
+  application_id: string;
+  guild_id: string;
+}
+
 /** @private */
 export interface RawRequest {
   method: string;
@@ -366,6 +387,12 @@ export const Endpoints = {
   COMMAND: (applicationID: string, commandID: string) => `/applications/${applicationID}/commands/${commandID}`,
   GUILD_COMMAND: (applicationID: string, guildID: string, commandID: string) =>
     `/applications/${applicationID}/guilds/${guildID}/commands/${commandID}`,
+
+  // Command Permissions
+  GUILD_COMMAND_PERMISSIONS: (applicationID: string, guildID: string) =>
+    `/applications/${applicationID}/guilds/${guildID}/commands/permissions`,
+  COMMAND_PERMISSIONS: (applicationID: string, guildID: string, commandID: string) =>
+    `/applications/${applicationID}/guilds/${guildID}/commands/${commandID}/permissions`,
 
   // Interactions
   INTERACTION_CALLBACK: (interactionID: string, interactionToken: string) =>

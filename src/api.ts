@@ -1,4 +1,11 @@
-import { ApplicationCommand, BulkUpdateCommand, Endpoints, PartialApplicationCommand } from './constants';
+import {
+  ApplicationCommand,
+  ApplicationCommandPermissions,
+  BulkUpdateCommand,
+  Endpoints,
+  GuildApplicationCommandPermissions,
+  PartialApplicationCommand
+} from './constants';
 import SlashCreator from './creator';
 
 /** The API handler for {@link SlashCreator}. */
@@ -84,6 +91,45 @@ class SlashCreatorAPI {
       guildID
         ? Endpoints.GUILD_COMMAND(this._creator.options.applicationID, guildID, commandID)
         : Endpoints.COMMAND(this._creator.options.applicationID, commandID)
+    );
+  }
+
+  getGuildCommandPermissions(guildID: string): Promise<GuildApplicationCommandPermissions[]> {
+    return this._creator.requestHandler.request(
+      'GET',
+      Endpoints.GUILD_COMMAND_PERMISSIONS(this._creator.options.applicationID, guildID)
+    );
+  }
+
+  getCommandPermissions(guildID: string, commandID: string): Promise<GuildApplicationCommandPermissions> {
+    return this._creator.requestHandler.request(
+      'GET',
+      Endpoints.COMMAND_PERMISSIONS(this._creator.options.applicationID, guildID, commandID)
+    );
+  }
+
+  updateCommandPermissions(
+    guildID: string,
+    commandID: string,
+    permissions: ApplicationCommandPermissions[]
+  ): Promise<GuildApplicationCommandPermissions> {
+    return this._creator.requestHandler.request(
+      'PUT',
+      Endpoints.COMMAND_PERMISSIONS(this._creator.options.applicationID, guildID, commandID),
+      true,
+      { permissions }
+    );
+  }
+
+  bulkUpdateCommandPermissions(
+    guildID: string,
+    commands: PartialApplicationCommand[]
+  ): Promise<GuildApplicationCommandPermissions> {
+    return this._creator.requestHandler.request(
+      'PUT',
+      Endpoints.GUILD_COMMAND_PERMISSIONS(this._creator.options.applicationID, guildID),
+      true,
+      commands
     );
   }
 

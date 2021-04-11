@@ -69,7 +69,7 @@ class SlashCreatorAPI {
    * @param commands The payload to update the commands to.
    * @param guildID The guild ID to put the command on. If undefined, the global command is updated.
    */
-  updateCommands(commands: BulkUpdateCommand[], guildID?: string): Promise<ApplicationCommand> {
+  updateCommands(commands: BulkUpdateCommand[], guildID?: string): Promise<ApplicationCommand[]> {
     return this._creator.requestHandler.request(
       'PUT',
       guildID
@@ -124,7 +124,7 @@ class SlashCreatorAPI {
   bulkUpdateCommandPermissions(
     guildID: string,
     commands: PartialApplicationCommand[]
-  ): Promise<GuildApplicationCommandPermissions> {
+  ): Promise<GuildApplicationCommandPermissions[]> {
     return this._creator.requestHandler.request(
       'PUT',
       Endpoints.GUILD_COMMAND_PERMISSIONS(this._creator.options.applicationID, guildID),

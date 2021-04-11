@@ -373,6 +373,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
           !!(command.guildIDs && command.guildIDs.includes(guildID) && command.commandName === partialCommand.name)
       );
       if (command) {
+        command.ids.set(guildID, applicationCommand.id);
         this.emit(
           'debug',
           `Found guild command "${applicationCommand.name}" (${applicationCommand.id}, guild: ${guildID})`
@@ -404,7 +405,15 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       });
     }
 
-    await this.api.updateCommands(updatePayload, guildID);
+    // Set command IDs for permission syncing
+    const updatedCommands = await this.api.updateCommands(updatePayload, guildID);
+    const newCommands = updatedCommands.filter(
+      (newCommand) => !commands.find((command) => command.id === newCommand.id)
+    );
+    for (const newCommand of newCommands) {
+      const command = unhandledCommands.find((command) => command.commandName === newCommand.name);
+      if (command) command.ids.set(guildID, newCommand.id);
+    }
   }
 
   /**
@@ -426,6 +435,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
       const command = this.commands.get(commandKey);
       if (command) {
+        command.ids.set('global', applicationCommand.id);
         this.emit('debug', `Found command "${applicationCommand.name}" (${applicationCommand.id})`);
         updatePayload.push({
           id: applicationCommand.id,
@@ -451,7 +461,14 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       });
     }
 
-    this.api.updateCommands(updatePayload);
+    const updatedCommands = await this.api.updateCommands(updatePayload);
+    const newCommands = updatedCommands.filter((newCommand) =>
+      commands.find((command) => command.id === newCommand.id)
+    );
+    for (const newCommand of newCommands) {
+      const command = unhandledCommands.find((command) => command.commandName === newCommand.name);
+      if (command) command.ids.set('global', newCommand.id);
+    }
   }
 
   private _getCommandFromInteraction(interaction: InteractionRequestData) {

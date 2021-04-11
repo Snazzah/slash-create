@@ -66,6 +66,11 @@ class SlashCommand {
    * Set this to `__filename` in the constructor to enable cache clearing.
    */
   filePath?: string;
+  /**
+   * Used for syncing command permissions.
+   * @hidden
+   */
+  ids = new Map<string, string>();
 
   /** The creator responsible for this command. */
   readonly creator: SlashCreator;
@@ -216,7 +221,7 @@ class SlashCommand {
    * Runs the command.
    * @param ctx The context of the interaction
    */
-  async run(ctx: CommandContext): Promise<string|MessageOptions|void> { // eslint-disable-line @typescript-eslint/no-unused-vars, prettier/prettier
+  async run(ctx: CommandContext): Promise<any> { // eslint-disable-line @typescript-eslint/no-unused-vars, prettier/prettier
     throw new Error(`${this.constructor.name} doesn't have a run() method.`);
   }
 

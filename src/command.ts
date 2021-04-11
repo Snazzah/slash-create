@@ -1,5 +1,5 @@
 import { ApplicationCommandOption, PartialApplicationCommand, PermissionNames } from './constants';
-import CommandContext, { MessageOptions } from './context';
+import CommandContext from './context';
 import SlashCreator from './creator';
 import { oneLine, validateOptions } from './util';
 

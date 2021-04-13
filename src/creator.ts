@@ -13,7 +13,8 @@ import {
   PartialApplicationCommand,
   BulkUpdateCommand,
   CommandUser,
-  InteractionRequestData
+  InteractionRequestData,
+  PartialApplicationCommandPermissions
 } from './constants';
 import SlashCommand from './command';
 import TypedEmitter from './util/typedEmitter';
@@ -98,6 +99,8 @@ interface SyncCommandOptions {
    * Guild syncs most likely can error if that guild no longer exists.
    */
   skipGuildErrors?: boolean;
+  /** Whether to sync command permissions after syncing commands. */
+  syncPermissions?: boolean;
 }
 
 /** The main class for using commands and interactions. */
@@ -310,7 +313,8 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       {
         deleteCommands: true,
         syncGuilds: true,
-        skipGuildErrors: true
+        skipGuildErrors: true,
+        syncPermissions: true
       },
       opts
     ) as SyncCommandOptions;
@@ -342,6 +346,13 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       }
 
       this.emit('debug', 'Finished syncing commands');
+
+      if (options.syncPermissions)
+        try {
+          await this.syncCommandPermissions();
+        } catch (e) {
+          this.emit('error', e);
+        }
     };
 
     promise()
@@ -469,6 +480,26 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       const command = unhandledCommands.find((command) => command.commandName === newCommand.name);
       if (command) command.ids.set('global', newCommand.id);
     }
+  }
+
+  async syncCommandPermissions() {
+    const guildPayloads: { [guildID: string]: PartialApplicationCommandPermissions[] } = {};
+
+    for (const [, command] of this.commands) {
+      if (command.permissions) {
+        for (const guildID in command.permissions) {
+          const commandID = command.ids.get(guildID) || command.ids.get('global');
+          if (!commandID) continue;
+          if (!(guildID in guildPayloads)) guildPayloads[guildID] = [];
+          guildPayloads[guildID].push({
+            id: commandID,
+            permissions: command.permissions[guildID]
+          });
+        }
+      }
+    }
+
+    for (const guildID in guildPayloads) await this.api.bulkUpdateCommandPermissions(guildID, guildPayloads[guildID]);
   }
 
   private _getCommandFromInteraction(interaction: InteractionRequestData) {

@@ -124,17 +124,20 @@ export enum ApplicationCommandPermissionType {
   USER = 2
 }
 
+/** A permission in a command. */
 export interface ApplicationCommandPermissions {
   id: string;
   type: ApplicationCommandPermissionType;
   permission: boolean;
 }
 
+/** @private */
 export interface PartialApplicationCommandPermissions {
   id: string;
   permissions: ApplicationCommandPermissions[];
 }
 
+/** @private */
 export interface GuildApplicationCommandPermissions extends PartialApplicationCommandPermissions {
   application_id: string;
   guild_id: string;

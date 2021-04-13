@@ -1,4 +1,9 @@
-import { ApplicationCommandOption, PartialApplicationCommand, PermissionNames } from './constants';
+import {
+  ApplicationCommandOption,
+  ApplicationCommandPermissions,
+  PartialApplicationCommand,
+  PermissionNames
+} from './constants';
 import CommandContext from './context';
 import SlashCreator from './creator';
 import { oneLine, validateOptions } from './util';
@@ -23,6 +28,26 @@ export interface SlashCommandOptions {
   deferEphemeral?: boolean;
   /** Whether to enable this command for everyone by default. `true` by default. */
   defaultPermission?: boolean;
+  /** The command permissions per guild */
+  permissions?: CommandPermissions;
+}
+
+/**
+ * The command permission for a {@link SlashCommand}.
+ * The object is a guild ID mapped to an array of {@link ApplicationCommandPermissions}.
+ * @example
+ * {
+ *   '<guild_id>': [
+ *     {
+ *       type: ApplicationCommandPermissionType.USER,
+ *       id: '<user_id>',
+ *       permission: true
+ *     }
+ *   ]
+ * }
+ */
+export interface CommandPermissions {
+  [guildID: string]: ApplicationCommandPermissions[];
 }
 
 /** The throttling options for a {@link SlashCommand}. */
@@ -60,6 +85,8 @@ class SlashCommand {
   readonly deferEphemeral: boolean;
   /** Whether to enable this command for everyone by default. */
   readonly defaultPermission: boolean;
+  /** The command permissions per guild. */
+  readonly permissions?: CommandPermissions;
   /**
    * The file path of the command.
    * Used for refreshing the require cache.
@@ -97,6 +124,7 @@ class SlashCommand {
     this.unknown = opts.unknown || false;
     this.deferEphemeral = opts.deferEphemeral || false;
     this.defaultPermission = typeof opts.defaultPermission === 'boolean' ? opts.defaultPermission : true;
+    if (opts.permissions) this.permissions = opts.permissions;
   }
 
   /**

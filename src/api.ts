@@ -4,7 +4,8 @@ import {
   BulkUpdateCommand,
   Endpoints,
   GuildApplicationCommandPermissions,
-  PartialApplicationCommand
+  PartialApplicationCommand,
+  PartialApplicationCommandPermissions
 } from './constants';
 import SlashCreator from './creator';
 
@@ -123,7 +124,7 @@ class SlashCreatorAPI {
 
   bulkUpdateCommandPermissions(
     guildID: string,
-    commands: PartialApplicationCommand[]
+    commands: PartialApplicationCommandPermissions[]
   ): Promise<GuildApplicationCommandPermissions[]> {
     return this._creator.requestHandler.request(
       'PUT',

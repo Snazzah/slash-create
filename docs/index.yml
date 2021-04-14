@@ -20,7 +20,7 @@
       path: webserver.js
     - name: Using a Discord Bot
       path: discord-bot.md
-    - name: Example Command
-      path: command.js
+    - name: Example Commands
+      path: command.md
     - name: Google Cloud Functions
       path: gcf.md

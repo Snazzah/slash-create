@@ -119,8 +119,11 @@ export interface ApplicationCommandOptionChoice {
   value: string | number;
 }
 
+/** The type of thing to apply the permission to. */
 export enum ApplicationCommandPermissionType {
+  /** A Discord role. */
   ROLE = 1,
+  /** A Discord user. */
   USER = 2
 }
 

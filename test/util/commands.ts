@@ -1,4 +1,4 @@
-import SlashCommand, { ThrottlingOptions } from '../../src/command';
+import SlashCommand, { CommandPermissions, ThrottlingOptions } from '../../src/command';
 import { ApplicationCommandOption } from '../../src/constants';
 import CommandContext from '../../src/context';
 import SlashCreator from '../../src/creator';
@@ -11,10 +11,14 @@ interface SlashCommandPartialOptions {
   options?: ApplicationCommandOption[];
   throttling?: ThrottlingOptions;
   unknown?: boolean;
+  deferEphemeral?: boolean;
+  defaultPermission?: boolean;
+  permissions?: CommandPermissions;
 }
 
 export const createBasicCommand = (
   opts: SlashCommandPartialOptions = {},
+  ids: [string, string][] = [],
   cb: (ctx: CommandContext) => any = () => {}
 ) => {
   return class BasicCommand extends SlashCommand {
@@ -24,6 +28,8 @@ export const createBasicCommand = (
         description: 'description',
         ...opts
       });
+
+      this.ids = new Map(ids);
     }
 
     run(ctx: CommandContext) {

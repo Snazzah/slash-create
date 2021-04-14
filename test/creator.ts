@@ -10,9 +10,16 @@ import SlashCreator from '../src/creator';
 import FastifyServer from '../src/servers/fastify';
 import GatewayServer from '../src/servers/gateway';
 import GCFServer from '../src/servers/gcf';
+import { ApplicationCommandPermissionType } from '../src/constants';
 import { createBasicCommand } from './util/commands';
 import { basicCommands } from './util/constants';
-import { globalCommands, guildCommands, updateGlobalCommands, updateGuildCommands } from './util/nock';
+import {
+  globalCommands,
+  guildCommands,
+  updateGlobalCommands,
+  updateGuildCommandPermissions,
+  updateGuildCommands
+} from './util/nock';
 
 describe('SlashCreator', () => {
   describe('constructor', () => {
@@ -201,37 +208,6 @@ describe('SlashCreator', () => {
     });
   });
 
-  describe('.startServer()', () => {
-    it('throws when there is no server given', () => {
-      const creator = new SlashCreator({
-        applicationID: '1'
-      });
-
-      return expect(creator.startServer()).to.eventually.be.rejected;
-    });
-
-    it('throws when used on GCFServer', () => {
-      const creator = new SlashCreator({
-        applicationID: '1',
-        publicKey: 'abc'
-      });
-
-      creator.withServer(new GCFServer({}));
-
-      return expect(creator.startServer()).to.eventually.be.rejected;
-    });
-
-    it('throws when used on GatewayServer', () => {
-      const creator = new SlashCreator({
-        applicationID: '1'
-      });
-
-      creator.withServer(new GatewayServer(() => {}));
-
-      return expect(creator.startServer()).to.eventually.be.rejected;
-    });
-  });
-
   describe('.syncCommands()', () => {
     it('syncs commands correctly', async () => {
       const creator = new SlashCreator({
@@ -241,7 +217,21 @@ describe('SlashCreator', () => {
 
       creator
         .registerCommand(createBasicCommand({ name: 'to-create-guild', guildIDs: '123' }))
-        .registerCommand(createBasicCommand({ name: 'to-update' }))
+        .registerCommand(
+          createBasicCommand({
+            name: 'to-update',
+            defaultPermission: false,
+            permissions: {
+              '123': [
+                {
+                  type: ApplicationCommandPermissionType.USER,
+                  id: '1',
+                  permission: true
+                }
+              ]
+            }
+          })
+        )
         .registerCommand(createBasicCommand({ name: 'to-leave-alone' }));
 
       const cmdsScope = globalCommands(basicCommands),
@@ -263,17 +253,43 @@ describe('SlashCreator', () => {
             application_id: '1',
             version: '1'
           }
+        ]),
+        permissionsScope = updateGuildCommandPermissions([
+          {
+            application_id: '1',
+            id: '1',
+            guild_id: '123',
+            permissions: [
+              {
+                type: ApplicationCommandPermissionType.USER,
+                id: '1',
+                permission: true
+              }
+            ]
+          }
         ]);
 
       creator.syncCommands();
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
-        { id: '1', name: 'to-update', description: 'description' },
-        { id: '3', name: 'to-leave-alone', description: 'description' }
+        { id: '1', default_permission: false, name: 'to-update', description: 'description' },
+        { id: '3', default_permission: true, name: 'to-leave-alone', description: 'description' }
       ]);
       await expect(guildCmdsScope, 'requests guild commands').to.have.been.requested;
       await expect(putGuildScope, 'updates guild commands').to.have.been.requestedWith([
-        { name: 'to-create-guild', description: 'description' }
+        { default_permission: true, name: 'to-create-guild', description: 'description' }
+      ]);
+      await expect(permissionsScope, 'updates command permissions').to.have.been.requestedWith([
+        {
+          id: '1',
+          permissions: [
+            {
+              type: ApplicationCommandPermissionType.USER,
+              id: '1',
+              permission: true
+            }
+          ]
+        }
       ]);
     });
   });
@@ -305,9 +321,9 @@ describe('SlashCreator', () => {
       const promise = expect(creator.syncCommandsIn('123')).to.be.fulfilled;
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
-        { id: '1', name: 'to-update', description: 'description' },
-        { id: '3', name: 'to-leave-alone', description: 'description' },
-        { name: 'to-create', description: 'description' }
+        { id: '1', default_permission: true, name: 'to-update', description: 'description' },
+        { id: '3', default_permission: true, name: 'to-leave-alone', description: 'description' },
+        { default_permission: true, name: 'to-create', description: 'description' }
       ]);
       return promise;
     });
@@ -339,11 +355,85 @@ describe('SlashCreator', () => {
       const promise = expect(creator.syncGlobalCommands()).to.be.fulfilled;
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
-        { id: '1', name: 'to-update', description: 'description' },
-        { id: '3', name: 'to-leave-alone', description: 'description' },
-        { name: 'to-create', description: 'description' }
+        { id: '1', default_permission: true, name: 'to-update', description: 'description' },
+        { id: '3', default_permission: true, name: 'to-leave-alone', description: 'description' },
+        { default_permission: true, name: 'to-create', description: 'description' }
       ]);
       return promise;
+    });
+  });
+
+  describe('.syncCommandPermissions()', () => {
+    it('syncs command permissions correctly', async () => {
+      const creator = new SlashCreator({
+        applicationID: '1',
+        token: 'xxx'
+      });
+
+      creator.registerCommand(
+        createBasicCommand(
+          {
+            name: 'to-update',
+            permissions: {
+              '123': [
+                {
+                  type: ApplicationCommandPermissionType.USER,
+                  id: '1',
+                  permission: true
+                }
+              ]
+            }
+          },
+          [['123', '1']]
+        )
+      );
+
+      const permissionsScope = updateGuildCommandPermissions([
+        {
+          application_id: '1',
+          id: '1',
+          guild_id: '123',
+          permissions: [
+            {
+              type: ApplicationCommandPermissionType.USER,
+              id: '1',
+              permission: true
+            }
+          ]
+        }
+      ]);
+
+      creator.syncCommandPermissions();
+      await expect(permissionsScope, 'updates command permissions').to.have.been.requestedWith([
+        {
+          id: '1',
+          permissions: [
+            {
+              type: ApplicationCommandPermissionType.USER,
+              id: '1',
+              permission: true
+            }
+          ]
+        }
+      ]);
+    });
+  });
+
+  describe('.collectCommandIDs()', () => {
+    it('collects command IDs', async () => {
+      const creator = new SlashCreator({
+        applicationID: '1',
+        token: 'xxx'
+      });
+
+      creator.registerCommand(createBasicCommand({ name: 'to-update' }));
+
+      const cmdsScope = globalCommands(basicCommands);
+
+      const promise = expect(creator.collectCommandIDs()).to.eventually.be.fulfilled;
+      await expect(cmdsScope, 'requests global commands').to.have.been.requested;
+      await promise;
+      expect(creator.commands.first()!.ids.get('global')).to.equal('1');
     });
   });
 
@@ -398,6 +488,37 @@ describe('SlashCreator', () => {
       });
 
       expect(creator.withServer.bind(creator, new GatewayServer(() => {}))).to.not.throw();
+    });
+  });
+
+  describe('.startServer()', () => {
+    it('throws when there is no server given', () => {
+      const creator = new SlashCreator({
+        applicationID: '1'
+      });
+
+      return expect(creator.startServer()).to.eventually.be.rejected;
+    });
+
+    it('throws when used on GCFServer', () => {
+      const creator = new SlashCreator({
+        applicationID: '1',
+        publicKey: 'abc'
+      });
+
+      creator.withServer(new GCFServer({}));
+
+      return expect(creator.startServer()).to.eventually.be.rejected;
+    });
+
+    it('throws when used on GatewayServer', () => {
+      const creator = new SlashCreator({
+        applicationID: '1'
+      });
+
+      creator.withServer(new GatewayServer(() => {}));
+
+      return expect(creator.startServer()).to.eventually.be.rejected;
     });
   });
 });

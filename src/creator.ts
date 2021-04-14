@@ -473,8 +473,8 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     }
 
     const updatedCommands = await this.api.updateCommands(updatePayload);
-    const newCommands = updatedCommands.filter((newCommand) =>
-      commands.find((command) => command.id === newCommand.id)
+    const newCommands = updatedCommands.filter(
+      (newCommand) => !commands.find((command) => command.id === newCommand.id)
     );
     for (const newCommand of newCommands) {
       const command = unhandledCommands.find((command) => command.commandName === newCommand.name);

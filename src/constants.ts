@@ -68,6 +68,8 @@ export interface PartialApplicationCommand {
   description: string;
   /** The optoins for the command. */
   options?: ApplicationCommandOption[];
+  /** Whether to enable this command for everyone by default. */
+  default_permission?: boolean;
 }
 
 /** @hidden */
@@ -115,6 +117,30 @@ export interface ApplicationCommandOptionChoice {
   name: string;
   /** The value of the choice. */
   value: string | number;
+}
+
+export enum ApplicationCommandPermissionType {
+  ROLE = 1,
+  USER = 2
+}
+
+/** A permission in a command. */
+export interface ApplicationCommandPermissions {
+  id: string;
+  type: ApplicationCommandPermissionType;
+  permission: boolean;
+}
+
+/** @private */
+export interface PartialApplicationCommandPermissions {
+  id: string;
+  permissions: ApplicationCommandPermissions[];
+}
+
+/** @private */
+export interface GuildApplicationCommandPermissions extends PartialApplicationCommandPermissions {
+  application_id: string;
+  guild_id: string;
 }
 
 /** @private */
@@ -364,6 +390,12 @@ export const Endpoints = {
   COMMAND: (applicationID: string, commandID: string) => `/applications/${applicationID}/commands/${commandID}`,
   GUILD_COMMAND: (applicationID: string, guildID: string, commandID: string) =>
     `/applications/${applicationID}/guilds/${guildID}/commands/${commandID}`,
+
+  // Command Permissions
+  GUILD_COMMAND_PERMISSIONS: (applicationID: string, guildID: string) =>
+    `/applications/${applicationID}/guilds/${guildID}/commands/permissions`,
+  COMMAND_PERMISSIONS: (applicationID: string, guildID: string, commandID: string) =>
+    `/applications/${applicationID}/guilds/${guildID}/commands/${commandID}/permissions`,
 
   // Interactions
   INTERACTION_CALLBACK: (interactionID: string, interactionToken: string) =>

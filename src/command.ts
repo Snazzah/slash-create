@@ -1,5 +1,10 @@
-import { ApplicationCommandOption, PartialApplicationCommand, PermissionNames } from './constants';
-import CommandContext, { MessageOptions } from './context';
+import {
+  ApplicationCommandOption,
+  ApplicationCommandPermissions,
+  PartialApplicationCommand,
+  PermissionNames
+} from './constants';
+import CommandContext from './context';
 import SlashCreator from './creator';
 import { oneLine, validateOptions } from './util';
 
@@ -21,6 +26,28 @@ export interface SlashCommandOptions {
   unknown?: boolean;
   /** Whether responses from this command should defer ephemeral messages. */
   deferEphemeral?: boolean;
+  /** Whether to enable this command for everyone by default. `true` by default. */
+  defaultPermission?: boolean;
+  /** The command permissions per guild */
+  permissions?: CommandPermissions;
+}
+
+/**
+ * The command permission for a {@link SlashCommand}.
+ * The object is a guild ID mapped to an array of {@link ApplicationCommandPermissions}.
+ * @example
+ * {
+ *   '<guild_id>': [
+ *     {
+ *       type: ApplicationCommandPermissionType.USER,
+ *       id: '<user_id>',
+ *       permission: true
+ *     }
+ *   ]
+ * }
+ */
+export interface CommandPermissions {
+  [guildID: string]: ApplicationCommandPermissions[];
 }
 
 /** The throttling options for a {@link SlashCommand}. */
@@ -56,12 +83,21 @@ class SlashCommand {
   readonly unknown: boolean;
   /** Whether responses from this command should defer ephemeral messages. */
   readonly deferEphemeral: boolean;
+  /** Whether to enable this command for everyone by default. */
+  readonly defaultPermission: boolean;
+  /** The command permissions per guild. */
+  readonly permissions?: CommandPermissions;
   /**
    * The file path of the command.
    * Used for refreshing the require cache.
    * Set this to `__filename` in the constructor to enable cache clearing.
    */
   filePath?: string;
+  /**
+   * A map of command IDs with its guild ID (or 'global' for global commands), used for syncing command permissions.
+   * This will populate when syncing or collecting with {@link SlashCreator#collectCommandIDs}.
+   */
+  ids = new Map<string, string>();
 
   /** The creator responsible for this command. */
   readonly creator: SlashCreator;
@@ -87,6 +123,8 @@ class SlashCommand {
     this.throttling = opts.throttling;
     this.unknown = opts.unknown || false;
     this.deferEphemeral = opts.deferEphemeral || false;
+    this.defaultPermission = typeof opts.defaultPermission === 'boolean' ? opts.defaultPermission : true;
+    if (opts.permissions) this.permissions = opts.permissions;
   }
 
   /**
@@ -97,6 +135,7 @@ class SlashCommand {
     return {
       name: this.commandName,
       description: this.description,
+      default_permission: this.defaultPermission,
       ...(this.options ? { options: this.options } : {})
     };
   }
@@ -210,7 +249,7 @@ class SlashCommand {
    * Runs the command.
    * @param ctx The context of the interaction
    */
-  async run(ctx: CommandContext): Promise<string|MessageOptions|void> { // eslint-disable-line @typescript-eslint/no-unused-vars, prettier/prettier
+  async run(ctx: CommandContext): Promise<any> { // eslint-disable-line @typescript-eslint/no-unused-vars, prettier/prettier
     throw new Error(`${this.constructor.name} doesn't have a run() method.`);
   }
 
@@ -220,7 +259,7 @@ class SlashCommand {
    * @param ctx The context of the interaction
    * @private
    */
-  finalize(response: any, ctx: CommandContext) {
+  finalize(response: any, ctx: CommandContext): any {
     if (!response && !ctx.initiallyResponded) return;
 
     if (typeof response === 'string' || (response && response.constructor && response.constructor.name === 'Object'))

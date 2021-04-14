@@ -41,6 +41,10 @@ export {
   ApplicationCommand,
   ApplicationCommandOption,
   ApplicationCommandOptionChoice,
+  ApplicationCommandPermissionType,
+  ApplicationCommandPermissions,
+  PartialApplicationCommandPermissions,
+  GuildApplicationCommandPermissions,
   RawRequest,
   AnyRequestData,
   PingRequestData,
@@ -61,7 +65,7 @@ export {
 
 export type { ConvertedOption } from './context';
 
-export { SlashCommandOptions } from './command';
+export { SlashCommandOptions, CommandPermissions } from './command';
 
 export {
   API,

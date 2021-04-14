@@ -23,6 +23,7 @@ describe('[index]', () => {
     expect(slashCreate.InteractionResponseFlags).to.be.a('object');
     expect(slashCreate.InteractionType).to.be.a('object');
     expect(slashCreate.InterationResponseType).to.be.a('object');
+    expect(slashCreate.ApplicationCommandPermissionType).to.be.a('object');
     expect(slashCreate.Member).to.be.a('function');
     expect(slashCreate.Message).to.be.a('function');
     expect(slashCreate.Permissions).to.be.a('function');

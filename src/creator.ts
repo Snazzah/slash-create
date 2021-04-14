@@ -13,7 +13,8 @@ import {
   PartialApplicationCommand,
   BulkUpdateCommand,
   CommandUser,
-  InteractionRequestData
+  InteractionRequestData,
+  PartialApplicationCommandPermissions
 } from './constants';
 import SlashCommand from './command';
 import TypedEmitter from './util/typedEmitter';
@@ -98,6 +99,8 @@ interface SyncCommandOptions {
    * Guild syncs most likely can error if that guild no longer exists.
    */
   skipGuildErrors?: boolean;
+  /** Whether to sync command permissions after syncing commands. */
+  syncPermissions?: boolean;
 }
 
 /** The main class for using commands and interactions. */
@@ -310,7 +313,8 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       {
         deleteCommands: true,
         syncGuilds: true,
-        skipGuildErrors: true
+        skipGuildErrors: true,
+        syncPermissions: true
       },
       opts
     ) as SyncCommandOptions;
@@ -342,6 +346,13 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       }
 
       this.emit('debug', 'Finished syncing commands');
+
+      if (options.syncPermissions)
+        try {
+          await this.syncCommandPermissions();
+        } catch (e) {
+          this.emit('error', e);
+        }
     };
 
     promise()
@@ -373,6 +384,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
           !!(command.guildIDs && command.guildIDs.includes(guildID) && command.commandName === partialCommand.name)
       );
       if (command) {
+        command.ids.set(guildID, applicationCommand.id);
         this.emit(
           'debug',
           `Found guild command "${applicationCommand.name}" (${applicationCommand.id}, guild: ${guildID})`
@@ -404,7 +416,15 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       });
     }
 
-    await this.api.updateCommands(updatePayload, guildID);
+    // Set command IDs for permission syncing
+    const updatedCommands = await this.api.updateCommands(updatePayload, guildID);
+    const newCommands = updatedCommands.filter(
+      (newCommand) => !commands.find((command) => command.id === newCommand.id)
+    );
+    for (const newCommand of newCommands) {
+      const command = unhandledCommands.find((command) => command.commandName === newCommand.name);
+      if (command) command.ids.set(guildID, newCommand.id);
+    }
   }
 
   /**
@@ -426,6 +446,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
 
       const command = this.commands.get(commandKey);
       if (command) {
+        command.ids.set('global', applicationCommand.id);
         this.emit('debug', `Found command "${applicationCommand.name}" (${applicationCommand.id})`);
         updatePayload.push({
           id: applicationCommand.id,
@@ -451,7 +472,85 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       });
     }
 
-    this.api.updateCommands(updatePayload);
+    const updatedCommands = await this.api.updateCommands(updatePayload);
+    const newCommands = updatedCommands.filter(
+      (newCommand) => !commands.find((command) => command.id === newCommand.id)
+    );
+    for (const newCommand of newCommands) {
+      const command = unhandledCommands.find((command) => command.commandName === newCommand.name);
+      if (command) command.ids.set('global', newCommand.id);
+    }
+  }
+
+  /**
+   * Sync command permissions.
+   * <warn>This requires you to have your token set in the creator config AND have commands already synced previously.</warn>
+   */
+  async syncCommandPermissions() {
+    const guildPayloads: { [guildID: string]: PartialApplicationCommandPermissions[] } = {};
+
+    for (const [, command] of this.commands) {
+      if (command.permissions) {
+        for (const guildID in command.permissions) {
+          const commandID = command.ids.get(guildID) || command.ids.get('global');
+          if (!commandID) continue;
+          if (!(guildID in guildPayloads)) guildPayloads[guildID] = [];
+          guildPayloads[guildID].push({
+            id: commandID,
+            permissions: command.permissions[guildID]
+          });
+        }
+      }
+    }
+
+    for (const guildID in guildPayloads) await this.api.bulkUpdateCommandPermissions(guildID, guildPayloads[guildID]);
+  }
+
+  /**
+   * Updates the command IDs internally in the creator.
+   * Use this if you make any changes to commands in the API.
+   * @param skipGuildErrors Whether to prevent throwing an error if the API failed to get guild commands
+   */
+  async collectCommandIDs(skipGuildErrors = true) {
+    let guildIDs: string[] = [];
+    for (const [, command] of this.commands) {
+      if (command.guildIDs) guildIDs = uniq([...guildIDs, ...command.guildIDs]);
+    }
+
+    const commands = await this.api.getCommands();
+
+    for (const applicationCommand of commands) {
+      const commandKey = `global:${applicationCommand.name}`;
+      const command = this.commands.get(commandKey);
+      if (command) command.ids.set('global', applicationCommand.id);
+    }
+
+    for (const guildID of guildIDs) {
+      try {
+        const commands = await this.api.getCommands(guildID);
+
+        for (const applicationCommand of commands) {
+          const command = this.commands.find(
+            (command) =>
+              !!(
+                command.guildIDs &&
+                command.guildIDs.includes(guildID) &&
+                command.commandName === applicationCommand.name
+              )
+          );
+          if (command) command.ids.set(guildID, applicationCommand.id);
+        }
+      } catch (e) {
+        if (skipGuildErrors) {
+          this.emit(
+            'warn',
+            `An error occurred during guild command ID collection (${guildID}), you may no longer have access to that guild.`
+          );
+        } else {
+          throw e;
+        }
+      }
+    }
   }
 
   private _getCommandFromInteraction(interaction: InteractionRequestData) {

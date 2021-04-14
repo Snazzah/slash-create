@@ -94,8 +94,8 @@ class SlashCommand {
    */
   filePath?: string;
   /**
-   * Used for syncing command permissions.
-   * @hidden
+   * A map of command IDs with its guild ID (or 'global' for global commands), used for syncing command permissions.
+   * This will populate when syncing or collecting with {@link SlashCreator#collectCommandIDs}.
    */
   ids = new Map<string, string>();
 

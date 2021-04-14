@@ -482,6 +482,10 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     }
   }
 
+  /**
+   * Sync command permissions.
+   * <warn>This requires you to have your token set in the creator config AND have commands already synced previously.</warn>
+   */
   async syncCommandPermissions() {
     const guildPayloads: { [guildID: string]: PartialApplicationCommandPermissions[] } = {};
 
@@ -500,6 +504,53 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     }
 
     for (const guildID in guildPayloads) await this.api.bulkUpdateCommandPermissions(guildID, guildPayloads[guildID]);
+  }
+
+  /**
+   * Updates the command IDs internally in the creator.
+   * Use this if you make any changes to commands in the API.
+   * @param skipGuildErrors Whether to prevent throwing an error if the API failed to get guild commands
+   */
+  async collectCommandIDs(skipGuildErrors = true) {
+    let guildIDs: string[] = [];
+    for (const [, command] of this.commands) {
+      if (command.guildIDs) guildIDs = uniq([...guildIDs, ...command.guildIDs]);
+    }
+
+    const commands = await this.api.getCommands();
+
+    for (const applicationCommand of commands) {
+      const commandKey = `global:${applicationCommand.name}`;
+      const command = this.commands.get(commandKey);
+      if (command) command.ids.set('global', applicationCommand.id);
+    }
+
+    for (const guildID of guildIDs) {
+      try {
+        const commands = await this.api.getCommands(guildID);
+
+        for (const applicationCommand of commands) {
+          const command = this.commands.find(
+            (command) =>
+              !!(
+                command.guildIDs &&
+                command.guildIDs.includes(guildID) &&
+                command.commandName === applicationCommand.name
+              )
+          );
+          if (command) command.ids.set(guildID, applicationCommand.id);
+        }
+      } catch (e) {
+        if (skipGuildErrors) {
+          this.emit(
+            'warn',
+            `An error occurred during guild command ID collection (${guildID}), you may no longer have access to that guild.`
+          );
+        } else {
+          throw e;
+        }
+      }
+    }
   }
 
   private _getCommandFromInteraction(interaction: InteractionRequestData) {

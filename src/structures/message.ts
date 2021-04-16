@@ -1,6 +1,28 @@
-import { UserObject } from '../constants';
+import { InteractionType, UserObject } from '../constants';
 import CommandContext, { EditMessageOptions } from '../context';
 import User from './user';
+
+/** A message interaction. */
+export interface MessageInteraction {
+  /** The ID of the interaction. */
+  id: string;
+  /** The type of interaction. */
+  type: InteractionType;
+  /** The name of the command. */
+  name: string;
+  /** The user who invoked the interaction. */
+  user: User;
+}
+
+/** A message reference. */
+export interface MessageReference {
+  /** The ID of the channel the reference is from. */
+  channelID: string;
+  /** The ID of the guild the reference is from. */
+  guildID?: string;
+  /** The message ID of the reference. */
+  messageID?: string;
+}
 
 /** @hidden */
 export interface MessageData {
@@ -19,7 +41,18 @@ export interface MessageData {
   timestamp: string;
   edited_timestamp: string | null;
   flags: number;
+  interaction?: {
+    id: string;
+    type: InteractionType;
+    name: string;
+    user: UserObject;
+  };
   webhook_id: string;
+  message_reference?: {
+    channel_id: string;
+    guild_id?: string;
+    message_id?: string;
+  };
 }
 
 /** Represents a Discord message. */
@@ -52,8 +85,12 @@ class Message {
   readonly editedTimestamp?: number;
   /** The message's flags */
   readonly flags: number;
+  /** The message that this message is referencing */
+  readonly messageReference?: MessageReference;
   /** The message's webhook ID */
   readonly webhookID: string;
+  /** The interaction this message is apart of */
+  readonly interaction?: MessageInteraction;
 
   /** The context that created the message class */
   private readonly _ctx: CommandContext;
@@ -67,7 +104,7 @@ class Message {
 
     this.id = data.id;
     this.type = data.type;
-    this.content = data.content || '';
+    this.content = data.content;
     this.channelID = data.channel_id;
     this.author = new User(data.author, ctx.creator);
     this.attachments = data.attachments;
@@ -79,7 +116,20 @@ class Message {
     this.timestamp = Date.parse(data.timestamp);
     if (data.edited_timestamp) this.editedTimestamp = Date.parse(data.edited_timestamp);
     this.flags = data.flags;
+    if (data.message_reference)
+      this.messageReference = {
+        channelID: data.message_reference.channel_id,
+        guildID: data.message_reference.guild_id,
+        messageID: data.message_reference.message_id
+      };
     this.webhookID = data.webhook_id;
+    if (data.interaction)
+      this.interaction = {
+        id: data.interaction.id,
+        type: data.interaction.type,
+        name: data.interaction.name,
+        user: new User(data.interaction.user, ctx.creator)
+      };
   }
 
   /**

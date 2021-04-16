@@ -173,6 +173,18 @@ class CommandContext {
   }
 
   /**
+   * Fetches a message.
+   * @param messageID The ID of the message, defaults to the original message
+   */
+  async fetch(messageID = '@original') {
+    const data = await this.creator.requestHandler.request(
+      'GET',
+      Endpoints.MESSAGE(this.creator.options.applicationID, this.interactionToken, messageID)
+    );
+    return new Message(data, this);
+  }
+
+  /**
    * Sends a message, if it already made an initial response, this will create a follow-up message.
    * IF the context has created a deferred message, it will edit that deferred message,
    * and future calls to this function create follow ups.
@@ -295,8 +307,6 @@ class CommandContext {
 
   /**
    * Edits the original message.
-   * This is put on a timeout of 150 ms for webservers to account for
-   * Discord recieving and processing the original response.
    * Note: This will error with ephemeral messages or deferred ephemeral messages.
    * @param content The content of the message
    * @param options The message options

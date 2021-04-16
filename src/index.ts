@@ -67,6 +67,8 @@ export type { ConvertedOption } from './context';
 
 export { SlashCommandOptions, CommandPermissions } from './command';
 
+export { MessageInteraction, MessageReference } from './structures/message';
+
 export {
   API,
   BitField,

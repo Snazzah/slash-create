@@ -5,6 +5,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [3.1.0] - 2021-04-16
+### Changed:
+- Removed webserver timeout.
+### Added:
+- `USE_APPLICATION_COMMANDS` and `REQUEST_TO_SPEAK` to the permissions bitfield.
+- Slash Command Permissions ([#48](https://github.com/Snazzah/slash-create/pull/48))
+  - Commands now have an `ids` Map, populated upon syncing (or with `SlashCreator#collectCommandIDs`). This pairs the IDs of guild IDs and `'global'` to the command ID from the API.
+  - `SlashCommandOptions#defaultPermissions`
+  - You can define permissions in `SlashCommandOptions#permissions`, [See here](https://slash-create.js.org/#/docs/main/v3.1.0/examples/command) for an example.
+- Fetching messages with `CommandContext#fetch` ([9c876f4](https://github.com/Snazzah/slash-create/commit/9c876f448808120b5599e8af6d0d36f328771a81))
+- `Message#interaction` and `Message#messageReference`
+### Fixed:
+- Typing for `SlashCreatorAPI#updateCommands`
+
 
 ## [3.0.1] - 2021-03-29
 ### Fixed:
@@ -216,7 +230,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v3.0.1...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v3.1.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -235,3 +249,4 @@ This release features mostly completed documentation and changes to the packages
 [2.1.2]: https://github.com/Snazzah/slash-create/compare/v2.1.1...v2.1.2
 [3.0.0]: https://github.com/Snazzah/slash-create/compare/v2.1.2...v3.0.0
 [3.0.1]: https://github.com/Snazzah/slash-create/compare/v3.0.0...v3.0.1
+[3.1.0]: https://github.com/Snazzah/slash-create/compare/v3.0.1...v3.1.0

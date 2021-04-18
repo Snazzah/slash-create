@@ -67,7 +67,21 @@ export type { ConvertedOption } from './context';
 
 export { SlashCommandOptions, CommandPermissions } from './command';
 
-export { MessageInteraction, MessageReference } from './structures/message';
+export {
+  MessageInteraction,
+  MessageReference,
+  MessageEmbed,
+  MessageEmbedOptions,
+  EmbedAuthor,
+  EmbedAuthorOptions,
+  EmbedField,
+  EmbedFooter,
+  EmbedFooterOptions,
+  EmbedImage,
+  EmbedImageOptions,
+  EmbedProvider,
+  EmbedVideo
+} from './structures/message';
 
 export {
   API,

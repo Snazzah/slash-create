@@ -9,7 +9,7 @@ import {
   InterationResponseType
 } from './constants';
 import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from './util';
-import Message from './structures/message';
+import Message, { MessageEmbedOptions } from './structures/message';
 import User from './structures/user';
 import Collection from '@discordjs/collection';
 import Channel from './structures/channel';
@@ -24,7 +24,7 @@ export interface EditMessageOptions {
   /** The message content. */
   content?: string;
   /** The embeds of the message. */
-  embeds?: any[];
+  embeds?: MessageEmbedOptions[];
   /** The mentions allowed to be used in this message. */
   allowedMentions?: MessageAllowedMentions;
   /**

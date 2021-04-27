@@ -104,7 +104,7 @@ type ApplicationCommandOptionBase = {
   required?: boolean;
   /** The choices of the option. If set, these are the only values a user can pick from. */
   choices?: ApplicationCommandOptionChoice[];
-}
+};
 
 /**
  * @private

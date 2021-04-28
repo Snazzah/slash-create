@@ -93,10 +93,7 @@ export interface ApplicationCommand extends PartialApplicationCommand {
   version: string;
 }
 
-/** An option in an application command. */
-export interface ApplicationCommandOption {
-  /** The type of option this one is. */
-  type: CommandOptionType;
+type ApplicationCommandOptionBase = {
   /** The name of the option. */
   name: string;
   /** The description of the option. */
@@ -107,9 +104,36 @@ export interface ApplicationCommandOption {
   required?: boolean;
   /** The choices of the option. If set, these are the only values a user can pick from. */
   choices?: ApplicationCommandOptionChoice[];
+};
+
+/**
+ * @private
+ */
+export interface ApplicationCommandOptionSubCommand {
+  /** The type of option this one is. */
+  type: CommandOptionType.SUB_COMMAND | CommandOptionType.SUB_COMMAND_GROUP;
   /** The sub-options for the option. This can only be used for sub-commands and sub-command groups. */
   options?: ApplicationCommandOption[];
 }
+
+/**
+ * @private
+ */
+export interface ApplicationCommandOptionNotSubCommand {
+  /** The type of option this one is. */
+  type:
+    | CommandOptionType.STRING
+    | CommandOptionType.INTEGER
+    | CommandOptionType.BOOLEAN
+    | CommandOptionType.USER
+    | CommandOptionType.CHANNEL
+    | CommandOptionType.ROLE;
+  options?: never;
+}
+
+/** An option in an application command. */
+export type ApplicationCommandOption = ApplicationCommandOptionBase &
+  (ApplicationCommandOptionSubCommand | ApplicationCommandOptionNotSubCommand);
 
 /** A choice for a user to pick from. */
 export interface ApplicationCommandOptionChoice {

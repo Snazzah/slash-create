@@ -53,7 +53,7 @@ const { SlashCommand } = require('slash-create');
 module.exports = class HelloCommand extends SlashCommand {
     constructor(client, creator, opts) {
         super(creator, opts);
-        this.client = client'
+        this.client = client;
     }
 
     // now you can use this.client ...
@@ -100,6 +100,6 @@ ctx.send([
 ```
 
 ### My bot sent a message but it's still thinking.
-There is a pretty good chance you are **creating the message outside of the interaction**, which does not show that the interaction has been completed. (by editing the deferred message or using `ctx.send`)
+Make sure that you have updated `slash-create` to the latest version. There is a pretty good chance you are **creating the message outside of the interaction**, which does not show that the interaction has been completed. (by editing the deferred message or using `ctx.send`)
 
 **Please make sure to use `ctx.send` or return a message (string or MessageOptions) when finishing your command interaction. Any `.send` functions outside of `ctx` will not finish the interaction.**

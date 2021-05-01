@@ -1,8 +1,6 @@
 import Server, { RequestHandler, ServerOptions } from '../server';
-// @ts-ignore
-import * as Express from 'express';
 
-let express: typeof Express;
+let express: any;
 try {
   express = require('express');
 } catch {}
@@ -12,17 +10,17 @@ try {
  * @see http://expressjs.com
  */
 class ExpressServer extends Server {
-  private readonly app: Express.Application;
+  private readonly app: any;
 
   /**
    * @param app The express application. Must have express.json installed as a middleware.
    * @param opts The server options
    */
-  constructor(app?: Express.Application, opts?: ServerOptions) {
+  constructor(app?: any, opts?: ServerOptions) {
     super(opts);
     if (!app) {
       if (!express) throw new Error('You must have the `express` module installed before using this server.');
-      app = ((express as unknown) as () => Express.Application)();
+      app = express();
       app.use(express.json());
     }
     this.app = app;
@@ -32,13 +30,13 @@ class ExpressServer extends Server {
    * Adds middleware to the Express server.
    * @param middleware The middleware to add.
    */
-  addMiddleware(middleware: Express.RequestHandler) {
+  addMiddleware(middleware: any) {
     this.app.use(middleware);
     return this;
   }
 
   /** Alias for {@link ExpressServer#addMiddleware} */
-  use(middleware: Express.RequestHandler) {
+  use(middleware: any) {
     return this.addMiddleware(middleware);
   }
 
@@ -55,7 +53,7 @@ class ExpressServer extends Server {
 
   /** @private */
   createEndpoint(path: string, handler: RequestHandler) {
-    this.app.post(path, (req: Express.Request, res: Express.Response) =>
+    this.app.post(path, (req: any, res: any) =>
       handler(
         {
           headers: req.headers,

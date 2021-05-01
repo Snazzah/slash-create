@@ -1,15 +1,6 @@
 import Server, { RequestHandler, ServerOptions } from '../server';
-// @ts-ignore
-import * as Fastify from 'fastify';
 
-/** @hidden */
-type FastifyOptions =
-  | Fastify.FastifyServerOptions<any, Fastify.FastifyLoggerInstance>
-  | Fastify.FastifyHttpsOptions<any, Fastify.FastifyLoggerInstance>
-  | Fastify.FastifyHttp2Options<any, Fastify.FastifyLoggerInstance>
-  | Fastify.FastifyHttp2SecureOptions<any, Fastify.FastifyLoggerInstance>;
-
-let fastify: typeof Fastify;
+let fastify: any;
 try {
   fastify = require('fastify');
 } catch {}
@@ -19,21 +10,21 @@ try {
  * @see https://fastify.io
  */
 class FastifyServer extends Server {
-  private readonly app: Fastify.FastifyInstance;
+  private readonly app: any;
 
   /**
    * @param app The fastify application, or the options for initialization
    * @param opts The server options
    */
-  constructor(app?: Fastify.FastifyInstance | FastifyOptions, opts?: ServerOptions) {
+  constructor(app?: any, opts?: ServerOptions) {
     super(opts);
     if (!fastify) throw new Error('You must have the `fastify` module installed before using this server.');
     if (!app) {
       app = fastify.default();
     } else if (!(Symbol('fastify.state') in app)) {
-      app = fastify.default(app as FastifyOptions);
+      app = fastify.default(app);
     }
-    this.app = app as Fastify.FastifyInstance;
+    this.app = app;
   }
 
   /**
@@ -59,7 +50,7 @@ class FastifyServer extends Server {
 
   /** @private */
   createEndpoint(path: string, handler: RequestHandler) {
-    this.app.post(path, (req: Fastify.FastifyRequest, res: Fastify.FastifyReply) =>
+    this.app.post(path, (req: any, res: any) =>
       handler(
         {
           headers: req.headers,

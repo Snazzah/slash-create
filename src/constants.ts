@@ -54,7 +54,9 @@ export enum CommandOptionType {
   /** A channel, this would return the channel's ID in the interaction. */
   CHANNEL = 7,
   /** A role, this would return the role's ID in the interaction. */
-  ROLE = 8
+  ROLE = 8,
+  /** Anything mentionable, returning the ID of the object. */
+  MENTIONABLE = 9
 }
 
 /**

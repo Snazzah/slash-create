@@ -1,5 +1,6 @@
 import { AnyComponent, InteractionType, UserObject } from '../constants';
 import CommandContext, { EditMessageOptions } from '../context';
+import SlashCreator from '../creator';
 import User from './user';
 
 /** A message interaction. */
@@ -178,21 +179,21 @@ class Message {
   readonly interaction?: MessageInteraction;
 
   /** The context that created the message class */
-  private readonly _ctx: CommandContext;
+  private readonly _ctx?: CommandContext;
 
   /**
    * @param data The data for the message
    * @param ctx The instantiating context
    */
-  constructor(data: MessageData, ctx: CommandContext) {
-    this._ctx = ctx;
+  constructor(data: MessageData, creator: SlashCreator, ctx?: CommandContext) {
+    if (ctx) this._ctx = ctx;
 
     this.id = data.id;
     this.type = data.type;
     this.content = data.content;
     this.channelID = data.channel_id;
     this.components = data.components || [];
-    this.author = new User(data.author, ctx.creator);
+    this.author = new User(data.author, creator);
     this.attachments = data.attachments;
     this.embeds = data.embeds;
     this.mentions = data.mentions;
@@ -214,7 +215,7 @@ class Message {
         id: data.interaction.id,
         type: data.interaction.type,
         name: data.interaction.name,
-        user: new User(data.interaction.user, ctx.creator)
+        user: new User(data.interaction.user, creator)
       };
   }
 
@@ -224,11 +225,13 @@ class Message {
    * @param options The message options
    */
   edit(content: string | EditMessageOptions, options?: EditMessageOptions) {
+    if (!this._ctx) throw new Error('This message was not created from a command context.');
     return this._ctx.edit(this.id, content, options);
   }
 
   /** Deletes this message. */
   delete() {
+    if (!this._ctx) throw new Error('This message was not created from a command context.');
     return this._ctx.delete(this.id);
   }
 

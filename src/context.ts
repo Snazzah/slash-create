@@ -184,7 +184,7 @@ class CommandContext {
       'GET',
       Endpoints.MESSAGE(this.creator.options.applicationID, this.interactionToken, messageID)
     );
-    return new Message(data, this);
+    return new Message(data, this.creator, this);
   }
 
   /**
@@ -270,7 +270,7 @@ class CommandContext {
       },
       options.file
     );
-    return new Message(data, this);
+    return new Message(data, this.creator, this);
   }
 
   /**
@@ -308,7 +308,7 @@ class CommandContext {
       },
       options.file
     );
-    return new Message(data, this);
+    return new Message(data, this.creator, this);
   }
 
   /**

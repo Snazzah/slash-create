@@ -14,7 +14,8 @@ import {
   BulkUpdateCommand,
   CommandUser,
   InteractionRequestData,
-  PartialApplicationCommandPermissions
+  PartialApplicationCommandPermissions,
+  MessageComponentRequestData
 } from './constants';
 import SlashCommand from './command';
 import TypedEmitter from './util/typedEmitter';
@@ -23,6 +24,7 @@ import SlashCreatorAPI from './api';
 import Server, { TransformedRequest, RespondFunction, Response } from './server';
 import CommandContext from './context';
 import { isEqual, uniq } from 'lodash';
+import Message from './structures/message';
 
 /**
  * The events typings for the {@link SlashCreator}.
@@ -37,6 +39,8 @@ interface SlashCreatorEvents {
   error: (err: Error) => void;
   unverifiedRequest: (treq: TransformedRequest) => void;
   unknownInteraction: (interaction: any) => void;
+  rawInteraction: (interaction: AnyRequestData) => void;
+  componentInteraction: (message: Message, interaction: MessageComponentRequestData) => void;
   commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
   commandUnregister: (command: SlashCommand) => void;
   commandReregister: (command: SlashCommand, oldCommand: SlashCommand) => void;
@@ -104,7 +108,7 @@ interface SyncCommandOptions {
 }
 
 /** The main class for using commands and interactions. */
-class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashCreatorEvents>) {
+class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */
@@ -602,6 +606,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
 
   private async _onInteraction(interaction: AnyRequestData, respond: RespondFunction | null, webserverMode: boolean) {
     this.emit('debug', 'Got interaction');
+    this.emit('rawInteraction', interaction);
 
     if (!respond || !webserverMode) respond = this._createGatewayRespond(interaction.id, interaction.token);
 
@@ -677,6 +682,14 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
           if (throttle) throttle.usages++;
           return this._runCommand(command, ctx);
         }
+      }
+      case InteractionType.MESSAGE_COMPONENT: {
+        if (this.listenerCount('componentInteraction') > 0) {
+          this.emit('componentInteraction', new Message(interaction.message, this), interaction);
+        }
+        return respond({
+          status: 200
+        });
       }
       default: {
         // @ts-ignore

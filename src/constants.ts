@@ -3,6 +3,7 @@ import SlashCommand from './command';
 import CommandContext from './context';
 import SlashCreator from './creator';
 import { TransformedRequest } from './server';
+import Message, { MessageData } from './structures/message';
 
 export const API_VERSION = 8;
 export const INTERACTION_VERSION = 1;
@@ -186,7 +187,7 @@ export interface RawRequest {
 }
 
 /** Any interaction request from Discord. */
-export type AnyRequestData = PingRequestData | InteractionRequestData;
+export type AnyRequestData = PingRequestData | InteractionRequestData | MessageComponentRequestData;
 
 /** @private */
 export interface RequestData {
@@ -226,15 +227,9 @@ export interface DMInteractionRequestData {
  * A command interaction within a guild.
  * @private
  */
-export interface GuildInteractionRequestData {
-  version: 1;
-  type: InteractionType.COMMAND;
-  token: string;
-  id: string;
-  channel_id: string;
+export interface GuildInteractionRequestData extends Omit<DMInteractionRequestData, 'user'> {
   guild_id: string;
   member: CommandMember;
-  data: CommandData;
 }
 
 /**
@@ -242,6 +237,25 @@ export interface GuildInteractionRequestData {
  * @private
  */
 export type InteractionRequestData = DMInteractionRequestData | GuildInteractionRequestData;
+
+/**
+ * A message component interaction.
+ * @private
+ */
+export interface MessageComponentRequestData {
+  version: 1;
+  type: InteractionType.MESSAGE_COMPONENT;
+  token: string;
+  message: MessageData;
+  id: string;
+  channel_id: string;
+  guild_id: string;
+  member: CommandMember;
+  data: {
+    custom_id: string;
+    component_type: ComponentType;
+  };
+}
 
 /** @private */
 export interface ResolvedMemberData {
@@ -547,6 +561,21 @@ declare function unverifiedRequest(treq: TransformedRequest): void;
  * @param interaction The unhandled interaction
  */
 declare function unknownInteraction(interaction: any): void;
+/**
+ * Emitted when any interaction is given.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param interaction The interaction
+ */
+declare function rawInteraction(interaction: AnyRequestData): void;
+/**
+ * Emitted when a component interaction is given.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param message The message from the interaction
+ * @param interaction The raw interaction
+ */
+declare function componentInteraction(message: Message, interaction: MessageComponentRequestData): void;
 /**
  * Emitted when a command is registered.
  * @event

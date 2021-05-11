@@ -150,7 +150,8 @@ describe('CommandContext', () => {
               },
               embeds: undefined,
               flags: undefined,
-              tts: undefined
+              tts: undefined,
+              components: undefined
             }
           });
           expect(treq.status).to.equal(200);
@@ -176,7 +177,8 @@ describe('CommandContext', () => {
               },
               embeds: undefined,
               flags: InteractionResponseFlags.EPHEMERAL,
-              tts: undefined
+              tts: undefined,
+              components: undefined
             }
           });
           expect(treq.status).to.equal(200);

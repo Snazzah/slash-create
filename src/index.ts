@@ -56,10 +56,17 @@ export {
   CommandData,
   AnyCommandOption,
   CommandOption,
-  CommandSubcommandOption,
   CommandStringOption,
   CommandIntegerOption,
   CommandBooleanOption,
+  CommandSubcommandOption,
+  ComponentType,
+  ButtonStyle,
+  AnyComponent,
+  ComponentActionRow,
+  AnyComponentButton,
+  ComponentButton,
+  ComponentButtonLink,
   ImageFormat
 } from './constants';
 

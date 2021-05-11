@@ -1,4 +1,4 @@
-import { InteractionType, UserObject } from '../constants';
+import { AnyComponent, InteractionType, UserObject } from '../constants';
 import CommandContext, { EditMessageOptions } from '../context';
 import User from './user';
 
@@ -112,6 +112,7 @@ export interface MessageData {
   type: number;
   content: string;
   channel_id: string;
+  components?: AnyComponent[];
   author: UserObject;
   attachments: MessageAttachment[];
   embeds: MessageEmbed[];
@@ -147,6 +148,8 @@ class Message {
   readonly content: string;
   /** The ID of the channel the message is in */
   readonly channelID: string;
+  /** The message's components */
+  readonly components: AnyComponent[];
   /** The author of the message */
   readonly author: User;
   /** The message's attachments */
@@ -188,6 +191,7 @@ class Message {
     this.type = data.type;
     this.content = data.content;
     this.channelID = data.channel_id;
+    this.components = data.components || [];
     this.author = new User(data.author, ctx.creator);
     this.attachments = data.attachments;
     this.embeds = data.embeds;

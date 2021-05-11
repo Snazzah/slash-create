@@ -14,7 +14,9 @@ export enum InteractionType {
   /** A ping. */
   PING = 1,
   /** A command invocation. */
-  COMMAND = 2
+  COMMAND = 2,
+  /** An invocation of a message component. */
+  MESSAGE_COMPONENT = 3
 }
 
 /** The types of interaction responses. */
@@ -355,6 +357,54 @@ export interface CommandSubcommandOption {
   name: string;
   type?: CommandOptionType.SUB_COMMAND | CommandOptionType.SUB_COMMAND_GROUP;
   options?: AnyCommandOption[];
+}
+
+/** The types of components available. */
+export enum ComponentType {
+  /** A row of components. */
+  ACTION_ROW = 1,
+  /** A button component. */
+  BUTTON = 2
+}
+
+/** The types of component button styles. */
+export enum ButtonStyle {
+  /** A primary-colored button. */
+  PRIMARY = 1,
+  /** A gray, secondary button. */
+  SECONDARY = 2,
+  /** A green button. */
+  SUCCESS = 3,
+  /** A red button. */
+  DESTRUCTIVE = 4,
+  /** A gray button with a link icon. */
+  LINK = 5
+}
+
+/** Any component. */
+export type AnyComponent = ComponentActionRow | AnyComponentButton;
+
+/** A row of components. */
+export interface ComponentActionRow {
+  type: ComponentType.ACTION_ROW;
+  components: AnyComponentButton[];
+}
+
+/** Any component button. */
+export type AnyComponentButton = ComponentButton | ComponentButtonLink;
+
+/** A regular component button. */
+export interface ComponentButton {
+  type: ComponentType.BUTTON;
+  style: ButtonStyle.PRIMARY | ButtonStyle.SECONDARY | ButtonStyle.SUCCESS | ButtonStyle.DESTRUCTIVE;
+  custom_id: string;
+  label: string;
+}
+
+/** A component button with a link. */
+export interface ComponentButtonLink extends Omit<ComponentButton, 'custom_id' | 'style'> {
+  style: ButtonStyle.LINK;
+  url: string;
 }
 
 /** @see https://www.npmjs.com/package/require-all#usage */

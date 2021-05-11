@@ -3,6 +3,7 @@ import { RespondFunction } from './server';
 import SlashCreator from './creator';
 import {
   AnyCommandOption,
+  ComponentActionRow,
   Endpoints,
   InteractionRequestData,
   InteractionResponseFlags,
@@ -33,6 +34,8 @@ export interface EditMessageOptions {
    * attachments.
    */
   file?: MessageFile | MessageFile[];
+  /** The components of the message. */
+  components?: ComponentActionRow[];
 }
 
 /** A file within {@link EditMessageOptions}. */
@@ -223,7 +226,8 @@ class CommandContext {
             content: options.content,
             embeds: options.embeds,
             flags: options.flags,
-            allowed_mentions: allowedMentions
+            allowed_mentions: allowedMentions,
+            components: options.components
           }
         }
       });
@@ -261,7 +265,8 @@ class CommandContext {
         tts: options.tts,
         content: options.content,
         embeds: options.embeds,
-        allowed_mentions: allowedMentions
+        allowed_mentions: allowedMentions,
+        components: options.components
       },
       options.file
     );
@@ -298,7 +303,8 @@ class CommandContext {
       {
         content: options.content,
         embeds: options.embeds,
-        allowed_mentions: allowedMentions
+        allowed_mentions: allowedMentions,
+        components: options.components
       },
       options.file
     );

@@ -273,7 +273,7 @@ class SlashCommand {
   static validateOptions(opts: SlashCommandOptions) {
     if (typeof opts.name !== 'string') throw new TypeError('Command name must be a string.');
     if (opts.name !== opts.name.toLowerCase()) throw new Error('Command name must be lowercase.');
-    if (!/^[\p{L}-]{1,32}$/u.test(opts.name))
+    if (!/^[\p{L}_-]{1,32}$/u.test(opts.name))
       throw new RangeError('Command name must be under 32 characters, matching this regex: /^[\\w-]{1,32}$/');
 
     if (typeof opts.description !== 'string') throw new TypeError('Command description must be a string.');

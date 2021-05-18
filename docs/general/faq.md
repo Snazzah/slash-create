@@ -84,21 +84,6 @@ module.exports = class HelloCommand extends SlashCommand {
 }
 ```
 
-### MessageEmbed doesn't work with this!
-slash-create doesn't support `discord.js`'s MessageEmbed out of the box.
-You can still use the builder if you send an embed JSON.
-```js
-const embed = new Discord.MessageEmbed()
-  .setTitle('Hi')
-  .setColor('RANDOM')
-  .setTimestamp()
-  .setDescription('Hello');
-
-ctx.send([
-  embeds: [embed.toJSON()]
-])
-```
-
 ### My bot sent a message but it's still thinking.
 Make sure that you have updated `slash-create` to the latest version. There is a pretty good chance you are **creating the message outside of the interaction**, which does not show that the interaction has been completed. (by editing the deferred message or using `ctx.send`)
 

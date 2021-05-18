@@ -84,18 +84,34 @@ module.exports = class HelloCommand extends SlashCommand {
 }
 ```
 
-### How can i send an embed?
-You can create a embed using `discord.js`'s MessageEmbed, here is an example!
+### MessageEmbed files don't work with this!
+slash-create doesn't support `discord.js`'s MessageEmbed out of the box.
+You can still use the builder as such, however any files attached to the builder will not be handled and should be included in the message options instead.
 ```js
-const exampleEmbed = new Discord.MessageEmbed()
+// Regular embed
+const embed = new Discord.MessageEmbed()
   .setTitle('Hi')
   .setColor('RANDOM')
   .setTimestamp()
   .setDescription('Hello');
 
-ctx.send({
-  embeds: [exampleEmbed]
-})
+ctx.send([
+  embeds: [embed]
+])
+```
+```js
+// Embed with files
+const embed = new Discord.MessageEmbed()
+  .setTitle('Look at this image')
+  .setImage('attachment://coolimage.png');
+
+ctx.send([
+  embeds: [embed],
+  file: {
+    name: 'coolimage.png',
+    file: fs.readFileSync('coolimage.png')
+  }
+])
 ```
 
 ### My bot sent a message but it's still thinking.

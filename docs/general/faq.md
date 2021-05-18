@@ -84,6 +84,20 @@ module.exports = class HelloCommand extends SlashCommand {
 }
 ```
 
+### How can i send an embed?
+You can create a embed using `discord.js`'s MessageEmbed, here is an example!
+```js
+const exampleEmbed = new Discord.MessageEmbed()
+  .setTitle('Hi')
+  .setColor('RANDOM')
+  .setTimestamp()
+  .setDescription('Hello');
+
+ctx.send({
+  embeds: [exampleEmbed]
+})
+```
+
 ### My bot sent a message but it's still thinking.
 Make sure that you have updated `slash-create` to the latest version. There is a pretty good chance you are **creating the message outside of the interaction**, which does not show that the interaction has been completed. (by editing the deferred message or using `ctx.send`)
 

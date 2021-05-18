@@ -84,10 +84,11 @@ module.exports = class HelloCommand extends SlashCommand {
 }
 ```
 
-### MessageEmbed doesn't work with this!
+### MessageEmbed files don't work with this!
 slash-create doesn't support `discord.js`'s MessageEmbed out of the box.
-You can still use the builder if you send an embed JSON.
+You can still use the builder as such, however any files attached to the builder will not be handled and should be included in the message options instead.
 ```js
+// Regular embed
 const embed = new Discord.MessageEmbed()
   .setTitle('Hi')
   .setColor('RANDOM')
@@ -95,7 +96,21 @@ const embed = new Discord.MessageEmbed()
   .setDescription('Hello');
 
 ctx.send([
-  embeds: [embed.toJSON()]
+  embeds: [embed]
+])
+```
+```js
+// Embed with files
+const embed = new Discord.MessageEmbed()
+  .setTitle('Look at this image')
+  .setImage('attachment://coolimage.png');
+
+ctx.send([
+  embeds: [embed],
+  file: {
+    name: 'coolimage.png',
+    file: fs.readFileSync('coolimage.png')
+  }
 ])
 ```
 

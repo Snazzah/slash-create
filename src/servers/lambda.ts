@@ -26,7 +26,7 @@ class AWSLambdaServer extends Server {
     this._handler(
       {
         headers: splitHeaders(event.headers),
-        body: event.body,
+        body: event.body ? JSON.parse(event.body) : {},
         request: event,
         response: callback
       },
@@ -34,7 +34,7 @@ class AWSLambdaServer extends Server {
         callback(null, {
           statusCode: response.status || 200,
           headers: joinHeaders(response.headers),
-          body: response.body
+          body: JSON.stringify(response.body)
         });
       }
     );

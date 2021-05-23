@@ -8,7 +8,7 @@ function splitHeaders(headers?: CommaDelimitedHeaders, separator = ',') {
   if (!headers) return arrayHeaders;
 
   Object.entries(headers).forEach(([headerKey, headerValue]) => {
-    if (headerValue?.includes(separator)) {
+    if (headerValue !== undefined && headerValue.includes(separator)) {
       arrayHeaders[headerKey] = headerValue.split(separator);
     } else {
       arrayHeaders[headerKey] = headerValue;

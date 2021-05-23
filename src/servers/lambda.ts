@@ -20,6 +20,9 @@ class AWSLambdaServer extends Server {
   }
 
   private _onRequest(event: APIGatewayProxyEventV2, _context: Context, callback: APIGatewayProxyCallbackV2) {
+    if (event.version !== '2.0') {
+      return callback('Only payload format version 2.0 is supported.');
+    }
     if (!this._handler) {
       return callback(null, { statusCode: 503, body: 'Server has no handler.' });
     }

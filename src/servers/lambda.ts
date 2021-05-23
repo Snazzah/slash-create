@@ -31,9 +31,13 @@ class AWSLambdaServer extends Server {
         response: callback
       },
       async (response) => {
+        const responseHeaders = joinHeaders(response.headers);
+        // Content-Type is not set automatically when overwriting headers
+        responseHeaders['Content-Type'] = 'application/json';
+
         callback(null, {
           statusCode: response.status || 200,
-          headers: joinHeaders(response.headers),
+          headers: responseHeaders,
           body: JSON.stringify(response.body)
         });
       }

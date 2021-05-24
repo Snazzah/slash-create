@@ -8,7 +8,7 @@ const expect = chai.expect;
 import FakeTimers from '@sinonjs/fake-timers';
 import { createFollowUp, deleteMessage, editMessage } from '../../util/nock';
 
-import { InteractionResponseFlags, InterationResponseType } from '../../../src/constants';
+import { InteractionResponseFlags, InteractionResponseType } from '../../../src/constants';
 import CommandContext from '../../../src/structures/interfaces/context';
 import Message from '../../../src/structures/message';
 import {
@@ -36,7 +36,7 @@ describe('CommandContext', () => {
         basicInteraction,
         async (treq) => {
           expect(treq.body).to.deep.equal({
-            type: InterationResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+            type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
             data: { flags: 0 }
           });
           expect(treq.status).to.equal(200);
@@ -96,7 +96,7 @@ describe('CommandContext', () => {
         basicInteraction,
         async (treq) => {
           expect(treq.body).to.deep.equal({
-            type: InterationResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+            type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
             data: { flags: 0 }
           });
           expect(treq.status).to.equal(200);
@@ -115,7 +115,7 @@ describe('CommandContext', () => {
         basicInteraction,
         async (treq) => {
           expect(treq.body).to.deep.equal({
-            type: InterationResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+            type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
             data: { flags: InteractionResponseFlags.EPHEMERAL }
           });
           expect(treq.status).to.equal(200);
@@ -142,7 +142,7 @@ describe('CommandContext', () => {
         basicInteraction,
         async (treq) => {
           expect(treq.body).to.deep.equal({
-            type: InterationResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
               content: 'test content',
               allowed_mentions: {
@@ -169,7 +169,7 @@ describe('CommandContext', () => {
         basicInteraction,
         async (treq) => {
           expect(treq.body).to.deep.equal({
-            type: InterationResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: {
               content: 'test content',
               allowed_mentions: {

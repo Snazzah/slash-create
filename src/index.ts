@@ -91,6 +91,13 @@ export {
   EmbedVideo
 } from './structures/message';
 
+export type {
+  MessageOptions,
+  EditMessageOptions,
+  FollowUpMessageOptions,
+  MessageFile
+} from './structures/interfaces/messageInteraction';
+
 export type { ConvertedOption } from './structures/interfaces/context';
 
 export {

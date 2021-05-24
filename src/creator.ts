@@ -8,7 +8,7 @@ import {
   AnyRequestData,
   RawRequest,
   RequireAllOptions,
-  InterationResponseType,
+  InteractionResponseType,
   InteractionResponseFlags,
   PartialApplicationCommand,
   BulkUpdateCommand,
@@ -615,7 +615,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
         return respond({
           status: 200,
           body: {
-            type: InterationResponseType.PONG
+            type: InteractionResponseType.PONG
           }
         });
       }
@@ -642,7 +642,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
             return respond({
               status: 200,
               body: {
-                type: InterationResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
                   content: oneLine`
                     This command no longer exists.

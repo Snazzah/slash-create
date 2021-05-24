@@ -21,7 +21,7 @@ export enum InteractionType {
 }
 
 /** The types of interaction responses. */
-export enum InterationResponseType {
+export enum InteractionResponseType {
   /** Acknowledge a `PING`. */
   PONG = 1,
   // ACKNOWLEDGE = 2,

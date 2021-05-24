@@ -37,7 +37,7 @@ const Command = SlashCommand;
 
 export {
   InteractionType,
-  InterationResponseType,
+  InteractionResponseType,
   InteractionResponseFlags,
   CommandOptionType,
   PartialApplicationCommand,

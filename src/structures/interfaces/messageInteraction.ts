@@ -1,4 +1,4 @@
-import { ComponentActionRow, Endpoints, InteractionResponseFlags, InterationResponseType } from '../../constants';
+import { ComponentActionRow, Endpoints, InteractionResponseFlags, InteractionResponseType } from '../../constants';
 import SlashCreator from '../../creator';
 import { RespondFunction } from '../../server';
 import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from '../../util';
@@ -143,7 +143,7 @@ class MessageInteractionContext {
       await this._respond({
         status: 200,
         body: {
-          type: InterationResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             tts: options.tts,
             content: options.content,
@@ -273,7 +273,7 @@ class MessageInteractionContext {
       await this._respond({
         status: 200,
         body: {
-          type: InterationResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+          type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             flags: ephemeral ? InteractionResponseFlags.EPHEMERAL : 0
           }

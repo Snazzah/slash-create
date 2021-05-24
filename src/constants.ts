@@ -3,7 +3,7 @@ import SlashCommand from './command';
 import CommandContext from './context';
 import SlashCreator from './creator';
 import { TransformedRequest } from './server';
-import Message, { MessageData } from './structures/message';
+import ComponentRequest from './structures/componentRequest';
 
 export const API_VERSION = 8;
 export const INTERACTION_VERSION = 1;
@@ -238,24 +238,44 @@ export interface GuildInteractionRequestData extends Omit<DMInteractionRequestDa
  */
 export type InteractionRequestData = DMInteractionRequestData | GuildInteractionRequestData;
 
+/** The partial message from a message component interaction. */
+export interface PartialMessage {
+  id: string;
+  flags: number;
+}
+
 /**
- * A message component interaction.
+ * A message component interaction within a direct message.
  * @private
  */
-export interface MessageComponentRequestData {
+export interface DMMessageComponentRequestData {
   version: 1;
   type: InteractionType.MESSAGE_COMPONENT;
   token: string;
-  message: MessageData;
+  message: PartialMessage;
   id: string;
   channel_id: string;
-  guild_id: string;
-  member: CommandMember;
+  user: CommandUser;
   data: {
     custom_id: string;
     component_type: ComponentType;
   };
 }
+
+/**
+ * A message component interaction within a guild.
+ * @private
+ */
+export interface GuildMessageComponentRequestData extends Omit<DMMessageComponentRequestData, 'user'> {
+  guild_id: string;
+  member: CommandMember;
+}
+
+/**
+ * Any message component interaction.
+ * @private
+ */
+export type MessageComponentRequestData = DMMessageComponentRequestData | GuildMessageComponentRequestData;
 
 /** @private */
 export interface ResolvedMemberData {
@@ -572,10 +592,9 @@ declare function rawInteraction(interaction: AnyRequestData): void;
  * Emitted when a component interaction is given.
  * @event
  * @asMemberOf SlashCreator
- * @param message The message from the interaction
- * @param interaction The raw interaction
+ * @param request The component request
  */
-declare function componentInteraction(message: Message, interaction: MessageComponentRequestData): void;
+declare function componentInteraction(request: ComponentRequest): void;
 /**
  * Emitted when a command is registered.
  * @event

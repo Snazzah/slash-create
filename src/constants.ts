@@ -434,6 +434,7 @@ export interface ComponentButton {
   style: ButtonStyle.PRIMARY | ButtonStyle.SECONDARY | ButtonStyle.SUCCESS | ButtonStyle.DESTRUCTIVE;
   custom_id: string;
   label: string;
+  disabled?: boolean;
 }
 
 /** A component button with a link. */

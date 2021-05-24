@@ -6,10 +6,10 @@ chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
 
-import CommandContext from '../src/context';
-import Message from '../src/structures/message';
-import { basicInteraction, creator, editedMessage, followUpMessage, noop } from './util/constants';
-import { deleteMessage, editMessage } from './util/nock';
+import CommandContext from '../../src/structures/interfaces/context';
+import Message from '../../src/structures/message';
+import { basicInteraction, creator, editedMessage, followUpMessage, noop } from '../util/constants';
+import { deleteMessage, editMessage } from '../util/nock';
 const ctx = new CommandContext(creator, basicInteraction, noop, false);
 ctx.initiallyResponded = true;
 // @ts-expect-error

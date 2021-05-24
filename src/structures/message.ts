@@ -1,6 +1,7 @@
 import { AnyComponent, InteractionType, UserObject } from '../constants';
-import CommandContext, { EditMessageOptions } from '../context';
+import { EditMessageOptions } from './interfaces/messageInteraction';
 import SlashCreator from '../creator';
+import MessageInteractionContext from './interfaces/messageInteraction';
 import User from './user';
 
 /** A message interaction. */
@@ -179,13 +180,13 @@ class Message {
   readonly interaction?: MessageInteraction;
 
   /** The context that created the message class */
-  private readonly _ctx?: CommandContext;
+  private readonly _ctx?: MessageInteractionContext;
 
   /**
    * @param data The data for the message
    * @param ctx The instantiating context
    */
-  constructor(data: MessageData, creator: SlashCreator, ctx?: CommandContext) {
+  constructor(data: MessageData, creator: SlashCreator, ctx?: MessageInteractionContext) {
     if (ctx) this._ctx = ctx;
 
     this.id = data.id;

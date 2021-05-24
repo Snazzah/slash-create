@@ -1,9 +1,9 @@
 import { IncomingMessage } from 'http';
 import SlashCommand from './command';
-import CommandContext from './context';
+import CommandContext from './structures/interfaces/context';
 import SlashCreator from './creator';
 import { TransformedRequest } from './server';
-import ComponentRequest from './structures/componentRequest';
+import ComponentContext from './structures/interfaces/componentContext';
 
 export const API_VERSION = 8;
 export const INTERACTION_VERSION = 1;
@@ -30,6 +30,7 @@ export enum InterationResponseType {
   CHANNEL_MESSAGE_WITH_SOURCE = 4,
   /** Create a deferred message with source. */
   DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = 5
+  // = 6
 }
 
 /** Message flags for interaction responses. */
@@ -592,9 +593,9 @@ declare function rawInteraction(interaction: AnyRequestData): void;
  * Emitted when a component interaction is given.
  * @event
  * @asMemberOf SlashCreator
- * @param request The component request
+ * @param ctx The component context
  */
-declare function componentInteraction(request: ComponentRequest): void;
+declare function componentInteraction(ctx: ComponentContext): void;
 /**
  * Emitted when a command is registered.
  * @event

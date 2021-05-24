@@ -6,11 +6,11 @@ chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
 import FakeTimers from '@sinonjs/fake-timers';
-import { createFollowUp, deleteMessage, editMessage } from './util/nock';
+import { createFollowUp, deleteMessage, editMessage } from '../../util/nock';
 
-import { InteractionResponseFlags, InterationResponseType } from '../src/constants';
-import CommandContext from '../src/context';
-import Message from '../src/structures/message';
+import { InteractionResponseFlags, InterationResponseType } from '../../../src/constants';
+import CommandContext from '../../../src/structures/interfaces/context';
+import Message from '../../../src/structures/message';
 import {
   creator,
   creatorNoToken,
@@ -22,7 +22,7 @@ import {
   subCommandOptionsInteraction,
   followUpMessage,
   editedMessage
-} from './util/constants';
+} from '../../util/constants';
 
 describe('CommandContext', () => {
   describe('constructor', () => {

@@ -21,9 +21,9 @@ import TypedEmitter from './util/typedEmitter';
 import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
 import Server, { TransformedRequest, RespondFunction, Response } from './server';
-import CommandContext from './context';
+import CommandContext from './structures/interfaces/context';
 import { isEqual, uniq } from 'lodash';
-import ComponentRequest from './structures/componentRequest';
+import ComponentContext from './structures/interfaces/componentContext';
 
 /**
  * The events typings for the {@link SlashCreator}.
@@ -39,7 +39,7 @@ interface SlashCreatorEvents {
   unverifiedRequest: (treq: TransformedRequest) => void;
   unknownInteraction: (interaction: any) => void;
   rawInteraction: (interaction: AnyRequestData) => void;
-  componentInteraction: (request: ComponentRequest) => void;
+  componentInteraction: (ctx: ComponentContext) => void;
   commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
   commandUnregister: (command: SlashCommand) => void;
   commandReregister: (command: SlashCommand, oldCommand: SlashCommand) => void;
@@ -684,7 +684,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
       }
       case InteractionType.MESSAGE_COMPONENT: {
         if (this.listenerCount('componentInteraction') > 0) {
-          this.emit('componentInteraction', new ComponentRequest(this, interaction, respond));
+          this.emit('componentInteraction', new ComponentContext(this, interaction, respond));
           break;
         } else
           return respond({

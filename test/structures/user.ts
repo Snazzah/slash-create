@@ -6,8 +6,8 @@ chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
 
-import User from '../src/structures/user';
-import { creator, userAvatar } from './util/constants';
+import User from '../../src/structures/user';
+import { creator, userAvatar } from '../util/constants';
 
 describe('User', () => {
   describe('constructor', () => {

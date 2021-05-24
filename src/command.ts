@@ -4,7 +4,7 @@ import {
   PartialApplicationCommand,
   PermissionNames
 } from './constants';
-import CommandContext from './context';
+import CommandContext from './structures/interfaces/context';
 import SlashCreator from './creator';
 import { oneLine, validateOptions } from './util';
 

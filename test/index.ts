@@ -10,7 +10,10 @@ describe('[index]', () => {
     expect(slashCreate.BitField).to.be.a('function');
     expect(slashCreate.Command).to.be.a('function');
     expect(slashCreate.CommandContext).to.be.a('function');
+    expect(slashCreate.ComponentContext).to.be.a('function');
+    expect(slashCreate.MessageInteractionContext).to.be.a('function');
     expect(slashCreate.CommandOptionType).to.be.a('object');
+    expect(slashCreate.ComponentType).to.be.a('object');
     expect(slashCreate.Constants).to.be.a('object');
     expect(slashCreate.Context).to.be.a('function');
     expect(slashCreate.Creator).to.be.a('function');

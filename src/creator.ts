@@ -604,7 +604,6 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
   }
 
   private async _onInteraction(interaction: AnyRequestData, respond: RespondFunction | null, webserverMode: boolean) {
-    this.emit('debug', 'Got interaction');
     this.emit('rawInteraction', interaction);
 
     if (!respond || !webserverMode) respond = this._createGatewayRespond(interaction.id, interaction.token);
@@ -683,6 +682,12 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
         }
       }
       case InteractionType.MESSAGE_COMPONENT: {
+        this.emit(
+          'debug',
+          `Component request recieved: ${interaction.data.custom_id}, ( msg ${interaction.message.id}, ${
+            'guild_id' in interaction ? `guild ${interaction.guild_id}` : `user ${interaction.user.id}`
+          })`
+        );
         if (this.listenerCount('componentInteraction') > 0) {
           this.emit('componentInteraction', new ComponentContext(this, interaction, respond));
           break;

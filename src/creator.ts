@@ -107,7 +107,7 @@ interface SyncCommandOptions {
 }
 
 /** The main class for using commands and interactions. */
-class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashCreatorEvents>) {
+class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */
@@ -258,6 +258,8 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
 
     if (!(command instanceof SlashCommand)) throw new Error(`Invalid command object to reregister: ${command}`);
 
+    oldCommand.onUnload();
+
     if (!command.unknown) {
       if (command.commandName !== oldCommand.commandName) throw new Error('Command name cannot change.');
       if (!isEqual(command.guildIDs, oldCommand.guildIDs)) throw new Error('Command guild IDs cannot change.');
@@ -277,6 +279,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
    * @param command Command to unregister
    */
   unregisterCommand(command: SlashCommand) {
+    command.onUnload();
     if (this.unknownCommand === command) this.unknownCommand = undefined;
     else this.commands.delete(command.keyName);
     this.emit('commandUnregister', command);

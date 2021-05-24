@@ -210,6 +210,11 @@ class SlashCommand {
   }
 
   /**
+   * Called when the command is being unloaded.
+   */
+  onUnload(): any {}
+
+  /**
    * Creates/obtains the throttle object for a user, if necessary.
    * @param userID ID of the user to throttle for
    * @private

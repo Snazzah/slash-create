@@ -38,8 +38,11 @@ Or, using yarn:
 yarn add slash-create
 ```
 
+If you execute TypeScript code directly (e.g. by running [`ts-node`](https://typestrong.org/ts-node)), make sure to install the `@types/aws-lambda` package to avoid any TS errors.
+
 ### Using webservers
 In order to use a specific webserver, you will need to install the dependency associated with that server. The following server types require these dependencies:
+- `AWSLambdaServer`: none technically, meant for use with [AWS Lambda](https://aws.amazon.com/lambda) and [Amazon API Gateway](https://aws.amazon.com/api-gateway), see [example](https://slash-create.js.org/#/docs/main/latest/examples/lambda)
 - `ExpressServer`: `express`
 - `FastifyServer`: `fastify`
 - `GatewayServer`: none, see [example](https://slash-create.js.org/#/docs/main/latest/examples/discord-bot)

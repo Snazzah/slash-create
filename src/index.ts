@@ -70,6 +70,8 @@ export {
   AnyComponentButton,
   ComponentButton,
   ComponentButtonLink,
+  PartialEmoji,
+  PartialMessage,
   ImageFormat
 } from './constants';
 

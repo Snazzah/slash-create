@@ -244,8 +244,20 @@ export type InteractionRequestData = DMInteractionRequestData | GuildInteraction
 
 /** The partial message from a message component interaction. */
 export interface PartialMessage {
+  /** The ID of the message. */
   id: string;
+  /** The message flags. */
   flags: number;
+}
+
+/** The partial emoji from a message component interaction. */
+export interface PartialEmoji {
+  /** The ID of the emoji, if it is custom. */
+  id?: string;
+  /** The name of the emoji, or the raw emoji if not custom. */
+  name?: string;
+  /** Whether this emoji is animated. */
+  animated?: boolean;
 }
 
 /**
@@ -443,15 +455,8 @@ export interface ComponentButton {
   custom_id: string;
   /** The label of the button. */
   label: string;
-  /** The emoji to show inside the button/ */
-  emoji?: {
-    /** The ID of the emoji, if it is custom. */
-    id?: string;
-    /** The name of the emoji, or the raw emoji if not custom. */
-    name?: string;
-    /** Whether this emoji is animated. */
-    animated?: boolean;
-  };
+  /** The emoji to show inside the button. */
+  emoji?: PartialEmoji;
   /** Whether this button will show as disabled. */
   disabled?: boolean;
 }

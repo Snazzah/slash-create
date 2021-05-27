@@ -1,7 +1,9 @@
 import { ComponentType, InteractionResponseType, MessageComponentRequestData, PartialMessage } from '../../constants';
-import MessageInteractionContext from './messageInteraction';
+import MessageInteractionContext, { EditMessageOptions } from './messageInteraction';
 import SlashCreator from '../../creator';
 import { RespondFunction } from '../../server';
+import Message from '../message';
+import { formatAllowedMentions, FormattedAllowedMentions } from '../../util';
 
 /** Represents an interaction context from a message component. */
 class ComponentContext extends MessageInteractionContext {
@@ -54,6 +56,49 @@ class ComponentContext extends MessageInteractionContext {
     }
 
     return false;
+  }
+
+  /**
+   * Edits the message that the component interaction came from.
+   * This will return a boolean if it's an initial response, otherwise a {@link Message} will be returned.
+   * @param content The content of the message
+   * @param options The message options
+   */
+  async editParent(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<boolean | Message> {
+    if (this.expired) throw new Error('This interaction has expired');
+
+    if (typeof content !== 'string') options = content;
+    else if (typeof options !== 'object') options = {};
+
+    if (typeof options !== 'object') throw new Error('Message options is not an object.');
+
+    if (!options.content && typeof content === 'string') options.content = content;
+
+    if (!options.content && !options.embeds && !options.allowedMentions)
+      throw new Error('No valid options were given.');
+
+    const allowedMentions = options.allowedMentions
+      ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
+      : this.creator.allowedMentions;
+
+    if (!this.initiallyResponded) {
+      this.initiallyResponded = true;
+      clearTimeout(this._timeout);
+      // @ts-expect-error
+      await this._respond({
+        status: 200,
+        body: {
+          type: InteractionResponseType.UPDATE_MESSAGE,
+          data: {
+            content: options.content,
+            embeds: options.embeds,
+            allowed_mentions: allowedMentions,
+            components: options.components
+          }
+        }
+      });
+      return true;
+    } else return this.edit(this.message.id, content, options);
   }
 }
 

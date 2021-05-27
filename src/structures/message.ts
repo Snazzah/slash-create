@@ -48,16 +48,16 @@ export interface MessageAttachment {
 
 /** Options to creating a message embed. */
 export interface MessageEmbedOptions {
-  author?: EmbedAuthorOptions;
-  color?: number;
-  description?: string;
+  author?: EmbedAuthorOptions | null;
+  color?: number | null;
+  description?: string | null;
   fields?: EmbedField[];
-  footer?: EmbedFooterOptions;
-  image?: EmbedImageOptions;
-  thumbnail?: EmbedImageOptions;
-  timestamp?: Date | string;
-  title?: string;
-  url?: string;
+  footer?: EmbedFooterOptions | null;
+  image?: EmbedImageOptions | null;
+  thumbnail?: EmbedImageOptions | null;
+  timestamp?: Date | string | number | null;
+  title?: string | null;
+  url?: string | null;
 }
 
 /** A message embed. */
@@ -75,7 +75,7 @@ export interface EmbedAuthor extends EmbedAuthorOptions {
 }
 export interface EmbedAuthorOptions {
   icon_url?: string;
-  name: string;
+  name?: string;
   url?: string;
 }
 export interface EmbedField {
@@ -88,7 +88,7 @@ export interface EmbedFooter extends EmbedFooterOptions {
 }
 export interface EmbedFooterOptions {
   icon_url?: string;
-  text: string;
+  text?: string;
 }
 export interface EmbedImage extends EmbedImageOptions {
   height?: number;

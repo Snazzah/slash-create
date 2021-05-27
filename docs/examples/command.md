@@ -54,3 +54,4 @@ module.exports = class HelloCommand extends SlashCommand {
     return 'Hi Snazzah!';
   }
 }
+```

@@ -446,9 +446,9 @@ export interface ComponentButton {
   /** The emoji to show inside the button/ */
   emoji?: {
     /** The ID of the emoji, if it is custom. */
-    id: string | null;
+    id?: string;
     /** The name of the emoji, or the raw emoji if not custom. */
-    name: string;
+    name?: string;
     /** Whether this emoji is animated. */
     animated?: boolean;
   };

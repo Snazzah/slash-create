@@ -2,7 +2,7 @@ export type ArrayHeaders = { [key: string]: string | string[] | undefined };
 export type CommaDelimitedHeaders = { [key: string]: string | undefined };
 export type JoinedCommaDelimitedHeaders = { [key: string]: string };
 
-function splitHeaders(headers?: CommaDelimitedHeaders, separator = ',') {
+export function splitHeaders(headers?: CommaDelimitedHeaders, separator = ',') {
   const arrayHeaders = {} as ArrayHeaders;
 
   if (!headers) return arrayHeaders;
@@ -18,7 +18,7 @@ function splitHeaders(headers?: CommaDelimitedHeaders, separator = ',') {
   return arrayHeaders;
 }
 
-function joinHeaders(headers?: ArrayHeaders, separator = ',') {
+export function joinHeaders(headers?: ArrayHeaders, separator = ',') {
   const commaDelimitedHeaders = {} as JoinedCommaDelimitedHeaders;
 
   if (!headers) return commaDelimitedHeaders;
@@ -35,5 +35,3 @@ function joinHeaders(headers?: ArrayHeaders, separator = ',') {
 
   return commaDelimitedHeaders;
 }
-
-export { splitHeaders, joinHeaders };

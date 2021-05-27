@@ -1,14 +1,10 @@
 import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import chaiNock from 'chai-nock';
-chai.use(chaiAsPromised);
-chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
 
-import { splitHeaders, joinHeaders } from '../lib/util/lambdaHeaders';
+import { splitHeaders, joinHeaders } from '../../src/util/lambdaHeaders';
 
-describe('util.lambdaHeaders', () => {
+describe('util/lambdaHeaders', () => {
   describe('splitHeaders()', () => {
     it('should handle undefined input properly', () => {
       const arrayHeaders = splitHeaders(undefined);

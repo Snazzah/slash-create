@@ -250,7 +250,7 @@ export interface PartialMessage {
   flags: number;
 }
 
-/** The partial emoji from a message component interaction. */
+/** The partial emoji from a message component. */
 export interface PartialEmoji {
   /** The ID of the emoji, if it is custom. */
   id?: string;

@@ -1,4 +1,4 @@
-View the [documentation for Component Contexts](https://slash-create.js.org/#/docs/main/$$$ref/class/ComponentContext) to know what to use.
+View the [documentation for Component Contexts](https://slash-create.js.org/#/docs/main/master/class/ComponentContext) to know what to use.
 
 ### Basic Event Usage
 ```js

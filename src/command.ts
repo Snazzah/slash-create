@@ -4,7 +4,7 @@ import {
   PartialApplicationCommand,
   PermissionNames
 } from './constants';
-import CommandContext from './context';
+import CommandContext from './structures/interfaces/context';
 import SlashCreator from './creator';
 import { oneLine, validateOptions } from './util';
 
@@ -208,6 +208,11 @@ class SlashCommand {
     if (!ctx.expired && !ctx.initiallyResponded)
       return ctx.send('An error occurred while running the command.', { ephemeral: true });
   }
+
+  /**
+   * Called when the command is being unloaded.
+   */
+  onUnload(): any {}
 
   /**
    * Creates/obtains the throttle object for a user, if necessary.

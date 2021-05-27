@@ -8,7 +8,7 @@ import {
   AnyRequestData,
   RawRequest,
   RequireAllOptions,
-  InterationResponseType,
+  InteractionResponseType,
   InteractionResponseFlags,
   PartialApplicationCommand,
   BulkUpdateCommand,
@@ -21,8 +21,9 @@ import TypedEmitter from './util/typedEmitter';
 import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
 import Server, { TransformedRequest, RespondFunction, Response } from './server';
-import CommandContext from './context';
+import CommandContext from './structures/interfaces/context';
 import { isEqual, uniq } from 'lodash';
+import ComponentContext from './structures/interfaces/componentContext';
 
 /**
  * The events typings for the {@link SlashCreator}.
@@ -37,6 +38,8 @@ interface SlashCreatorEvents {
   error: (err: Error) => void;
   unverifiedRequest: (treq: TransformedRequest) => void;
   unknownInteraction: (interaction: any) => void;
+  rawInteraction: (interaction: AnyRequestData) => void;
+  componentInteraction: (ctx: ComponentContext) => void;
   commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
   commandUnregister: (command: SlashCommand) => void;
   commandReregister: (command: SlashCommand, oldCommand: SlashCommand) => void;
@@ -124,6 +127,12 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
   readonly allowedMentions: FormattedAllowedMentions;
   /** The command to run when an unknown command is used. */
   unknownCommand?: SlashCommand;
+
+  /**
+   * The command contexts awaiting component interactions.
+   * @private
+   */
+  _awaitingCommandCtxs = new Map<string, CommandContext>();
 
   /** @param opts The options for the creator */
   constructor(opts: SlashCreatorOptions) {
@@ -255,6 +264,8 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
 
     if (!(command instanceof SlashCommand)) throw new Error(`Invalid command object to reregister: ${command}`);
 
+    oldCommand.onUnload();
+
     if (!command.unknown) {
       if (command.commandName !== oldCommand.commandName) throw new Error('Command name cannot change.');
       if (!isEqual(command.guildIDs, oldCommand.guildIDs)) throw new Error('Command guild IDs cannot change.');
@@ -274,6 +285,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
    * @param command Command to unregister
    */
   unregisterCommand(command: SlashCommand) {
+    command.onUnload();
     if (this.unknownCommand === command) this.unknownCommand = undefined;
     else this.commands.delete(command.keyName);
     this.emit('commandUnregister', command);
@@ -553,6 +565,17 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
     }
   }
 
+  /**
+   * Cleans any awaiting component callbacks from command contexts.
+   */
+  cleanRegisteredComponents() {
+    if (this._awaitingCommandCtxs.size)
+      Array.from(this._awaitingCommandCtxs.keys()).forEach((messageID) => {
+        const ctx = this._awaitingCommandCtxs.get(messageID)!;
+        if (ctx.expired) this._awaitingCommandCtxs.delete(messageID);
+      });
+  }
+
   private _getCommandFromInteraction(interaction: InteractionRequestData) {
     return 'guild_id' in interaction
       ? this.commands.find(
@@ -601,7 +624,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
   }
 
   private async _onInteraction(interaction: AnyRequestData, respond: RespondFunction | null, webserverMode: boolean) {
-    this.emit('debug', 'Got interaction');
+    this.emit('rawInteraction', interaction);
 
     if (!respond || !webserverMode) respond = this._createGatewayRespond(interaction.id, interaction.token);
 
@@ -612,7 +635,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
         return respond({
           status: 200,
           body: {
-            type: InterationResponseType.PONG
+            type: InteractionResponseType.PONG
           }
         });
       }
@@ -639,7 +662,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
             return respond({
               status: 200,
               body: {
-                type: InterationResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
                   content: oneLine`
                     This command no longer exists.
@@ -677,6 +700,32 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
           if (throttle) throttle.usages++;
           return this._runCommand(command, ctx);
         }
+      }
+      case InteractionType.MESSAGE_COMPONENT: {
+        this.emit(
+          'debug',
+          `Component request recieved: ${interaction.data.custom_id}, ( msg ${interaction.message.id}, ${
+            'guild_id' in interaction ? `guild ${interaction.guild_id}` : `user ${interaction.user.id}`
+          })`
+        );
+
+        if (this._awaitingCommandCtxs.size || this.listenerCount('componentInteraction') > 0) {
+          const ctx = new ComponentContext(this, interaction, respond);
+          this.emit('componentInteraction', ctx);
+
+          this.cleanRegisteredComponents();
+
+          if (this._awaitingCommandCtxs.has(ctx.message.id))
+            this._awaitingCommandCtxs.get(ctx.message.id)!._onComponent(ctx);
+
+          break;
+        } else
+          return respond({
+            status: 200,
+            body: {
+              type: InteractionResponseType.DEFERRED_UPDATE_MESSAGE
+            }
+          });
       }
       default: {
         // @ts-ignore

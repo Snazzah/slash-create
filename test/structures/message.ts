@@ -6,10 +6,10 @@ chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
 
-import CommandContext from '../src/context';
-import Message from '../src/structures/message';
-import { basicInteraction, creator, editedMessage, followUpMessage, noop } from './util/constants';
-import { deleteMessage, editMessage } from './util/nock';
+import CommandContext from '../../src/structures/interfaces/context';
+import Message from '../../src/structures/message';
+import { basicInteraction, creator, editedMessage, followUpMessage, noop } from '../__util__/constants';
+import { deleteMessage, editMessage } from '../__util__/nock';
 const ctx = new CommandContext(creator, basicInteraction, noop, false);
 ctx.initiallyResponded = true;
 // @ts-expect-error
@@ -18,7 +18,7 @@ clearTimeout(ctx._timeout);
 describe('Message', () => {
   describe('constructor', () => {
     it('should apply properties properly', () => {
-      const message = new Message(followUpMessage, ctx);
+      const message = new Message(followUpMessage, creator, ctx);
 
       expect(message).to.include({
         id: followUpMessage.id,
@@ -48,7 +48,7 @@ describe('Message', () => {
 
   describe('.edit()', () => {
     it('edits and returns message', async () => {
-      const message = new Message(followUpMessage, ctx);
+      const message = new Message(followUpMessage, creator, ctx);
       const scope = editMessage('1234', editedMessage);
 
       const promise = expect(message.edit(editedMessage.content)).to.eventually.be.an.instanceof(Message);
@@ -64,7 +64,7 @@ describe('Message', () => {
 
   describe('.delete()', () => {
     it('deletes message', async () => {
-      const message = new Message(followUpMessage, ctx);
+      const message = new Message(followUpMessage, creator, ctx);
       const scope = deleteMessage('1234');
 
       await ctx.defer();

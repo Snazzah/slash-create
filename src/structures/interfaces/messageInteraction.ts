@@ -1,25 +1,12 @@
-import Member from './structures/member';
-import { RespondFunction } from './server';
-import SlashCreator from './creator';
-import {
-  AnyCommandOption,
-  Endpoints,
-  InteractionRequestData,
-  InteractionResponseFlags,
-  InterationResponseType
-} from './constants';
-import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from './util';
-import Message, { MessageEmbedOptions } from './structures/message';
-import User from './structures/user';
-import Collection from '@discordjs/collection';
-import Channel from './structures/channel';
-import Role from './structures/role';
-import ResolvedMember from './structures/resolvedMember';
+import { ComponentActionRow, Endpoints, InteractionResponseFlags, InteractionResponseType } from '../../constants';
+import SlashCreator from '../../creator';
+import { RespondFunction } from '../../server';
+import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from '../../util';
+import Member from '../member';
+import User from '../user';
+import Message, { MessageEmbedOptions } from '../message';
 
-/** Command options converted for ease of use. */
-export type ConvertedOption = { [key: string]: ConvertedOption } | string | number | boolean;
-
-/** The options for {@link CommandContext#edit}. */
+/** The options for {@link MessageInteractionContext#edit}. */
 export interface EditMessageOptions {
   /** The message content. */
   content?: string;
@@ -33,6 +20,8 @@ export interface EditMessageOptions {
    * attachments.
    */
   file?: MessageFile | MessageFile[];
+  /** The components of the message. */
+  components?: ComponentActionRow[];
 }
 
 /** A file within {@link EditMessageOptions}. */
@@ -43,7 +32,7 @@ export interface MessageFile {
   name: string;
 }
 
-/** The options for {@link CommandContext#sendFollowUp}. */
+/** The options for {@link MessageInteractionContext#sendFollowUp}. */
 export interface FollowUpMessageOptions extends EditMessageOptions {
   /** Whether to use TTS for the content. */
   tts?: boolean;
@@ -51,7 +40,7 @@ export interface FollowUpMessageOptions extends EditMessageOptions {
   flags?: number;
 }
 
-/** The options for {@link CommandContext#send}. */
+/** The options for {@link MessageInteractionContext#send}. */
 export interface MessageOptions extends FollowUpMessageOptions {
   /**
    * Whether or not the message should be ephemeral.
@@ -60,73 +49,41 @@ export interface MessageOptions extends FollowUpMessageOptions {
   ephemeral?: boolean;
 }
 
-/** Context representing a command interaction. */
-class CommandContext {
-  /** The creator of the command. */
+/** Represents a interaction context that handles messages. */
+class MessageInteractionContext {
+  /** The creator of the interaction request. */
   readonly creator: SlashCreator;
-  /** The full interaction data. */
-  readonly data: InteractionRequestData;
   /** The interaction's token. */
   readonly interactionToken: string;
   /** The interaction's ID. */
   readonly interactionID: string;
-  /** The channel ID that the command was invoked in. */
+  /** The channel ID that the interaction was invoked in. */
   readonly channelID: string;
-  /** The guild ID that the command was invoked in. */
+  /** The guild ID that the interaction was invoked in. */
   readonly guildID?: string;
-  /** The member that invoked the command. */
+  /** The member that invoked the interaction. */
   readonly member?: Member;
-  /** The user that invoked the command. */
+  /** The user that invoked the interaction. */
   readonly user: User;
-
-  /** The command's name. */
-  readonly commandName: string;
-  /** The command's ID. */
-  readonly commandID: string;
-  /** The options given to the command. */
-  readonly options: { [key: string]: ConvertedOption };
-  /** The subcommands the member used in order. */
-  readonly subcommands: string[];
-  /** The time when the context was created. */
+  /** The time when the interaction was created. */
   readonly invokedAt: number = Date.now();
+
   /** Whether the initial response was sent. */
   initiallyResponded = false;
   /** Whether there is a deferred message available. */
   deferred = false;
-
-  /** The resolved users of the interaction. */
-  readonly users = new Collection<string, User>();
-  /** The resolved members of the interaction. */
-  readonly members = new Collection<string, ResolvedMember>();
-  /** The resolved roles of the interaction. */
-  readonly roles = new Collection<string, Role>();
-  /** The resolved channels of the interaction. */
-  readonly channels = new Collection<string, Channel>();
-
-  /** Whether the context is from a webserver. */
-  private webserverMode: boolean;
-  /** The initial response function. */
+  /** The original message ID, automatically set when editing/fetching original message. */
+  messageID?: string;
+  /** @hidden */
   private _respond: RespondFunction;
-  /** The timeout for the auto-response. */
-  private _timeout?: any;
 
   /**
    * @param creator The instantiating creator.
-   * @param data The interaction data for the context.
+   * @param data The interaction data.
    * @param respond The response function for the interaction.
-   * @param webserverMode Whether the interaction was from a webserver.
-   * @param deferEphemeral Whether the context should auto-defer ephemeral messages.
    */
-  constructor(
-    creator: SlashCreator,
-    data: InteractionRequestData,
-    respond: RespondFunction,
-    webserverMode: boolean,
-    deferEphemeral = false
-  ) {
+  constructor(creator: SlashCreator, data: any, respond: RespondFunction) {
     this.creator = creator;
-    this.data = data;
-    this.webserverMode = webserverMode;
     this._respond = respond;
 
     this.interactionToken = data.token;
@@ -135,36 +92,6 @@ class CommandContext {
     this.guildID = 'guild_id' in data ? data.guild_id : undefined;
     this.member = 'guild_id' in data ? new Member(data.member, this.creator) : undefined;
     this.user = new User('guild_id' in data ? data.member.user : data.user, this.creator);
-
-    this.commandName = data.data.name;
-    this.commandID = data.data.id;
-    this.options = data.data.options ? CommandContext.convertOptions(data.data.options) : {};
-    this.subcommands = data.data.options ? CommandContext.getSubcommandArray(data.data.options) : [];
-
-    if (data.data.resolved) {
-      if (data.data.resolved.users)
-        Object.keys(data.data.resolved.users).forEach((id) =>
-          this.users.set(id, new User(data.data.resolved!.users![id], this.creator))
-        );
-      if (data.data.resolved.members)
-        Object.keys(data.data.resolved.members).forEach((id) =>
-          this.members.set(
-            id,
-            new ResolvedMember(data.data.resolved!.members![id], data.data.resolved!.users![id], this.creator)
-          )
-        );
-      if (data.data.resolved.roles)
-        Object.keys(data.data.resolved.roles).forEach((id) =>
-          this.roles.set(id, new Role(data.data.resolved!.roles![id]))
-        );
-      if (data.data.resolved.channels)
-        Object.keys(data.data.resolved.channels).forEach((id) =>
-          this.channels.set(id, new Channel(data.data.resolved!.channels![id]))
-        );
-    }
-
-    // Auto-defer if no response was given in 2 seconds
-    this._timeout = setTimeout(() => this.defer(deferEphemeral || false), 2000);
   }
 
   /** Whether the interaction has expired. Interactions last 15 minutes. */
@@ -181,7 +108,10 @@ class CommandContext {
       'GET',
       Endpoints.MESSAGE(this.creator.options.applicationID, this.interactionToken, messageID)
     );
-    return new Message(data, this);
+
+    if (messageID === '@original') this.messageID = data.id;
+
+    return new Message(data, this.creator, this);
   }
 
   /**
@@ -213,17 +143,19 @@ class CommandContext {
 
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
+      // @ts-expect-error
       clearTimeout(this._timeout);
       await this._respond({
         status: 200,
         body: {
-          type: InterationResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             tts: options.tts,
             content: options.content,
             embeds: options.embeds,
             flags: options.flags,
-            allowed_mentions: allowedMentions
+            allowed_mentions: allowedMentions,
+            components: options.components
           }
         }
       });
@@ -261,11 +193,12 @@ class CommandContext {
         tts: options.tts,
         content: options.content,
         embeds: options.embeds,
-        allowed_mentions: allowedMentions
+        allowed_mentions: allowedMentions,
+        components: options.components
       },
       options.file
     );
-    return new Message(data, this);
+    return new Message(data, this.creator, this);
   }
 
   /**
@@ -298,11 +231,12 @@ class CommandContext {
       {
         content: options.content,
         embeds: options.embeds,
-        allowed_mentions: allowedMentions
+        allowed_mentions: allowedMentions,
+        components: options.components
       },
       options.file
     );
-    return new Message(data, this);
+    return new Message(data, this.creator, this);
   }
 
   /**
@@ -311,9 +245,11 @@ class CommandContext {
    * @param content The content of the message
    * @param options The message options
    */
-  editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message> {
+  async editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message> {
     this.deferred = false;
-    return this.edit('@original', content, options);
+    const message = await this.edit('@original', content, options);
+    this.messageID = message.id;
+    return message;
   }
 
   /**
@@ -339,11 +275,12 @@ class CommandContext {
     if (!this.initiallyResponded && !this.deferred) {
       this.initiallyResponded = true;
       this.deferred = true;
+      // @ts-expect-error
       clearTimeout(this._timeout);
       await this._respond({
         status: 200,
         body: {
-          type: InterationResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+          type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
             flags: ephemeral ? InteractionResponseFlags.EPHEMERAL : 0
           }
@@ -354,27 +291,6 @@ class CommandContext {
 
     return false;
   }
-
-  /** @private */
-  static convertOptions(options: AnyCommandOption[]) {
-    const convertedOptions: { [key: string]: ConvertedOption } = {};
-    for (const option of options) {
-      if ('options' in option)
-        convertedOptions[option.name] = option.options ? CommandContext.convertOptions(option.options) : {};
-      else convertedOptions[option.name] = 'value' in option && option.value !== undefined ? option.value : {};
-    }
-    return convertedOptions;
-  }
-
-  /** @private */
-  static getSubcommandArray(options: AnyCommandOption[]) {
-    const result: string[] = [];
-    for (const option of options) {
-      if ('options' in option || !('value' in option))
-        result.push(option.name, ...(option.options ? CommandContext.getSubcommandArray(option.options) : []));
-    }
-    return result;
-  }
 }
 
-export default CommandContext;
+export default MessageInteractionContext;

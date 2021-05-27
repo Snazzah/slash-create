@@ -11,15 +11,15 @@ import FastifyServer from '../src/servers/fastify';
 import GatewayServer from '../src/servers/gateway';
 import GCFServer from '../src/servers/gcf';
 import { ApplicationCommandPermissionType } from '../src/constants';
-import { createBasicCommand } from './util/commands';
-import { basicCommands } from './util/constants';
+import { createBasicCommand } from './__util__/commands';
+import { basicCommands } from './__util__/constants';
 import {
   globalCommands,
   guildCommands,
   updateGlobalCommands,
   updateGuildCommandPermissions,
   updateGuildCommands
-} from './util/nock';
+} from './__util__/nock';
 
 describe('SlashCreator', () => {
   describe('constructor', () => {

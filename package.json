@@ -27,7 +27,7 @@
     "docs": "npx typedoc --json .tmp/typedoc-out.json --plugin typedoc-plugin-as-member-of && ts-node scripts/docs",
     "lint": "npx eslint --ext .ts ./src",
     "lint:fix": "npx eslint --ext .ts ./src --fix",
-    "test": "npx mocha -r ts-node/register --extension ts",
+    "test": "npx mocha -r ts-node/register --extension ts 'test/**/*.ts'",
     "gpr": "npx ts-node scripts/gpr",
     "prepare": "npx husky install && npm run build:prepare",
     "prepublishOnly": "([ -d \"lib/\" ] || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
@@ -70,7 +70,7 @@
     "nock": "^13.0.5",
     "prettier": "^2.2.1",
     "ts-docgen": "github:dbots-pkg/ts-docgen#main",
-    "ts-node": "^9.1.1",
+    "ts-node": "^10.0.0",
     "typedoc": "^0.19.2",
     "typedoc-plugin-as-member-of": "^1.0.2",
     "typescript": "4.2.4"
@@ -78,5 +78,13 @@
   "peerDependencies": {
     "express": "^4.17.1",
     "fastify": "^3.9.1"
-  }
+  },
+	"peerDependenciesMeta": {
+		"express": {
+			"optional": true
+		},
+		"fastify": {
+			"optional": true
+		}
+	}
 }

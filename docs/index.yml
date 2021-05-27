@@ -22,7 +22,9 @@
       path: discord-bot.md
     - name: Example Commands
       path: command.md
-    - name: AWS Lambda
-      path: lambda.md
+    - name: Message Components
+      path: components.md
     - name: Google Cloud Functions
       path: gcf.md
+    - name: AWS Lambda
+      path: lambda.md

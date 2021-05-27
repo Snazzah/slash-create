@@ -1,5 +1,6 @@
 import Server, { RequestHandler } from '../server';
 import { joinHeaders, splitHeaders } from '../util/lambdaHeaders';
+// @ts-ignore
 import { APIGatewayProxyCallbackV2, APIGatewayProxyEventV2, Context } from 'aws-lambda';
 
 /**

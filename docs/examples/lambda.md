@@ -11,7 +11,7 @@ const { AWSLambdaServer, SlashCreator } = require('slash-create');
 const creator = new SlashCreator({
     applicationID: process.env.DISCORD_APP_ID,
     publicKey: process.env.DISCORD_PUBLIC_KEY,
-    token: process.env.DISOCRD_BOT_TOKEN
+    token: process.env.DISCORD_BOT_TOKEN
 });
 
 creator
@@ -45,6 +45,5 @@ upload.zip
 17. Everything should work fine!
 
 ### Additional notes
-Please note that syncing your commands in the Lambda handler is quite inefficient because AWS will destroy and recreate your execution environment as needed, which could lead to a lot of unnecessary requests to the Discord API.
-A more efficient approach would be to create a separate function for syncing the commands and removing `syncCommands()` from the handler.
-You will then also not need your bot token in the handler function.
+- Please note that **syncing your commands in the Lambda handler is not recommended** because AWS will destroy and recreate your execution environment as needed, which could lead to a lot of unnecessary requests to the Discord API.
+  - A more efficient approach would be to create a separate function for syncing the commands and removing `syncCommands()` from the handler.

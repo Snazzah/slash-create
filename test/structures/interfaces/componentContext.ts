@@ -7,9 +7,11 @@ import 'mocha';
 const expect = chai.expect;
 import FakeTimers from '@sinonjs/fake-timers';
 
-import { creator, noop, basicMessageInteraction } from '../../__util__/constants';
+import { creator, noop, basicMessageInteraction, followUpMessage } from '../../__util__/constants';
 import ComponentContext from '../../../src/structures/interfaces/componentContext';
 import { InteractionResponseType } from '../../../src/constants';
+import { editMessage } from '../../__util__/nock';
+import Message from '../../../src/structures/message';
 
 describe('ComponentContext', () => {
   describe('constructor', () => {
@@ -58,6 +60,43 @@ describe('ComponentContext', () => {
       const ctx = new ComponentContext(creator, basicMessageInteraction, noop);
       await ctx.acknowledge();
       await expect(ctx.acknowledge()).to.eventually.equal(false);
+    });
+  });
+
+  describe('.editParent()', () => {
+    it('updates original message initially', async () => {
+      const ctx = new ComponentContext(creator, basicMessageInteraction, async (treq) => {
+        expect(treq.body).to.deep.equal({
+          type: InteractionResponseType.UPDATE_MESSAGE,
+          data: {
+            content: 'test content',
+            allowed_mentions: {
+              parse: ['roles', 'users']
+            },
+            embeds: undefined,
+            components: undefined
+          }
+        });
+        expect(treq.status).to.equal(200);
+      });
+      expect(ctx.initiallyResponded).to.equal(false);
+      await expect(ctx.editParent('test content')).to.eventually.equal(true);
+      expect(ctx.initiallyResponded).to.equal(true);
+    });
+
+    it('edits original message after acknowledging', async () => {
+      const ctx = new ComponentContext(creator, basicMessageInteraction, noop);
+      const scope = editMessage(basicMessageInteraction.message.id, followUpMessage);
+
+      await ctx.acknowledge();
+      const promise = expect(ctx.editParent(followUpMessage.content)).to.eventually.be.an.instanceof(Message);
+      await expect(scope).to.have.been.requestedWith({
+        allowed_mentions: {
+          parse: ['roles', 'users']
+        },
+        content: followUpMessage.content
+      });
+      return promise;
     });
   });
 });

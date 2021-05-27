@@ -13,9 +13,6 @@ import { MessageData } from '../../src/structures/message';
 export const MOCK_TOKEN =
   '3d89bb7572e0fb30d8128367b3b1b44fecd1726de135cbe28a41f8b2f777c372ba2939e72279b94526ff5d1bd4358d65cf11';
 
-export const MOCK_TOKEN_2 =
-  '3d89bb7572e0fb30d8128367b3b1b44fecd1726de135cbe28a41f8b2f777c372ba2939e72279b94526ff5d1bd4358d65cf12';
-
 export const noop: RespondFunction = async () => {};
 
 export const creator = new SlashCreator({

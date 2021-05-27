@@ -72,6 +72,8 @@ class MessageInteractionContext {
   initiallyResponded = false;
   /** Whether there is a deferred message available. */
   deferred = false;
+  /** The original message ID, automatically set when editing/fetching original message. */
+  messageID?: string;
   /** @hidden */
   private _respond: RespondFunction;
 
@@ -106,6 +108,9 @@ class MessageInteractionContext {
       'GET',
       Endpoints.MESSAGE(this.creator.options.applicationID, this.interactionToken, messageID)
     );
+
+    if (messageID === '@original') this.messageID = data.id;
+
     return new Message(data, this.creator, this);
   }
 
@@ -240,9 +245,11 @@ class MessageInteractionContext {
    * @param content The content of the message
    * @param options The message options
    */
-  editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message> {
+  async editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message> {
     this.deferred = false;
-    return this.edit('@original', content, options);
+    const message = await this.edit('@original', content, options);
+    this.messageID = message.id;
+    return message;
   }
 
   /**

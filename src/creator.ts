@@ -128,6 +128,12 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
   /** The command to run when an unknown command is used. */
   unknownCommand?: SlashCommand;
 
+  /**
+   * The command contexts awaiting component interactions.
+   * @private
+   */
+  _awaitingCommandCtxs = new Map<string, CommandContext>();
+
   /** @param opts The options for the creator */
   constructor(opts: SlashCreatorOptions) {
     // eslint-disable-next-line constructor-super
@@ -559,6 +565,17 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     }
   }
 
+  /**
+   * Cleans any awaiting component callbacks from command contexts.
+   */
+  cleanRegisteredComponents() {
+    if (this._awaitingCommandCtxs.size)
+      Array.from(this._awaitingCommandCtxs.keys()).forEach((messageID) => {
+        const ctx = this._awaitingCommandCtxs.get(messageID)!;
+        if (ctx.expired) this._awaitingCommandCtxs.delete(messageID);
+      });
+  }
+
   private _getCommandFromInteraction(interaction: InteractionRequestData) {
     return 'guild_id' in interaction
       ? this.commands.find(
@@ -691,14 +708,21 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
             'guild_id' in interaction ? `guild ${interaction.guild_id}` : `user ${interaction.user.id}`
           })`
         );
-        if (this.listenerCount('componentInteraction') > 0) {
-          this.emit('componentInteraction', new ComponentContext(this, interaction, respond));
+
+        if (this._awaitingCommandCtxs.size || this.listenerCount('componentInteraction') > 0) {
+          const ctx = new ComponentContext(this, interaction, respond);
+          this.emit('componentInteraction', ctx);
+
+          this.cleanRegisteredComponents();
+
+          if (this._awaitingCommandCtxs.has(ctx.message.id))
+            this._awaitingCommandCtxs.get(ctx.message.id)!._onComponent(ctx);
+
           break;
         } else
           return respond({
             status: 200,
             body: {
-              // TODO: Document interaction response type 6
               type: InteractionResponseType.DEFERRED_UPDATE_MESSAGE
             }
           });

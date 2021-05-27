@@ -7,9 +7,13 @@ import Channel from '../channel';
 import Role from '../role';
 import ResolvedMember from '../resolvedMember';
 import MessageInteractionContext from './messageInteraction';
+import ComponentContext from './componentContext';
 
 /** Command options converted for ease of use. */
 export type ConvertedOption = { [key: string]: ConvertedOption } | string | number | boolean;
+
+/** A component callback from {@see CommandContext#registerComponent}. */
+export type ComponentRegisterCallback = (ctx: ComponentContext) => void;
 
 /** Context representing a command interaction. */
 class CommandContext extends MessageInteractionContext {
@@ -38,6 +42,8 @@ class CommandContext extends MessageInteractionContext {
   private webserverMode: boolean;
   /** @hidden */
   private _timeout?: any;
+  /** @hidden */
+  private _componentCallbacks = new Map<string, ComponentRegisterCallback>();
 
   /**
    * @param creator The instantiating creator.
@@ -86,6 +92,37 @@ class CommandContext extends MessageInteractionContext {
 
     // Auto-defer if no response was given in 2 seconds
     this._timeout = setTimeout(() => this.defer(deferEphemeral || false), 2000);
+  }
+
+  /**
+   * Registers a component callback from a custom ID.
+   * This unregisters automatically when the context expires.
+   * @param custom_id The custom ID of the component to register
+   * @param callback The callback to use on interaction
+   */
+  registerComponent(custom_id: string, callback: ComponentRegisterCallback) {
+    if (this.expired) throw new Error('This interaction has expired');
+    if (!this.initiallyResponded || this.deferred)
+      throw new Error('You must send a message before registering components');
+    if (!this.messageID)
+      throw new Error('Fetch your original message or use deferred messages before registering components');
+
+    this._componentCallbacks.set(custom_id, callback);
+    this.creator._awaitingCommandCtxs.set(this.messageID, this);
+  }
+
+  /**
+   * Unregisters a component callback.
+   * @param custom_id The custom ID of the component to unregister
+   */
+  unregisterComponent(custom_id: string) {
+    return this._componentCallbacks.delete(custom_id);
+  }
+
+  /** @hidden */
+  _onComponent(ctx: ComponentContext) {
+    if (this.messageID === ctx.message.id && this._componentCallbacks.has(ctx.customID))
+      this._componentCallbacks.get(ctx.customID)!(ctx);
   }
 
   /** @private */

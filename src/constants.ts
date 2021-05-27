@@ -231,9 +231,15 @@ export interface DMInteractionRequestData {
  * A command interaction within a guild.
  * @private
  */
-export interface GuildInteractionRequestData extends Omit<DMInteractionRequestData, 'user'> {
+export interface GuildInteractionRequestData {
+  version: 1;
+  type: InteractionType.COMMAND;
+  token: string;
+  id: string;
+  channel_id: string;
   guild_id: string;
   member: CommandMember;
+  data: CommandData;
 }
 
 /**
@@ -282,9 +288,19 @@ export interface DMMessageComponentRequestData {
  * A message component interaction within a guild.
  * @private
  */
-export interface GuildMessageComponentRequestData extends Omit<DMMessageComponentRequestData, 'user'> {
+export interface GuildMessageComponentRequestData {
+  version: 1;
+  type: InteractionType.MESSAGE_COMPONENT;
+  token: string;
+  message: PartialMessage;
+  id: string;
+  channel_id: string;
   guild_id: string;
   member: CommandMember;
+  data: {
+    custom_id: string;
+    component_type: ComponentType;
+  };
 }
 
 /**

@@ -1,4 +1,4 @@
-import { ComponentType, MessageComponentRequestData, PartialMessage } from '../../constants';
+import { ComponentType, InteractionResponseType, MessageComponentRequestData, PartialMessage } from '../../constants';
 import MessageInteractionContext from './messageInteraction';
 import SlashCreator from '../../creator';
 import { RespondFunction } from '../../server';
@@ -47,7 +47,7 @@ class ComponentContext extends MessageInteractionContext {
       await this._respond({
         status: 200,
         body: {
-          type: 6
+          type: InteractionResponseType.DEFERRED_UPDATE_MESSAGE
         }
       });
       return true;

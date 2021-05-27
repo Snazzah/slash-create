@@ -107,7 +107,7 @@ interface SyncCommandOptions {
 }
 
 /** The main class for using commands and interactions. */
-class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashCreatorEvents>) {
+class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */
@@ -699,7 +699,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
             status: 200,
             body: {
               // TODO: Document interaction response type 6
-              type: 6
+              type: InteractionResponseType.DEFERRED_UPDATE_MESSAGE
             }
           });
       }

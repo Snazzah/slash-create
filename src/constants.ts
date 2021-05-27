@@ -29,8 +29,11 @@ export enum InteractionResponseType {
   /** Respond with a message, showing the user's input. */
   CHANNEL_MESSAGE_WITH_SOURCE = 4,
   /** Create a deferred message with source. */
-  DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = 5
-  // = 6
+  DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = 5,
+  /** Acknowledge the interaction, edit the original message later. */
+  DEFERRED_UPDATE_MESSAGE = 6,
+  /** Edits the message the component was attached to. */
+  UPDATE_MESSAGE = 7
 }
 
 /** Message flags for interaction responses. */
@@ -421,7 +424,9 @@ export type AnyComponent = ComponentActionRow | AnyComponentButton;
 
 /** A row of components. */
 export interface ComponentActionRow {
+  /** The type of component to use. */
   type: ComponentType.ACTION_ROW;
+  /** The components to show inside this row. */
   components: AnyComponentButton[];
 }
 
@@ -430,16 +435,32 @@ export type AnyComponentButton = ComponentButton | ComponentButtonLink;
 
 /** A regular component button. */
 export interface ComponentButton {
+  /** The type of component to use. */
   type: ComponentType.BUTTON;
+  /** The style of button to show. */
   style: ButtonStyle.PRIMARY | ButtonStyle.SECONDARY | ButtonStyle.SUCCESS | ButtonStyle.DESTRUCTIVE;
+  /** The identifier for this button. */
   custom_id: string;
+  /** The label of the button. */
   label: string;
+  /** The emoji to show inside the button/ */
+  emoji?: {
+    /** The ID of the emoji, if it is custom. */
+    id: string | null;
+    /** The name of the emoji, or the raw emoji if not custom. */
+    name: string;
+    /** Whether this emoji is animated. */
+    animated?: boolean;
+  };
+  /** Whether this button will show as disabled. */
   disabled?: boolean;
 }
 
 /** A component button with a link. */
 export interface ComponentButtonLink extends Omit<ComponentButton, 'custom_id' | 'style'> {
+  /** The style of button to show. */
   style: ButtonStyle.LINK;
+  /** The URL for link buttons. */
   url: string;
 }
 

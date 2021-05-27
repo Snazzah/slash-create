@@ -9,6 +9,7 @@ import FakeTimers from '@sinonjs/fake-timers';
 
 import { creator, noop, basicMessageInteraction } from '../../__util__/constants';
 import ComponentContext from '../../../src/structures/interfaces/componentContext';
+import { InteractionResponseType } from '../../../src/constants';
 
 describe('ComponentContext', () => {
   describe('constructor', () => {
@@ -19,7 +20,7 @@ describe('ComponentContext', () => {
 
       new ComponentContext(creator, basicMessageInteraction, async (treq) => {
         expect(treq.body).to.deep.equal({
-          type: 6
+          type: InteractionResponseType.DEFERRED_UPDATE_MESSAGE
         });
         expect(treq.status).to.equal(200);
         done();
@@ -43,7 +44,7 @@ describe('ComponentContext', () => {
     it('sends acknowledgements', async () => {
       const ctx = new ComponentContext(creator, basicMessageInteraction, async (treq) => {
         expect(treq.body).to.deep.equal({
-          type: 6
+          type: InteractionResponseType.DEFERRED_UPDATE_MESSAGE
         });
         expect(treq.status).to.equal(200);
       });

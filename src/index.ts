@@ -13,6 +13,7 @@ import SequentialBucket from './util/sequentialBucket';
 import DiscordHTTPError from './errors/DiscordHTTPError';
 import DiscordRESTError from './errors/DiscordRESTError';
 
+import AWSLambdaServer from './servers/lambda';
 import ExpressServer from './servers/express';
 import FastifyServer from './servers/fastify';
 import GatewayServer from './servers/gateway';
@@ -102,6 +103,7 @@ export type {
 
 export {
   API,
+  AWSLambdaServer,
   BitField,
   Command,
   CommandContext,

@@ -26,3 +26,5 @@
       path: components.md
     - name: Google Cloud Functions
       path: gcf.md
+    - name: AWS Lambda
+      path: lambda.md

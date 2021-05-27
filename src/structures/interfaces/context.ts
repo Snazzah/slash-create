@@ -9,9 +9,6 @@ import ResolvedMember from '../resolvedMember';
 import MessageInteractionContext from './messageInteraction';
 import ComponentContext from './componentContext';
 
-/** Command options converted for ease of use. */
-export type ConvertedOption = { [key: string]: ConvertedOption } | string | number | boolean;
-
 /** A component callback from {@see CommandContext#registerComponent}. */
 export type ComponentRegisterCallback = (ctx: ComponentContext) => void;
 
@@ -25,7 +22,7 @@ class CommandContext extends MessageInteractionContext {
   /** The command's ID. */
   readonly commandID: string;
   /** The options given to the command. */
-  readonly options: { [key: string]: ConvertedOption };
+  readonly options: { [key: string]: any };
   /** The subcommands the member used in order. */
   readonly subcommands: string[];
 
@@ -127,7 +124,7 @@ class CommandContext extends MessageInteractionContext {
 
   /** @private */
   static convertOptions(options: AnyCommandOption[]) {
-    const convertedOptions: { [key: string]: ConvertedOption } = {};
+    const convertedOptions: { [key: string]: any } = {};
     for (const option of options) {
       if ('options' in option)
         convertedOptions[option.name] = option.options ? CommandContext.convertOptions(option.options) : {};

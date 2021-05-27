@@ -22,5 +22,7 @@
       path: discord-bot.md
     - name: Example Commands
       path: command.md
+    - name: Message Components
+      path: components.md
     - name: Google Cloud Functions
       path: gcf.md

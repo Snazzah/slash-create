@@ -424,10 +424,11 @@ class RequestHandler {
   routefy(url: string, method: string) {
     let route = url
       .replace(/\/([a-z-]+)\/(?:[0-9]{17,19})/g, function (match, p) {
-        return p === 'channels' || p === 'guilds' || p === 'webhooks' ? match : `/${p}/:id`;
+        return p === 'channels' || p === 'guilds' || p === 'webhooks' || p === 'interactions' ? match : `/${p}/:id`;
       })
       .replace(/\/reactions\/[^/]+/g, '/reactions/:id')
-      .replace(/^\/webhooks\/(\d+)\/[A-Za-z0-9-_]{64,}/, '/webhooks/$1/:token');
+      .replace(/^\/webhooks\/(\d+)\/[A-Za-z0-9-_]{64,}/, '/webhooks/$1/:token')
+      .replace(/\/[A-Za-z0-9-_]{64,}\/callback$/, '/:token/callback');
     if (method === 'DELETE' && route.endsWith('/messages/:id')) {
       // Delete Messsage endpoint has its own ratelimit
       route = method + route;

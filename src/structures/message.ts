@@ -1,5 +1,7 @@
-import { InteractionType, UserObject } from '../constants';
-import CommandContext, { EditMessageOptions } from '../context';
+import { AnyComponent, InteractionType, UserObject } from '../constants';
+import { EditMessageOptions } from './interfaces/messageInteraction';
+import SlashCreator from '../creator';
+import MessageInteractionContext from './interfaces/messageInteraction';
 import User from './user';
 
 /** A message interaction. */
@@ -112,6 +114,7 @@ export interface MessageData {
   type: number;
   content: string;
   channel_id: string;
+  components?: AnyComponent[];
   author: UserObject;
   attachments: MessageAttachment[];
   embeds: MessageEmbed[];
@@ -147,6 +150,8 @@ class Message {
   readonly content: string;
   /** The ID of the channel the message is in */
   readonly channelID: string;
+  /** The message's components */
+  readonly components: AnyComponent[];
   /** The author of the message */
   readonly author: User;
   /** The message's attachments */
@@ -175,20 +180,21 @@ class Message {
   readonly interaction?: MessageInteraction;
 
   /** The context that created the message class */
-  private readonly _ctx: CommandContext;
+  private readonly _ctx?: MessageInteractionContext;
 
   /**
    * @param data The data for the message
    * @param ctx The instantiating context
    */
-  constructor(data: MessageData, ctx: CommandContext) {
-    this._ctx = ctx;
+  constructor(data: MessageData, creator: SlashCreator, ctx?: MessageInteractionContext) {
+    if (ctx) this._ctx = ctx;
 
     this.id = data.id;
     this.type = data.type;
     this.content = data.content;
     this.channelID = data.channel_id;
-    this.author = new User(data.author, ctx.creator);
+    this.components = data.components || [];
+    this.author = new User(data.author, creator);
     this.attachments = data.attachments;
     this.embeds = data.embeds;
     this.mentions = data.mentions;
@@ -210,7 +216,7 @@ class Message {
         id: data.interaction.id,
         type: data.interaction.type,
         name: data.interaction.name,
-        user: new User(data.interaction.user, ctx.creator)
+        user: new User(data.interaction.user, creator)
       };
   }
 
@@ -220,11 +226,13 @@ class Message {
    * @param options The message options
    */
   edit(content: string | EditMessageOptions, options?: EditMessageOptions) {
+    if (!this._ctx) throw new Error('This message was not created from a command context.');
     return this._ctx.edit(this.id, content, options);
   }
 
   /** Deletes this message. */
   delete() {
+    if (!this._ctx) throw new Error('This message was not created from a command context.');
     return this._ctx.delete(this.id);
   }
 

@@ -1,4 +1,11 @@
-import { ApplicationCommand, CommandOptionType, InteractionRequestData, InteractionType } from '../../src/constants';
+import {
+  ApplicationCommand,
+  CommandOptionType,
+  ComponentType,
+  InteractionRequestData,
+  InteractionType,
+  MessageComponentRequestData
+} from '../../src/constants';
 import SlashCreator from '../../src/creator';
 import { RespondFunction } from '../../src/server';
 import { MessageData } from '../../src/structures/message';
@@ -67,6 +74,35 @@ export const basicInteraction: InteractionRequestData = {
   data: {
     id: '0',
     name: 'basic-command'
+  }
+};
+
+export const basicMessageInteraction: MessageComponentRequestData = {
+  version: 1,
+  type: InteractionType.MESSAGE_COMPONENT,
+  token: MOCK_TOKEN,
+  id: '00000000000000000',
+  channel_id: '00000000000000000',
+  guild_id: '00000000000000000',
+  member: {
+    user,
+    roles: [],
+    premium_since: null,
+    permissions: '0',
+    is_pending: false,
+    pending: false,
+    mute: false,
+    deaf: false,
+    nick: null,
+    joined_at: '2021-01-01T21:46:12.072Z'
+  },
+  message: {
+    id: '00000000000000000',
+    flags: 0
+  },
+  data: {
+    custom_id: '0',
+    component_type: ComponentType.BUTTON
   }
 };
 

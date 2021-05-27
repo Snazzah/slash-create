@@ -3,7 +3,6 @@ import * as Util from './util';
 
 import API from './api';
 import SlashCommand from './command';
-import CommandContext from './context';
 import SlashCreator from './creator';
 import Server from './server';
 
@@ -25,6 +24,10 @@ import Permissions from './structures/permissions';
 import User from './structures/user';
 import UserFlags from './structures/userFlags';
 
+import ComponentContext from './structures/interfaces/componentContext';
+import CommandContext from './structures/interfaces/context';
+import MessageInteractionContext from './structures/interfaces/messageInteraction';
+
 const VERSION: string = require('../package').version;
 
 // Aliases
@@ -34,7 +37,7 @@ const Command = SlashCommand;
 
 export {
   InteractionType,
-  InterationResponseType,
+  InteractionResponseType,
   InteractionResponseFlags,
   CommandOptionType,
   PartialApplicationCommand,
@@ -56,14 +59,21 @@ export {
   CommandData,
   AnyCommandOption,
   CommandOption,
-  CommandSubcommandOption,
   CommandStringOption,
   CommandIntegerOption,
   CommandBooleanOption,
+  CommandSubcommandOption,
+  ComponentType,
+  ButtonStyle,
+  AnyComponent,
+  ComponentActionRow,
+  AnyComponentButton,
+  ComponentButton,
+  ComponentButtonLink,
+  PartialEmoji,
+  PartialMessage,
   ImageFormat
 } from './constants';
-
-export type { ConvertedOption } from './context';
 
 export { SlashCommandOptions, CommandPermissions } from './command';
 
@@ -83,11 +93,21 @@ export {
   EmbedVideo
 } from './structures/message';
 
+export type {
+  MessageOptions,
+  EditMessageOptions,
+  FollowUpMessageOptions,
+  MessageFile
+} from './structures/interfaces/messageInteraction';
+
+export type { ConvertedOption } from './structures/interfaces/context';
+
 export {
   API,
   BitField,
   Command,
   CommandContext,
+  ComponentContext,
   Constants,
   Context,
   Creator,
@@ -99,6 +119,7 @@ export {
   GCFServer,
   Member,
   Message,
+  MessageInteractionContext,
   Permissions,
   RequestHandler,
   SequentialBucket,

@@ -25,6 +25,15 @@ ctx.send({
   }
 });
 ```
+### How do I edit the original message from a component context?
+Use `ctx.editParent` rather than `ctx.editOriginal`.
+
+`ctx.editOriginal` edits the first sent message by the component context, while `ctx.editParent` edits the message that has the component.
+
+### How do I remove the component buttons after they click it?
+```js
+await ctx.editParent('You clicked the button!', { components: [] });
+```
 
 ## External Libraries
 

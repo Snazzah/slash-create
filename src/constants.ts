@@ -1,8 +1,9 @@
 import { IncomingMessage } from 'http';
 import SlashCommand from './command';
-import CommandContext from './context';
+import CommandContext from './structures/interfaces/context';
 import SlashCreator from './creator';
 import { TransformedRequest } from './server';
+import ComponentContext from './structures/interfaces/componentContext';
 
 export const API_VERSION = 8;
 export const INTERACTION_VERSION = 1;
@@ -14,11 +15,13 @@ export enum InteractionType {
   /** A ping. */
   PING = 1,
   /** A command invocation. */
-  COMMAND = 2
+  COMMAND = 2,
+  /** An invocation of a message component. */
+  MESSAGE_COMPONENT = 3
 }
 
 /** The types of interaction responses. */
-export enum InterationResponseType {
+export enum InteractionResponseType {
   /** Acknowledge a `PING`. */
   PONG = 1,
   // ACKNOWLEDGE = 2,
@@ -26,7 +29,11 @@ export enum InterationResponseType {
   /** Respond with a message, showing the user's input. */
   CHANNEL_MESSAGE_WITH_SOURCE = 4,
   /** Create a deferred message with source. */
-  DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = 5
+  DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = 5,
+  /** Acknowledge the interaction, edit the original message later. */
+  DEFERRED_UPDATE_MESSAGE = 6,
+  /** Edits the message the component was attached to. */
+  UPDATE_MESSAGE = 7
 }
 
 /** Message flags for interaction responses. */
@@ -184,7 +191,7 @@ export interface RawRequest {
 }
 
 /** Any interaction request from Discord. */
-export type AnyRequestData = PingRequestData | InteractionRequestData;
+export type AnyRequestData = PingRequestData | InteractionRequestData | MessageComponentRequestData;
 
 /** @private */
 export interface RequestData {
@@ -240,6 +247,67 @@ export interface GuildInteractionRequestData {
  * @private
  */
 export type InteractionRequestData = DMInteractionRequestData | GuildInteractionRequestData;
+
+/** The partial message from a message component interaction. */
+export interface PartialMessage {
+  /** The ID of the message. */
+  id: string;
+  /** The message flags. */
+  flags: number;
+}
+
+/** The partial emoji from a message component. */
+export interface PartialEmoji {
+  /** The ID of the emoji, if it is custom. */
+  id?: string;
+  /** The name of the emoji, or the raw emoji if not custom. */
+  name?: string;
+  /** Whether this emoji is animated. */
+  animated?: boolean;
+}
+
+/**
+ * A message component interaction within a direct message.
+ * @private
+ */
+export interface DMMessageComponentRequestData {
+  version: 1;
+  type: InteractionType.MESSAGE_COMPONENT;
+  token: string;
+  message: PartialMessage;
+  id: string;
+  channel_id: string;
+  user: CommandUser;
+  data: {
+    custom_id: string;
+    component_type: ComponentType;
+  };
+}
+
+/**
+ * A message component interaction within a guild.
+ * @private
+ */
+export interface GuildMessageComponentRequestData {
+  version: 1;
+  type: InteractionType.MESSAGE_COMPONENT;
+  token: string;
+  message: PartialMessage;
+  id: string;
+  channel_id: string;
+  guild_id: string;
+  member: CommandMember;
+  data: {
+    custom_id: string;
+    component_type: ComponentType;
+  };
+}
+
+/**
+ * Any message component interaction.
+ * @private
+ */
+export type MessageComponentRequestData = DMMessageComponentRequestData | GuildMessageComponentRequestData;
 
 /** @private */
 export interface ResolvedMemberData {
@@ -355,6 +423,66 @@ export interface CommandSubcommandOption {
   name: string;
   type?: CommandOptionType.SUB_COMMAND | CommandOptionType.SUB_COMMAND_GROUP;
   options?: AnyCommandOption[];
+}
+
+/** The types of components available. */
+export enum ComponentType {
+  /** A row of components. */
+  ACTION_ROW = 1,
+  /** A button component. */
+  BUTTON = 2
+}
+
+/** The types of component button styles. */
+export enum ButtonStyle {
+  /** A primary-colored button. */
+  PRIMARY = 1,
+  /** A gray, secondary button. */
+  SECONDARY = 2,
+  /** A green button. */
+  SUCCESS = 3,
+  /** A red button. */
+  DESTRUCTIVE = 4,
+  /** A gray button with a link icon. */
+  LINK = 5
+}
+
+/** Any component. */
+export type AnyComponent = ComponentActionRow | AnyComponentButton;
+
+/** A row of components. */
+export interface ComponentActionRow {
+  /** The type of component to use. */
+  type: ComponentType.ACTION_ROW;
+  /** The components to show inside this row. */
+  components: AnyComponentButton[];
+}
+
+/** Any component button. */
+export type AnyComponentButton = ComponentButton | ComponentButtonLink;
+
+/** A regular component button. */
+export interface ComponentButton {
+  /** The type of component to use. */
+  type: ComponentType.BUTTON;
+  /** The style of button to show. */
+  style: ButtonStyle.PRIMARY | ButtonStyle.SECONDARY | ButtonStyle.SUCCESS | ButtonStyle.DESTRUCTIVE;
+  /** The identifier for this button. */
+  custom_id: string;
+  /** The label of the button. */
+  label: string;
+  /** The emoji to show inside the button. */
+  emoji?: PartialEmoji;
+  /** Whether this button will show as disabled. */
+  disabled?: boolean;
+}
+
+/** A component button with a link. */
+export interface ComponentButtonLink extends Omit<ComponentButton, 'custom_id' | 'style'> {
+  /** The style of button to show. */
+  style: ButtonStyle.LINK;
+  /** The URL for link buttons. */
+  url: string;
 }
 
 /** @see https://www.npmjs.com/package/require-all#usage */
@@ -497,6 +625,20 @@ declare function unverifiedRequest(treq: TransformedRequest): void;
  * @param interaction The unhandled interaction
  */
 declare function unknownInteraction(interaction: any): void;
+/**
+ * Emitted when any interaction is given.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param interaction The interaction
+ */
+declare function rawInteraction(interaction: AnyRequestData): void;
+/**
+ * Emitted when a component interaction is given.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param ctx The component context
+ */
+declare function componentInteraction(ctx: ComponentContext): void;
 /**
  * Emitted when a command is registered.
  * @event

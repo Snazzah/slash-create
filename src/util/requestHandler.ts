@@ -329,8 +329,13 @@ class RequestHandler {
                   // For some reason, the Retry-After header isn't in ms precision
                   // This should hopefully fix any spam requests
                   if (response) {
-                    response = JSON.parse(response);
-                    if (response.retry_after) retryAfter = response.retry_after * 1000 + 250;
+                    try {
+                      response = JSON.parse(response);
+                      if (response.retry_after) retryAfter = response.retry_after * 1000 + 250;
+                    } catch (err) {
+                      reject(err);
+                      return;
+                    }
                   }
                   if (retryAfter) {
                     setTimeout(() => {

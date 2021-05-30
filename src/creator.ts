@@ -107,7 +107,7 @@ interface SyncCommandOptions {
 }
 
 /** The main class for using commands and interactions. */
-class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashCreatorEvents>) {
+class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */
@@ -416,26 +416,35 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
       }
     }
 
-    const unhandledCommands = this.commands.filter(
-      (command) =>
-        !!(command.guildIDs && command.guildIDs.includes(guildID) && !handledCommands.includes(command.keyName))
-    );
+    const commandsPayload = commands.map((cmd) => {
+      delete (cmd as any).application_id;
+      delete (cmd as any).guild_id;
+      delete (cmd as any).version;
+      return cmd;
+    });
 
-    for (const [, command] of unhandledCommands) {
-      this.emit('debug', `Creating guild command "${command.commandName}" (guild: ${guildID})`);
-      updatePayload.push({
-        ...command.commandJSON
-      });
-    }
+    if (!isEqual(updatePayload, commandsPayload)) {
+      const unhandledCommands = this.commands.filter(
+        (command) =>
+          !!(command.guildIDs && command.guildIDs.includes(guildID) && !handledCommands.includes(command.keyName))
+      );
 
-    // Set command IDs for permission syncing
-    const updatedCommands = await this.api.updateCommands(updatePayload, guildID);
-    const newCommands = updatedCommands.filter(
-      (newCommand) => !commands.find((command) => command.id === newCommand.id)
-    );
-    for (const newCommand of newCommands) {
-      const command = unhandledCommands.find((command) => command.commandName === newCommand.name);
-      if (command) command.ids.set(guildID, newCommand.id);
+      for (const [, command] of unhandledCommands) {
+        this.emit('debug', `Creating guild command "${command.commandName}" (guild: ${guildID})`);
+        updatePayload.push({
+          ...command.commandJSON
+        });
+      }
+
+      // Set command IDs for permission syncing
+      const updatedCommands = await this.api.updateCommands(updatePayload, guildID);
+      const newCommands = updatedCommands.filter(
+        (newCommand) => !commands.find((command) => command.id === newCommand.id)
+      );
+      for (const newCommand of newCommands) {
+        const command = unhandledCommands.find((command) => command.commandName === newCommand.name);
+        if (command) command.ids.set(guildID, newCommand.id);
+      }
     }
   }
 
@@ -473,24 +482,32 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
       handledCommands.push(commandKey);
     }
 
-    const unhandledCommands = this.commands.filter(
-      (command) => !command.guildIDs && !handledCommands.includes(command.keyName)
-    );
+    const commandsPayload = commands.map((cmd) => {
+      delete (cmd as any).application_id;
+      delete (cmd as any).version;
+      return cmd;
+    });
 
-    for (const [, command] of unhandledCommands) {
-      this.emit('debug', `Creating command "${command.commandName}"`);
-      updatePayload.push({
-        ...command.commandJSON
-      });
-    }
+    if (!isEqual(updatePayload, commandsPayload)) {
+      const unhandledCommands = this.commands.filter(
+        (command) => !command.guildIDs && !handledCommands.includes(command.keyName)
+      );
 
-    const updatedCommands = await this.api.updateCommands(updatePayload);
-    const newCommands = updatedCommands.filter(
-      (newCommand) => !commands.find((command) => command.id === newCommand.id)
-    );
-    for (const newCommand of newCommands) {
-      const command = unhandledCommands.find((command) => command.commandName === newCommand.name);
-      if (command) command.ids.set('global', newCommand.id);
+      for (const [, command] of unhandledCommands) {
+        this.emit('debug', `Creating command "${command.commandName}"`);
+        updatePayload.push({
+          ...command.commandJSON
+        });
+      }
+
+      const updatedCommands = await this.api.updateCommands(updatePayload);
+      const newCommands = updatedCommands.filter(
+        (newCommand) => !commands.find((command) => command.id === newCommand.id)
+      );
+      for (const newCommand of newCommands) {
+        const command = unhandledCommands.find((command) => command.commandName === newCommand.name);
+        if (command) command.ids.set('global', newCommand.id);
+      }
     }
   }
 

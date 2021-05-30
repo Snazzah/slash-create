@@ -22,7 +22,8 @@ import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
 import Server, { TransformedRequest, RespondFunction, Response } from './server';
 import CommandContext from './structures/interfaces/context';
-import { isEqual, uniq } from 'lodash';
+import isEqual from 'lodash.isequal';
+import uniq from 'lodash.uniq';
 import ComponentContext from './structures/interfaces/componentContext';
 
 /**

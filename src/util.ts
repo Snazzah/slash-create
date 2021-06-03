@@ -92,7 +92,7 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
     if (option.description.length < 1 || option.description.length > 100)
       throwError(RangeError, i, 'Option description must be under 100 characters.');
 
-    if (option.options) {
+    if ('options' in option && option.options) {
       if (option.type !== CommandOptionType.SUB_COMMAND && option.type !== CommandOptionType.SUB_COMMAND_GROUP)
         throwError(
           Error,
@@ -106,10 +106,13 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
       validateOptions(option.options, `options[${i}].options`);
     }
 
-    if (option.choices) {
+    if ('choices' in option && option.choices) {
       if (
+        // @ts-ignore
         option.type === CommandOptionType.SUB_COMMAND ||
+        // @ts-ignore
         option.type === CommandOptionType.SUB_COMMAND_GROUP ||
+        // @ts-ignore
         option.type === CommandOptionType.BOOLEAN
       )
         throwError(

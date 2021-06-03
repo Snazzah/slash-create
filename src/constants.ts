@@ -102,23 +102,31 @@ export interface ApplicationCommand extends PartialApplicationCommand {
   version: string;
 }
 
-type ApplicationCommandOptionBase = {
+export interface ApplicationCommandOptionBase {
+  /** The type of option this one is. */
+  type:
+    | CommandOptionType.BOOLEAN
+    | CommandOptionType.USER
+    | CommandOptionType.CHANNEL
+    | CommandOptionType.ROLE
+    | CommandOptionType.MENTIONABLE;
   /** The name of the option. */
   name: string;
   /** The description of the option. */
   description: string;
-  /** The first required option the user has to complete. */
+  /**
+   * The first required option the user has to complete.
+   * @deprecated Reorder the required options instead.
+   */
   default?: boolean;
-  /** Whether the command is required. */
+  /** Whether the parameter is required. */
   required?: boolean;
-  /** The choices of the option. If set, these are the only values a user can pick from. */
-  choices?: ApplicationCommandOptionChoice[];
-};
+}
 
 /**
  * @private
  */
-export interface ApplicationCommandOptionSubCommand {
+export interface ApplicationCommandOptionSubCommand extends Omit<ApplicationCommandOptionBase, 'type'> {
   /** The type of option this one is. */
   type: CommandOptionType.SUB_COMMAND | CommandOptionType.SUB_COMMAND_GROUP;
   /** The sub-options for the option. This can only be used for sub-commands and sub-command groups. */
@@ -128,21 +136,18 @@ export interface ApplicationCommandOptionSubCommand {
 /**
  * @private
  */
-export interface ApplicationCommandOptionNotSubCommand {
+export interface ApplicationCommandOptionArgument extends Omit<ApplicationCommandOptionBase, 'type'> {
   /** The type of option this one is. */
-  type:
-    | CommandOptionType.STRING
-    | CommandOptionType.INTEGER
-    | CommandOptionType.BOOLEAN
-    | CommandOptionType.USER
-    | CommandOptionType.CHANNEL
-    | CommandOptionType.ROLE;
-  options?: never;
+  type: CommandOptionType.STRING | CommandOptionType.INTEGER;
+  /** The choices of the option. If set, these are the only values a user can pick from. */
+  choices?: ApplicationCommandOptionChoice[];
 }
 
 /** An option in an application command. */
-export type ApplicationCommandOption = ApplicationCommandOptionBase &
-  (ApplicationCommandOptionSubCommand | ApplicationCommandOptionNotSubCommand);
+export type ApplicationCommandOption =
+  | ApplicationCommandOptionBase
+  | ApplicationCommandOptionSubCommand
+  | ApplicationCommandOptionArgument;
 
 /** A choice for a user to pick from. */
 export interface ApplicationCommandOptionChoice {

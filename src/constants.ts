@@ -2,7 +2,7 @@ import { IncomingMessage } from 'http';
 import SlashCommand from './command';
 import CommandContext from './structures/interfaces/context';
 import SlashCreator from './creator';
-import { TransformedRequest } from './server';
+import { RespondFunction, TransformedRequest } from './server';
 import ComponentContext from './structures/interfaces/componentContext';
 
 export const API_VERSION = 8;
@@ -637,6 +637,20 @@ declare function unknownInteraction(interaction: any): void;
  * @param interaction The interaction
  */
 declare function rawInteraction(interaction: AnyRequestData): void;
+/**
+ * Emitted when a command interaction is given.
+ * Only emits if `handleCommandsManually` in {@link SlashCreatorOptions} is true.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param interaction The interaction
+ * @param respond The response callback to the interaction
+ * @param webserverMode Whether this is from a webserver
+ */
+declare function commandInteraction(
+  interaction: InteractionRequestData,
+  respond: RespondFunction,
+  webserverMode: boolean
+): void;
 /**
  * Emitted when a component interaction is given.
  * @event

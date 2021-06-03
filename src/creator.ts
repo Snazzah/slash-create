@@ -40,6 +40,7 @@ interface SlashCreatorEvents {
   unverifiedRequest: (treq: TransformedRequest) => void;
   unknownInteraction: (interaction: any) => void;
   rawInteraction: (interaction: AnyRequestData) => void;
+  commandInteraction: (interaction: InteractionRequestData, respond: RespondFunction, webserverMode: boolean) => void;
   componentInteraction: (ctx: ComponentContext) => void;
   commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
   commandUnregister: (command: SlashCommand) => void;
@@ -74,6 +75,11 @@ interface SlashCreatorOptions {
    * If an unknown command is registered, this is ignored.
    */
   unknownCommandResponse?: boolean;
+  /**
+   * Whether to hand off command interactions to the `commandInteraction` event
+   * rather than handle it automatically.
+   */
+  handleCommandsManually?: boolean;
   /** The default allowed mentions for all messages. */
   allowedMentions?: MessageAllowedMentions;
   /** The default format to provide user avatars in. */
@@ -108,7 +114,7 @@ interface SyncCommandOptions {
 }
 
 /** The main class for using commands and interactions. */
-class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashCreatorEvents>) {
+class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */
@@ -155,6 +161,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
         defaultImageFormat: 'jpg',
         defaultImageSize: 128,
         unknownCommandResponse: true,
+        handleCommandsManually: false,
         latencyThreshold: 30000,
         ratelimiterOffset: 0,
         requestTimeout: 15000,
@@ -658,6 +665,11 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
         });
       }
       case InteractionType.COMMAND: {
+        if (this.options.handleCommandsManually) {
+          this.emit('commandInteraction', interaction, respond, webserverMode);
+          return;
+        }
+
         const command = this._getCommandFromInteraction(interaction);
 
         if (!command) {
@@ -722,7 +734,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
       case InteractionType.MESSAGE_COMPONENT: {
         this.emit(
           'debug',
-          `Component request recieved: ${interaction.data.custom_id}, ( msg ${interaction.message.id}, ${
+          `Component request recieved: ${interaction.data.custom_id}, (msg ${interaction.message.id}, ${
             'guild_id' in interaction ? `guild ${interaction.guild_id}` : `user ${interaction.user.id}`
           })`
         );

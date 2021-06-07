@@ -18,6 +18,11 @@ docs/
 
 # NPM ignore
 .eslintrc.json
+.eslintrc.js
+.eslintignore
+.editorconfig
+.mergify.yml
+.prettierrc
 .gitattributes
 .gitignore
 .github/

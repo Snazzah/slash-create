@@ -69,16 +69,17 @@ module.exports = class HelloCommand extends SlashCommand {
 }
 ```
 
-#### Requiring the client itself
+#### Putting the Client in the Creator
+This does nothing to the creator, however doing this in TypeScript will result in errors.
 ```js
 // bot.js
 const Discord = require('discord.js');
 const { SlashCreator, GatewayServer } = require('slash-create');
 
 const client = new Discord.Client({ /* ... */ });
+const creator = new SlashCreator({ /* ... */ });
+creator.client = client;
 // ...
-
-module.exports = client;
 ```
 ```js
 // commands/command.js
@@ -88,6 +89,7 @@ const client = require('../bot.js');
 module.exports = class HelloCommand extends SlashCommand {
   // ...
   async run(ctx) {
+    const client = ctx.creator.client;
     // do stuff with the client...
   }
 }

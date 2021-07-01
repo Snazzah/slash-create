@@ -71,6 +71,8 @@ export {
   AnyComponentButton,
   ComponentButton,
   ComponentButtonLink,
+  ComponentSelectMenu,
+  ComponentSelectOption,
   PartialEmoji,
   PartialMessage,
   ImageFormat

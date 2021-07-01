@@ -286,6 +286,7 @@ export interface DMMessageComponentRequestData {
   data: {
     custom_id: string;
     component_type: ComponentType;
+    values?: string[];
   };
 }
 
@@ -435,7 +436,9 @@ export enum ComponentType {
   /** A row of components. */
   ACTION_ROW = 1,
   /** A button component. */
-  BUTTON = 2
+  BUTTON = 2,
+  /** A select component. */
+  SELECT = 3
 }
 
 /** The types of component button styles. */
@@ -453,14 +456,14 @@ export enum ButtonStyle {
 }
 
 /** Any component. */
-export type AnyComponent = ComponentActionRow | AnyComponentButton;
+export type AnyComponent = ComponentActionRow | AnyComponentButton | ComponentSelectMenu;
 
 /** A row of components. */
 export interface ComponentActionRow {
   /** The type of component to use. */
   type: ComponentType.ACTION_ROW;
   /** The components to show inside this row. */
-  components: AnyComponentButton[];
+  components: AnyComponentButton[] | [ComponentSelectMenu];
 }
 
 /** Any component button. */
@@ -488,6 +491,33 @@ export interface ComponentButtonLink extends Omit<ComponentButton, 'custom_id' |
   style: ButtonStyle.LINK;
   /** The URL for link buttons. */
   url: string;
+}
+
+export interface ComponentSelectMenu {
+  /** The type of component to use. */
+  type: ComponentType.SELECT;
+  /** The identifier of the of the menu. */
+  custom_id: string;
+  /** The options to show inside this menu. */
+  options: ComponentSelectOption[];
+  /** The string to show in absence of a selected option. */
+  placeholder?: string;
+  /** The minimum number of items to be chosen. */
+  min_values?: number;
+  /** The maximum number of items to be chosen. */
+  max_values?: number;
+}
+
+export interface ComponentSelectOption {
+  description: string;
+  /** The emoji to show with the option. */
+  emoji?: PartialEmoji;
+  /** The label of this option. */
+  label: string;
+  /** The value of this option. */
+  value: string;
+  /** Should this render by default */
+  default?: boolean;
 }
 
 /** @see https://www.npmjs.com/package/require-all#usage */

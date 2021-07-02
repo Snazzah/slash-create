@@ -306,6 +306,7 @@ export interface GuildMessageComponentRequestData {
   data: {
     custom_id: string;
     component_type: ComponentType;
+    values?: string[];
   };
 }
 

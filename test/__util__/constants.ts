@@ -106,6 +106,15 @@ export const basicMessageInteraction: MessageComponentRequestData = {
   }
 };
 
+export const selectMessageInteraction: MessageComponentRequestData = {
+  ...basicMessageInteraction,
+  data: {
+    custom_id: '0',
+    component_type: ComponentType.SELECT,
+    values: ['1', '2']
+  }
+};
+
 export const subCommandInteraction: InteractionRequestData = {
   ...interactionDefaults,
   data: {

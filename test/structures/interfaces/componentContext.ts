@@ -7,7 +7,13 @@ import 'mocha';
 const expect = chai.expect;
 import FakeTimers from '@sinonjs/fake-timers';
 
-import { creator, noop, basicMessageInteraction, followUpMessage } from '../../__util__/constants';
+import {
+  creator,
+  noop,
+  basicMessageInteraction,
+  followUpMessage,
+  selectMessageInteraction
+} from '../../__util__/constants';
 import ComponentContext from '../../../src/structures/interfaces/componentContext';
 import { InteractionResponseType } from '../../../src/constants';
 import { editMessage } from '../../__util__/nock';
@@ -39,6 +45,16 @@ describe('ComponentContext', () => {
       expect(ctx.message).to.equal(basicMessageInteraction.message);
       expect(ctx.customID).to.equal(basicMessageInteraction.data.custom_id);
       expect(ctx.componentType).to.equal(basicMessageInteraction.data.component_type);
+    });
+
+    it('assigns properties properly for select interactions', async () => {
+      const ctx = new ComponentContext(creator, selectMessageInteraction, noop);
+      await ctx.acknowledge();
+
+      expect(ctx.message).to.equal(selectMessageInteraction.message);
+      expect(ctx.customID).to.equal(selectMessageInteraction.data.custom_id);
+      expect(ctx.componentType).to.equal(selectMessageInteraction.data.component_type);
+      expect(ctx.values).to.equal(selectMessageInteraction.data.values);
     });
   });
 

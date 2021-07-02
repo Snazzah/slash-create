@@ -1,6 +1,7 @@
 # Packages
 node_modules/
 yarn.lock
+package-lock.json
 
 # Log files
 logs/
@@ -12,6 +13,7 @@ deploy/
 # Miscellaneous
 .tmp/
 .vscode/
+.husky/
 scripts/
 static/
 docs/

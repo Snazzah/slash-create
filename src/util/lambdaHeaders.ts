@@ -1,5 +1,8 @@
+/** @hidden */
 export type ArrayHeaders = { [key: string]: string | string[] | undefined };
+/** @hidden */
 export type CommaDelimitedHeaders = { [key: string]: string | undefined };
+/** @hidden */
 export type JoinedCommaDelimitedHeaders = { [key: string]: string };
 
 export function splitHeaders(headers?: CommaDelimitedHeaders, separator = ',') {

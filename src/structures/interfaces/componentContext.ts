@@ -14,6 +14,8 @@ class ComponentContext extends MessageInteractionContext {
   readonly customID: string;
   /** The type of component this interaction came from. */
   readonly componentType: ComponentType;
+  /** The the values of the interaction, if the component was a SELECT. */
+  readonly values: string[];
   /** The partial message this interaction came from. */
   readonly message: PartialMessage;
 
@@ -31,6 +33,7 @@ class ComponentContext extends MessageInteractionContext {
 
     this.customID = data.data.custom_id;
     this.componentType = data.data.component_type;
+    this.values = data.data.values || [];
     this.message = data.message;
 
     // Auto-acknowledge if no response was given in 2 seconds

@@ -39,7 +39,7 @@
     "url": "https://github.com/sponsors/Snazzah"
   },
   "dependencies": {
-    "@discordjs/collection": "^0.1.6",
+    "@discordjs/collection": "^0.2.0",
     "eventemitter3": "^4.0.7",
     "lodash.isequal": "^4.5.0",
     "lodash.uniq": "^4.5.0",

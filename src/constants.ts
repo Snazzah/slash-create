@@ -510,7 +510,8 @@ export interface ComponentSelectMenu {
 }
 
 export interface ComponentSelectOption {
-  description: string;
+  /** The description of this option. */
+  description?: string;
   /** The emoji to show with the option. */
   emoji?: PartialEmoji;
   /** The label of this option. */

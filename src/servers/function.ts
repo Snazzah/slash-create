@@ -1,7 +1,7 @@
 import Server, { RequestHandler } from '../server';
-// Importing "type" ensures the import will not be transpiled to Js 
+// Importing "type" ensures the import will not be transpiled to Js
 // @ts-ignore
-import type { Context, HttpRequest } from "@azure/functions"
+import type { Context, HttpRequest } from '@azure/functions';
 
 /**
  * A server for Azure Function integration
@@ -18,11 +18,11 @@ class AzureFunctionServer extends Server {
   private _onRequest(context: Context, req: HttpRequest) {
     if (!this._handler) {
       context.res!.status = 503;
-      context.res!.send("Server has no handler")
+      context.res!.send('Server has no handler');
     }
     if (req.method !== 'POST') {
       context.res!.status = 400;
-      context.res!.send("Server only supports POST requests.")
+      context.res!.send('Server only supports POST requests.');
     }
     this._handler!(
       {
@@ -34,9 +34,9 @@ class AzureFunctionServer extends Server {
       async (response) => {
         context.res!.status = response?.status ?? 200;
         // Hardcoding this, as the interaction will fail if this header isn't set
-        context.res!.header("Content-type", "application/json")
-        for (const key in response?.headers) context.res!.header(key, response.headers[key]);
-        context.res!.send(response.body)
+        context.res!.header('Content-type', 'application/json');
+        for (const key in response?.headers) context.res!.header(key, response?.headers[key]);
+        context.res!.send(response.body);
       }
     );
   }

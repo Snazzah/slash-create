@@ -36,7 +36,7 @@ class AzureFunctionServer extends Server {
         // Hardcoding this, as the interaction will fail if this header isn't set
         context.res!.header('Content-type', 'application/json');
         for (const key in response?.headers) context.res!.header(key, response?.headers[key]);
-        context.res!.send(response.body);
+        context.res!.send(response!.body);
       }
     );
   }

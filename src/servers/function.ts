@@ -1,5 +1,4 @@
 import Server, { RequestHandler } from '../server';
-// Importing "type" ensures the import will not be transpiled to Js
 // @ts-ignore
 import type { Context, HttpRequest } from '@azure/functions';
 

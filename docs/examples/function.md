@@ -53,7 +53,7 @@ creator
 
 ```
 
-Next, open `function.json` and replace *the bindings section* by this. See [details](#details) if you care about how it works.
+Next, open `function.json` and replace the `bindings` property to the following. Scroll down to the Details section for more info on how it works.
 
 ```json
   "bindings": [

@@ -1,16 +1,16 @@
 
 ## Creating the Function
 
- + Create a new empty directory, and open it with VSCode
- + Install the "Azure Function" VS Code extension
- + Press CTRL + SHIFT + P to open the command prompt
- + Select "Azure Functions : Create new Project"
- + Select the current directory
- + Select either "TypeScript" or "JavaScript" when prompted for a language
- + Select "HTTP trigger" when prompted for a template
- + The Function name doesn't matter.
- + Select "Anonymous" when prompted for the "Authorization Level"
- + A new function should have been created
+ - Create a new empty directory, and open it with VS Code
+ - Install the [Azure Functions](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions) VS Code extension
+ - Press <kbd>CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>P</kbd> to open the command prompt
+ - Select **Azure Functions: Create new Project**
+ - Select the current directory
+ - Select either **TypeScript** or **JavaScript** when prompted for a language
+ - Select **HTTP trigger** when prompted for a template
+ - Type any function name you want
+ - Select **Anonymous** when prompted for the "Authorization Level"
+ - A new function should be created!
 
  Be aware that you can also do all these steps in the Azure Portal. 
 
@@ -126,5 +126,4 @@ Azure Functions use something called [bindings](https://docs.microsoft.com/en-us
     }
   ],
 ```
-
 

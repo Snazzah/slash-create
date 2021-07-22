@@ -141,12 +141,6 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
   /** The command to run when an unknown command is used. */
   unknownCommand?: SlashCommand;
 
-  /**
-   * The command contexts awaiting component interactions.
-   * @private
-   */
-  _awaitingCommandCtxs = new Map<string, CommandContext>();
-
   /** @hidden */
   _componentCallbacks = new Map<string, ComponentCallback>();
 
@@ -747,7 +741,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
           })`
         );
 
-        if (this._awaitingCommandCtxs.size || this.listenerCount('componentInteraction') > 0) {
+        if (this._componentCallbacks.size || this.listenerCount('componentInteraction') > 0) {
           const ctx = new ComponentContext(this, interaction, respond);
           this.emit('componentInteraction', ctx);
 

@@ -8,6 +8,7 @@ describe('[index]', () => {
   it('exports check', () => {
     expect(slashCreate.API).to.be.a('function');
     expect(slashCreate.AWSLambdaServer).to.be.a('function');
+    expect(slashCreate.AzureFunctionServer).to.be.a('function');
     expect(slashCreate.BitField).to.be.a('function');
     expect(slashCreate.Command).to.be.a('function');
     expect(slashCreate.CommandContext).to.be.a('function');

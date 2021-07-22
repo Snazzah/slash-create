@@ -39,8 +39,6 @@ class CommandContext extends MessageInteractionContext {
   private webserverMode: boolean;
   /** @hidden */
   private _timeout?: any;
-  /** @hidden */
-  private _componentCallbacks = new Map<string, ComponentRegisterCallback>();
 
   /**
    * @param creator The instantiating creator.
@@ -92,7 +90,7 @@ class CommandContext extends MessageInteractionContext {
   }
 
   /**
-   * Registers a component callback from a custom ID.
+   * Registers a component callback from the initial message.
    * This unregisters automatically when the context expires.
    * @param custom_id The custom ID of the component to register
    * @param callback The callback to use on interaction
@@ -104,22 +102,23 @@ class CommandContext extends MessageInteractionContext {
     if (!this.messageID)
       throw new Error('Fetch your original message or use deferred messages before registering components');
 
-    this._componentCallbacks.set(custom_id, callback);
-    this.creator._awaitingCommandCtxs.set(this.messageID, this);
+    this.creator._componentCallbacks.set(`${this.messageID}-${custom_id}`, {
+      callback,
+      expires: this.invokedAt + 1000 * 60 * 15
+    });
   }
 
   /**
    * Unregisters a component callback.
    * @param custom_id The custom ID of the component to unregister
+   * @param message_id The message ID of the component to unregister, defaults to initial message ID if any
    */
-  unregisterComponent(custom_id: string) {
-    return this._componentCallbacks.delete(custom_id);
-  }
-
-  /** @hidden */
-  _onComponent(ctx: ComponentContext) {
-    if (this.messageID === ctx.message.id && this._componentCallbacks.has(ctx.customID))
-      this._componentCallbacks.get(ctx.customID)!(ctx);
+  unregisterComponent(custom_id: string, message_id?: string) {
+    if (!message_id) {
+      if (!this.messageID) throw new Error('The initial message ID was not provided by the context!');
+      else message_id = this.messageID;
+    }
+    return this.creator._componentCallbacks.delete(`${message_id}-${custom_id}`);
   }
 
   /** @private */

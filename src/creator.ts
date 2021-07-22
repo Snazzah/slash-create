@@ -21,7 +21,7 @@ import TypedEmitter from './util/typedEmitter';
 import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
 import Server, { TransformedRequest, RespondFunction, Response } from './server';
-import CommandContext from './structures/interfaces/context';
+import CommandContext, { ComponentRegisterCallback } from './structures/interfaces/context';
 import isEqual from 'lodash.isequal';
 import uniq from 'lodash.uniq';
 import ComponentContext from './structures/interfaces/componentContext';
@@ -113,8 +113,14 @@ interface SyncCommandOptions {
   syncPermissions?: boolean;
 }
 
+/** @hidden */
+interface ComponentCallback {
+  callback: ComponentRegisterCallback;
+  expires: number;
+}
+
 /** The main class for using commands and interactions. */
-class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashCreatorEvents>) {
+class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */
@@ -140,6 +146,9 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
    * @private
    */
   _awaitingCommandCtxs = new Map<string, CommandContext>();
+
+  /** @hidden */
+  _componentCallbacks = new Map<string, ComponentCallback>();
 
   /** @param opts The options for the creator */
   constructor(opts: SlashCreatorOptions) {
@@ -594,11 +603,10 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
    * Cleans any awaiting component callbacks from command contexts.
    */
   cleanRegisteredComponents() {
-    if (this._awaitingCommandCtxs.size)
-      Array.from(this._awaitingCommandCtxs.keys()).forEach((messageID) => {
-        const ctx = this._awaitingCommandCtxs.get(messageID)!;
-        if (ctx.expired) this._awaitingCommandCtxs.delete(messageID);
-      });
+    if (this._componentCallbacks.size)
+      for (const [key, callback] of this._componentCallbacks) {
+        if (callback.expires < Date.now()) this._componentCallbacks.delete(key);
+      }
   }
 
   private _getCommandFromInteraction(interaction: InteractionRequestData) {
@@ -745,8 +753,9 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
 
           this.cleanRegisteredComponents();
 
-          if (this._awaitingCommandCtxs.has(ctx.message.id))
-            this._awaitingCommandCtxs.get(ctx.message.id)!._onComponent(ctx);
+          const componentCallbackKey = `${ctx.message.id}-${ctx.customID}`;
+          if (this._componentCallbacks.has(componentCallbackKey))
+            this._componentCallbacks.get(componentCallbackKey)!.callback(ctx);
 
           break;
         } else

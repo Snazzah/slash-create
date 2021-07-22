@@ -7,10 +7,6 @@ import Channel from '../channel';
 import Role from '../role';
 import ResolvedMember from '../resolvedMember';
 import MessageInteractionContext from './messageInteraction';
-import ComponentContext from './componentContext';
-
-/** A component callback from {@see CommandContext#registerComponent}. */
-export type ComponentRegisterCallback = (ctx: ComponentContext) => void;
 
 /** Context representing a command interaction. */
 class CommandContext extends MessageInteractionContext {
@@ -87,38 +83,6 @@ class CommandContext extends MessageInteractionContext {
 
     // Auto-defer if no response was given in 2 seconds
     this._timeout = setTimeout(() => this.defer(deferEphemeral || false), 2000);
-  }
-
-  /**
-   * Registers a component callback from the initial message.
-   * This unregisters automatically when the context expires.
-   * @param custom_id The custom ID of the component to register
-   * @param callback The callback to use on interaction
-   */
-  registerComponent(custom_id: string, callback: ComponentRegisterCallback) {
-    if (this.expired) throw new Error('This interaction has expired');
-    if (!this.initiallyResponded || this.deferred)
-      throw new Error('You must send a message before registering components');
-    if (!this.messageID)
-      throw new Error('Fetch your original message or use deferred messages before registering components');
-
-    this.creator._componentCallbacks.set(`${this.messageID}-${custom_id}`, {
-      callback,
-      expires: this.invokedAt + 1000 * 60 * 15
-    });
-  }
-
-  /**
-   * Unregisters a component callback.
-   * @param custom_id The custom ID of the component to unregister
-   * @param message_id The message ID of the component to unregister, defaults to initial message ID if any
-   */
-  unregisterComponent(custom_id: string, message_id?: string) {
-    if (!message_id) {
-      if (!this.messageID) throw new Error('The initial message ID was not provided by the context!');
-      else message_id = this.messageID;
-    }
-    return this.creator._componentCallbacks.delete(`${message_id}-${custom_id}`);
   }
 
   /** @private */

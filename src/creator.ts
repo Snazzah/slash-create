@@ -21,7 +21,7 @@ import TypedEmitter from './util/typedEmitter';
 import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
 import Server, { TransformedRequest, RespondFunction, Response } from './server';
-import CommandContext, { ComponentRegisterCallback } from './structures/interfaces/context';
+import CommandContext from './structures/interfaces/context';
 import isEqual from 'lodash.isequal';
 import uniq from 'lodash.uniq';
 import ComponentContext from './structures/interfaces/componentContext';
@@ -113,6 +113,9 @@ interface SyncCommandOptions {
   syncPermissions?: boolean;
 }
 
+/** A component callback from {@see MessageInteractionContext#registerComponent}. */
+export type ComponentRegisterCallback = (ctx: ComponentContext) => void;
+
 /** @hidden */
 interface ComponentCallback {
   callback: ComponentRegisterCallback;
@@ -120,7 +123,7 @@ interface ComponentCallback {
 }
 
 /** The main class for using commands and interactions. */
-class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashCreatorEvents>) {
+class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */

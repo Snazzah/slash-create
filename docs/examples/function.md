@@ -79,11 +79,11 @@ Next, open `function.json` and replace the `bindings` property to the following.
 The last thing is to deploy the function.
 
 ### Deploying the Function 
- + Press CTRL + SHIFT + P to open the command prompt
- + Search for "Azure Functions : Deploy to Function App.."
- + Follow the prompts, creating a new fucntion app when prompted
- + Once deployed, open the command prompt and select "Azure Functions: Retrieve Function URL"
- + Follow the prompts and you should have the Function's invocation URL in the clipboard. This URL should follow this pattern:   
+ - Press <kbd>CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>P</kbd> to open the command prompt again
+ - Search for **Azure Functions: Deploy to Function App...**
+ - Follow the prompts, creating a new function app when prompted
+ - Once deployed, open the command prompt and select "Azure Functions: Retrieve Function URL"
+ - Follow the prompts and you should have the function's invocation URL in the clipboard. This URL should follow this pattern:   
  
     https://[function-app-name].azurewebsites.net/api/[function-name]
 

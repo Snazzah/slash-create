@@ -91,10 +91,10 @@ You can also retrieve this URL in the Azure Portal.
 
 ## Discord configuration
 
-+ Go to [Discord developers](https://discord.com/developers/applications). 
-+ Select / Create a new application. On the application page, fill the "Interactions endpoint URL" input with the retrieved Function URL.  
-+ Invite your application to your server using this URL : https://discord.com/oauth2/authorize?client_id=[client-id]&scope=applications.commands
-+ You're ready to go !
+- Go to to [Discord Developers Portal Applications Page](https://discord.com/developers/applications). 
+- Select / Create a new application. On the application's page, fill the "Interactions endpoint URL" input with the retrieved Function URL.  
+- Invite your application to your server using this URL: `https://discord.com/oauth2/authorize?client_id=[client-id]&scope=applications.commands`
+- You're ready to go!
 
 ## Details
 

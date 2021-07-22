@@ -120,7 +120,7 @@ interface ComponentCallback {
 }
 
 /** The main class for using commands and interactions. */
-class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<SlashCreatorEvents>) {
+class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */

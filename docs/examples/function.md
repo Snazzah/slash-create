@@ -32,7 +32,7 @@ Now that you created a Function, your folder structure should look like this:
 └── package.json
 ```
 
-Open `index.js` and replace its content by this :
+Open `index.js` and replace its content by this:
 
 ```js
 const { AzureFunctionServer, SlashCreator } = require('slash-create');

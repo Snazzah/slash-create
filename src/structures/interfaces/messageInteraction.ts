@@ -32,7 +32,10 @@ export interface MessageFile {
   name: string;
 }
 
-/** The options for {@link MessageInteractionContext#sendFollowUp}. */
+/**
+ * The options for {@link MessageInteractionContext#sendFollowUp}.
+ * @deprecated Use {@link MessageOptions} instead.
+ */
 export interface FollowUpMessageOptions extends EditMessageOptions {
   /** Whether to use TTS for the content. */
   tts?: boolean;
@@ -40,8 +43,12 @@ export interface FollowUpMessageOptions extends EditMessageOptions {
   flags?: number;
 }
 
-/** The options for {@link MessageInteractionContext#send}. */
-export interface MessageOptions extends FollowUpMessageOptions {
+/** The options for {@link MessageInteractionContext#send} and {@link MessageInteractionContext#sendFollowUp}. */
+export interface MessageOptions extends EditMessageOptions {
+  /** Whether to use TTS for the content. */
+  tts?: boolean;
+  /** The flags to use in the message. */
+  flags?: number;
   /**
    * Whether or not the message should be ephemeral.
    * Ignored if `flags` is defined.
@@ -169,7 +176,7 @@ class MessageInteractionContext {
    * @param content The content of the message
    * @param options The message options
    */
-  async sendFollowUp(content: string | FollowUpMessageOptions, options?: FollowUpMessageOptions): Promise<Message> {
+  async sendFollowUp(content: string | MessageOptions, options?: MessageOptions): Promise<Message> {
     if (this.expired) throw new Error('This interaction has expired');
 
     if (typeof content !== 'string') options = content;
@@ -180,6 +187,8 @@ class MessageInteractionContext {
     if (!options.content && typeof content === 'string') options.content = content;
 
     if (!options.content && !options.embeds) throw new Error('Message content and embeds are both not given.');
+
+    if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
@@ -194,7 +203,8 @@ class MessageInteractionContext {
         content: options.content,
         embeds: options.embeds,
         allowed_mentions: allowedMentions,
-        components: options.components
+        components: options.components,
+        flags: options.flags
       },
       options.file
     );

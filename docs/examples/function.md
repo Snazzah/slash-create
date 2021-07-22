@@ -19,7 +19,7 @@
 
 ### Building the Function 
 
-Now that you created a Function, your folder structure should look like this : 
+Now that you created a Function, your folder structure should look like this: 
 
 ```
 ├── [Function name]
@@ -126,4 +126,3 @@ Azure Functions use something called [bindings](https://docs.microsoft.com/en-us
     }
   ],
 ```
-

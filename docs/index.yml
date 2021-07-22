@@ -28,5 +28,5 @@
       path: gcf.md
     - name: AWS Lambda
       path: lambda.md
-    - name: Azure Function
-      path: function.md
+    - name: Azure Functions
+      path: azure.md

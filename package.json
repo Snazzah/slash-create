@@ -21,8 +21,8 @@
     "wrapper"
   ],
   "scripts": {
-    "build": "([ ! -d \"lib/\" ] || rm -r lib/*) && npx tsc",
-    "build:prepare": "[ -d \"lib/\" ] || npm run build",
+    "build": "npx rimraf lib && npx tsc",
+    "build:prepare": "npx shx test -d ./lib || npm run build",
     "changelog": "npx ts-node scripts/changelog",
     "docs": "npx typedoc --json .tmp/typedoc-out.json --plugin typedoc-plugin-as-member-of && ts-node scripts/docs",
     "lint": "npx eslint --ext .ts ./src",
@@ -30,7 +30,7 @@
     "test": "npx mocha -r ts-node/register --extension ts 'test/**/*.ts'",
     "gpr": "npx ts-node scripts/gpr",
     "prepare": "npx husky install && npm run build:prepare",
-    "prepublishOnly": "([ -d \"lib/\" ] || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
+    "prepublishOnly": "(npx shx test -d ./lib || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
   },
   "lint-staged": {
     "*.ts": "eslint --fix"

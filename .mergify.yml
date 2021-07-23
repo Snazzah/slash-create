@@ -1,10 +1,4 @@
 pull_request_rules:
-  - name: Automatic merge on approval
-    conditions:
-      - approved-reviews-by=Snazzah
-    actions:
-      merge:
-        method: merge
   - name: Merge non-breaking dependencies automatically
     conditions:
       - author~=^dependabot(|-preview)\[bot\]$

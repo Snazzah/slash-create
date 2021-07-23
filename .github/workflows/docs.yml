@@ -4,6 +4,13 @@ on:
     branches:
       - '*'
       - '!docs'
+    paths:
+      - "src/**"
+      - "docs/**"
+      - "static/**"
+      - "scripts/docs.ts"
+      - "package.json"
+      - ".github/workflows/docs.yml"
   workflow_dispatch:
 
 jobs:

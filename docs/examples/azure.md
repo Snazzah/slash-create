@@ -96,6 +96,25 @@ You can also retrieve this URL in the Azure Portal.
 - Invite your application to your server using this URL: `https://discord.com/oauth2/authorize?client_id=[client-id]&scope=applications.commands`
 - You're ready to go!
 
+## Debugging locally 
+Waiting for the function to deploy over and over again each time you are a experimenting with a new feature can be tedious. 
+
+To circumvent this problem, it is possible to create a local server. 
+
+First, you will need to install [azure-cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli), and the [azure function runtime](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=windows%2Ccsharp%2Cbash) **version 3**. The runtime is a local emulator. 
+
+Now you should be able to start the function locally by running **func start** or **npm run start** in the [Function name] directory.
+
+By default, the function will start on port 7071. The **local** function invocation URL should be :
+
+    https://localhost:7071/api/[function-name]
+
+All that's left to do is to expose this local url to the internet. A way to do this easily is to use [ngrok](https://ngrok.com/). Download and install ngrok.
+
+In another terminal, input **ngrok http 7071**. This will prompt you with a "https://*.ngrok.io" URL. You can now follow the **Discord configuration** part above, and fill the "Interactions endpoint URL" input with the ngrok URL.
+
+**Important Note** : Be aware that the ngrok url will expire after 2h. You will need to restart the ngrok command after this delay.
+
 ## Details
 
 Azure Functions use something called [bindings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings?tabs=javascript). This is a fancy way of decoupling components. The bindings section above declares two bindings

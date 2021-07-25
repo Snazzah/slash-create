@@ -41,5 +41,3 @@ Be aware that the ngrok url expires after 2h, you'll have to restart the ngrok c
 ## Production considerations
 
 The simplest way to use the created server is to use http://[server-public-ip]/interactions as a "Interactions endpoint URL" (see "Debugging locally" section above).
-
-However, exposing your server directly could be detrimental to its security. Using coponents such as a [reverse proxy](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/) or a [Web Application Firewall](https://en.wikipedia.org/wiki/Web_application_firewall) is recommended.

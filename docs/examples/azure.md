@@ -106,11 +106,9 @@ By default, the function will start on port 7071. The **local** function invocat
 
     https://localhost:7071/api/[function-name]
 
-All that's left to do is to expose this local url to the internet. A way to do this easily is to use [ngrok](https://ngrok.com/). Download and install ngrok.
-
-In another terminal, input **ngrok http 7071**. This will prompt you with a "https://*.ngrok.io" URL. You can now follow the **Discord configuration** part above, and fill the "Interactions endpoint URL" input with the ngrok URL.
-
-**Important Note** : Be aware that the ngrok url will expire after 2h. You will need to restart the ngrok command after this delay.
+However, you need a public URL to use in interactions. An easy way to do this is with [ngrok](https://ngrok.com/). ([download](https://ngrok.com/download))
+- In another terminal, run `ngrok http 7071`. This will prompt you with a "https://*.ngrok.io" URL. You can now follow the **Discord configuration** part above, and fill the "Interactions endpoint URL" input with the ngrok URL.
+- **Note**: Be aware that the ngrok URL will expire after 2 hours. You will need to restart the ngrok command after this delay.
 
 ## Details
 

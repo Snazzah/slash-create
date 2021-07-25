@@ -24,18 +24,17 @@ creator
 
 ## Debugging locally
 
-You can expose the local server url using [ngrok](https://ngrok.com/). 
+A way expose a localhost port to a URL is by using [ngrok](https://ngrok.com/). ([download](https://ngrok.com/download))
 
-First, download and install ngrok.
-Then type **ngrok http 80** in a new terminal. This will create a https://*.ngrok.io url. All calls to this URL will be redirected to localhost:80.
+First, download and install ngrok, then type `ngrok http 80` in a new terminal. This will create a https://*.ngrok.io URL.
 
-To instruct discord to use your server for all user-created interactions, you must :
+To instruct discord to use your server for all user-created interactions, you must:
 - Go to to [Discord Developers Portal Applications Page](https://discord.com/developers/applications). 
 - Select / Create a new application. On the application's page, fill the "Interactions endpoint URL" input with the https://*.ngrok.io/interactions url.
 - Invite your application to your server using this URL: `https://discord.com/oauth2/authorize?client_id=[client-id]&scope=applications.commands`
 - You're ready to go!
 
-Be aware that the ngrok url expires after 2h, you'll have to restart the ngrok command after this delay.
+Be aware that the ngrok URL expires after 2 hours, you'll have to restart the ngrok command after this delay.
 
 
 ## Production considerations

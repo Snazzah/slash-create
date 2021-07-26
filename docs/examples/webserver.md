@@ -35,8 +35,3 @@ To instruct discord to use your server for all user-created interactions, you mu
 - You're ready to go!
 
 Be aware that the ngrok URL expires after 2 hours, you'll have to restart the ngrok command after this delay.
-
-
-## Production considerations
-
-The simplest way to use the created server is to use http://[server-public-ip]/interactions as a "Interactions endpoint URL" (see "Debugging locally" section above).

@@ -17,7 +17,7 @@
     - name: Basic Example
       path: basic.js
     - name: Using a Webserver
-      path: webserver.js
+      path: webserver.md
     - name: Using a Discord Bot
       path: discord-bot.md
     - name: Example Commands

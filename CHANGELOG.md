@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [3.4.0] - 2021-07-26
+### Changed:
+- Component callbacks have been changed internally to support other message IDs. ([#84](https://github.com/Snazzah/slash-create/pull/84))
+- Follow-up messages can now be ephemeral. ([#83](https://github.com/Snazzah/slash-create/issues/83), [10ba62d](https://github.com/Snazzah/slash-create/commit/10ba62d))
+- The FollowUpMessageOptions type def is deprecated.
+- [`ComponentSelectOption.description`](https://slash-create.js.org/#/docs/main/v3.4.0/class/ComponentSelectOption) is now optional ([#80](https://github.com/Snazzah/slash-create/pull/80))
+### Added:
+- Azure Functions Server ([#82](https://github.com/Snazzah/slash-create/pull/82))
+- [`MessageInteractionContext.registerComponentFrom`](https://slash-create.js.org/#/docs/main/v3.4.0/class/MessageInteractionContext?scrollTo=registerComponentFrom) to register components from other messages. ([#84](https://github.com/Snazzah/slash-create/pull/84))
 ## [3.3.0] - 2021-07-02
 ### Added:
 - Option to manually handle command interactions (`SlashCreatorOptions.handleCommandsManually`)
@@ -264,7 +273,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v3.3.0...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v3.4.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -289,3 +298,4 @@ This release features mostly completed documentation and changes to the packages
 [3.2.2]: https://github.com/Snazzah/slash-create/compare/v3.2.1...v3.2.2
 [3.2.3]: https://github.com/Snazzah/slash-create/compare/v3.2.2...v3.2.3
 [3.3.0]: https://github.com/Snazzah/slash-create/compare/v3.2.3...v3.3.0
+[3.4.0]: https://github.com/Snazzah/slash-create/compare/v3.3.0...v3.4.0

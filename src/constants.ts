@@ -63,7 +63,9 @@ export enum CommandOptionType {
   /** A role, this would return the role's ID in the interaction. */
   ROLE = 8,
   /** Anything mentionable, returning the ID of the object. */
-  MENTIONABLE = 9
+  MENTIONABLE = 9,
+  /** A number, including decimal numbers. */
+  NUMBER = 10
 }
 
 /**
@@ -138,7 +140,7 @@ export interface ApplicationCommandOptionSubCommand extends Omit<ApplicationComm
  */
 export interface ApplicationCommandOptionArgument extends Omit<ApplicationCommandOptionBase, 'type'> {
   /** The type of option this one is. */
-  type: CommandOptionType.STRING | CommandOptionType.INTEGER;
+  type: CommandOptionType.STRING | CommandOptionType.INTEGER | CommandOptionType.NUMBER;
   /** The choices of the option. If set, these are the only values a user can pick from. */
   choices?: ApplicationCommandOptionChoice[];
 }

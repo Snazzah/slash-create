@@ -31,7 +31,7 @@ class AzureFunctionServer extends Server {
         response: context.res
       },
       async (response) => {
-        context.res!.status = response?.status ?? 200;
+        context.res!.status = response ? response.status || 200 : 200;
         context.res!.header('Content-type', 'application/json');
         for (const key in response?.headers) context.res!.header(key, response?.headers[key]);
         context.res!.send(response!.body);

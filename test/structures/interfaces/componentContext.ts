@@ -42,7 +42,7 @@ describe('ComponentContext', () => {
       const ctx = new ComponentContext(creator, basicMessageInteraction, noop);
       await ctx.acknowledge();
 
-      expect(ctx.message).to.equal(basicMessageInteraction.message);
+      expect(ctx.message.id).to.equal(basicMessageInteraction.message.id);
       expect(ctx.customID).to.equal(basicMessageInteraction.data.custom_id);
       expect(ctx.componentType).to.equal(basicMessageInteraction.data.component_type);
     });
@@ -51,7 +51,7 @@ describe('ComponentContext', () => {
       const ctx = new ComponentContext(creator, selectMessageInteraction, noop);
       await ctx.acknowledge();
 
-      expect(ctx.message).to.equal(selectMessageInteraction.message);
+      expect(ctx.message.id).to.equal(selectMessageInteraction.message.id);
       expect(ctx.customID).to.equal(selectMessageInteraction.data.custom_id);
       expect(ctx.componentType).to.equal(selectMessageInteraction.data.component_type);
       expect(ctx.values).to.equal(selectMessageInteraction.data.values);

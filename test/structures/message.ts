@@ -6,7 +6,7 @@ chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
 
-import CommandContext from '../../src/structures/interfaces/context';
+import CommandContext from '../../src/structures/interfaces/commandContext';
 import Message from '../../src/structures/message';
 import { basicInteraction, creator, editedMessage, followUpMessage, noop } from '../__util__/constants';
 import { deleteMessage, editMessage } from '../__util__/nock';

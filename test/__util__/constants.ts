@@ -44,6 +44,34 @@ export const userAnimatedAvatar = {
   avatar: 'a_vy'
 };
 
+export const followUpMessage: MessageData = {
+  id: '1234',
+  type: 0,
+  content: 'test',
+  channel_id: '0',
+  author: {
+    ...user,
+    bot: false
+  },
+  attachments: [],
+  embeds: [],
+  mentions: [],
+  mention_roles: [],
+  pinned: false,
+  mention_everyone: false,
+  tts: false,
+  timestamp: new Date().toISOString(),
+  edited_timestamp: null,
+  flags: 0,
+  webhook_id: '0'
+};
+
+export const editedMessage: MessageData = {
+  ...followUpMessage,
+  content: 'edited',
+  edited_timestamp: new Date(Date.now() + 60 * 1000).toISOString()
+};
+
 export const interactionDefaults: InteractionRequestData = {
   version: 1,
   type: InteractionType.COMMAND,
@@ -96,10 +124,7 @@ export const basicMessageInteraction: MessageComponentRequestData = {
     nick: null,
     joined_at: '2021-01-01T21:46:12.072Z'
   },
-  message: {
-    id: '00000000000000000',
-    flags: 0
-  },
+  message: followUpMessage,
   data: {
     custom_id: '0',
     component_type: ComponentType.BUTTON
@@ -205,34 +230,6 @@ export const subCommandOptionsInteraction: InteractionRequestData = {
       }
     ]
   }
-};
-
-export const followUpMessage: MessageData = {
-  id: '1234',
-  type: 0,
-  content: 'test',
-  channel_id: '0',
-  author: {
-    ...user,
-    bot: false
-  },
-  attachments: [],
-  embeds: [],
-  mentions: [],
-  mention_roles: [],
-  pinned: false,
-  mention_everyone: false,
-  tts: false,
-  timestamp: new Date().toISOString(),
-  edited_timestamp: null,
-  flags: 0,
-  webhook_id: '0'
-};
-
-export const editedMessage: MessageData = {
-  ...followUpMessage,
-  content: 'edited',
-  edited_timestamp: new Date(Date.now() + 60 * 1000).toISOString()
 };
 
 export const basicCommands: ApplicationCommand[] = [

@@ -1,6 +1,6 @@
 import { IncomingMessage } from 'http';
 import SlashCommand from './command';
-import CommandContext from './structures/interfaces/context';
+import CommandContext from './structures/interfaces/commandContext';
 import SlashCreator from './creator';
 import { RespondFunction, TransformedRequest } from './server';
 import ComponentContext from './structures/interfaces/componentContext';

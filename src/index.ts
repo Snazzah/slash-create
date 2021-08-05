@@ -27,7 +27,7 @@ import User from './structures/user';
 import UserFlags from './structures/userFlags';
 
 import ComponentContext from './structures/interfaces/componentContext';
-import CommandContext from './structures/interfaces/context';
+import CommandContext from './structures/interfaces/commandContext';
 import MessageInteractionContext from './structures/interfaces/messageInteraction';
 
 const VERSION: string = require('../package').version;

@@ -1,6 +1,6 @@
 import SlashCommand, { CommandPermissions, ThrottlingOptions } from '../../src/command';
 import { ApplicationCommandOption } from '../../src/constants';
-import CommandContext from '../../src/structures/interfaces/context';
+import CommandContext from '../../src/structures/interfaces/commandContext';
 import SlashCreator from '../../src/creator';
 
 interface SlashCommandPartialOptions {

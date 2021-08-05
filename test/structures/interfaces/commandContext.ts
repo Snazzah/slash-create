@@ -8,7 +8,7 @@ const expect = chai.expect;
 import FakeTimers from '@sinonjs/fake-timers';
 
 import { InteractionResponseType } from '../../../src/constants';
-import CommandContext from '../../../src/structures/interfaces/context';
+import CommandContext from '../../../src/structures/interfaces/commandContext';
 import {
   creator,
   noop,

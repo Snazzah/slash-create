@@ -21,7 +21,7 @@ import TypedEmitter from './util/typedEmitter';
 import RequestHandler from './util/requestHandler';
 import SlashCreatorAPI from './api';
 import Server, { TransformedRequest, RespondFunction, Response } from './server';
-import CommandContext from './structures/interfaces/context';
+import CommandContext from './structures/interfaces/commandContext';
 import isEqual from 'lodash.isequal';
 import uniq from 'lodash.uniq';
 import ComponentContext from './structures/interfaces/componentContext';
@@ -123,7 +123,7 @@ interface ComponentCallback {
 }
 
 /** The main class for using commands and interactions. */
-class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashCreatorEvents>) {
+class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */

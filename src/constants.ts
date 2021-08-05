@@ -4,6 +4,7 @@ import CommandContext from './structures/interfaces/context';
 import SlashCreator from './creator';
 import { RespondFunction, TransformedRequest } from './server';
 import ComponentContext from './structures/interfaces/componentContext';
+import { MessageData } from './structures/message';
 
 export const API_VERSION = 8;
 export const INTERACTION_VERSION = 1;
@@ -281,7 +282,7 @@ export interface DMMessageComponentRequestData {
   version: 1;
   type: InteractionType.MESSAGE_COMPONENT;
   token: string;
-  message: PartialMessage;
+  message: MessageData;
   id: string;
   channel_id: string;
   user: CommandUser;
@@ -300,7 +301,7 @@ export interface GuildMessageComponentRequestData {
   version: 1;
   type: InteractionType.MESSAGE_COMPONENT;
   token: string;
-  message: PartialMessage;
+  message: MessageData;
   id: string;
   channel_id: string;
   guild_id: string;

@@ -1,4 +1,4 @@
-import { ComponentType, InteractionResponseType, MessageComponentRequestData } from '../../constants';
+import { ComponentType, InteractionResponseType, MessageComponentRequestData, PartialMessage } from '../../constants';
 import MessageInteractionContext, { EditMessageOptions } from './messageInteraction';
 import SlashCreator from '../../creator';
 import { RespondFunction } from '../../server';
@@ -16,8 +16,8 @@ class ComponentContext extends MessageInteractionContext {
   readonly componentType: ComponentType;
   /** The the values of the interaction, if the component was a SELECT. */
   readonly values: string[];
-  /** The message this interaction came from. */
-  readonly message: Message;
+  /** The message this interaction came from, will be partial for ephemeral messages. */
+  readonly message: Message | PartialMessage;
 
   /** @hidden */
   private _timeout?: any;
@@ -34,7 +34,7 @@ class ComponentContext extends MessageInteractionContext {
     this.customID = data.data.custom_id;
     this.componentType = data.data.component_type;
     this.values = data.data.values || [];
-    this.message = new Message(data.message, creator, this);
+    this.message = 'type' in data.message ? new Message(data.message, creator, this) : data.message;
 
     // Auto-acknowledge if no response was given in 2 seconds
     this._timeout = setTimeout(() => this.acknowledge(), 2000);

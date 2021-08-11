@@ -33,7 +33,11 @@ export const FLAGS: { [perm: string]: bigint } = {
   MANAGE_WEBHOOKS: 1n << 29n,
   MANAGE_EMOJIS: 1n << 30n,
   USE_APPLICATION_COMMANDS: 1n << 31n,
-  REQUEST_TO_SPEAK: 1n << 32n
+  REQUEST_TO_SPEAK: 1n << 32n,
+  MANAGE_THREADS: 1n << 34n,
+  USE_PUBLIC_THREADS: 1n << 35n,
+  USE_PRIVATE_THREADS: 1n << 36n,
+  USE_EXTERNAL_STICKERS: 1n << 37n
 };
 
 /**

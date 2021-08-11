@@ -87,7 +87,7 @@ export interface PartialApplicationCommand {
   /** The name of the command. */
   name: string;
   /** The description of the command. */
-  description: string;
+  description?: string;
   /** The optoins for the command. */
   options?: ApplicationCommandOption[];
   /** Whether to enable this command for everyone by default. */

@@ -11,10 +11,12 @@ import { oneLine, validateOptions } from './util';
 
 /** The options for a {@link SlashCommand}. */
 export interface SlashCommandOptions {
+  /** The type of command this is. Defaults to chat input, or a regular slash command. */
+  type?: ApplicationCommandType;
   /** The name of the command. */
   name: string;
   /** The description of the command. */
-  description: string;
+  description?: string;
   /** The guild ID(s) that this command will be assigned to. */
   guildIDs?: string | string[];
   /** The required permission(s) for this command. */
@@ -67,11 +69,13 @@ export interface ThrottleObject {
 }
 
 /** Represents a Discord slash command. */
-class SlashCommand {
+export default class SlashCommand {
   /** The command's name. */
   readonly commandName: string;
+  /** The type of command this is. */
+  readonly type: ApplicationCommandType;
   /** The command's description. */
-  readonly description: string;
+  readonly description?: string;
   /** The options for the command. */
   readonly options?: ApplicationCommandOption[];
   /** The guild ID(s) for the command. */
@@ -116,8 +120,9 @@ class SlashCommand {
 
     if (!opts.unknown) SlashCommand.validateOptions(opts);
 
+    this.type = opts.type || ApplicationCommandType.CHAT_INPUT;
     this.commandName = opts.name;
-    this.description = opts.description;
+    if (opts.description) this.description = opts.description;
     this.options = opts.options;
     if (opts.guildIDs) this.guildIDs = typeof opts.guildIDs == 'string' ? [opts.guildIDs] : opts.guildIDs;
     this.requiredPermissions = opts.requiredPermissions;
@@ -133,13 +138,19 @@ class SlashCommand {
    * @private
    */
   get commandJSON(): PartialApplicationCommand {
-    return {
-      name: this.commandName,
-      description: this.description,
-      default_permission: this.defaultPermission,
-      type: ApplicationCommandType.CHAT_INPUT,
-      ...(this.options ? { options: this.options } : {})
-    };
+    return this.type === ApplicationCommandType.CHAT_INPUT
+      ? {
+          name: this.commandName,
+          description: this.description,
+          default_permission: this.defaultPermission,
+          type: ApplicationCommandType.CHAT_INPUT,
+          ...(this.options ? { options: this.options } : {})
+        }
+      : {
+          name: this.commandName,
+          type: this.type,
+          default_permission: this.defaultPermission
+        };
   }
 
   /**
@@ -148,7 +159,7 @@ class SlashCommand {
    */
   get keyName() {
     const prefix = this.guildIDs ? this.guildIDs.join(',') : 'global';
-    return `1:${prefix}:${this.commandName}`;
+    return `${this.type}:${prefix}:${this.commandName}`;
   }
 
   /**
@@ -279,19 +290,24 @@ class SlashCommand {
    */
   static validateOptions(opts: SlashCommandOptions) {
     if (typeof opts.name !== 'string') throw new TypeError('Command name must be a string.');
-    if (opts.name !== opts.name.toLowerCase()) throw new Error('Command name must be lowercase.');
-    if (!/^[\p{L}_\d-]{1,32}$/u.test(opts.name))
-      throw new RangeError('Command name must be under 32 characters, matching this regex: /^[\\w-]{1,32}$/');
+    if (!opts.type || opts.type === ApplicationCommandType.CHAT_INPUT) {
+      if (opts.name !== opts.name.toLowerCase()) throw new Error('Command name must be lowercase.');
+      if (!/^[\p{L}_\d-]{1,32}$/u.test(opts.name))
+        throw new RangeError('Command name must be under 32 characters, matching this regex: /^[\\w-]{1,32}$/');
 
-    if (typeof opts.description !== 'string') throw new TypeError('Command description must be a string.');
-    if (opts.description.length < 1 || opts.description.length > 100)
-      throw new RangeError('Command description must be under 100 characters.');
+      if (typeof opts.description !== 'string') throw new TypeError('Command description must be a string.');
+      if (opts.description.length < 1 || opts.description.length > 100)
+        throw new RangeError('Command description must be under 100 characters.');
 
-    if (opts.options) {
-      if (!Array.isArray(opts.options)) throw new TypeError('Command options must be an array of options.');
-      if (opts.options.length > 25) throw new RangeError('Command options cannot exceed 25 options.');
+      if (opts.options) {
+        if (!Array.isArray(opts.options)) throw new TypeError('Command options must be an array of options.');
+        if (opts.options.length > 25) throw new RangeError('Command options cannot exceed 25 options.');
 
-      validateOptions(opts.options);
+        validateOptions(opts.options);
+      }
+    } else {
+      if (opts.name.length < 1 || opts.name.length > 32)
+        throw new RangeError('Command names must be between 1-32 characters.');
     }
 
     if (opts.requiredPermissions) {
@@ -314,5 +330,3 @@ class SlashCommand {
     }
   }
 }
-
-export default SlashCommand;

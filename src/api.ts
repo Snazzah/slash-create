@@ -144,7 +144,7 @@ class SlashCreatorAPI {
     return this._creator.requestHandler.request(
       'POST',
       Endpoints.INTERACTION_CALLBACK(interactionID, interactionToken),
-      true,
+      false,
       body
     );
   }

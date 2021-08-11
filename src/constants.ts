@@ -394,7 +394,10 @@ export interface CommandData {
     members?: { [id: string]: ResolvedMemberData };
     roles?: { [id: string]: ResolvedRole };
     channels?: { [id: string]: ResolvedChannel };
+    messages?: { [id: string]: MessageData };
   };
+  type: ApplicationCommandType;
+  target_id?: string;
 }
 
 /** @private */

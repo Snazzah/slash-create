@@ -573,7 +573,7 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
     const commands = await this.api.getCommands();
 
     for (const applicationCommand of commands) {
-      const commandKey = `global:${applicationCommand.name}`;
+      const commandKey = `${applicationCommand.type}:global:${applicationCommand.name}`;
       const command = this.commands.get(commandKey);
       if (command) command.ids.set('global', applicationCommand.id);
     }
@@ -588,17 +588,15 @@ class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<Slas
               !!(
                 command.guildIDs &&
                 command.guildIDs.includes(guildID) &&
-                command.commandName === applicationCommand.name
+                command.commandName === applicationCommand.name &&
+                command.type === applicationCommand.type
               )
           );
           if (command) command.ids.set(guildID, applicationCommand.id);
         }
       } catch (e) {
         if (skipGuildErrors) {
-          this.emit(
-            'warn',
-            `An error occurred during guild command ID collection (${guildID}), you may no longer have access to that guild.`
-          );
+          this.emit('warn', `An error occurred during guild command ID collection (${guildID}): ${e}`);
         } else {
           throw e;
         }

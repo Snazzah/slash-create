@@ -10,7 +10,7 @@ import SlashCreator from '../src/creator';
 import FastifyServer from '../src/servers/fastify';
 import GatewayServer from '../src/servers/gateway';
 import GCFServer from '../src/servers/gcf';
-import { ApplicationCommandPermissionType } from '../src/constants';
+import { ApplicationCommandPermissionType, ApplicationCommandType } from '../src/constants';
 import { createBasicCommand } from './__util__/commands';
 import { basicCommands } from './__util__/constants';
 import {
@@ -243,7 +243,8 @@ describe('SlashCreator', () => {
             name: 'to-update',
             description: 'description',
             application_id: '1',
-            version: '1'
+            version: '1',
+            type: ApplicationCommandType.CHAT_INPUT
           }
         ]),
         putGuildScope = updateGuildCommands([
@@ -252,7 +253,8 @@ describe('SlashCreator', () => {
             name: 'to-update',
             description: 'description',
             application_id: '1',
-            version: '1'
+            version: '1',
+            type: ApplicationCommandType.CHAT_INPUT
           }
         ]),
         permissionsScope = updateGuildCommandPermissions([
@@ -273,12 +275,29 @@ describe('SlashCreator', () => {
       creator.syncCommands();
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
-        { id: '1', default_permission: false, name: 'to-update', description: 'description' },
-        { id: '3', default_permission: true, name: 'to-leave-alone', description: 'description' }
+        {
+          id: '1',
+          default_permission: false,
+          name: 'to-update',
+          description: 'description',
+          type: ApplicationCommandType.CHAT_INPUT
+        },
+        {
+          id: '3',
+          default_permission: true,
+          name: 'to-leave-alone',
+          description: 'description',
+          type: ApplicationCommandType.CHAT_INPUT
+        }
       ]);
       await expect(guildCmdsScope, 'requests guild commands').to.have.been.requested;
       await expect(putGuildScope, 'updates guild commands').to.have.been.requestedWith([
-        { default_permission: true, name: 'to-create-guild', description: 'description' }
+        {
+          default_permission: true,
+          name: 'to-create-guild',
+          description: 'description',
+          type: ApplicationCommandType.CHAT_INPUT
+        }
       ]);
       await expect(permissionsScope, 'updates command permissions').to.have.been.requestedWith([
         {
@@ -315,16 +334,34 @@ describe('SlashCreator', () => {
             description: 'description',
             guild_id: '123',
             application_id: '1',
-            version: '1'
+            version: '1',
+            type: ApplicationCommandType.CHAT_INPUT
           }
         ]);
 
       const promise = expect(creator.syncCommandsIn('123')).to.be.fulfilled;
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
-        { id: '1', default_permission: true, name: 'to-update', description: 'description' },
-        { id: '3', default_permission: true, name: 'to-leave-alone', description: 'description' },
-        { default_permission: true, name: 'to-create', description: 'description' }
+        {
+          id: '1',
+          default_permission: true,
+          name: 'to-update',
+          description: 'description',
+          type: ApplicationCommandType.CHAT_INPUT
+        },
+        {
+          id: '3',
+          default_permission: true,
+          name: 'to-leave-alone',
+          description: 'description',
+          type: ApplicationCommandType.CHAT_INPUT
+        },
+        {
+          default_permission: true,
+          name: 'to-create',
+          description: 'description',
+          type: ApplicationCommandType.CHAT_INPUT
+        }
       ]);
       return promise;
     });
@@ -356,9 +393,26 @@ describe('SlashCreator', () => {
       const promise = expect(creator.syncGlobalCommands()).to.be.fulfilled;
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
-        { id: '1', default_permission: true, name: 'to-update', description: 'description' },
-        { id: '3', default_permission: true, name: 'to-leave-alone', description: 'description' },
-        { default_permission: true, name: 'to-create', description: 'description' }
+        {
+          id: '1',
+          default_permission: true,
+          name: 'to-update',
+          description: 'description',
+          type: ApplicationCommandType.CHAT_INPUT
+        },
+        {
+          id: '3',
+          default_permission: true,
+          name: 'to-leave-alone',
+          description: 'description',
+          type: ApplicationCommandType.CHAT_INPUT
+        },
+        {
+          default_permission: true,
+          name: 'to-create',
+          description: 'description',
+          type: ApplicationCommandType.CHAT_INPUT
+        }
       ]);
       return promise;
     });

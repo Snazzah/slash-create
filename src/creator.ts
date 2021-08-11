@@ -14,7 +14,8 @@ import {
   BulkUpdateCommand,
   CommandUser,
   InteractionRequestData,
-  PartialApplicationCommandPermissions
+  PartialApplicationCommandPermissions,
+  ApplicationCommandType
 } from './constants';
 import SlashCommand from './command';
 import TypedEmitter from './util/typedEmitter';
@@ -204,6 +205,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
       this.commands.some(
         (cmd) =>
           !!(
+            cmd.type === command.type &&
             cmd.commandName === command.commandName &&
             cmd.guildIDs &&
             cmd.guildIDs.map((gid) => command.guildIDs.includes(gid)).includes(true)
@@ -361,10 +363,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
           await this.syncCommandsIn(guildID, options.deleteCommands);
         } catch (e) {
           if (options.skipGuildErrors) {
-            this.emit(
-              'warn',
-              `An error occurred during guild sync (${guildID}), you may no longer have access to that guild.`
-            );
+            this.emit('warn', `An error occurred during guild sync (${guildID}): ${e.message}`);
           } else {
             throw e;
           }
@@ -407,13 +406,18 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
 
       const command = this.commands.find(
         (command) =>
-          !!(command.guildIDs && command.guildIDs.includes(guildID) && command.commandName === partialCommand.name)
+          !!(
+            command.guildIDs &&
+            command.guildIDs.includes(guildID) &&
+            command.commandName === partialCommand.name &&
+            command.type === partialCommand.type
+          )
       );
       if (command) {
         command.ids.set(guildID, applicationCommand.id);
         this.emit(
           'debug',
-          `Found guild command "${applicationCommand.name}" (${applicationCommand.id}, guild: ${guildID})`
+          `Found guild command "${applicationCommand.name}" (${applicationCommand.id}, type ${applicationCommand.type}, guild: ${guildID})`
         );
         updatePayload.push({
           id: applicationCommand.id,
@@ -423,7 +427,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
       } else if (deleteCommands) {
         this.emit(
           'debug',
-          `Removing guild command "${applicationCommand.name}" (${applicationCommand.id}, guild: ${guildID})`
+          `Removing guild command "${applicationCommand.name}" (${applicationCommand.id}, type ${applicationCommand.type}, guild: ${guildID})`
         );
       } else {
         updatePayload.push(applicationCommand);
@@ -443,7 +447,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
     );
 
     for (const [, command] of unhandledCommands) {
-      this.emit('debug', `Creating guild command "${command.commandName}" (guild: ${guildID})`);
+      this.emit('debug', `Creating guild command "${command.commandName}" (type ${command.type}, guild: ${guildID})`);
       updatePayload.push({
         ...command.commandJSON
       });
@@ -474,7 +478,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
 
     for (const applicationCommand of commands) {
       const partialCommand: PartialApplicationCommand = Object.assign({}, applicationCommand);
-      const commandKey = `global:${partialCommand.name}`;
+      const commandKey = `${partialCommand.type || ApplicationCommandType.CHAT_INPUT}:global:${partialCommand.name}`;
       delete (partialCommand as any).application_id;
       delete (partialCommand as any).id;
       delete (partialCommand as any).version;
@@ -482,13 +486,19 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
       const command = this.commands.get(commandKey);
       if (command) {
         command.ids.set('global', applicationCommand.id);
-        this.emit('debug', `Found command "${applicationCommand.name}" (${applicationCommand.id})`);
+        this.emit(
+          'debug',
+          `Found command "${applicationCommand.name}" (${applicationCommand.id}, type ${applicationCommand.type})`
+        );
         updatePayload.push({
           id: applicationCommand.id,
           ...command.commandJSON
         });
       } else if (deleteCommands) {
-        this.emit('debug', `Removing command "${applicationCommand.name}" (${applicationCommand.id})`);
+        this.emit(
+          'debug',
+          `Removing command "${applicationCommand.name}" (${applicationCommand.id}, type ${applicationCommand.type})`
+        );
       } else {
         updatePayload.push(applicationCommand);
       }
@@ -507,7 +517,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
     );
 
     for (const [, command] of unhandledCommands) {
-      this.emit('debug', `Creating command "${command.commandName}"`);
+      this.emit('debug', `Creating command "${command.commandName}" (type ${command.type})`);
       updatePayload.push({
         ...command.commandJSON
       });
@@ -563,7 +573,7 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
     const commands = await this.api.getCommands();
 
     for (const applicationCommand of commands) {
-      const commandKey = `global:${applicationCommand.name}`;
+      const commandKey = `${applicationCommand.type}:global:${applicationCommand.name}`;
       const command = this.commands.get(commandKey);
       if (command) command.ids.set('global', applicationCommand.id);
     }
@@ -578,17 +588,15 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
               !!(
                 command.guildIDs &&
                 command.guildIDs.includes(guildID) &&
-                command.commandName === applicationCommand.name
+                command.commandName === applicationCommand.name &&
+                command.type === applicationCommand.type
               )
           );
           if (command) command.ids.set(guildID, applicationCommand.id);
         }
       } catch (e) {
         if (skipGuildErrors) {
-          this.emit(
-            'warn',
-            `An error occurred during guild command ID collection (${guildID}), you may no longer have access to that guild.`
-          );
+          this.emit('warn', `An error occurred during guild command ID collection (${guildID}): ${e}`);
         } else {
           throw e;
         }

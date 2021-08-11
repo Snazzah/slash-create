@@ -1,5 +1,6 @@
 import {
   ApplicationCommand,
+  ApplicationCommandType,
   CommandOptionType,
   ComponentType,
   InteractionRequestData,
@@ -93,7 +94,8 @@ export const interactionDefaults: InteractionRequestData = {
   },
   data: {
     id: '0',
-    name: 'command'
+    name: 'command',
+    type: ApplicationCommandType.CHAT_INPUT
   }
 };
 
@@ -101,7 +103,8 @@ export const basicInteraction: InteractionRequestData = {
   ...interactionDefaults,
   data: {
     id: '0',
-    name: 'basic-command'
+    name: 'basic-command',
+    type: ApplicationCommandType.CHAT_INPUT
   }
 };
 
@@ -145,6 +148,7 @@ export const subCommandInteraction: InteractionRequestData = {
   data: {
     id: '0',
     name: 'sub-command',
+    type: ApplicationCommandType.CHAT_INPUT,
     options: [
       {
         name: 'sub-command',
@@ -160,6 +164,7 @@ export const subCommandGroupInteraction: InteractionRequestData = {
   data: {
     id: '0',
     name: 'sub-command-group',
+    type: ApplicationCommandType.CHAT_INPUT,
     options: [
       {
         name: 'sub-command-group',
@@ -181,6 +186,7 @@ export const optionsInteraction: InteractionRequestData = {
   data: {
     id: '0',
     name: 'command-opts',
+    type: ApplicationCommandType.CHAT_INPUT,
     options: [
       {
         name: 'string',
@@ -206,6 +212,7 @@ export const subCommandOptionsInteraction: InteractionRequestData = {
   data: {
     id: '0',
     name: 'sub-command-opts',
+    type: ApplicationCommandType.CHAT_INPUT,
     options: [
       {
         name: 'sub-command',
@@ -238,20 +245,23 @@ export const basicCommands: ApplicationCommand[] = [
     name: 'to-update',
     description: 'old description',
     application_id: '1',
-    version: '1'
+    version: '1',
+    type: ApplicationCommandType.CHAT_INPUT
   },
   {
     id: '2',
     name: 'to-delete',
     description: 'description',
     application_id: '1',
-    version: '1'
+    version: '1',
+    type: ApplicationCommandType.CHAT_INPUT
   },
   {
     id: '3',
     name: 'to-leave-alone',
     description: 'description',
     application_id: '1',
-    version: '1'
+    version: '1',
+    type: ApplicationCommandType.CHAT_INPUT
   }
 ];

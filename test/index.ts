@@ -14,6 +14,8 @@ describe('[index]', () => {
     expect(slashCreate.CommandContext).to.be.a('function');
     expect(slashCreate.ComponentContext).to.be.a('function');
     expect(slashCreate.MessageInteractionContext).to.be.a('function');
+    expect(slashCreate.ApplicationCommandType).to.be.a('object');
+    expect(slashCreate.ApplicationCommandPermissionType).to.be.a('object');
     expect(slashCreate.CommandOptionType).to.be.a('object');
     expect(slashCreate.ComponentType).to.be.a('object');
     expect(slashCreate.Constants).to.be.a('object');

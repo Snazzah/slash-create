@@ -44,6 +44,7 @@ export {
   CommandOptionType,
   PartialApplicationCommand,
   ApplicationCommand,
+  ApplicationCommandType,
   ApplicationCommandOption,
   ApplicationCommandOptionChoice,
   ApplicationCommandPermissionType,

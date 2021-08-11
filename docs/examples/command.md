@@ -26,7 +26,7 @@ module.exports = class HelloCommand extends SlashCommand {
 
 ### Command with Permissions
 ```js
-const { SlashCommand, CommandOptionType, ApplicationCommandPermissionType } = require('slash-create');
+const { SlashCommand, ApplicationCommandPermissionType } = require('slash-create');
 
 module.exports = class HelloCommand extends SlashCommand {
   constructor(creator) {
@@ -52,6 +52,51 @@ module.exports = class HelloCommand extends SlashCommand {
 
   async run(ctx) {
     return 'Hi Snazzah!';
+  }
+}
+```
+
+### Context Menu Command
+```js
+const { SlashCommand, ApplicationCommandType } = require('slash-create');
+
+module.exports = class AvatarCommand extends SlashCommand {
+  constructor(creator) {
+    super(creator, {
+      // You must specify a type for context menu commands, but defaults
+      // to `CHAT_INPUT`, or regular slash commands.
+      type: ApplicationCommandType.USER,
+      name: 'Get Avatar URL',
+    });
+
+    this.filePath = __filename;
+  }
+
+  async run(ctx) {
+    // The target user can be accessed from here
+    // You can also use `ctx.targetMember` for member properties
+    const target = ctx.targetUser;
+    return `${target.username}'s Avatar: ${target.avatarURL}`;
+  }
+}
+```
+```js
+const { SlashCommand, ApplicationCommandType } = require('slash-create');
+
+module.exports = class ReverseCommand extends SlashCommand {
+  constructor(creator) {
+    super(creator, {
+      type: ApplicationCommandType.MESSAGE,
+      name: 'Reverse this Message',
+    });
+
+    this.filePath = __filename;
+  }
+
+  async run(ctx) {
+    // The target message can be accessed from here
+    const msg = ctx.targetMessage;
+    return msg.content.reverse();
   }
 }
 ```

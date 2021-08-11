@@ -69,6 +69,16 @@ export enum CommandOptionType {
   NUMBER = 10
 }
 
+/** The types of applicaiion commands available. */
+export enum ApplicationCommandType {
+  /** Slash commands; a text-based command that shows up when a user types `/` */
+  CHAT_INPUT = 1,
+  /** A UI-based command that shows up when you right click or tap on a user */
+  USER = 2,
+  /** A UI-based command that shows up when you right click or tap on a messages */
+  MESSAGE = 3
+}
+
 /**
  * An partial application command in Discord.
  * @private
@@ -82,6 +92,8 @@ export interface PartialApplicationCommand {
   options?: ApplicationCommandOption[];
   /** Whether to enable this command for everyone by default. */
   default_permission?: boolean;
+  /** The type of application this is representing. `1` by default. */
+  type?: ApplicationCommandType;
 }
 
 /** @hidden */

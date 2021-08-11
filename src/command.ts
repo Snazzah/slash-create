@@ -1,6 +1,7 @@
 import {
   ApplicationCommandOption,
   ApplicationCommandPermissions,
+  ApplicationCommandType,
   PartialApplicationCommand,
   PermissionNames
 } from './constants';
@@ -136,6 +137,7 @@ class SlashCommand {
       name: this.commandName,
       description: this.description,
       default_permission: this.defaultPermission,
+      type: ApplicationCommandType.CHAT_INPUT,
       ...(this.options ? { options: this.options } : {})
     };
   }
@@ -146,7 +148,7 @@ class SlashCommand {
    */
   get keyName() {
     const prefix = this.guildIDs ? this.guildIDs.join(',') : 'global';
-    return `${prefix}:${this.commandName}`;
+    return `1:${prefix}:${this.commandName}`;
   }
 
   /**

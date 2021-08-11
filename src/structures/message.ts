@@ -166,6 +166,8 @@ class Message {
   readonly mentionedEveryone: boolean;
   /** Whether the message used TTS */
   readonly tts: boolean;
+  /** Whether the message is pinned */
+  readonly pinned: boolean;
   /** The timestamp of the message */
   readonly timestamp: number;
   /** The timestamp of when the message was last edited */
@@ -201,6 +203,7 @@ class Message {
     this.roleMentions = data.mention_roles;
     this.mentionedEveryone = data.mention_everyone;
     this.tts = data.tts;
+    this.pinned = data.pinned;
     this.timestamp = Date.parse(data.timestamp);
     if (data.edited_timestamp) this.editedTimestamp = Date.parse(data.edited_timestamp);
     this.flags = data.flags;

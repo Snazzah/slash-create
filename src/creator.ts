@@ -124,7 +124,7 @@ interface ComponentCallback {
 }
 
 /** The main class for using commands and interactions. */
-class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashCreatorEvents>) {
+class SlashCreator extends ((EventEmitter as any) as new () => TypedEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */
@@ -621,10 +621,11 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
             !!(
               command.guildIDs &&
               command.guildIDs.includes(interaction.guild_id) &&
-              command.commandName === interaction.data.name
+              command.commandName === interaction.data.name &&
+              command.type === interaction.data.type
             )
-        ) || this.commands.get(`global:${interaction.data.name}`)
-      : this.commands.get(`global:${interaction.data.name}`);
+        ) || this.commands.get(`${interaction.data.type}:global:${interaction.data.name}`)
+      : this.commands.get(`${interaction.data.type}:global:${interaction.data.name}`);
   }
 
   private async _onRequest(treq: TransformedRequest, respond: RespondFunction) {

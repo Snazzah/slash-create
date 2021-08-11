@@ -148,6 +148,7 @@ export default class SlashCommand {
         }
       : {
           name: this.commandName,
+          description: '',
           type: this.type,
           default_permission: this.defaultPermission
         };

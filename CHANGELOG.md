@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [3.5.0] - 2021-08-11
+### Changed:
+- **Permissions:** `MANAGE_EMOJIS` is now `MANAGE_EMOJIS_AND_STICKERS`, making the former deprecated.
+### Added:
+- **SlashCommand:** Added multiple types support for context menu commands. ([#94](https://github.com/Snazzah/slash-create/pull/94), see [updated guide](https://slash-create.js.org/#/docs/main/v3.5.0/examples/command))
+- **CommandContext:** Added support for resolved messages and targeted objects. ([#94](https://github.com/Snazzah/slash-create/pull/94), see [updated guide](https://slash-create.js.org/#/docs/main/v3.5.0/examples/command))
+- **Message:** Added `pinned` property.
+- **Permissions:** Added `MANAGE_THREADS`, `USE_PUBLIC_THREADS`, `USE_PRIVATE_THREADS` and `USE_EXTERNAL_STICKERS`.
+### Fixed:
+- **SlashCommandAPI:** The interaction callback function no longer requires a token.
 ## [3.4.3] - 2021-08-08
 ### Fixed:
 - ComponentContext allows for partial messages
@@ -282,7 +292,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v3.4.3...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v3.5.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -311,3 +321,4 @@ This release features mostly completed documentation and changes to the packages
 [3.4.1]: https://github.com/Snazzah/slash-create/compare/v3.4.0...v3.4.1
 [3.4.2]: https://github.com/Snazzah/slash-create/compare/v3.4.1...v3.4.2
 [3.4.3]: https://github.com/Snazzah/slash-create/compare/v3.4.2...v3.4.3
+[3.5.0]: https://github.com/Snazzah/slash-create/compare/v3.4.3...v3.5.0

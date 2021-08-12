@@ -57,7 +57,7 @@ In order to use a specific webserver, you will need to install the dependency as
 - [Creating commands](https://slash-create.js.org/#/docs/main/latest/examples/command)
 
 ## Useful Links
-- [**Discord Documentation on Slash Commands**](https://discord.com/developers/docs/interactions/slash-commands)
+- [**Discord Documentation on Application Commands**](https://discord.com/developers/docs/interactions/application-commands)
 - [Website](https://slash-create.js.org/) ([source](https://github.com/Snazzah/slash-create-website))
 - [Documentation](https://slash-create.js.org/#/docs/main/latest/general/welcome)
 - [Commands Template](https://github.com/Snazzah/slash-create-template)

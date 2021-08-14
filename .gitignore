@@ -1,6 +1,5 @@
 # Packages
 node_modules/
-yarn.lock
 
 # Log files
 logs/

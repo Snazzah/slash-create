@@ -294,7 +294,7 @@ export interface DMMessageComponentRequestData {
   version: 1;
   type: InteractionType.MESSAGE_COMPONENT;
   token: string;
-  message: MessageData | PartialMessage;
+  message: MessageData;
   id: string;
   channel_id: string;
   user: CommandUser;
@@ -313,7 +313,7 @@ export interface GuildMessageComponentRequestData {
   version: 1;
   type: InteractionType.MESSAGE_COMPONENT;
   token: string;
-  message: MessageData | PartialMessage;
+  message: MessageData;
   id: string;
   channel_id: string;
   guild_id: string;

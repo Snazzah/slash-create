@@ -1,9 +1,9 @@
 import { CDN_URL, Endpoints, ImageFormat, ImageFormats, ImageSizeBoundaries, UserObject } from '../constants';
-import SlashCreator from '../creator';
-import UserFlags from './userFlags';
+import { SlashCreator } from '../creator';
+import { UserFlags } from './userFlags';
 
 /** Represents a user on Discord. */
-class User {
+export class User {
   /** The user's ID. */
   readonly id: string;
   /** The user's username. */
@@ -84,5 +84,3 @@ class User {
     return `${CDN_URL}${Endpoints.USER_AVATAR(this.id, this.avatar)}.${format}?size=${size}`;
   }
 }
-
-export default User;

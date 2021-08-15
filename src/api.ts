@@ -7,10 +7,10 @@ import {
   PartialApplicationCommand,
   PartialApplicationCommandPermissions
 } from './constants';
-import SlashCreator from './creator';
+import { SlashCreator } from './creator';
 
 /** The API handler for {@link SlashCreator}. */
-class SlashCreatorAPI {
+export class SlashCreatorAPI {
   /** The parent creator. */
   private readonly _creator: SlashCreator;
 
@@ -150,4 +150,4 @@ class SlashCreatorAPI {
   }
 }
 
-export default SlashCreatorAPI;
+export const API = SlashCreatorAPI;

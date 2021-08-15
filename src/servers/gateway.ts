@@ -1,10 +1,10 @@
-import Server, { InteractionHandler } from '../server';
+import { Server, InteractionHandler } from '../server';
 
 /** @private */
 type EventHandler = (handler: InteractionHandler) => void;
 
 /** A "server" for gateway connections to pipe events into. */
-class GatewayServer extends Server {
+export class GatewayServer extends Server {
   private readonly _eventHandler: EventHandler;
 
   /** @param eventHandler A function that is used to handle the event for gateway interactions. */
@@ -18,5 +18,3 @@ class GatewayServer extends Server {
     this._eventHandler(handler);
   }
 }
-
-export default GatewayServer;

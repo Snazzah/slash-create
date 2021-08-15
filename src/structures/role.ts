@@ -1,9 +1,9 @@
 /* global BigInt */
 import { ResolvedRole } from '../constants';
-import Permissions from './permissions';
+import { Permissions } from './permissions';
 
 /** Represents a resolved role object. */
-class Role {
+export class Role {
   /** The role's ID */
   readonly id: string;
   /** The role's name */
@@ -57,5 +57,3 @@ class Role {
     return `[Role ${this.id}]`;
   }
 }
-
-export default Role;

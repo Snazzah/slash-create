@@ -1,8 +1,5 @@
-/* global BigInt */
-export type BitFieldResolvable = string | number | bigint | BitField | Array<BitFieldResolvable>;
-
 /** Data structure that makes it easy to interact with a bitfield. */
-class BitField {
+export class BitField {
   /** Bitfield of the packed bits. */
   bitfield: number | bigint = 0;
   /** The flags for this bitfield. */
@@ -122,4 +119,5 @@ class BitField {
   }
 }
 
-export default BitField;
+/* global BigInt */
+export type BitFieldResolvable = string | number | bigint | BitField | Array<BitFieldResolvable>;

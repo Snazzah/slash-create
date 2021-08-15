@@ -1,4 +1,4 @@
-import Server, { RequestHandler } from '../server';
+import { Server, ServerRequestHandler } from '../server';
 import { joinHeaders, splitHeaders } from '../util/lambdaHeaders';
 // @ts-ignore
 import { APIGatewayProxyCallbackV2, APIGatewayProxyEventV2, Context } from 'aws-lambda';
@@ -8,8 +8,8 @@ import { APIGatewayProxyCallbackV2, APIGatewayProxyEventV2, Context } from 'aws-
  * @see https://aws.amazon.com/lambda/
  * @see https://aws.amazon.com/api-gateway/
  */
-class AWSLambdaServer extends Server {
-  private _handler?: RequestHandler;
+export class AWSLambdaServer extends Server {
+  private _handler?: ServerRequestHandler;
 
   /**
    * @param moduleExports The exports for your module, must be `module.exports`
@@ -49,9 +49,7 @@ class AWSLambdaServer extends Server {
   }
 
   /** @private */
-  createEndpoint(path: string, handler: RequestHandler) {
+  createEndpoint(path: string, handler: ServerRequestHandler) {
     this._handler = handler;
   }
 }
-
-export default AWSLambdaServer;

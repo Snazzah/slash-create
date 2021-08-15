@@ -1,31 +1,21 @@
 import { API_BASE_URL } from '../constants';
-import SlashCreator from '../creator';
+import { SlashCreator } from '../creator';
 import HTTPS from 'https';
-import SequentialBucket from './sequentialBucket';
+import { SequentialBucket } from './sequentialBucket';
 import Zlib from 'zlib';
-import DiscordHTTPError from '../errors/DiscordHTTPError';
-import DiscordRESTError from '../errors/DiscordRESTError';
-import MultipartData from './multipartData';
+import { DiscordHTTPError } from '../errors/DiscordHTTPError';
+import { DiscordRESTError } from '../errors/DiscordRESTError';
+import { MultipartData } from './multipartData';
 
 export const USER_AGENT = `DiscordBot (https://github.com/Snazzah/slash-create, ${
   require('../../package.json').version
 })`;
 
-/** @hidden */
-interface LatencyRef {
-  latency: number;
-  offset?: number;
-  raw: number[];
-  timeOffset: number;
-  timeOffsets: number[];
-  lastTimeOffsetCheck: number;
-}
-
 /**
  * The request handler for REST requests.
  * @private
  */
-class RequestHandler {
+export class RequestHandler {
   /** The base URL for all requests. */
   readonly baseURL: string = API_BASE_URL;
   /** The user agent for all requests. */
@@ -446,4 +436,12 @@ class RequestHandler {
   }
 }
 
-export default RequestHandler;
+/** @hidden */
+interface LatencyRef {
+  latency: number;
+  offset?: number;
+  raw: number[];
+  timeOffset: number;
+  timeOffsets: number[];
+  lastTimeOffsetCheck: number;
+}

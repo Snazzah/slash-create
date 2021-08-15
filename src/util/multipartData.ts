@@ -1,4 +1,4 @@
-class MultipartData {
+export class MultipartData {
   boundary = '----------------SlashCreate';
   bufs: Buffer[] = [];
 
@@ -25,5 +25,3 @@ class MultipartData {
     return this.bufs;
   }
 }
-
-export default MultipartData;

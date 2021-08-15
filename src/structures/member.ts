@@ -1,11 +1,11 @@
 /* global BigInt */
 import { CommandMember } from '../constants';
-import SlashCreator from '../creator';
-import Permissions from './permissions';
-import ResolvedMember from './resolvedMember';
+import { SlashCreator } from '../creator';
+import { Permissions } from './permissions';
+import { ResolvedMember } from './resolvedMember';
 
 /** Represents a Discord guild member. */
-class Member extends ResolvedMember {
+export class Member extends ResolvedMember {
   /** Whether the user is muted in voice channels */
   readonly mute: boolean;
   /** Whether the user is deafened in voice channels */
@@ -36,5 +36,3 @@ class Member extends ResolvedMember {
     return `[Member ${this.id}]`;
   }
 }
-
-export default Member;

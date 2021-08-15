@@ -6,10 +6,10 @@ chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
 
-import SlashCreator from '../src/creator';
-import FastifyServer from '../src/servers/fastify';
-import GatewayServer from '../src/servers/gateway';
-import GCFServer from '../src/servers/gcf';
+import { SlashCreator } from '../src/creator';
+import { FastifyServer } from '../src/servers/fastify';
+import { GatewayServer } from '../src/servers/gateway';
+import { GCFServer } from '../src/servers/gcf';
 import { ApplicationCommandPermissionType, ApplicationCommandType } from '../src/constants';
 import { createBasicCommand } from './__util__/commands';
 import { basicCommands } from './__util__/constants';

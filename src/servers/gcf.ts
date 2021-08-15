@@ -1,4 +1,4 @@
-import Server, { RequestHandler } from '../server';
+import { Server, ServerRequestHandler } from '../server';
 // @ts-ignore
 import * as Express from 'express';
 
@@ -6,8 +6,8 @@ import * as Express from 'express';
  * A server for Google Cloud Functions.
  * @see https://cloud.google.com/functions/
  */
-class GCFServer extends Server {
-  private _handler?: RequestHandler;
+export class GCFServer extends Server {
+  private _handler?: ServerRequestHandler;
 
   /**
    * @param moduleExports The exports for your module, must be `module.exports`
@@ -37,9 +37,7 @@ class GCFServer extends Server {
   }
 
   /** @private */
-  createEndpoint(path: string, handler: RequestHandler) {
+  createEndpoint(path: string, handler: ServerRequestHandler) {
     this._handler = handler;
   }
 }
-
-export default GCFServer;

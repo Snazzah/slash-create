@@ -1,4 +1,4 @@
-import Server, { RequestHandler, ServerOptions } from '../server';
+import { Server, ServerRequestHandler, ServerOptions } from '../server';
 
 let fastify: any;
 try {
@@ -9,7 +9,7 @@ try {
  * A server for Fastify applications.
  * @see https://fastify.io
  */
-class FastifyServer extends Server {
+export class FastifyServer extends Server {
   private readonly app: any;
 
   /**
@@ -49,7 +49,7 @@ class FastifyServer extends Server {
   }
 
   /** @private */
-  createEndpoint(path: string, handler: RequestHandler) {
+  createEndpoint(path: string, handler: ServerRequestHandler) {
     this.app.post(path, (req: any, res: any) =>
       handler(
         {
@@ -73,5 +73,3 @@ class FastifyServer extends Server {
     await this.app.listen(port, host);
   }
 }
-
-export default FastifyServer;

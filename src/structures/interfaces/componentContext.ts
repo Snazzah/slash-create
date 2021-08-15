@@ -1,12 +1,12 @@
 import { ComponentType, InteractionResponseType, MessageComponentRequestData } from '../../constants';
-import MessageInteractionContext, { EditMessageOptions } from './messageInteraction';
-import SlashCreator from '../../creator';
+import { MessageInteractionContext, EditMessageOptions } from './messageInteraction';
+import { SlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
-import Message from '../message';
+import { Message } from '../message';
 import { formatAllowedMentions, FormattedAllowedMentions } from '../../util';
 
 /** Represents an interaction context from a message component. */
-class ComponentContext extends MessageInteractionContext {
+export class ComponentContext extends MessageInteractionContext {
   /** The request data. */
   readonly data: MessageComponentRequestData;
 
@@ -104,5 +104,3 @@ class ComponentContext extends MessageInteractionContext {
     } else return this.edit(this.message.id, content, options);
   }
 }
-
-export default ComponentContext;

@@ -1,9 +1,9 @@
 /* global BigInt */
 import { ResolvedChannel } from '../constants';
-import Permissions from './permissions';
+import { Permissions } from './permissions';
 
 /** Represents a resolved channel object. */
-class Channel {
+export class Channel {
   /** The channel's ID */
   readonly id: string;
   /** The channel's name */
@@ -42,5 +42,3 @@ class Channel {
     return `[Channel ${this.id}]`;
   }
 }
-
-export default Channel;

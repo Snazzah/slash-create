@@ -1,6 +1,6 @@
-import BitField from '../util/bitfield';
+import { BitField } from '../util/bitfield';
 
-export const FLAGS: { [perm: string]: number } = {
+const FLAGS: { [perm: string]: number } = {
   DISCORD_EMPLOYEE: 1,
   PARTNERED_SERVER_OWNER: 1 << 1,
   HYPESQUAD_EVENTS: 1 << 2,
@@ -22,9 +22,7 @@ export const FLAGS: { [perm: string]: number } = {
 };
 
 /** Data structure that makes it easy to interact with a {@link User#flags} bitfield. */
-class UserFlags extends BitField {
+export class UserFlags extends BitField {
   /** The flags for users. Check the source of this property for available flags. */
   static FLAGS = FLAGS;
 }
-
-export default UserFlags;

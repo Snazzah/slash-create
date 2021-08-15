@@ -1,18 +1,8 @@
-/** @hidden */
-export interface MinimalLatencyRef {
-  /** Interval between consuming tokens. */
-  latency: number;
-  offset?: number;
-}
-
-/** @hidden */
-type CallbackFunction = (callback: () => void) => unknown;
-
 /**
  * Ratelimit requests and release in sequence.
  * @private
  */
-class SequentialBucket {
+export class SequentialBucket {
   /** How many tokens the bucket can consume in the current interval. */
   limit: number;
   /** Whether the queue is being processed. */
@@ -94,4 +84,12 @@ class SequentialBucket {
   }
 }
 
-export default SequentialBucket;
+/** @hidden */
+export interface MinimalLatencyRef {
+  /** Interval between consuming tokens. */
+  latency: number;
+  offset?: number;
+}
+
+/** @hidden */
+type CallbackFunction = (callback: () => void) => unknown;

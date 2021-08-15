@@ -8,7 +8,7 @@ const expect = chai.expect;
 import { createFollowUp, deleteMessage, editMessage } from '../../__util__/nock';
 
 import { InteractionResponseFlags, InteractionResponseType } from '../../../src/constants';
-import Message from '../../../src/structures/message';
+import { Message } from '../../../src/structures/message';
 import {
   creator,
   creatorNoToken,
@@ -17,7 +17,7 @@ import {
   followUpMessage,
   editedMessage
 } from '../../__util__/constants';
-import MessageInteractionContext from '../../../src/structures/interfaces/messageInteraction';
+import { MessageInteractionContext } from '../../../src/structures/interfaces/messageInteraction';
 
 describe('MessageInteractionContext', () => {
   describe('constructor', () => {

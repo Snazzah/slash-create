@@ -15,8 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed:
 - **types:** `RequestHandler` -> `ServerRequestHandler`
 - **types:** `TypedEmitter` -> `TypedEventEmitter`
-- **Permissions/UserFlags:** `FLAGS` constants from Permissions and UserFlags are hidden
-- **index:** Almost everything is now properly exported to index
+- **Permissions/UserFlags:** `FLAGS` constants from Permissions and UserFlags are inaccessible from the file itself. Use `Permissions.FLAGS` instead.
+- **index:** Almost everything is now properly exported to index ([#96](https://github.com/Snazzah/slash-create/pull/96))
   - All files are no longer using `default` for exporting
 ### Fixed:
 - **MessageInteractionContext:** Deleting the original message de-references the message ID from the context ([#97](https://github.com/Snazzah/slash-create/pull/97))

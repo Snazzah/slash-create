@@ -222,7 +222,10 @@ export class MessageInteractionContext {
     return this.creator.requestHandler.request(
       'DELETE',
       Endpoints.MESSAGE(this.creator.options.applicationID, this.interactionToken, messageID)
-    );
+    ).then(res => {
+      if(!messageID && messageID === '@original') this.messageID = undefined;
+      return res;
+    });
   }
 
   /**

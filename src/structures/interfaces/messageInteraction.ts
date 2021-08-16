@@ -219,13 +219,13 @@ export class MessageInteractionContext {
   async delete(messageID?: string) {
     if (this.expired) throw new Error('This interaction has expired');
 
-    return this.creator.requestHandler.request(
+    const res = await this.creator.requestHandler.request(
       'DELETE',
       Endpoints.MESSAGE(this.creator.options.applicationID, this.interactionToken, messageID)
-    ).then(res => {
-      if(!messageID && messageID === '@original') this.messageID = undefined;
-      return res;
-    });
+    );
+    
+    if(!messageID || messageID === '@original') this.messageID = undefined;
+    return res;
   }
 
   /**

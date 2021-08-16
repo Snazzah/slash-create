@@ -119,5 +119,4 @@ export class BitField {
   }
 }
 
-/* global BigInt */
 export type BitFieldResolvable = string | number | bigint | BitField | Array<BitFieldResolvable>;

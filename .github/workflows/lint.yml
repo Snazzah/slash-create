@@ -9,7 +9,7 @@ on:
       - ".eslintrc.*"
       - ".prettierrc"
       - ".github/workflows/lint.yml"
-  pull_request:
+  pull_request_target:
     branches:
       - "*"
       - "!docs"

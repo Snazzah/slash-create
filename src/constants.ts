@@ -132,11 +132,6 @@ export interface ApplicationCommandOptionBase {
   name: string;
   /** The description of the option. */
   description: string;
-  /**
-   * The first required option the user has to complete.
-   * @deprecated Reorder the required options instead.
-   */
-  default?: boolean;
   /** Whether the parameter is required. */
   required?: boolean;
 }
@@ -409,17 +404,6 @@ export type AnyCommandOption =
   | CommandIntegerOption
   | CommandBooleanOption
   | CommandSubcommandOption;
-
-/**
- * @private
- * @deprecated
- */
-export interface CommandOption {
-  /** The name for the option. */
-  name: string;
-  type?: CommandOptionType;
-  value?: string | number | boolean;
-}
 
 /** @private */
 export interface CommandStringOption {

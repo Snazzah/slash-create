@@ -332,17 +332,6 @@ export interface MessageFile {
   name: string;
 }
 
-/**
- * The options for {@link MessageInteractionContext#sendFollowUp}.
- * @deprecated Use {@link MessageOptions} instead.
- */
-export interface FollowUpMessageOptions extends EditMessageOptions {
-  /** Whether to use TTS for the content. */
-  tts?: boolean;
-  /** The flags to use in the message. */
-  flags?: number;
-}
-
 /** The options for {@link MessageInteractionContext#send} and {@link MessageInteractionContext#sendFollowUp}. */
 export interface MessageOptions extends EditMessageOptions {
   /** Whether to use TTS for the content. */

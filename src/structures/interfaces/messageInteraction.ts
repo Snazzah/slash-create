@@ -223,8 +223,8 @@ export class MessageInteractionContext {
       'DELETE',
       Endpoints.MESSAGE(this.creator.options.applicationID, this.interactionToken, messageID)
     );
-    
-    if(!messageID || messageID === '@original') this.messageID = undefined;
+
+    if (!messageID || messageID === '@original') this.messageID = undefined;
     return res;
   }
 

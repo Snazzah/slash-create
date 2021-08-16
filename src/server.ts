@@ -43,6 +43,7 @@ export class Server {
     throw new Error(`${this.constructor.name} doesn't have a listen method. You should remove \`.startServer()\`.`);
   }
 }
+
 /** Options for a {@link Server}. */
 export interface ServerOptions {
   /** Whether or not the server is already listening to a port. */

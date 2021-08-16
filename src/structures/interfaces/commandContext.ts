@@ -1,16 +1,16 @@
 import { RespondFunction } from '../../server';
-import SlashCreator from '../../creator';
+import { SlashCreator } from '../../creator';
 import { AnyCommandOption, ApplicationCommandType, InteractionRequestData } from '../../constants';
-import User from '../user';
+import { User } from '../user';
 import Collection from '@discordjs/collection';
-import Channel from '../channel';
-import Role from '../role';
-import ResolvedMember from '../resolvedMember';
-import MessageInteractionContext from './messageInteraction';
-import Message from '../message';
+import { Channel } from '../channel';
+import { Role } from '../role';
+import { ResolvedMember } from '../resolvedMember';
+import { MessageInteractionContext } from './messageInteraction';
+import { Message } from '../message';
 
 /** Context representing a command interaction. */
-class CommandContext extends MessageInteractionContext {
+export class CommandContext extends MessageInteractionContext {
   /** The full interaction data. */
   readonly data: InteractionRequestData;
 
@@ -147,4 +147,4 @@ class CommandContext extends MessageInteractionContext {
   }
 }
 
-export default CommandContext;
+export const Context = CommandContext;

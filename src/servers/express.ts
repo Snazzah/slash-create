@@ -1,4 +1,4 @@
-import Server, { RequestHandler, ServerOptions } from '../server';
+import { Server, ServerRequestHandler, ServerOptions } from '../server';
 
 let express: any;
 try {
@@ -9,7 +9,7 @@ try {
  * A server for Express applications.
  * @see http://expressjs.com
  */
-class ExpressServer extends Server {
+export class ExpressServer extends Server {
   private readonly app: any;
 
   /**
@@ -52,7 +52,7 @@ class ExpressServer extends Server {
   }
 
   /** @private */
-  createEndpoint(path: string, handler: RequestHandler) {
+  createEndpoint(path: string, handler: ServerRequestHandler) {
     this.app.post(path, (req: any, res: any) =>
       handler(
         {
@@ -76,5 +76,3 @@ class ExpressServer extends Server {
     this.app.listen(port, host);
   }
 }
-
-export default ExpressServer;

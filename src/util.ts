@@ -26,23 +26,6 @@ export async function verifyKey(
   }
 }
 
-/** The allowed mentions for a {@link Message}. */
-export interface MessageAllowedMentions {
-  everyone: boolean;
-  roles?: boolean | string[];
-  users?: boolean | string[];
-}
-
-/**
- * The formatted allowed_mentions for Discord.
- * @private
- */
-export interface FormattedAllowedMentions {
-  parse: ('everyone' | 'roles' | 'users')[];
-  roles?: string[];
-  users?: string[];
-}
-
 export function formatAllowedMentions(
   allowed: MessageAllowedMentions,
   defaultMentions?: FormattedAllowedMentions
@@ -131,4 +114,21 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
       }
     }
   }
+}
+
+/** The allowed mentions for a {@link Message}. */
+export interface MessageAllowedMentions {
+  everyone: boolean;
+  roles?: boolean | string[];
+  users?: boolean | string[];
+}
+
+/**
+ * The formatted allowed_mentions for Discord.
+ * @private
+ */
+export interface FormattedAllowedMentions {
+  parse: ('everyone' | 'roles' | 'users')[];
+  roles?: string[];
+  users?: string[];
 }

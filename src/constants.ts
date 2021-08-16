@@ -1,10 +1,13 @@
 import { IncomingMessage } from 'http';
-import SlashCommand from './command';
-import CommandContext from './structures/interfaces/commandContext';
-import SlashCreator from './creator';
+import { SlashCommand } from './command';
+import { CommandContext } from './structures/interfaces/commandContext';
+import { SlashCreator } from './creator';
 import { RespondFunction, TransformedRequest } from './server';
-import ComponentContext from './structures/interfaces/componentContext';
+import { ComponentContext } from './structures/interfaces/componentContext';
 import { MessageData } from './structures/message';
+import { version } from '../package.json';
+
+export const VERSION: string = version;
 
 export const API_VERSION = 8;
 export const INTERACTION_VERSION = 1;

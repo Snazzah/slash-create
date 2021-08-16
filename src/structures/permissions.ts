@@ -1,6 +1,6 @@
-import BitField from '../util/bitfield';
+import { BitField } from '../util/bitfield';
 
-export const FLAGS: { [perm: string]: bigint } = {
+const FLAGS: { [perm: string]: bigint } = {
   CREATE_INSTANT_INVITE: 1n << 0n,
   KICK_MEMBERS: 1n << 1n,
   BAN_MEMBERS: 1n << 2n,
@@ -46,9 +46,7 @@ export const FLAGS: { [perm: string]: bigint } = {
  * Data structure that makes it easy to interact with a permission bitfield.
  * All {@link Member}s have a set of permissions.
  */
-class Permissions extends BitField {
+export class Permissions extends BitField {
   /** Permission flags. Check the source of this property for available permissions. */
   static FLAGS = FLAGS;
 }
-
-export default Permissions;

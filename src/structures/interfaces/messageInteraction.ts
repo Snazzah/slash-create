@@ -1,63 +1,13 @@
 import { ComponentActionRow, Endpoints, InteractionResponseFlags, InteractionResponseType } from '../../constants';
-import SlashCreator, { ComponentRegisterCallback } from '../../creator';
+import { SlashCreator, ComponentRegisterCallback } from '../../creator';
 import { RespondFunction } from '../../server';
 import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from '../../util';
-import Member from '../member';
-import User from '../user';
-import Message, { MessageEmbedOptions } from '../message';
-
-/** The options for {@link MessageInteractionContext#edit}. */
-export interface EditMessageOptions {
-  /** The message content. */
-  content?: string;
-  /** The embeds of the message. */
-  embeds?: MessageEmbedOptions[];
-  /** The mentions allowed to be used in this message. */
-  allowedMentions?: MessageAllowedMentions;
-  /**
-   * The attachment(s) to send with the message.
-   * Note that ephemeral messages and initial messages cannot have
-   * attachments.
-   */
-  file?: MessageFile | MessageFile[];
-  /** The components of the message. */
-  components?: ComponentActionRow[];
-}
-
-/** A file within {@link EditMessageOptions}. */
-export interface MessageFile {
-  /** The attachment to send. */
-  file: Buffer;
-  /** The name of the file. */
-  name: string;
-}
-
-/**
- * The options for {@link MessageInteractionContext#sendFollowUp}.
- * @deprecated Use {@link MessageOptions} instead.
- */
-export interface FollowUpMessageOptions extends EditMessageOptions {
-  /** Whether to use TTS for the content. */
-  tts?: boolean;
-  /** The flags to use in the message. */
-  flags?: number;
-}
-
-/** The options for {@link MessageInteractionContext#send} and {@link MessageInteractionContext#sendFollowUp}. */
-export interface MessageOptions extends EditMessageOptions {
-  /** Whether to use TTS for the content. */
-  tts?: boolean;
-  /** The flags to use in the message. */
-  flags?: number;
-  /**
-   * Whether or not the message should be ephemeral.
-   * Ignored if `flags` is defined.
-   */
-  ephemeral?: boolean;
-}
+import { Member } from '../member';
+import { User } from '../user';
+import { Message, MessageEmbedOptions } from '../message';
 
 /** Represents a interaction context that handles messages. */
-class MessageInteractionContext {
+export class MessageInteractionContext {
   /** The creator of the interaction request. */
   readonly creator: SlashCreator;
   /** The interaction's token. */
@@ -353,4 +303,52 @@ class MessageInteractionContext {
   }
 }
 
-export default MessageInteractionContext;
+/** The options for {@link MessageInteractionContext#edit}. */
+export interface EditMessageOptions {
+  /** The message content. */
+  content?: string;
+  /** The embeds of the message. */
+  embeds?: MessageEmbedOptions[];
+  /** The mentions allowed to be used in this message. */
+  allowedMentions?: MessageAllowedMentions;
+  /**
+   * The attachment(s) to send with the message.
+   * Note that ephemeral messages and initial messages cannot have
+   * attachments.
+   */
+  file?: MessageFile | MessageFile[];
+  /** The components of the message. */
+  components?: ComponentActionRow[];
+}
+
+/** A file within {@link EditMessageOptions}. */
+export interface MessageFile {
+  /** The attachment to send. */
+  file: Buffer;
+  /** The name of the file. */
+  name: string;
+}
+
+/**
+ * The options for {@link MessageInteractionContext#sendFollowUp}.
+ * @deprecated Use {@link MessageOptions} instead.
+ */
+export interface FollowUpMessageOptions extends EditMessageOptions {
+  /** Whether to use TTS for the content. */
+  tts?: boolean;
+  /** The flags to use in the message. */
+  flags?: number;
+}
+
+/** The options for {@link MessageInteractionContext#send} and {@link MessageInteractionContext#sendFollowUp}. */
+export interface MessageOptions extends EditMessageOptions {
+  /** Whether to use TTS for the content. */
+  tts?: boolean;
+  /** The flags to use in the message. */
+  flags?: number;
+  /**
+   * Whether or not the message should be ephemeral.
+   * Ignored if `flags` is defined.
+   */
+  ephemeral?: boolean;
+}

@@ -1,9 +1,9 @@
 import { CommandUser, ResolvedMemberData } from '../constants';
-import SlashCreator from '../creator';
-import User from './user';
+import { SlashCreator } from '../creator';
+import { User } from './user';
 
 /** Represents a resolved member object. */
-class ResolvedMember {
+export class ResolvedMember {
   /** The member's ID */
   readonly id: string;
   /** The member's nickname */
@@ -55,5 +55,3 @@ class ResolvedMember {
     return this.nick || this.user.username;
   }
 }
-
-export default ResolvedMember;

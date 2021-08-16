@@ -1,147 +1,11 @@
 import { AnyComponent, InteractionType, UserObject } from '../constants';
 import { EditMessageOptions } from './interfaces/messageInteraction';
-import SlashCreator from '../creator';
-import MessageInteractionContext from './interfaces/messageInteraction';
-import User from './user';
-
-/** A message interaction. */
-export interface MessageInteraction {
-  /** The ID of the interaction. */
-  id: string;
-  /** The type of interaction. */
-  type: InteractionType;
-  /** The name of the command. */
-  name: string;
-  /** The user who invoked the interaction. */
-  user: User;
-}
-
-/** A message reference. */
-export interface MessageReference {
-  /** The ID of the channel the reference is from. */
-  channelID: string;
-  /** The ID of the guild the reference is from. */
-  guildID?: string;
-  /** The message ID of the reference. */
-  messageID?: string;
-}
-
-/** A message attachment. */
-export interface MessageAttachment {
-  /** The ID of the attachment. */
-  id: string;
-  /** The filename of the attachment. */
-  filename: string;
-  /** The attachment's content type. */
-  content_type?: string;
-  /** The size of the attachment in bytes. */
-  size: number;
-  /** The source URL of the attachment. */
-  url: string;
-  /** The proxied URL of the attachment. */
-  proxy_url: string;
-  /** The height of the image, if the attachment was an image. */
-  height?: number;
-  /** The width of the image, if the attachment was an image. */
-  width?: number;
-}
-
-/** Options to creating a message embed. */
-export interface MessageEmbedOptions {
-  author?: EmbedAuthorOptions;
-  color?: number;
-  description?: string;
-  fields?: EmbedField[];
-  footer?: EmbedFooterOptions;
-  image?: EmbedImageOptions;
-  thumbnail?: EmbedImageOptions;
-  timestamp?: Date | string;
-  title?: string;
-  url?: string;
-}
-
-/** A message embed. */
-export interface MessageEmbed extends Omit<MessageEmbedOptions, 'footer' | 'image' | 'thumbnail' | 'author'> {
-  author?: EmbedAuthor;
-  footer?: EmbedFooter;
-  image?: EmbedImage;
-  provider?: EmbedProvider;
-  thumbnail?: EmbedImage;
-  type: string;
-  video?: EmbedVideo;
-}
-export interface EmbedAuthor extends EmbedAuthorOptions {
-  proxy_icon_url?: string;
-}
-export interface EmbedAuthorOptions {
-  icon_url?: string;
-  name: string;
-  url?: string;
-}
-export interface EmbedField {
-  inline?: boolean;
-  name: string;
-  value: string;
-}
-export interface EmbedFooter extends EmbedFooterOptions {
-  proxy_icon_url?: string;
-}
-export interface EmbedFooterOptions {
-  icon_url?: string;
-  text: string;
-}
-export interface EmbedImage extends EmbedImageOptions {
-  height?: number;
-  proxy_url?: string;
-  width?: number;
-}
-export interface EmbedImageOptions {
-  url?: string;
-}
-export interface EmbedProvider {
-  name?: string;
-  url?: string;
-}
-export interface EmbedVideo {
-  height?: number;
-  url?: string;
-  width?: number;
-}
-
-/** @hidden */
-export interface MessageData {
-  id: string;
-  type: number;
-  content: string;
-  channel_id: string;
-  components?: AnyComponent[];
-  author: UserObject;
-  attachments: MessageAttachment[];
-  embeds: MessageEmbed[];
-  mentions: string[];
-  mention_roles: string[];
-  pinned: boolean;
-  mention_everyone: boolean;
-  tts: boolean;
-  timestamp: string;
-  edited_timestamp: string | null;
-  flags: number;
-  interaction?: {
-    id: string;
-    type: InteractionType;
-    name: string;
-    user: UserObject;
-  };
-  webhook_id: string;
-  message_reference?: {
-    channel_id: string;
-    guild_id?: string;
-    message_id?: string;
-  };
-}
+import { SlashCreator } from '../creator';
+import { MessageInteractionContext } from './interfaces/messageInteraction';
+import { User } from './user';
 
 /** Represents a Discord message. */
-class Message {
+export class Message {
   /** The message's ID */
   readonly id: string;
   /** The message type */
@@ -245,4 +109,147 @@ class Message {
   }
 }
 
-export default Message;
+/** A message interaction. */
+export interface MessageInteraction {
+  /** The ID of the interaction. */
+  id: string;
+  /** The type of interaction. */
+  type: InteractionType;
+  /** The name of the command. */
+  name: string;
+  /** The user who invoked the interaction. */
+  user: User;
+}
+
+/** A message reference. */
+export interface MessageReference {
+  /** The ID of the channel the reference is from. */
+  channelID: string;
+  /** The ID of the guild the reference is from. */
+  guildID?: string;
+  /** The message ID of the reference. */
+  messageID?: string;
+}
+
+/** A message attachment. */
+export interface MessageAttachment {
+  /** The ID of the attachment. */
+  id: string;
+  /** The filename of the attachment. */
+  filename: string;
+  /** The attachment's content type. */
+  content_type?: string;
+  /** The size of the attachment in bytes. */
+  size: number;
+  /** The source URL of the attachment. */
+  url: string;
+  /** The proxied URL of the attachment. */
+  proxy_url: string;
+  /** The height of the image, if the attachment was an image. */
+  height?: number;
+  /** The width of the image, if the attachment was an image. */
+  width?: number;
+}
+
+/** Options to creating a message embed. */
+export interface MessageEmbedOptions {
+  author?: EmbedAuthorOptions;
+  color?: number;
+  description?: string;
+  fields?: EmbedField[];
+  footer?: EmbedFooterOptions;
+  image?: EmbedImageOptions;
+  thumbnail?: EmbedImageOptions;
+  timestamp?: Date | string;
+  title?: string;
+  url?: string;
+}
+
+/** A message embed. */
+export interface MessageEmbed extends Omit<MessageEmbedOptions, 'footer' | 'image' | 'thumbnail' | 'author'> {
+  author?: EmbedAuthor;
+  footer?: EmbedFooter;
+  image?: EmbedImage;
+  provider?: EmbedProvider;
+  thumbnail?: EmbedImage;
+  type: string;
+  video?: EmbedVideo;
+}
+
+export interface EmbedAuthor extends EmbedAuthorOptions {
+  proxy_icon_url?: string;
+}
+
+export interface EmbedAuthorOptions {
+  icon_url?: string;
+  name: string;
+  url?: string;
+}
+
+export interface EmbedField {
+  inline?: boolean;
+  name: string;
+  value: string;
+}
+
+export interface EmbedFooter extends EmbedFooterOptions {
+  proxy_icon_url?: string;
+}
+
+export interface EmbedFooterOptions {
+  icon_url?: string;
+  text: string;
+}
+
+export interface EmbedImage extends EmbedImageOptions {
+  height?: number;
+  proxy_url?: string;
+  width?: number;
+}
+
+export interface EmbedImageOptions {
+  url?: string;
+}
+
+export interface EmbedProvider {
+  name?: string;
+  url?: string;
+}
+
+export interface EmbedVideo {
+  height?: number;
+  url?: string;
+  width?: number;
+}
+
+/** @hidden */
+export interface MessageData {
+  id: string;
+  type: number;
+  content: string;
+  channel_id: string;
+  components?: AnyComponent[];
+  author: UserObject;
+  attachments: MessageAttachment[];
+  embeds: MessageEmbed[];
+  mentions: string[];
+  mention_roles: string[];
+  pinned: boolean;
+  mention_everyone: boolean;
+  tts: boolean;
+  timestamp: string;
+  edited_timestamp: string | null;
+  flags: number;
+  interaction?: {
+    id: string;
+    type: InteractionType;
+    name: string;
+    user: UserObject;
+  };
+  webhook_id: string;
+  message_reference?: {
+    channel_id: string;
+    guild_id?: string;
+    message_id?: string;
+  };
+}

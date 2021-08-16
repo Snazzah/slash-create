@@ -5,71 +5,12 @@ import {
   PartialApplicationCommand,
   PermissionNames
 } from './constants';
-import CommandContext from './structures/interfaces/commandContext';
-import SlashCreator from './creator';
+import { CommandContext } from './structures/interfaces/commandContext';
+import { SlashCreator } from './creator';
 import { oneLine, validateOptions } from './util';
 
-/** The options for a {@link SlashCommand}. */
-export interface SlashCommandOptions {
-  /** The type of command this is. Defaults to chat input, or a regular slash command. */
-  type?: ApplicationCommandType;
-  /** The name of the command. */
-  name: string;
-  /** The description of the command. */
-  description?: string;
-  /** The guild ID(s) that this command will be assigned to. */
-  guildIDs?: string | string[];
-  /** The required permission(s) for this command. */
-  requiredPermissions?: Array<string>;
-  /** The command's options. */
-  options?: ApplicationCommandOption[];
-  /** The throttling options for the command. */
-  throttling?: ThrottlingOptions;
-  /** Whether this command is used for unknown commands. */
-  unknown?: boolean;
-  /** Whether responses from this command should defer ephemeral messages. */
-  deferEphemeral?: boolean;
-  /** Whether to enable this command for everyone by default. `true` by default. */
-  defaultPermission?: boolean;
-  /** The command permissions per guild */
-  permissions?: CommandPermissions;
-}
-
-/**
- * The command permission for a {@link SlashCommand}.
- * The object is a guild ID mapped to an array of {@link ApplicationCommandPermissions}.
- * @example
- * {
- *   '<guild_id>': [
- *     {
- *       type: ApplicationCommandPermissionType.USER,
- *       id: '<user_id>',
- *       permission: true
- *     }
- *   ]
- * }
- */
-export interface CommandPermissions {
-  [guildID: string]: ApplicationCommandPermissions[];
-}
-
-/** The throttling options for a {@link SlashCommand}. */
-export interface ThrottlingOptions {
-  /** Maximum number of usages of the command allowed in the time frame. */
-  usages: number;
-  /** Amount of time to count the usages of the command within (in seconds). */
-  duration: number;
-}
-
-/** @private */
-export interface ThrottleObject {
-  start: number;
-  usages: number;
-  timeout: any;
-}
-
 /** Represents a Discord slash command. */
-export default class SlashCommand {
+export class SlashCommand {
   /** The command's name. */
   readonly commandName: string;
   /** The type of command this is. */
@@ -330,4 +271,65 @@ export default class SlashCommand {
       if (opts.throttling.duration < 1) throw new RangeError('Command throttling duration must be at least 1.');
     }
   }
+}
+
+export const Command = SlashCommand;
+
+/** The options for a {@link SlashCommand}. */
+export interface SlashCommandOptions {
+  /** The type of command this is. Defaults to chat input, or a regular slash command. */
+  type?: ApplicationCommandType;
+  /** The name of the command. */
+  name: string;
+  /** The description of the command. */
+  description?: string;
+  /** The guild ID(s) that this command will be assigned to. */
+  guildIDs?: string | string[];
+  /** The required permission(s) for this command. */
+  requiredPermissions?: Array<string>;
+  /** The command's options. */
+  options?: ApplicationCommandOption[];
+  /** The throttling options for the command. */
+  throttling?: ThrottlingOptions;
+  /** Whether this command is used for unknown commands. */
+  unknown?: boolean;
+  /** Whether responses from this command should defer ephemeral messages. */
+  deferEphemeral?: boolean;
+  /** Whether to enable this command for everyone by default. `true` by default. */
+  defaultPermission?: boolean;
+  /** The command permissions per guild */
+  permissions?: CommandPermissions;
+}
+
+/**
+ * The command permission for a {@link SlashCommand}.
+ * The object is a guild ID mapped to an array of {@link ApplicationCommandPermissions}.
+ * @example
+ * {
+ *   '<guild_id>': [
+ *     {
+ *       type: ApplicationCommandPermissionType.USER,
+ *       id: '<user_id>',
+ *       permission: true
+ *     }
+ *   ]
+ * }
+ */
+export interface CommandPermissions {
+  [guildID: string]: ApplicationCommandPermissions[];
+}
+
+/** The throttling options for a {@link SlashCommand}. */
+export interface ThrottlingOptions {
+  /** Maximum number of usages of the command allowed in the time frame. */
+  usages: number;
+  /** Amount of time to count the usages of the command within (in seconds). */
+  duration: number;
+}
+
+/** @private */
+export interface ThrottleObject {
+  start: number;
+  usages: number;
+  timeout: any;
 }

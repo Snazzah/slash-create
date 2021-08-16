@@ -1,4 +1,4 @@
-import Server, { RequestHandler } from '../server';
+import { Server, ServerRequestHandler } from '../server';
 // @ts-ignore
 import type { Context, HttpRequest } from '@azure/functions';
 
@@ -6,8 +6,8 @@ import type { Context, HttpRequest } from '@azure/functions';
  * A server for Azure Function integration
  * @see https://docs.microsoft.com/en-us/azure/azure-functions/
  */
-class AzureFunctionServer extends Server {
-  private _handler?: RequestHandler;
+export class AzureFunctionServer extends Server {
+  private _handler?: ServerRequestHandler;
 
   constructor(moduleExports: any, target = 'interactions') {
     super({ alreadyListening: true });
@@ -42,9 +42,7 @@ class AzureFunctionServer extends Server {
   }
 
   /** @private */
-  createEndpoint(path: string, handler: RequestHandler) {
+  createEndpoint(path: string, handler: ServerRequestHandler) {
     this._handler = handler;
   }
 }
-
-export default AzureFunctionServer;

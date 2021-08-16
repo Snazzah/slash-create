@@ -2,6 +2,48 @@
 
 import { AnyRequestData } from './constants';
 
+/**
+ * The base Server for {@link SlashCreator}.
+ * @private
+ */
+export class Server {
+  /** Whether this server is already listening to a port. */
+  alreadyListening: boolean;
+  /** Whether this server is a webserver. */
+  isWebserver: boolean;
+
+  /**
+   * @param opts The server options
+   * @param isWebserver Whether this server is a webserver
+   */
+  constructor(opts: ServerOptions = { alreadyListening: false }, isWebserver = true) {
+    if (this.constructor.name === 'Server') throw new Error('The base Server cannot be instantiated.');
+
+    this.alreadyListening = opts.alreadyListening;
+    this.isWebserver = isWebserver;
+  }
+
+  /** @private */
+  addMiddleware(middleware: Function) {
+    throw new Error(`${this.constructor.name} doesn't have a addMiddleware method.`);
+  }
+
+  /** @private */
+  createEndpoint(path: string, handler: ServerRequestHandler) {
+    throw new Error(`${this.constructor.name} doesn't have a createEndpoint method.`);
+  }
+
+  /** @private */
+  handleInteraction(handler: InteractionHandler) {
+    throw new Error(`${this.constructor.name} doesn't have a handleInteraction method.`);
+  }
+
+  /** @private */
+  async listen(port = 8030, host = 'localhost') {
+    throw new Error(`${this.constructor.name} doesn't have a listen method. You should remove \`.startServer()\`.`);
+  }
+}
+
 /** Options for a {@link Server}. */
 export interface ServerOptions {
   /** Whether or not the server is already listening to a port. */
@@ -43,54 +85,10 @@ export type RespondFunction = (response: Response) => Promise<void>;
  * The handler for pushing requests to a {@link SlashCreator}.
  * @private
  */
-export type RequestHandler = (treq: TransformedRequest, respond: RespondFunction) => void;
+export type ServerRequestHandler = (treq: TransformedRequest, respond: RespondFunction) => void;
 
 /**
  * The handler for pushing interaction events to a {@link SlashCreator}.
  * @private
  */
 export type InteractionHandler = (interaction: AnyRequestData) => void;
-
-/**
- * The base Server for {@link SlashCreator}.
- * @private
- */
-class Server {
-  /** Whether this server is already listening to a port. */
-  alreadyListening: boolean;
-  /** Whether this server is a webserver. */
-  isWebserver: boolean;
-
-  /**
-   * @param opts The server options
-   * @param isWebserver Whether this server is a webserver
-   */
-  constructor(opts: ServerOptions = { alreadyListening: false }, isWebserver = true) {
-    if (this.constructor.name === 'Server') throw new Error('The base Server cannot be instantiated.');
-
-    this.alreadyListening = opts.alreadyListening;
-    this.isWebserver = isWebserver;
-  }
-
-  /** @private */
-  addMiddleware(middleware: Function) {
-    throw new Error(`${this.constructor.name} doesn't have a addMiddleware method.`);
-  }
-
-  /** @private */
-  createEndpoint(path: string, handler: RequestHandler) {
-    throw new Error(`${this.constructor.name} doesn't have a createEndpoint method.`);
-  }
-
-  /** @private */
-  handleInteraction(handler: InteractionHandler) {
-    throw new Error(`${this.constructor.name} doesn't have a handleInteraction method.`);
-  }
-
-  /** @private */
-  async listen(port = 8030, host = 'localhost') {
-    throw new Error(`${this.constructor.name} doesn't have a listen method. You should remove \`.startServer()\`.`);
-  }
-}
-
-export default Server;

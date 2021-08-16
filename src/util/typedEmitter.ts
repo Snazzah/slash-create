@@ -3,14 +3,11 @@
  * https://npm.im/typed-emitter
  */
 
-/** @hidden */
-export type Arguments<T> = [T] extends [(...args: infer U) => any] ? U : [T] extends [void] ? [] : [T];
-
 /**
  * Type-safe event emitter.
  * @hidden
  */
-interface TypedEventEmitter<Events> {
+export interface TypedEventEmitter<Events> {
   /** @hidden */
   addListener<E extends keyof Events>(event: E, listener: Events[E]): this;
   /** @hidden */
@@ -46,4 +43,5 @@ interface TypedEventEmitter<Events> {
   setMaxListeners(maxListeners: number): this;
 }
 
-export default TypedEventEmitter;
+/** @hidden */
+export type Arguments<T> = [T] extends [(...args: infer U) => any] ? U : [T] extends [void] ? [] : [T];

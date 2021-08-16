@@ -1,7 +1,7 @@
 import { ClientRequest, IncomingMessage } from 'http';
 
 /** An Discord error from a request. */
-class DiscordRESTError extends Error {
+export class DiscordRESTError extends Error {
   /** The client request of the error. */
   readonly req: ClientRequest;
   /** The response from the server. */
@@ -68,5 +68,3 @@ class DiscordRESTError extends Error {
     return messages;
   }
 }
-
-export default DiscordRESTError;

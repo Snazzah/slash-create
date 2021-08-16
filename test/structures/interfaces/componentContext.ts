@@ -14,10 +14,10 @@ import {
   followUpMessage,
   selectMessageInteraction
 } from '../../__util__/constants';
-import ComponentContext from '../../../src/structures/interfaces/componentContext';
+import { ComponentContext } from '../../../src/structures/interfaces/componentContext';
 import { InteractionResponseType } from '../../../src/constants';
 import { editMessage } from '../../__util__/nock';
-import Message from '../../../src/structures/message';
+import { Message } from '../../../src/structures/message';
 
 describe('ComponentContext', () => {
   describe('constructor', () => {

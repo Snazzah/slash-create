@@ -17,114 +17,18 @@ import {
   PartialApplicationCommandPermissions,
   ApplicationCommandType
 } from './constants';
-import SlashCommand from './command';
-import TypedEmitter from './util/typedEmitter';
-import RequestHandler from './util/requestHandler';
-import SlashCreatorAPI from './api';
-import Server, { TransformedRequest, RespondFunction, Response } from './server';
-import CommandContext from './structures/interfaces/commandContext';
+import { SlashCommand } from './command';
+import { TypedEventEmitter } from './util/typedEmitter';
+import { RequestHandler } from './util/requestHandler';
+import { SlashCreatorAPI } from './api';
+import { Server, TransformedRequest, RespondFunction, Response } from './server';
+import { CommandContext } from './structures/interfaces/commandContext';
 import isEqual from 'lodash.isequal';
 import uniq from 'lodash.uniq';
-import ComponentContext from './structures/interfaces/componentContext';
-
-/**
- * The events typings for the {@link SlashCreator}.
- * @private
- */
-interface SlashCreatorEvents {
-  ping: (user?: CommandUser) => void;
-  synced: () => void;
-  rawREST: (request: RawRequest) => void;
-  warn: (warning: Error | string) => void;
-  debug: (message: string) => void;
-  error: (err: Error) => void;
-  unverifiedRequest: (treq: TransformedRequest) => void;
-  unknownInteraction: (interaction: any) => void;
-  rawInteraction: (interaction: AnyRequestData) => void;
-  commandInteraction: (interaction: InteractionRequestData, respond: RespondFunction, webserverMode: boolean) => void;
-  componentInteraction: (ctx: ComponentContext) => void;
-  commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
-  commandUnregister: (command: SlashCommand) => void;
-  commandReregister: (command: SlashCommand, oldCommand: SlashCommand) => void;
-  commandBlock: (command: SlashCommand, ctx: CommandContext, reason: string, data: any) => void;
-  commandError: (command: SlashCommand, err: Error, ctx: CommandContext) => void;
-  commandRun: (command: SlashCommand, promise: Promise<any>, ctx: CommandContext) => void;
-}
-
-/** The options for the {@link SlashCreator}. */
-interface SlashCreatorOptions {
-  /** Your Application's ID */
-  applicationID: string;
-  /**
-   * The public key for your application.
-   * Required for webservers.
-   */
-  publicKey?: string;
-  /**
-   * The bot/client token for the application.
-   * Recommended to set this in your config.
-   */
-  token?: string;
-  /** The path where the server will listen for interactions. */
-  endpointPath?: string;
-  /** The port where the server will listen on. */
-  serverPort?: number;
-  /** The host where the server will listen on. */
-  serverHost?: string;
-  /**
-   * Whether to respond to an unknown command with an ephemeral message.
-   * If an unknown command is registered, this is ignored.
-   */
-  unknownCommandResponse?: boolean;
-  /**
-   * Whether to hand off command interactions to the `commandInteraction` event
-   * rather than handle it automatically.
-   */
-  handleCommandsManually?: boolean;
-  /** The default allowed mentions for all messages. */
-  allowedMentions?: MessageAllowedMentions;
-  /** The default format to provide user avatars in. */
-  defaultImageFormat?: ImageFormat;
-  /** The default image size to provide user avatars in. */
-  defaultImageSize?: number;
-  /** The average latency where SlashCreate will start emitting warnings for. */
-  latencyThreshold?: number;
-  /** A number of milliseconds to offset the ratelimit timing calculations by. */
-  ratelimiterOffset?: number;
-  /** A number of milliseconds before requests are considered timed out. */
-  requestTimeout?: number;
-  /** A number of milliseconds before requests with a timestamp past that time get rejected. */
-  maxSignatureTimestamp?: number;
-  /** A HTTP Agent used to proxy requests */
-  agent?: HTTPS.Agent;
-}
-
-/** The options for {@link SlashCreator#syncCommands}. */
-interface SyncCommandOptions {
-  /** Whether to delete commands that do not exist in the creator. */
-  deleteCommands?: boolean;
-  /** Whether to sync guild-specific commands. */
-  syncGuilds?: boolean;
-  /**
-   * Whether to skip over guild syncing errors.
-   * Guild syncs most likely can error if that guild no longer exists.
-   */
-  skipGuildErrors?: boolean;
-  /** Whether to sync command permissions after syncing commands. */
-  syncPermissions?: boolean;
-}
-
-/** A component callback from {@see MessageInteractionContext#registerComponent}. */
-export type ComponentRegisterCallback = (ctx: ComponentContext) => void;
-
-/** @hidden */
-interface ComponentCallback {
-  callback: ComponentRegisterCallback;
-  expires: number;
-}
+import { ComponentContext } from './structures/interfaces/componentContext';
 
 /** The main class for using commands and interactions. */
-class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashCreatorEvents>) {
+export class SlashCreator extends (EventEmitter as any as new () => TypedEventEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */
@@ -812,4 +716,100 @@ class SlashCreator extends (EventEmitter as any as new () => TypedEmitter<SlashC
   }
 }
 
-export default SlashCreator;
+export const Creator = SlashCreator;
+
+/**
+ * The events typings for the {@link SlashCreator}.
+ * @private
+ */
+interface SlashCreatorEvents {
+  ping: (user?: CommandUser) => void;
+  synced: () => void;
+  rawREST: (request: RawRequest) => void;
+  warn: (warning: Error | string) => void;
+  debug: (message: string) => void;
+  error: (err: Error) => void;
+  unverifiedRequest: (treq: TransformedRequest) => void;
+  unknownInteraction: (interaction: any) => void;
+  rawInteraction: (interaction: AnyRequestData) => void;
+  commandInteraction: (interaction: InteractionRequestData, respond: RespondFunction, webserverMode: boolean) => void;
+  componentInteraction: (ctx: ComponentContext) => void;
+  commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
+  commandUnregister: (command: SlashCommand) => void;
+  commandReregister: (command: SlashCommand, oldCommand: SlashCommand) => void;
+  commandBlock: (command: SlashCommand, ctx: CommandContext, reason: string, data: any) => void;
+  commandError: (command: SlashCommand, err: Error, ctx: CommandContext) => void;
+  commandRun: (command: SlashCommand, promise: Promise<any>, ctx: CommandContext) => void;
+}
+
+/** The options for the {@link SlashCreator}. */
+export interface SlashCreatorOptions {
+  /** Your Application's ID */
+  applicationID: string;
+  /**
+   * The public key for your application.
+   * Required for webservers.
+   */
+  publicKey?: string;
+  /**
+   * The bot/client token for the application.
+   * Recommended to set this in your config.
+   */
+  token?: string;
+  /** The path where the server will listen for interactions. */
+  endpointPath?: string;
+  /** The port where the server will listen on. */
+  serverPort?: number;
+  /** The host where the server will listen on. */
+  serverHost?: string;
+  /**
+   * Whether to respond to an unknown command with an ephemeral message.
+   * If an unknown command is registered, this is ignored.
+   */
+  unknownCommandResponse?: boolean;
+  /**
+   * Whether to hand off command interactions to the `commandInteraction` event
+   * rather than handle it automatically.
+   */
+  handleCommandsManually?: boolean;
+  /** The default allowed mentions for all messages. */
+  allowedMentions?: MessageAllowedMentions;
+  /** The default format to provide user avatars in. */
+  defaultImageFormat?: ImageFormat;
+  /** The default image size to provide user avatars in. */
+  defaultImageSize?: number;
+  /** The average latency where SlashCreate will start emitting warnings for. */
+  latencyThreshold?: number;
+  /** A number of milliseconds to offset the ratelimit timing calculations by. */
+  ratelimiterOffset?: number;
+  /** A number of milliseconds before requests are considered timed out. */
+  requestTimeout?: number;
+  /** A number of milliseconds before requests with a timestamp past that time get rejected. */
+  maxSignatureTimestamp?: number;
+  /** A HTTP Agent used to proxy requests */
+  agent?: HTTPS.Agent;
+}
+
+/** The options for {@link SlashCreator#syncCommands}. */
+interface SyncCommandOptions {
+  /** Whether to delete commands that do not exist in the creator. */
+  deleteCommands?: boolean;
+  /** Whether to sync guild-specific commands. */
+  syncGuilds?: boolean;
+  /**
+   * Whether to skip over guild syncing errors.
+   * Guild syncs most likely can error if that guild no longer exists.
+   */
+  skipGuildErrors?: boolean;
+  /** Whether to sync command permissions after syncing commands. */
+  syncPermissions?: boolean;
+}
+
+/** A component callback from {@see MessageInteractionContext#registerComponent}. */
+export type ComponentRegisterCallback = (ctx: ComponentContext) => void;
+
+/** @hidden */
+interface ComponentCallback {
+  callback: ComponentRegisterCallback;
+  expires: number;
+}

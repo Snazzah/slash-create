@@ -7,7 +7,7 @@ import {
   InteractionType,
   MessageComponentRequestData
 } from '../../src/constants';
-import SlashCreator from '../../src/creator';
+import { SlashCreator } from '../../src/creator';
 import { RespondFunction } from '../../src/server';
 import { MessageData } from '../../src/structures/message';
 

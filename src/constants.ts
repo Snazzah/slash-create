@@ -5,9 +5,8 @@ import { SlashCreator } from './creator';
 import { RespondFunction, TransformedRequest } from './server';
 import { ComponentContext } from './structures/interfaces/componentContext';
 import { MessageData } from './structures/message';
-import { version } from '../package.json';
 
-export const VERSION: string = version;
+export const VERSION: string = require('../package.json').version;
 
 export const API_VERSION = 8;
 export const INTERACTION_VERSION = 1;

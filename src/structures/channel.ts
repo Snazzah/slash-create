@@ -28,7 +28,7 @@ export class Channel {
 
   /** The string that mentions this channel. */
   get mention() {
-    return `<@#${this.id}>`;
+    return `<#${this.id}>`;
   }
 
   /** The permissions the member has. */

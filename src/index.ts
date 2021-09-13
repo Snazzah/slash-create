@@ -19,6 +19,7 @@ export * from './servers/express';
 export * from './servers/fastify';
 export * from './servers/gateway';
 export * from './servers/gcf';
+export * from './servers/vercel';
 
 export * from './structures/member';
 export * from './structures/message';

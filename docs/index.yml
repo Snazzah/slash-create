@@ -30,3 +30,5 @@
       path: lambda.md
     - name: Azure Functions
       path: azure.md
+    - name: Vercel
+      path: vercel.md

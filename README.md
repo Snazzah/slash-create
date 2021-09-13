@@ -4,9 +4,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/slash-create?maxAge=3600)](https://www.npmjs.com/package/slash-create) [![NPM downloads](https://img.shields.io/npm/dt/slash-create?maxAge=3600)](https://www.npmjs.com/package/slash-create) [![ESLint status](https://github.com/Snazzah/slash-create/workflows/ESLint/badge.svg)](https://github.com/Snazzah/slash-create/actions?query=workflow%3A%22ESLint%22) [![DeepScan grade](https://deepscan.io/api/teams/11596/projects/15103/branches/297399/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=11596&pid=15103&bid=297399) [![discord chat](https://img.shields.io/discord/311027228177727508?logo=discord&logoColor=white)](https://snaz.in/discord)
 
-Creator and handler for Discord's [slash commands](https://discord.com/developers/docs/interactions/slash-commands).
-
-You can create commands similar to Discord.JS [Commando](https://github.com/discordjs/Commando).
+Create [Discord slash commands](https://discord.com/developers/docs/interactions/application-commands) similar to Discord.JS [Commando](https://github.com/discordjs/Commando).
 
 
 </div>

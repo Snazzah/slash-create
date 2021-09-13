@@ -12,11 +12,10 @@ export class VercelServer extends Server {
 
   constructor() {
     super({ alreadyListening: true });
-    // moduleExports = this._onRequest.bind(this);
   }
 
   /** The endpoint Vercel uses for serverless functions. */
-  vercelEndpoint(req: VercelRequest, res: VercelResponse) {
+  vercelEndpoint = (req: VercelRequest, res: VercelResponse) => {
     if (!this._handler) return res.status(503).send('Server has no handler.');
     if (req.method !== 'POST') return res.status(405).send('Server only supports POST requests.');
     this._handler(
@@ -32,7 +31,7 @@ export class VercelServer extends Server {
         res.send(response.body);
       }
     );
-  }
+  };
 
   /** @private */
   createEndpoint(path: string, handler: ServerRequestHandler) {

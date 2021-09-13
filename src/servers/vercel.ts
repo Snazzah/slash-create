@@ -10,16 +10,13 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 export class VercelServer extends Server {
   private _handler?: ServerRequestHandler;
 
-  /**
-   * @param moduleExports The exports for your module, must be `module.exports`
-   * @param target The name of the exported function
-   */
   constructor() {
     super({ alreadyListening: true });
     // moduleExports = this._onRequest.bind(this);
   }
 
-  vercelEndpoint = (req: VercelRequest, res: VercelResponse) => {
+  /** The endpoint Vercel uses for serverless functions. */
+  vercelEndpoint(req: VercelRequest, res: VercelResponse) {
     if (!this._handler) return res.status(503).send('Server has no handler.');
     if (req.method !== 'POST') return res.status(405).send('Server only supports POST requests.');
     this._handler(
@@ -35,7 +32,7 @@ export class VercelServer extends Server {
         res.send(response.body);
       }
     );
-  };
+  }
 
   /** @private */
   createEndpoint(path: string, handler: ServerRequestHandler) {

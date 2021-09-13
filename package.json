@@ -60,7 +60,6 @@
     "@types/sinonjs__fake-timers": "6.0.1",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
-    "@vercel/node": "^1.12.1",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
     "chai-nock": "^1.3.0",

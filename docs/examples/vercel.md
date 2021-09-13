@@ -1,52 +1,17 @@
-**➡️ Please note that a working templatereference can be found [here](https://github.com/GabrielTK/VercelSlashCreate).**
 
-The most important thing is to:
-1. Export the VercelServer instance:
-```ts
-const { VercelServer } = require('slash-create');
-const vercelServer = new VercelServer();
-creator
-  .withServer(vercelServer)
-  .registerCommandsIn(path.join(__dirname, 'commands'))
-  //.syncCommands()
+You can deploy the template with [Vercel](https://vercel.com/) by clicking the button below:
 
-export const vercel = vercelServer;
-export const slash = creator;
-```
-2. Then, create a directory called `api`, with the two following files:
-
-* `interactions.ts`
-```ts
-import { vercel } from ".."; //This is the VercelServer we exported from the previous step.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSnazzah%2Fslash-create-vercel&env=DISCORD_APP_ID,DISCORD_PUBLIC_KEY,DISCORD_BOT_TOKEN&envDescription=Variables%20needed%20to%20recognize%20and%20operate%20slash%20commands.&project-name=discord-interactions&repo-name=discord-slash-commands&demo-description=Deploy%20a%20slash-create%20server%20for%20Discord%20interactions.&demo-image=https%3A%2F%2Fget.snaz.in%2F4MVTTaR.png&demo-title=%2Fcreate&demo-url=https%3A%2F%2Fslash-create.js.org)
 
 
-export default vercel.vercelEndpoint;
-```
+Fill out the environment variables with the credentials from your application's page.
 
-* `resync.ts` - This file can be renamed, and will be used to resync the interactions with Discord API. I recommend you use this as a post-deploy hook.
+Your interactions URL will be the domain of the deployment with `/api/interactions` appended to it. (Example: `https://slash-create.vercel.app`)
 
-```ts
-import { VercelRequest, VercelResponse } from "@vercel/node";
-import { slash } from "..";
+> If the build fails, set the Install Command to `yarn install --network-concurrency 1` on Vercel.
 
-const api = async (req: VercelRequest, res: VercelResponse) => {
-  //I do recommend you add secret verification here, or some security check.
-  slash.syncCommands();
-  //This basically waits until the sync is done
-  let awaiter = new Promise((resolve,reject) => {
-  slash.on('synced', () => {
-    console.log("Elapsed Sync")
-   resolve(true);
-  });
-  });
-  slash.syncCommands();
-  await awaiter;
-  res.status(200).send(JSON.stringify(slash.commands.map(c => [{name: c.commandName, description: c.description}])));
-}
-export default api;
-```
 
-Now, just push it to Vercel! Be sure to verify that the source files are not exposed, and that `/api/interactions` results in a response such as `Server only supports POST requests.` - That's the URL you'll use as your `INTERACTIONS ENDPOINT URL` on your [Discord Developers Page](https://discord.com/developers/)
+The [template](https://github.com/Snazzah/slash-create-vercel) will handle syncing to Discord after building. You can create a new repo from the template and deploy with Vercel with that repository.
 
 
 

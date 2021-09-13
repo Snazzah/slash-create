@@ -13,5 +13,6 @@ Your interactions URL will be the domain of the deployment with `/api/interactio
 
 The [template](https://github.com/Snazzah/slash-create-vercel) will handle syncing to Discord after building. You can create a new repo from the template and deploy with Vercel with that repository.
 
+# Limitations
 
-
+Since the template is using Vercel's serverless functions, **registering components will not work**.

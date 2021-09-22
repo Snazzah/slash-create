@@ -195,7 +195,7 @@ export class SlashCommand {
   /** Reloads the command. */
   reload() {
     if (!this.filePath) throw new Error('Cannot reload a command without a file path defined!');
-    if (this.filePath && require.cache[this.filePath]) delete require.cache[this.filePath];
+    if (require.cache[this.filePath]) delete require.cache[this.filePath];
     const newCommand = require(this.filePath);
     this.creator.reregisterCommand(newCommand, this);
   }

@@ -5,6 +5,7 @@ import { SlashCreator } from './creator';
 import { RespondFunction, TransformedRequest } from './server';
 import { ComponentContext } from './structures/interfaces/componentContext';
 import { MessageData } from './structures/message';
+import { AutocompleteContext } from '.';
 
 export const VERSION: string = require('../package.json').version;
 
@@ -17,10 +18,14 @@ export const CDN_URL = 'https://cdn.discordapp.com';
 export enum InteractionType {
   /** A ping. */
   PING = 1,
-  /** A command invocation. */
+  /** @deprecated */
   COMMAND = 2,
+  /** A command invocation. */
+  APPLICATION_COMMAND = 2,
   /** An invocation of a message component. */
-  MESSAGE_COMPONENT = 3
+  MESSAGE_COMPONENT = 3,
+  /** An autocomplete invocation of a command. */
+  APPLICATION_COMMAND_AUTOCOMPLETE = 4
 }
 
 /** The types of interaction responses. */
@@ -36,7 +41,9 @@ export enum InteractionResponseType {
   /** Acknowledge the interaction, edit the original message later. */
   DEFERRED_UPDATE_MESSAGE = 6,
   /** Edits the message the component was attached to. */
-  UPDATE_MESSAGE = 7
+  UPDATE_MESSAGE = 7,
+  /** Responds to an autocomplete interaction request. */
+  APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = 8
 }
 
 /** Message flags for interaction responses. */
@@ -67,11 +74,11 @@ export enum CommandOptionType {
   ROLE = 8,
   /** Anything mentionable, returning the ID of the object. */
   MENTIONABLE = 9,
-  /** A number, including decimal numbers. */
+  /** A decimal. */
   NUMBER = 10
 }
 
-/** The types of applicaiion commands available. */
+/** The types of application commands available. */
 export enum ApplicationCommandType {
   /** Slash commands; a text-based command that shows up when a user types `/` */
   CHAT_INPUT = 1,
@@ -155,11 +162,22 @@ export interface ApplicationCommandOptionArgument extends Omit<ApplicationComman
   choices?: ApplicationCommandOptionChoice[];
 }
 
+/**
+ * @private
+ */
+export interface ApplicationCommandOptionAutocompletable extends Omit<ApplicationCommandOptionBase, 'type'> {
+  /** The type of option this one is. */
+  type: CommandOptionType.STRING | CommandOptionType.INTEGER | CommandOptionType.NUMBER;
+  /** Whether this option can be autocompleted. */
+  autocomplete?: boolean;
+}
+
 /** An option in an application command. */
 export type ApplicationCommandOption =
   | ApplicationCommandOptionBase
   | ApplicationCommandOptionSubCommand
-  | ApplicationCommandOptionArgument;
+  | ApplicationCommandOptionArgument
+  | ApplicationCommandOptionAutocompletable;
 
 /** A choice for a user to pick from. */
 export interface ApplicationCommandOptionChoice {
@@ -208,7 +226,11 @@ export interface RawRequest {
 }
 
 /** Any interaction request from Discord. */
-export type AnyRequestData = PingRequestData | InteractionRequestData | MessageComponentRequestData;
+export type AnyRequestData =
+  | PingRequestData
+  | InteractionRequestData
+  | MessageComponentRequestData
+  | CommandAutocompleteRequestData;
 
 /** @private */
 export interface RequestData {
@@ -236,7 +258,7 @@ export interface PingRequestData {
  */
 export interface DMInteractionRequestData {
   version: 1;
-  type: InteractionType.COMMAND;
+  type: InteractionType.APPLICATION_COMMAND;
   token: string;
   id: string;
   channel_id: string;
@@ -250,7 +272,7 @@ export interface DMInteractionRequestData {
  */
 export interface GuildInteractionRequestData {
   version: 1;
-  type: InteractionType.COMMAND;
+  type: InteractionType.APPLICATION_COMMAND;
   token: string;
   id: string;
   channel_id: string;
@@ -327,6 +349,50 @@ export interface GuildMessageComponentRequestData {
  * @private
  */
 export type MessageComponentRequestData = DMMessageComponentRequestData | GuildMessageComponentRequestData;
+
+/**
+ * A message component interaction within a direct message.
+ * @private
+ */
+export interface DMCommandAutocompleteRequestData {
+  version: 1;
+  type: InteractionType.APPLICATION_COMMAND_AUTOCOMPLETE;
+  token: string;
+  id: string;
+  channel_id: string;
+  user: CommandUser;
+  data: AutocompleteData;
+}
+
+/**
+ * A message component interaction within a guild.
+ * @private
+ */
+export interface GuildCommandAutocompleteRequestData {
+  version: 1;
+  type: InteractionType.APPLICATION_COMMAND_AUTOCOMPLETE;
+  token: string;
+  id: string;
+  channel_id: string;
+  guild_id: string;
+  member: CommandMember;
+  data: AutocompleteData;
+}
+
+/** @private */
+export interface AutocompleteData {
+  id: string;
+  name: string;
+  type: ApplicationCommandType;
+  version: string;
+  options: AnyCommandOption[];
+}
+
+/**
+ * Any message component interaction.
+ * @private
+ */
+export type CommandAutocompleteRequestData = DMCommandAutocompleteRequestData | GuildCommandAutocompleteRequestData;
 
 /** @private */
 export interface ResolvedMemberData {
@@ -410,6 +476,7 @@ export interface CommandStringOption {
   name: string;
   type?: CommandOptionType.STRING | CommandOptionType.USER | CommandOptionType.CHANNEL | CommandOptionType.ROLE;
   value: string;
+  focused?: boolean;
 }
 
 /** @private */
@@ -418,6 +485,7 @@ export interface CommandIntegerOption {
   name: string;
   type?: CommandOptionType.INTEGER;
   value: number;
+  focused?: boolean;
 }
 
 /** @private */
@@ -694,6 +762,14 @@ declare function commandInteraction(
  * @param ctx The component context
  */
 declare function componentInteraction(ctx: ComponentContext): void;
+/**
+ * Emitted when a autocomplete interaction is given.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param ctx The autocomplete context
+ * @param command The command that is being autocompleted
+ */
+declare function autocompleteInteraction(ctx: AutocompleteContext, command?: SlashCommand): void;
 /**
  * Emitted when a command is registered.
  * @event

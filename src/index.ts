@@ -27,6 +27,7 @@ export * from './structures/permissions';
 export * from './structures/user';
 export * from './structures/userFlags';
 
+export * from './structures/interfaces/autocompleteContext';
 export * from './structures/interfaces/componentContext';
 export * from './structures/interfaces/commandContext';
 export * from './structures/interfaces/messageInteraction';

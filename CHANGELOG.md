@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [4.2.0] - 2021-09-24
+### Added:
+- Autocomplete function to commands ([#134](https://github.com/Snazzah/slash-create/pull/134))
+### Fixed:
+- Reloading commands clears require cache
 ## [4.1.1] - 2021-09-13
 ### Fixed:
 - Fixed Vercel Endpoint
@@ -319,7 +324,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v4.1.1...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v4.2.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -353,3 +358,4 @@ This release features mostly completed documentation and changes to the packages
 [4.0.1]: https://github.com/Snazzah/slash-create/compare/v4.0.0...v4.0.1
 [4.1.0]: https://github.com/Snazzah/slash-create/compare/v4.0.1...v4.1.0
 [4.1.1]: https://github.com/Snazzah/slash-create/compare/v4.1.0...v4.1.1
+[4.2.0]: https://github.com/Snazzah/slash-create/compare/v4.1.1...v4.2.0

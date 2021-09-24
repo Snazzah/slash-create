@@ -8,6 +8,7 @@ import {
 import { CommandContext } from './structures/interfaces/commandContext';
 import { SlashCreator } from './creator';
 import { oneLine, validateOptions } from './util';
+import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
 
 /** Represents a Discord slash command. */
 export class SlashCommand {
@@ -212,6 +213,14 @@ export class SlashCommand {
    */
   async run(ctx: CommandContext): Promise<any> { // eslint-disable-line @typescript-eslint/no-unused-vars, prettier/prettier
     throw new Error(`${this.constructor.name} doesn't have a run() method.`);
+  }
+
+  /**
+   * Runs an autocomplete function.
+   * @param ctx The context of the interaction
+   */
+  async autocomplete(ctx: AutocompleteContext): Promise<any> { // eslint-disable-line @typescript-eslint/no-unused-vars, prettier/prettier
+    throw new Error(`${this.constructor.name} doesn't have a autocomplete() method.`);
   }
 
   /**

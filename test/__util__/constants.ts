@@ -1,6 +1,7 @@
 import {
   ApplicationCommand,
   ApplicationCommandType,
+  CommandAutocompleteRequestData,
   CommandOptionType,
   ComponentType,
   InteractionRequestData,
@@ -75,7 +76,7 @@ export const editedMessage: MessageData = {
 
 export const interactionDefaults: InteractionRequestData = {
   version: 1,
-  type: InteractionType.COMMAND,
+  type: InteractionType.APPLICATION_COMMAND,
   token: MOCK_TOKEN,
   id: '00000000000000000',
   channel_id: '00000000000000000',
@@ -232,6 +233,31 @@ export const subCommandOptionsInteraction: InteractionRequestData = {
             name: 'bool',
             type: CommandOptionType.BOOLEAN,
             value: true
+          }
+        ]
+      }
+    ]
+  }
+};
+
+export const autocompleteInteraction: CommandAutocompleteRequestData = {
+  ...interactionDefaults,
+  type: InteractionType.APPLICATION_COMMAND_AUTOCOMPLETE,
+  data: {
+    id: '0',
+    name: 'sub-command-opts',
+    type: ApplicationCommandType.CHAT_INPUT,
+    version: '0',
+    options: [
+      {
+        name: 'sub-command',
+        type: CommandOptionType.SUB_COMMAND,
+        options: [
+          {
+            name: 'string',
+            type: CommandOptionType.STRING,
+            value: 'incomplete str',
+            focused: true
           }
         ]
       }

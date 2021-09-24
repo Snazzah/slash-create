@@ -15,7 +15,8 @@ import {
   CommandUser,
   InteractionRequestData,
   PartialApplicationCommandPermissions,
-  ApplicationCommandType
+  ApplicationCommandType,
+  CommandAutocompleteRequestData
 } from './constants';
 import { SlashCommand } from './command';
 import { TypedEventEmitter } from './util/typedEmitter';
@@ -26,6 +27,7 @@ import { CommandContext } from './structures/interfaces/commandContext';
 import isEqual from 'lodash.isequal';
 import uniq from 'lodash.uniq';
 import { ComponentContext } from './structures/interfaces/componentContext';
+import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
 
 /** The main class for using commands and interactions. */
 export class SlashCreator extends (EventEmitter as any as new () => TypedEventEmitter<SlashCreatorEvents>) {
@@ -267,7 +269,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           await this.syncCommandsIn(guildID, options.deleteCommands);
         } catch (e) {
           if (options.skipGuildErrors) {
-            this.emit('warn', `An error occurred during guild sync (${guildID}): ${e.message}`);
+            this.emit('warn', `An error occurred during guild sync (${guildID}): ${(e as Error).message}`);
           } else {
             throw e;
           }
@@ -280,7 +282,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         try {
           await this.syncCommandPermissions();
         } catch (e) {
-          this.emit('error', e);
+          this.emit('error', e as Error);
         }
     };
 
@@ -518,7 +520,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       }
   }
 
-  private _getCommandFromInteraction(interaction: InteractionRequestData) {
+  private _getCommandFromInteraction(interaction: InteractionRequestData | CommandAutocompleteRequestData) {
     return 'guild_id' in interaction
       ? this.commands.find(
           (command) =>
@@ -582,7 +584,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           }
         });
       }
-      case InteractionType.COMMAND: {
+      case InteractionType.APPLICATION_COMMAND: {
         if (this.options.handleCommandsManually) {
           this.emit('commandInteraction', interaction, respond, webserverMode);
           return;
@@ -676,6 +678,37 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
             }
           });
       }
+      case InteractionType.APPLICATION_COMMAND_AUTOCOMPLETE: {
+        const command = this._getCommandFromInteraction(interaction);
+        const ctx = new AutocompleteContext(this, interaction, respond);
+        this.emit('autocompleteInteraction', ctx, command);
+
+        if (!command) {
+          this.emit(
+            'debug',
+            `Unknown command autocomplete request: ${interaction.data.name} (${interaction.data.id}, ${
+              'guild_id' in interaction ? `guild ${interaction.guild_id}` : `user ${interaction.user.id}`
+            })`
+          );
+          return respond({
+            status: 400
+          });
+        } else {
+          try {
+            this.emit(
+              'debug',
+              `Running autocomplete function: ${interaction.data.name} (${interaction.data.id}, ${
+                'guild_id' in interaction ? `guild ${interaction.guild_id}` : `user ${interaction.user.id}`
+              })`
+            );
+            const retVal = await command.autocomplete(ctx);
+            if (Array.isArray(retVal) && !ctx.responded) await ctx.sendResults(retVal);
+            return;
+          } catch (err) {
+            return this.emit('error', err as Error);
+          }
+        }
+      }
       default: {
         // @ts-ignore
         this.emit('debug', `Unknown interaction type recieved: ${interaction.type}`);
@@ -700,11 +733,11 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       const retVal = await promise;
       if (retVal) return command.finalize(retVal, ctx);
     } catch (err) {
-      this.emit('commandError', command, err, ctx);
+      this.emit('commandError', command, err as Error, ctx);
       try {
-        return command.onError(err, ctx);
+        return command.onError(err as Error, ctx);
       } catch (secondErr) {
-        return this.emit('error', secondErr);
+        return this.emit('error', secondErr as Error);
       }
     }
   }
@@ -734,6 +767,7 @@ interface SlashCreatorEvents {
   rawInteraction: (interaction: AnyRequestData) => void;
   commandInteraction: (interaction: InteractionRequestData, respond: RespondFunction, webserverMode: boolean) => void;
   componentInteraction: (ctx: ComponentContext) => void;
+  autocompleteInteraction: (ctx: AutocompleteContext, command?: SlashCommand) => void;
   commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
   commandUnregister: (command: SlashCommand) => void;
   commandReregister: (command: SlashCommand, oldCommand: SlashCommand) => void;

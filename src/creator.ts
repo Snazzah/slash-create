@@ -239,6 +239,22 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   }
 
   /**
+   * Registers a global component callback. Note that this will have no expiration, and should be invoked by the returned name.
+   * @param custom_id The custom ID of the component to register
+   * @param callback The callback to use on interaction
+   */
+  registerGlobalComponent(custom_id: string, callback: ComponentRegisterCallback) {
+    if (this._componentCallbacks.has(custom_id))
+      throw new Error(`A global component with the ID "${custom_id}" is already registered.`);
+    const newName = `global-${custom_id}`;
+    this._componentCallbacks.set(newName, {
+      callback,
+      expires: undefined
+    });
+    return newName;
+  }
+
+  /**
    * Sync all commands with Discord. This ensures that commands exist when handling them.
    * <warn>This requires you to have your token set in the creator config.</warn>
    */
@@ -516,7 +532,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   cleanRegisteredComponents() {
     if (this._componentCallbacks.size)
       for (const [key, callback] of this._componentCallbacks) {
-        if (callback.expires < Date.now()) this._componentCallbacks.delete(key);
+        if (callback.expires != null && callback.expires < Date.now()) this._componentCallbacks.delete(key);
       }
   }
 
@@ -666,9 +682,11 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           this.cleanRegisteredComponents();
 
           const componentCallbackKey = `${ctx.message.id}-${ctx.customID}`;
+          const globalCallbackKey = `global-${ctx.customID}`;
           if (this._componentCallbacks.has(componentCallbackKey))
             this._componentCallbacks.get(componentCallbackKey)!.callback(ctx);
-
+          if (this._componentCallbacks.has(globalCallbackKey))
+            this._componentCallbacks.get(globalCallbackKey)!.callback(ctx);
           break;
         } else
           return respond({
@@ -845,5 +863,5 @@ export type ComponentRegisterCallback = (ctx: ComponentContext) => void;
 /** @hidden */
 interface ComponentCallback {
   callback: ComponentRegisterCallback;
-  expires: number;
+  expires?: number;
 }

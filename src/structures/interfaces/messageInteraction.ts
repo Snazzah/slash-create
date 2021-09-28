@@ -260,8 +260,9 @@ export class MessageInteractionContext {
    * This unregisters automatically when the context expires.
    * @param custom_id The custom ID of the component to register
    * @param callback The callback to use on interaction
+   * @param expiration The expiration time of the callback in miliseconds. It is recommendable to use the default. Use null for no expiration.
    */
-  registerComponent(custom_id: string, callback: ComponentRegisterCallback) {
+  registerComponent(custom_id: string, callback: ComponentRegisterCallback, expiration: number = 1000 * 60 * 15) {
     if (this.expired) throw new Error('This interaction has expired');
     if (!this.initiallyResponded || this.deferred)
       throw new Error('You must send a message before registering components');
@@ -270,7 +271,7 @@ export class MessageInteractionContext {
 
     this.creator._componentCallbacks.set(`${this.messageID}-${custom_id}`, {
       callback,
-      expires: this.invokedAt + 1000 * 60 * 15
+      expires: expiration != null ? this.invokedAt + expiration : undefined
     });
   }
 
@@ -280,15 +281,21 @@ export class MessageInteractionContext {
    * @param message_id The message ID of the component to register
    * @param custom_id The custom ID of the component to register
    * @param callback The callback to use on interaction
+   * @param expiration The expiration time of the callback in miliseconds. It is recommendable to use the default. Use null for no expiration.
    */
-  registerComponentFrom(message_id: string, custom_id: string, callback: ComponentRegisterCallback) {
+  registerComponentFrom(
+    message_id: string,
+    custom_id: string,
+    callback: ComponentRegisterCallback,
+    expiration: number = 1000 * 60 * 15
+  ) {
     if (this.expired) throw new Error('This interaction has expired');
     if (!this.initiallyResponded || this.deferred)
       throw new Error('You must send a message before registering components');
 
     this.creator._componentCallbacks.set(`${message_id}-${custom_id}`, {
       callback,
-      expires: this.invokedAt + 1000 * 60 * 15
+      expires: expiration != null ? this.invokedAt + expiration : undefined
     });
   }
 

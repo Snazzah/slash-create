@@ -88,6 +88,7 @@ export enum ApplicationCommandType {
   MESSAGE = 3
 }
 
+/** The types of channels in Discord channels. */
 export enum ChannelType {
   /** A text channel. */
   GUILD_TEXT = 0,

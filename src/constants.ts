@@ -153,12 +153,7 @@ export interface ApplicationCommand extends PartialApplicationCommand {
 
 export interface ApplicationCommandOptionBase {
   /** The type of option this one is. */
-  type:
-    | CommandOptionType.BOOLEAN
-    | CommandOptionType.USER
-    | CommandOptionType.CHANNEL
-    | CommandOptionType.ROLE
-    | CommandOptionType.MENTIONABLE;
+  type: CommandOptionType.BOOLEAN | CommandOptionType.USER | CommandOptionType.ROLE | CommandOptionType.MENTIONABLE;
   /** The name of the option. */
   name: string;
   /** The description of the option. */
@@ -197,7 +192,7 @@ export interface ApplicationCommandOptionAutocompletable extends Omit<Applicatio
   autocomplete?: boolean;
 }
 
-export interface ApplicationCommandOptionChannel extends ApplicationCommandOptionBase {
+export interface ApplicationCommandOptionChannel extends Omit<ApplicationCommandOptionBase, 'type'> {
   /** The type of option this one is. */
   type: CommandOptionType.CHANNEL;
   /** An array of channel types this option can be. */

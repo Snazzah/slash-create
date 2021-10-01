@@ -287,6 +287,7 @@ export interface PingRequestData {
  */
 export interface DMInteractionRequestData {
   version: 1;
+  application_id: string;
   type: InteractionType.APPLICATION_COMMAND;
   token: string;
   id: string;
@@ -301,6 +302,7 @@ export interface DMInteractionRequestData {
  */
 export interface GuildInteractionRequestData {
   version: 1;
+  application_id: string;
   type: InteractionType.APPLICATION_COMMAND;
   token: string;
   id: string;

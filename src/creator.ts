@@ -534,7 +534,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     if (this._componentCallbacks.size)
       for (const [key, callback] of this._componentCallbacks) {
         if (callback.expires != null && callback.expires < Date.now()) {
-          callback.onExpired?.();
+          if (callback.onExpired != null) callback.onExpired();
           this._componentCallbacks.delete(key);
         }
       }

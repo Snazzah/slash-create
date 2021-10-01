@@ -88,6 +88,32 @@ export enum ApplicationCommandType {
   MESSAGE = 3
 }
 
+/** The types of channels in Discord channels. */
+export enum ChannelType {
+  /** A text channel. */
+  GUILD_TEXT = 0,
+  /** A direct message between users. */
+  DM = 1,
+  /** A voice channel. */
+  GUILD_VOICE = 2,
+  /** A direct message between multiple users. */
+  GROUP_DM = 3,
+  /** A channel category containing up to 50 channels. */
+  GUILD_CATEGORY = 4,
+  /** A channel that users can follow and crosspost into their own server. */
+  GUILD_NEWS = 5,
+  /** A channel in which game developers can sell their game. */
+  GUILD_STORE = 6,
+  /** A temporary sub-channel within a `GUILD_NEWS` channel. */
+  GUILD_NEWS_THREAD = 10,
+  /** A temporary sub-channel within a `GUILD_TEXT` channel. */
+  GUILD_PUBLIC_THREAD = 11,
+  /** A temporary sub-channel within a `GUILD_TEXT` channel. */
+  GUILD_PRIVATE_THREAD = 12,
+  /** A voice channel for hosting events with an audience. */
+  GUILD_STAGE_VOICE = 13
+}
+
 /**
  * An partial application command in Discord.
  * @private
@@ -128,12 +154,7 @@ export interface ApplicationCommand extends PartialApplicationCommand {
 
 export interface ApplicationCommandOptionBase {
   /** The type of option this one is. */
-  type:
-    | CommandOptionType.BOOLEAN
-    | CommandOptionType.USER
-    | CommandOptionType.CHANNEL
-    | CommandOptionType.ROLE
-    | CommandOptionType.MENTIONABLE;
+  type: CommandOptionType.BOOLEAN | CommandOptionType.USER | CommandOptionType.ROLE | CommandOptionType.MENTIONABLE;
   /** The name of the option. */
   name: string;
   /** The description of the option. */
@@ -172,12 +193,20 @@ export interface ApplicationCommandOptionAutocompletable extends Omit<Applicatio
   autocomplete?: boolean;
 }
 
+export interface ApplicationCommandOptionChannel extends Omit<ApplicationCommandOptionBase, 'type'> {
+  /** The type of option this one is. */
+  type: CommandOptionType.CHANNEL;
+  /** An array of channel types this option can be. */
+  channel_types?: ChannelType[];
+}
+
 /** An option in an application command. */
 export type ApplicationCommandOption =
   | ApplicationCommandOptionBase
   | ApplicationCommandOptionSubCommand
   | ApplicationCommandOptionArgument
-  | ApplicationCommandOptionAutocompletable;
+  | ApplicationCommandOptionAutocompletable
+  | ApplicationCommandOptionChannel;
 
 /** A choice for a user to pick from. */
 export interface ApplicationCommandOptionChoice {

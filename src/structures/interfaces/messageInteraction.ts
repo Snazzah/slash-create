@@ -288,7 +288,8 @@ export class MessageInteractionContext {
    * @param message_id The message ID of the component to register
    * @param custom_id The custom ID of the component to register
    * @param callback The callback to use on interaction
-   * @param expiration (Optional) A function to be called when the component expires.
+   * @param expiration (Optional) The expiration time of the callback in miliseconds. Use null for no expiration (Although, in this case, global components might be more consistant).
+   * @param onExpired (Optional) A function to be called when the component expires.
    */
   registerComponentFrom(
     message_id: string,

@@ -249,7 +249,8 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     const newName = `global-${custom_id}`;
     this._componentCallbacks.set(newName, {
       callback,
-      expires: undefined
+      expires: undefined,
+      onExpired: undefined
     });
     return newName;
   }
@@ -532,7 +533,10 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   cleanRegisteredComponents() {
     if (this._componentCallbacks.size)
       for (const [key, callback] of this._componentCallbacks) {
-        if (callback.expires != null && callback.expires < Date.now()) this._componentCallbacks.delete(key);
+        if (callback.expires != null && callback.expires < Date.now()) {
+          callback.onExpired?.();
+          this._componentCallbacks.delete(key);
+        }
       }
   }
 
@@ -682,11 +686,11 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           this.cleanRegisteredComponents();
 
           const componentCallbackKey = `${ctx.message.id}-${ctx.customID}`;
-          const globalCallbackKey = `global-${ctx.customID}`;
+
           if (this._componentCallbacks.has(componentCallbackKey))
             this._componentCallbacks.get(componentCallbackKey)!.callback(ctx);
-          if (this._componentCallbacks.has(globalCallbackKey))
-            this._componentCallbacks.get(globalCallbackKey)!.callback(ctx);
+          if (ctx.customID.includes('global-') && this._componentCallbacks.has(ctx.customID))
+            this._componentCallbacks.get(ctx.customID)!.callback(ctx);
           break;
         } else
           return respond({
@@ -864,4 +868,5 @@ export type ComponentRegisterCallback = (ctx: ComponentContext) => void;
 interface ComponentCallback {
   callback: ComponentRegisterCallback;
   expires?: number;
+  onExpired?: () => void;
 }

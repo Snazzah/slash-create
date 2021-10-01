@@ -260,9 +260,15 @@ export class MessageInteractionContext {
    * This unregisters automatically when the context expires.
    * @param custom_id The custom ID of the component to register
    * @param callback The callback to use on interaction
-   * @param expiration The expiration time of the callback in miliseconds. It is recommendable to use the default. Use null for no expiration.
+   * @param expiration (Optional) The expiration time of the callback in miliseconds. Use null for no expiration (Although, in this case, global components might be more consistant).
+   * @param onExpired (Optional) A function to be called when the component expires.
    */
-  registerComponent(custom_id: string, callback: ComponentRegisterCallback, expiration: number = 1000 * 60 * 15) {
+  registerComponent(
+    custom_id: string,
+    callback: ComponentRegisterCallback,
+    expiration: number = 1000 * 60 * 15,
+    onExpired?: () => void
+  ) {
     if (this.expired) throw new Error('This interaction has expired');
     if (!this.initiallyResponded || this.deferred)
       throw new Error('You must send a message before registering components');
@@ -271,7 +277,8 @@ export class MessageInteractionContext {
 
     this.creator._componentCallbacks.set(`${this.messageID}-${custom_id}`, {
       callback,
-      expires: expiration != null ? this.invokedAt + expiration : undefined
+      expires: expiration != null ? this.invokedAt + expiration : undefined,
+      onExpired
     });
   }
 
@@ -281,13 +288,14 @@ export class MessageInteractionContext {
    * @param message_id The message ID of the component to register
    * @param custom_id The custom ID of the component to register
    * @param callback The callback to use on interaction
-   * @param expiration The expiration time of the callback in miliseconds. It is recommendable to use the default. Use null for no expiration.
+   * @param expiration (Optional) A function to be called when the component expires.
    */
   registerComponentFrom(
     message_id: string,
     custom_id: string,
     callback: ComponentRegisterCallback,
-    expiration: number = 1000 * 60 * 15
+    expiration: number = 1000 * 60 * 15,
+    onExpired?: () => void
   ) {
     if (this.expired) throw new Error('This interaction has expired');
     if (!this.initiallyResponded || this.deferred)
@@ -295,7 +303,8 @@ export class MessageInteractionContext {
 
     this.creator._componentCallbacks.set(`${message_id}-${custom_id}`, {
       callback,
-      expires: expiration != null ? this.invokedAt + expiration : undefined
+      expires: expiration != null ? this.invokedAt + expiration : undefined,
+      onExpired
     });
   }
 

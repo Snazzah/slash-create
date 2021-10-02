@@ -264,6 +264,7 @@ export type AnyRequestData =
 /** @private */
 export interface RequestData {
   version: 1;
+  application_id: string;
   type: InteractionType;
   token: string;
   id: string;
@@ -275,6 +276,7 @@ export interface RequestData {
  */
 export interface PingRequestData {
   version: 1;
+  application_id: string;
   type: InteractionType.PING;
   user?: CommandUser;
   token: string;
@@ -342,6 +344,7 @@ export interface PartialEmoji {
  */
 export interface DMMessageComponentRequestData {
   version: 1;
+  application_id: string;
   type: InteractionType.MESSAGE_COMPONENT;
   token: string;
   message: MessageData;
@@ -361,6 +364,7 @@ export interface DMMessageComponentRequestData {
  */
 export interface GuildMessageComponentRequestData {
   version: 1;
+  application_id: string;
   type: InteractionType.MESSAGE_COMPONENT;
   token: string;
   message: MessageData;
@@ -387,6 +391,7 @@ export type MessageComponentRequestData = DMMessageComponentRequestData | GuildM
  */
 export interface DMCommandAutocompleteRequestData {
   version: 1;
+  application_id: string;
   type: InteractionType.APPLICATION_COMMAND_AUTOCOMPLETE;
   token: string;
   id: string;
@@ -401,6 +406,7 @@ export interface DMCommandAutocompleteRequestData {
  */
 export interface GuildCommandAutocompleteRequestData {
   version: 1;
+  application_id: string;
   type: InteractionType.APPLICATION_COMMAND_AUTOCOMPLETE;
   token: string;
   id: string;

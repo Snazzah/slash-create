@@ -704,7 +704,8 @@ export const Endpoints = {
 
   // CDN
   DEFAULT_USER_AVATAR: (userDiscriminator: string | number) => `/embed/avatars/${userDiscriminator}`,
-  USER_AVATAR: (userID: string, userAvatar: string) => `/avatars/${userID}/${userAvatar}`
+  USER_AVATAR: (userID: string, userAvatar: string) => `/avatars/${userID}/${userAvatar}`,
+  ROLE_ICON: (roleID: string, roleIcon: string) => `/role-icons/${roleID}/${roleIcon}`
 };
 
 // SlashCreator events for documentation.

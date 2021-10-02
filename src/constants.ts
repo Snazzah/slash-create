@@ -455,11 +455,13 @@ export interface ResolvedRole {
   color: number;
   hoist: boolean;
   id: string;
+  icon?: string;
   managed: boolean;
   mentionable: boolean;
   name: string;
   permissions: string;
   position: number;
+  unicode_emoji?: string;
 }
 
 /** @private */

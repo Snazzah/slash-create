@@ -575,7 +575,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
 
     switch (interaction.type) {
       case InteractionType.PING: {
-        this.emit('debug', 'Ping recieved');
+        this.emit('debug', 'Ping received');
         this.emit('ping', interaction.user);
         return respond({
           status: 200,
@@ -654,7 +654,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       case InteractionType.MESSAGE_COMPONENT: {
         this.emit(
           'debug',
-          `Component request recieved: ${interaction.data.custom_id}, (msg ${interaction.message.id}, ${
+          `Component request received: ${interaction.data.custom_id}, (msg ${interaction.message.id}, ${
             'guild_id' in interaction ? `guild ${interaction.guild_id}` : `user ${interaction.user.id}`
           })`
         );
@@ -711,7 +711,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       }
       default: {
         // @ts-ignore
-        this.emit('debug', `Unknown interaction type recieved: ${interaction.type}`);
+        this.emit('debug', `Unknown interaction type received: ${interaction.type}`);
         this.emit('unknownInteraction', interaction);
         return respond({
           status: 400

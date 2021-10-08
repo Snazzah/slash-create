@@ -244,9 +244,9 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    * @param callback The callback to use on interaction
    */
   registerGlobalComponent(custom_id: string, callback: ComponentRegisterCallback) {
-    if (this._componentCallbacks.has(custom_id))
-      throw new Error(`A global component with the ID "${custom_id}" is already registered.`);
     const newName = `global-${custom_id}`;
+    if (this._componentCallbacks.has(newName))
+      throw new Error(`A global component with the ID "${newName}" is already registered.`);
     this._componentCallbacks.set(newName, {
       callback,
       expires: undefined,

@@ -76,6 +76,7 @@ export const editedMessage: MessageData = {
 
 export const interactionDefaults: InteractionRequestData = {
   version: 1,
+  application_id: '00000000000000000',
   type: InteractionType.APPLICATION_COMMAND,
   token: MOCK_TOKEN,
   id: '00000000000000000',
@@ -111,6 +112,7 @@ export const basicInteraction: InteractionRequestData = {
 
 export const basicMessageInteraction: MessageComponentRequestData = {
   version: 1,
+  application_id: '00000000000000000',
   type: InteractionType.MESSAGE_COMPONENT,
   token: MOCK_TOKEN,
   id: '00000000000000000',

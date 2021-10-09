@@ -82,7 +82,7 @@ export class CommandContext extends MessageInteractionContext {
         );
       if (data.data.resolved.roles)
         Object.keys(data.data.resolved.roles).forEach((id) =>
-          this.roles.set(id, new Role(data.data.resolved!.roles![id]))
+          this.roles.set(id, new Role(data.data.resolved!.roles![id], this.creator))
         );
       if (data.data.resolved.channels)
         Object.keys(data.data.resolved.channels).forEach((id) =>

@@ -149,7 +149,6 @@ They are quite useful for server welcome messages, for example.
 
 ```typescript
 module.exports = class HelloCommand extends SlashCommand {
-  GLOBAL_BUTTON: string; // Stores the Custom ID for the button.
   constructor(creator: SlashCreator) {
     super(creator, {
       name: 'eternity',
@@ -157,17 +156,17 @@ module.exports = class HelloCommand extends SlashCommand {
       description: 'Says hello to you.',
       options: []
     });
-    //Since this is registered globally in the constructor, it will remain the same forever.
-    this.GLOBAL_BUTTON = creator.registerGlobalComponent('hello', (interact)=>{
+
+    // Since this is registered globally in the constructor, it will remain the same forever.
+    creator.registerGlobalComponent('hello', (interact) => {
       interact.sendFollowUp("This button will never expire!");
     })
   }
 
 
   async run(ctx: CommandContext) {
-
     return ctx.send("Press the button to agree to the rules", {components: [{type: ComponentType.ACTION_ROW, components: [{type: ComponentType.BUTTON,
-      custom_id: this.GLOBAL_BUTTON,
+      custom_id: 'hello',
       label: 'Accept Rules',
       style: ButtonStyle.PRIMARY,
     }]}]});
@@ -241,9 +240,10 @@ module.exports = class ButtonCommand extends SlashCommand {
      * This function handles component contexts within a command, so you
      * can use the previous context aswell.
      */
-    ctx.registerComponent('class_select', async (selectCtx) => {
-      await selectCtx.editParent('You selected the following classes: ' + selectCtx.values.join(', '));
-    },
+    ctx.registerComponent('class_select',
+      async (selectCtx) => {
+        await selectCtx.editParent('You selected the following classes: ' + selectCtx.values.join(', '));
+      },
       5000, // Expiration time in milliseconds.
       () => { // Callback to be called when the component expires.
         ctx.send("You cannot use that component anymore. Please run the command again.");

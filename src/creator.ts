@@ -239,22 +239,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   }
 
   /**
-   * Registers a global component callback. Note that this will have no expiration, and should be invoked by the returned name.
-   * @param custom_id The custom ID of the component to register
-   * @param callback The callback to use on interaction
-   */
-  registerGlobalComponent(custom_id: string, callback: ComponentRegisterCallback) {
-    const newName = `global-${custom_id}`;
-    if (this._componentCallbacks.has(newName))
-      throw new Error(`A global component with the ID "${newName}" is already registered.`);
-    this._componentCallbacks.set(newName, {
-      callback,
-      expires: undefined,
-      onExpired: undefined
-    });
-  }
-
-  /**
    * Sync all commands with Discord. This ensures that commands exist when handling them.
    * <warn>This requires you to have your token set in the creator config.</warn>
    */
@@ -524,6 +508,30 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         }
       }
     }
+  }
+
+  /**
+   * Registers a global component callback. Note that this will have no expiration, and should be invoked by the returned name.
+   * @param custom_id The custom ID of the component to register
+   * @param callback The callback to use on interaction
+   */
+  registerGlobalComponent(custom_id: string, callback: ComponentRegisterCallback) {
+    const newName = `global-${custom_id}`;
+    if (this._componentCallbacks.has(newName))
+      throw new Error(`A global component with the ID "${newName}" is already registered.`);
+    this._componentCallbacks.set(newName, {
+      callback,
+      expires: undefined,
+      onExpired: undefined
+    });
+  }
+
+  /**
+   * Unregisters a global component callback.
+   * @param custom_id The custom ID of the component to unregister
+   */
+  unregisterGlobalComponent(custom_id: string) {
+    return this.creator._componentCallbacks.delete(`global-${custom_id}`);
   }
 
   /**

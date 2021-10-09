@@ -252,7 +252,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       expires: undefined,
       onExpired: undefined
     });
-    return newName;
   }
 
   /**
@@ -686,11 +685,12 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           this.cleanRegisteredComponents();
 
           const componentCallbackKey = `${ctx.message.id}-${ctx.customID}`;
+          const globalCallbackKey = `global-${ctx.customID}`;
 
           if (this._componentCallbacks.has(componentCallbackKey))
-            this._componentCallbacks.get(componentCallbackKey)!.callback(ctx);
-          if (ctx.customID.includes('global-') && this._componentCallbacks.has(ctx.customID))
-            this._componentCallbacks.get(ctx.customID)!.callback(ctx);
+            return this._componentCallbacks.get(componentCallbackKey)!.callback(ctx);
+          if (this._componentCallbacks.has(globalCallbackKey))
+            return this._componentCallbacks.get(globalCallbackKey)!.callback(ctx);
           break;
         } else
           return respond({

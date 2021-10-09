@@ -511,12 +511,39 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   }
 
   /**
+   * Registers a global component callback. Note that this will have no expiration, and should be invoked by the returned name.
+   * @param custom_id The custom ID of the component to register
+   * @param callback The callback to use on interaction
+   */
+  registerGlobalComponent(custom_id: string, callback: ComponentRegisterCallback) {
+    const newName = `global-${custom_id}`;
+    if (this._componentCallbacks.has(newName))
+      throw new Error(`A global component with the ID "${newName}" is already registered.`);
+    this._componentCallbacks.set(newName, {
+      callback,
+      expires: undefined,
+      onExpired: undefined
+    });
+  }
+
+  /**
+   * Unregisters a global component callback.
+   * @param custom_id The custom ID of the component to unregister
+   */
+  unregisterGlobalComponent(custom_id: string) {
+    return this._componentCallbacks.delete(`global-${custom_id}`);
+  }
+
+  /**
    * Cleans any awaiting component callbacks from command contexts.
    */
   cleanRegisteredComponents() {
     if (this._componentCallbacks.size)
       for (const [key, callback] of this._componentCallbacks) {
-        if (callback.expires < Date.now()) this._componentCallbacks.delete(key);
+        if (callback.expires != null && callback.expires < Date.now()) {
+          if (callback.onExpired != null) callback.onExpired();
+          this._componentCallbacks.delete(key);
+        }
       }
   }
 
@@ -666,9 +693,12 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           this.cleanRegisteredComponents();
 
           const componentCallbackKey = `${ctx.message.id}-${ctx.customID}`;
-          if (this._componentCallbacks.has(componentCallbackKey))
-            this._componentCallbacks.get(componentCallbackKey)!.callback(ctx);
+          const globalCallbackKey = `global-${ctx.customID}`;
 
+          if (this._componentCallbacks.has(componentCallbackKey))
+            return this._componentCallbacks.get(componentCallbackKey)!.callback(ctx);
+          if (this._componentCallbacks.has(globalCallbackKey))
+            return this._componentCallbacks.get(globalCallbackKey)!.callback(ctx);
           break;
         } else
           return respond({
@@ -845,5 +875,6 @@ export type ComponentRegisterCallback = (ctx: ComponentContext) => void;
 /** @hidden */
 interface ComponentCallback {
   callback: ComponentRegisterCallback;
-  expires: number;
+  expires?: number;
+  onExpired?: () => void;
 }

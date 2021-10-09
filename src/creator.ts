@@ -531,7 +531,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    * @param custom_id The custom ID of the component to unregister
    */
   unregisterGlobalComponent(custom_id: string) {
-    return this.creator._componentCallbacks.delete(`global-${custom_id}`);
+    return this._componentCallbacks.delete(`global-${custom_id}`);
   }
 
   /**

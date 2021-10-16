@@ -1,3 +1,4 @@
+import { CDN_URL, Endpoints, ImageFormat, ImageFormats, ImageSizeBoundaries } from '..';
 import { CommandUser, ResolvedMemberData } from '../constants';
 import { SlashCreator } from '../creator';
 import { User } from './user';
@@ -16,6 +17,8 @@ export class ResolvedMember {
   readonly premiumSince?: number;
   /** Whether the member is pending verification */
   readonly pending: boolean;
+  /** The member's guild avatar hash */
+  readonly avatar?: string;
   /** The user object for this member */
   readonly user: User;
 
@@ -37,6 +40,7 @@ export class ResolvedMember {
     this.pending = data.pending;
 
     this.id = userData.id;
+    if(data.avatar) this.avatar = data.avatar;
     this.user = new User(userData, creator);
   }
 
@@ -53,5 +57,22 @@ export class ResolvedMember {
   /** The display name for this member. */
   get displayName() {
     return this.nick || this.user.username;
+  }
+
+  /** The URL to the member's avatar. */
+  get avatarURL() {
+    return this.dynamicAvatarURL();
+  }
+
+  dynamicAvatarURL(format?: ImageFormat, size?: number) {
+    if(!this.avatar) return this.user.dynamicAvatarURL(format, size);
+    if(!format || !ImageFormats.includes(format.toLowerCase())) {
+      format = this.avatar.startsWith('a_') ? 'gif' : this._creator.options.defaultImageFormat;
+    }
+    if(!size || size < ImageSizeBoundaries.MINIMUM || size > ImageSizeBoundaries.MAXIMUM) {
+      size = this._creator.options.defaultImageSize;
+    }
+
+    return `${CDN_URL}${Endpoints.GUILD_MEMBER_AVATAR(null /* guildID - not available */, this.id, this.avatar)}.${format}?size=${size}`;
   }
 }

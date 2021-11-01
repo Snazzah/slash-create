@@ -525,6 +525,8 @@ export interface CommandIntegerOption {
   type?: CommandOptionType.INTEGER;
   value: number;
   focused?: boolean;
+  min_value?: number;
+  max_value?: number;
 }
 
 /** @private */

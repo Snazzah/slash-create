@@ -1698,9 +1698,9 @@ neo-async@^2.6.0:
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
 nock@^13.1.1:
-  version "13.1.4"
-  resolved "https://registry.yarnpkg.com/nock/-/nock-13.1.4.tgz#367c917d4c532a889404b85ade92762c29e80262"
-  integrity sha512-hr5+mknLpIbTOXifB13lx9mAKF1zQPUCMh53Galx79ic5opvNOd55jiB0iGCp2xqh+hwnFbNE/ddBKHsJNQrbw==
+  version "13.2.0"
+  resolved "https://registry.yarnpkg.com/nock/-/nock-13.2.0.tgz#1da976e809cb082e3acb65de9ea7839cdd115d3e"
+  integrity sha512-j7xjoMU9ZnvkTeoLnD2gIXNlwmLb+GNCPbnqtx7IwlNvdBBqU5aaQPK4Nw6lNmqIJkBubyka6rvrZuDNz1L7Ew==
   dependencies:
     debug "^4.1.0"
     json-stringify-safe "^5.0.1"

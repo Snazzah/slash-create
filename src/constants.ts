@@ -193,11 +193,28 @@ export interface ApplicationCommandOptionAutocompletable extends Omit<Applicatio
   autocomplete?: boolean;
 }
 
+/**
+ * @private
+ */
 export interface ApplicationCommandOptionChannel extends Omit<ApplicationCommandOptionBase, 'type'> {
   /** The type of option this one is. */
   type: CommandOptionType.CHANNEL;
   /** An array of channel types this option can be. */
   channel_types?: ChannelType[];
+}
+
+/**
+ * @private
+ */
+export interface ApplicationCommandOptionLimitedNumber extends Omit<ApplicationCommandOptionBase, 'type'> {
+  /** The type of option this one is. */
+  type: CommandOptionType.INTEGER | CommandOptionType.NUMBER;
+  /** Whether this option can be autocompleted. */
+  autocomplete?: boolean;
+  /** The minimum value permitted. */
+  min_value?: number;
+  /** The maximum value permitted. */
+  max_value?: number;
 }
 
 /** An option in an application command. */
@@ -206,7 +223,8 @@ export type ApplicationCommandOption =
   | ApplicationCommandOptionSubCommand
   | ApplicationCommandOptionArgument
   | ApplicationCommandOptionAutocompletable
-  | ApplicationCommandOptionChannel;
+  | ApplicationCommandOptionChannel
+  | ApplicationCommandOptionLimitedNumber;
 
 /** A choice for a user to pick from. */
 export interface ApplicationCommandOptionChoice {
@@ -525,6 +543,8 @@ export interface CommandIntegerOption {
   type?: CommandOptionType.INTEGER;
   value: number;
   focused?: boolean;
+  min_value?: number;
+  max_value?: number;
 }
 
 /** @private */

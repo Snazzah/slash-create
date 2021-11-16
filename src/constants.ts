@@ -735,7 +735,8 @@ export const Endpoints = {
   DEFAULT_USER_AVATAR: (userDiscriminator: string | number) => `/embed/avatars/${userDiscriminator}`,
   USER_AVATAR: (userID: string, userAvatar: string) => `/avatars/${userID}/${userAvatar}`,
   ROLE_ICON: (roleID: string, roleIcon: string) => `/role-icons/${roleID}/${roleIcon}`,
-  GUILD_MEMBER_AVATAR: (guildID: string, memberID: string, memberAvatar: string) => `/guilds/${guildID}/users/${memberID}/avatars/${memberAvatar}`
+  GUILD_MEMBER_AVATAR: (guildID: string, memberID: string, memberAvatar: string) =>
+    `/guilds/${guildID}/users/${memberID}/avatars/${memberAvatar}`
 };
 
 // SlashCreator events for documentation.

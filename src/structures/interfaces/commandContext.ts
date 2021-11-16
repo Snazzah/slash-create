@@ -77,7 +77,12 @@ export class CommandContext extends MessageInteractionContext {
         Object.keys(data.data.resolved.members).forEach((id) =>
           this.members.set(
             id,
-            new ResolvedMember(data.data.resolved!.members![id], data.data.resolved!.users![id], this.creator, this.guildID!)
+            new ResolvedMember(
+              data.data.resolved!.members![id],
+              data.data.resolved!.users![id],
+              this.creator,
+              this.guildID!
+            )
           )
         );
       if (data.data.resolved.roles)

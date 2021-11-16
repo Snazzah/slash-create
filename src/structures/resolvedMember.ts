@@ -1,4 +1,12 @@
-import { CommandUser, ResolvedMemberData } from '../constants';
+import {
+  CommandUser,
+  ResolvedMemberData,
+  CDN_URL,
+  Endpoints,
+  ImageFormat,
+  ImageFormats,
+  ImageSizeBoundaries
+} from '../constants';
 import { SlashCreator } from '../creator';
 import { User } from './user';
 
@@ -16,8 +24,12 @@ export class ResolvedMember {
   readonly premiumSince?: number;
   /** Whether the member is pending verification */
   readonly pending: boolean;
+  /** The member's guild avatar hash */
+  readonly avatar?: string;
   /** The user object for this member */
   readonly user: User;
+  /** The ID of the guild this member belongs to. */
+  readonly guildID: string;
 
   /** The creator of the member class. */
   private readonly _creator: SlashCreator;
@@ -26,8 +38,9 @@ export class ResolvedMember {
    * @param data The data for the member
    * @param userData The data for the member's user
    * @param creator The instantiating creator
+   * @param guildID The ID of the guild this member belongs to
    */
-  constructor(data: ResolvedMemberData, userData: CommandUser, creator: SlashCreator) {
+  constructor(data: ResolvedMemberData, userData: CommandUser, creator: SlashCreator, guildID: string) {
     this._creator = creator;
 
     if (data.nick) this.nick = data.nick;
@@ -35,8 +48,10 @@ export class ResolvedMember {
     this.roles = data.roles;
     if (data.premium_since) this.premiumSince = Date.parse(data.premium_since);
     this.pending = data.pending;
+    this.guildID = guildID;
 
     this.id = userData.id;
+    if (data.avatar) this.avatar = data.avatar;
     this.user = new User(userData, creator);
   }
 
@@ -53,5 +68,22 @@ export class ResolvedMember {
   /** The display name for this member. */
   get displayName() {
     return this.nick || this.user.username;
+  }
+
+  /** The URL to the member's avatar. */
+  get avatarURL() {
+    return this.dynamicAvatarURL();
+  }
+
+  dynamicAvatarURL(format?: ImageFormat, size?: number) {
+    if (!this.avatar) return this.user.dynamicAvatarURL(format, size);
+    if (!format || !ImageFormats.includes(format.toLowerCase())) {
+      format = this.avatar.startsWith('a_') ? 'gif' : this._creator.options.defaultImageFormat;
+    }
+    if (!size || size < ImageSizeBoundaries.MINIMUM || size > ImageSizeBoundaries.MAXIMUM) {
+      size = this._creator.options.defaultImageSize;
+    }
+
+    return `${CDN_URL}${Endpoints.GUILD_MEMBER_AVATAR(this.guildID, this.id, this.avatar)}.${format}?size=${size}`;
   }
 }

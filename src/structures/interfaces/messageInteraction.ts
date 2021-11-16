@@ -47,7 +47,7 @@ export class MessageInteractionContext {
     this.interactionID = data.id;
     this.channelID = data.channel_id;
     this.guildID = 'guild_id' in data ? data.guild_id : undefined;
-    this.member = 'guild_id' in data ? new Member(data.member, this.creator) : undefined;
+    this.member = 'guild_id' in data ? new Member(data.member, this.creator, data.guild_id) : undefined;
     this.user = new User('guild_id' in data ? data.member.user : data.user, this.creator);
   }
 

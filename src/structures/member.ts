@@ -18,8 +18,8 @@ export class Member extends ResolvedMember {
    * @param data The data for the member
    * @param creator The instantiating creator
    */
-  constructor(data: CommandMember, creator: SlashCreator) {
-    super(data, data.user, creator);
+  constructor(data: CommandMember, creator: SlashCreator, guildID: string) {
+    super(data, data.user, creator, guildID);
     this.mute = data.mute;
     this.deaf = data.deaf;
     this._permissions = data.permissions;

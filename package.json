@@ -1,6 +1,6 @@
 {
   "name": "slash-create",
-  "version": "4.3.0",
+  "version": "4.3.1",
   "description": "Create and sync Discord slash commands!",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -39,7 +39,7 @@
     "url": "https://github.com/sponsors/Snazzah"
   },
   "dependencies": {
-    "@discordjs/collection": "^0.2.1",
+    "@discordjs/collection": "^0.3.2",
     "eventemitter3": "^4.0.7",
     "lodash.isequal": "^4.5.0",
     "lodash.uniq": "^4.5.0",
@@ -68,7 +68,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "fastify": "^3.20.1",
     "husky": "^7.0.1",
-    "lint-staged": "^11.1.2",
+    "lint-staged": "^12.0.2",
     "mocha": "^9.0.3",
     "nock": "^13.1.1",
     "prettier": "^2.3.2",

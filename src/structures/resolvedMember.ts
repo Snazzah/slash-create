@@ -21,6 +21,8 @@ export class ResolvedMember {
   readonly avatar?: string;
   /** The user object for this member */
   readonly user: User;
+  /** The ID of the guild this member belongs to. */
+  readonly guildID: string;
 
   /** The creator of the member class. */
   private readonly _creator: SlashCreator;
@@ -29,8 +31,9 @@ export class ResolvedMember {
    * @param data The data for the member
    * @param userData The data for the member's user
    * @param creator The instantiating creator
+   * @param guildID The ID of the guild this member belongs to
    */
-  constructor(data: ResolvedMemberData, userData: CommandUser, creator: SlashCreator) {
+  constructor(data: ResolvedMemberData, userData: CommandUser, creator: SlashCreator, guildID: string) {
     this._creator = creator;
 
     if (data.nick) this.nick = data.nick;
@@ -38,6 +41,7 @@ export class ResolvedMember {
     this.roles = data.roles;
     if (data.premium_since) this.premiumSince = Date.parse(data.premium_since);
     this.pending = data.pending;
+    this.guildID = guildID;
 
     this.id = userData.id;
     if(data.avatar) this.avatar = data.avatar;
@@ -73,6 +77,6 @@ export class ResolvedMember {
       size = this._creator.options.defaultImageSize;
     }
 
-    return `${CDN_URL}${Endpoints.GUILD_MEMBER_AVATAR(null /* guildID - not available */, this.id, this.avatar)}.${format}?size=${size}`;
+    return `${CDN_URL}${Endpoints.GUILD_MEMBER_AVATAR(this.guildID, this.id, this.avatar)}.${format}?size=${size}`;
   }
 }

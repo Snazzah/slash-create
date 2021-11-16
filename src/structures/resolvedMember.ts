@@ -1,5 +1,12 @@
-import { CDN_URL, Endpoints, ImageFormat, ImageFormats, ImageSizeBoundaries } from '..';
-import { CommandUser, ResolvedMemberData } from '../constants';
+import {
+  CommandUser,
+  ResolvedMemberData,
+  CDN_URL,
+  Endpoints,
+  ImageFormat,
+  ImageFormats,
+  ImageSizeBoundaries
+} from '../constants';
 import { SlashCreator } from '../creator';
 import { User } from './user';
 
@@ -44,7 +51,7 @@ export class ResolvedMember {
     this.guildID = guildID;
 
     this.id = userData.id;
-    if(data.avatar) this.avatar = data.avatar;
+    if (data.avatar) this.avatar = data.avatar;
     this.user = new User(userData, creator);
   }
 
@@ -69,11 +76,11 @@ export class ResolvedMember {
   }
 
   dynamicAvatarURL(format?: ImageFormat, size?: number) {
-    if(!this.avatar) return this.user.dynamicAvatarURL(format, size);
-    if(!format || !ImageFormats.includes(format.toLowerCase())) {
+    if (!this.avatar) return this.user.dynamicAvatarURL(format, size);
+    if (!format || !ImageFormats.includes(format.toLowerCase())) {
       format = this.avatar.startsWith('a_') ? 'gif' : this._creator.options.defaultImageFormat;
     }
-    if(!size || size < ImageSizeBoundaries.MINIMUM || size > ImageSizeBoundaries.MAXIMUM) {
+    if (!size || size < ImageSizeBoundaries.MINIMUM || size > ImageSizeBoundaries.MAXIMUM) {
       size = this._creator.options.defaultImageSize;
     }
 

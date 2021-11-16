@@ -455,7 +455,6 @@ export interface ResolvedMemberData {
   roles: string[];
   premium_since: string | null;
   pending: boolean;
-  is_pending: boolean;
   nick: string | null;
   joined_at: string;
 }

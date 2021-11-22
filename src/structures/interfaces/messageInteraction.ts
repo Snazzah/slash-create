@@ -321,6 +321,32 @@ export class MessageInteractionContext {
     }
     return this.creator._componentCallbacks.delete(`${message_id}-${custom_id}`);
   }
+
+  registerWildcardComponent(
+    callback: ComponentRegisterCallback,
+    message_id: string,
+    expiration: number = 1000 * 60 * 15,
+    onExpired?: () => void
+  ) {
+    if (this.expired) throw new Error('This interaction has expired');
+    if (!this.initiallyResponded || this.deferred)
+      throw new Error('You must send a message before registering components');
+    
+    this.creator._componentCallbacks.set(`${message_id}-*`, {
+      callback,
+      expires: expiration != null ? this.invokedAt + expiration : undefined,
+      onExpired
+    });
+  }
+
+  unregisterWildcardComponent(message_id: string) {
+    if (!message_id) {
+      if (!this.messageID) throw new Error('The initial message ID was not provided by the context!');
+      else message_id = this.messageID;
+    }
+
+    return this.creator._componentCallbacks.delete(`${message_id}-*`);
+  }
 }
 
 /** The options for {@link MessageInteractionContext#edit}. */

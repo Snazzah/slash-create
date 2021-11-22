@@ -694,11 +694,14 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
 
           const componentCallbackKey = `${ctx.message.id}-${ctx.customID}`;
           const globalCallbackKey = `global-${ctx.customID}`;
+          const wildcardCallbackKey = `${ctx.message.id}-*`;
 
           if (this._componentCallbacks.has(componentCallbackKey))
             return this._componentCallbacks.get(componentCallbackKey)!.callback(ctx);
           if (this._componentCallbacks.has(globalCallbackKey))
             return this._componentCallbacks.get(globalCallbackKey)!.callback(ctx);
+          if (this._componentCallbacks.has(wildcardCallbackKey))
+            return this._componentCallbacks.get(wildcardCallbackKey)!.callback(ctx);
           break;
         } else
           return respond({

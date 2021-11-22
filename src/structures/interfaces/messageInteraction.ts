@@ -350,7 +350,6 @@ export class MessageInteractionContext {
   /**
    * Unregisters a component callback.
    * @param message_id The message ID of the component to unregister, defaults to the invoking message ID.
-   * @returns 
    */
   unregisterWildcardComponent(message_id: string) {
     if (!message_id) {

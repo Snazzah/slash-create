@@ -323,8 +323,8 @@ export class MessageInteractionContext {
   }
 
   registerWildcardComponent(
-    callback: ComponentRegisterCallback,
     message_id: string,
+    callback: ComponentRegisterCallback,
     expiration: number = 1000 * 60 * 15,
     onExpired?: () => void
   ) {

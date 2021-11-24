@@ -136,7 +136,8 @@ export class MessageInteractionContext {
 
     if (!options.content && typeof content === 'string') options.content = content;
 
-    if (!options.content && !options.embeds) throw new Error('Message content and embeds are both not given.');
+    if (!options.content && !options.embeds && !options.components)
+      throw new Error('One of message content, embeds, or components need to be given.');
 
     if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 
@@ -177,8 +178,7 @@ export class MessageInteractionContext {
 
     if (!options.content && typeof content === 'string') options.content = content;
 
-    if (!options.content && !options.embeds && !options.allowedMentions)
-      throw new Error('No valid options were given.');
+    if (!options.content && !options.embeds && !options.components) throw new Error('No valid options were given.');
 
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)

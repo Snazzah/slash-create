@@ -136,8 +136,7 @@ export class MessageInteractionContext {
 
     if (!options.content && typeof content === 'string') options.content = content;
 
-    if (!options.content && !options.embeds && !options.components)
-      throw new Error('One of message content, embeds, or components need to be given.');
+    if (!options.content && !options.embeds) throw new Error('Message content or embeds need to be given.');
 
     if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 

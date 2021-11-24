@@ -303,8 +303,6 @@ export class MessageInteractionContext {
     onExpired?: () => void
   ): ComponentUnregisterCallback {
     if (this.expired) throw new Error('This interaction has expired');
-    if (!this.initiallyResponded || this.deferred)
-      throw new Error('You must send a message before registering components');
 
     this.creator._componentCallbacks.set(`${message_id}-${custom_id}`, {
       callback,
@@ -344,8 +342,6 @@ export class MessageInteractionContext {
     onExpired?: () => void
   ): ComponentUnregisterCallback {
     if (this.expired) throw new Error('This interaction has expired');
-    if (!this.initiallyResponded || this.deferred)
-      throw new Error('You must send a message before registering components');
 
     this.creator._componentCallbacks.set(`${message_id}-*`, {
       callback,
@@ -361,11 +357,6 @@ export class MessageInteractionContext {
    * @param message_id The message ID of the component to unregister, defaults to the invoking message ID.
    */
   unregisterWildcardComponent(message_id: string) {
-    if (!message_id) {
-      if (!this.messageID) throw new Error('The initial message ID was not provided by the context!');
-      else message_id = this.messageID;
-    }
-
     return this.creator._componentCallbacks.delete(`${message_id}-*`);
   }
 }

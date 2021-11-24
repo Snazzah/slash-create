@@ -56,6 +56,52 @@ module.exports = class HelloCommand extends SlashCommand {
 }
 ```
 
+### Command with Subcommands
+```js
+const { SlashCommand, CommandOptionType } = require('slash-create');
+module.exports = class SubCommand extends SlashCommand {
+    constructor(creator) {
+        super(creator, {
+            name: 'subcommands',
+            description: 'Make a command with subcommands',
+            options: [{
+                type: CommandOptionType.SUB_COMMAND,
+                name: 'one',
+                description: 'Here is the first sub command',
+                options: [{
+                    name: 'option_one',
+                    description: 'This is the first option',
+                    type: CommandOptionType.STRING,
+                    required: true
+                }]
+            }, {
+                type: CommandOptionType.SUB_COMMAND,
+                name: 'two',
+                description: 'Here is the second sub command',
+                options: [{
+                    name: 'option_two',
+                    description: 'This is the second option',
+                    type: CommandOptionType.STRING,
+                    required: true,
+                    choices: [{
+                        name: 'option_two_one',
+                        value: 'This is the first value for sub-command two option one'
+                    }, {
+                        name: 'option_two_two',
+                        value: 'This is the second value for sub-command two option two'
+                    }]
+                }]
+            }]
+        });
+        // Not required initially, but required for reloading with a fresh file.
+        this.filePath = __filename;
+    }
+    async run(ctx) {
+        return `You used subcommand \`${ctx.subcommands[0]}\` and chose option \`${Object.keys(Object.values(ctx.options)[0])[0]}\` with value \`${Object.values(Object.values(ctx.options)[0])[0]}\``;
+    }
+};
+```
+
 ### Context Menu Command
 ```js
 const { SlashCommand, ApplicationCommandType } = require('slash-create');

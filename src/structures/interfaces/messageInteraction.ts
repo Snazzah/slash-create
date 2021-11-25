@@ -298,8 +298,6 @@ export class MessageInteractionContext {
     onExpired?: () => void
   ) {
     if (this.expired) throw new Error('This interaction has expired');
-    if (!this.initiallyResponded || this.deferred)
-      throw new Error('You must send a message before registering components');
 
     this.creator._componentCallbacks.set(`${message_id}-${custom_id}`, {
       callback,
@@ -319,6 +317,37 @@ export class MessageInteractionContext {
       else message_id = this.messageID;
     }
     return this.creator._componentCallbacks.delete(`${message_id}-${custom_id}`);
+  }
+
+  /**
+   * Registers a wildcard component callback on a message.
+   * This unregisters automatically when the context expires.
+   * @param message_id The message ID of the component to register
+   * @param callback The callback to use on interaction
+   * @param expiration The expiration time of the callback in milliseconds. Use null for no expiration (Although, in this case, global components might be more consistent).
+   * @param onExpired A function to be called when the component expires.
+   */
+  registerWildcardComponent(
+    message_id: string,
+    callback: ComponentRegisterCallback,
+    expiration: number = 1000 * 60 * 15,
+    onExpired?: () => void
+  ) {
+    if (this.expired) throw new Error('This interaction has expired');
+
+    this.creator._componentCallbacks.set(`${message_id}-*`, {
+      callback,
+      expires: expiration != null ? this.invokedAt + expiration : undefined,
+      onExpired
+    });
+  }
+
+  /**
+   * Unregisters a component callback.
+   * @param message_id The message ID of the component to unregister, defaults to the invoking message ID.
+   */
+  unregisterWildcardComponent(message_id: string) {
+    return this.creator._componentCallbacks.delete(`${message_id}-*`);
   }
 }
 

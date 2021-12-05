@@ -59,7 +59,7 @@ module.exports = class HelloCommand extends SlashCommand {
 ### Command with Subcommands
 ```js
 const { SlashCommand, CommandOptionType } = require('slash-create');
-module.exports = class SubCommand extends SlashCommand {
+module.exports = class CharacterCommand extends SlashCommand {
     constructor(creator) {
         super(creator, {
             name: 'subcommands',
@@ -97,9 +97,32 @@ module.exports = class SubCommand extends SlashCommand {
         this.filePath = __filename;
     }
     async run(ctx) {
-        return `You used subcommand \`${ctx.subcommands[0]}\` and chose option \`${Object.keys(Object.values(ctx.options)[0])[0]}\` with value \`${Object.values(Object.values(ctx.options)[0])[0]}\``;
+        // returns the subcommand, option, and option value
+        let returnStringValues = [ctx.subcommands[0]];
+        switch (ctx.subcommands[0]) { // Which subcommand was used?
+            case 'one':
+                switch (Object.keys(ctx.options[ctx.subcommands[0]])[0]) { // Which options was used?
+                    case 'option_one':
+                        returnStringValues.push('option_one')
+                        returnStringValues.push(ctx.options[ctx.subcommands[0]]['option_one']); // value of option
+                        break;
+                    //...
+                }
+                break;
+            case 'two':
+                switch (Object.keys(ctx.options[ctx.subcommands[0]])[0]) {
+                    case 'option_two':
+                        returnStringValues.push('option_two');
+                        returnStringValues.push(ctx.options[ctx.subcommands[0]]['option_two']);
+                        break;
+                    //...
+                }
+                break;
+        }
+        return `Subcommand: \`${returnStringValues[0]}\`\nOption: \`${returnStringValues[1]}\`\nValue of option: \`${returnStringValues[2]}\``;
     }
 };
+
 ```
 
 ### Context Menu Command

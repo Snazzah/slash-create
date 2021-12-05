@@ -97,7 +97,6 @@ module.exports = class SubCommand extends SlashCommand {
         this.filePath = __filename;
     }
     async run(ctx) {
-        await ctx.defer();
         return `You used subcommand \`${ctx.subcommands[0]}\` and chose option \`${Object.keys(Object.values(ctx.options)[0])[0]}\` with value \`${Object.values(Object.values(ctx.options)[0])[0]}\``;
     }
 };

@@ -93,7 +93,6 @@ module.exports = class CharacterCommand extends SlashCommand {
                 }]
             }]
         });
-        // Not required initially, but required for reloading with a fresh file.
         this.filePath = __filename;
     }
     async run(ctx) {

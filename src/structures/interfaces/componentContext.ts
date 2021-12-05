@@ -77,8 +77,7 @@ export class ComponentContext extends MessageInteractionContext {
 
     if (!options.content && typeof content === 'string') options.content = content;
 
-    if (!options.content && !options.embeds && !options.allowedMentions)
-      throw new Error('No valid options were given.');
+    if (!options.content && !options.embeds && !options.components) throw new Error('No valid options were given.');
 
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)

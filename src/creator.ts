@@ -239,10 +239,21 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   }
 
   /**
-   * Sync all commands with Discord. This ensures that commands exist when handling them.
+   * Sync all commands to Discord. This ensures that commands exist when handling them.
    * <warn>This requires you to have your token set in the creator config.</warn>
    */
   syncCommands(opts?: SyncCommandOptions) {
+    this.syncCommandsAsync(opts)
+      .then(() => this.emit('synced'))
+      .catch((err) => this.emit('error', err));
+    return this;
+  }
+
+  /**
+   * Sync all commands to Discord asyncronously. This ensures that commands exist when handling them.
+   * <warn>This requires you to have your token set in the creator config.</warn>
+   */
+  async syncCommandsAsync(opts?: SyncCommandOptions) {
     const options = Object.assign(
       {
         deleteCommands: true,
@@ -253,43 +264,31 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       opts
     ) as SyncCommandOptions;
 
-    const promise = async () => {
-      let guildIDs: string[] = [];
+    let guildIDs: string[] = [];
 
-      // Collect guild IDs with specific commands
-      for (const [, command] of this.commands) {
-        if (command.guildIDs) guildIDs = uniq([...guildIDs, ...command.guildIDs]);
-      }
+    // Collect guild IDs with specific commands
+    for (const [, command] of this.commands) {
+      if (command.guildIDs) guildIDs = uniq([...guildIDs, ...command.guildIDs]);
+    }
 
-      await this.syncGlobalCommands(options.deleteCommands);
+    await this.syncGlobalCommands(options.deleteCommands);
 
-      // Sync guild commands
-      for (const guildID of guildIDs) {
-        try {
-          await this.syncCommandsIn(guildID, options.deleteCommands);
-        } catch (e) {
-          if (options.skipGuildErrors) {
-            this.emit('warn', `An error occurred during guild sync (${guildID}): ${(e as Error).message}`);
-          } else {
-            throw e;
-          }
+    // Sync guild commands
+    for (const guildID of guildIDs) {
+      try {
+        await this.syncCommandsIn(guildID, options.deleteCommands);
+      } catch (e) {
+        if (options.skipGuildErrors) {
+          this.emit('warn', `An error occurred during guild sync (${guildID}): ${(e as Error).message}`);
+        } else {
+          throw e;
         }
       }
+    }
 
-      this.emit('debug', 'Finished syncing commands');
+    this.emit('debug', 'Finished syncing commands');
 
-      if (options.syncPermissions)
-        try {
-          await this.syncCommandPermissions();
-        } catch (e) {
-          this.emit('error', e as Error);
-        }
-    };
-
-    promise()
-      .then(() => this.emit('synced'))
-      .catch((err) => this.emit('error', err));
-    return this;
+    if (options.syncPermissions) await this.syncCommandPermissions();
   }
 
   /**
@@ -694,11 +693,14 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
 
           const componentCallbackKey = `${ctx.message.id}-${ctx.customID}`;
           const globalCallbackKey = `global-${ctx.customID}`;
+          const wildcardCallbackKey = `${ctx.message.id}-*`;
 
           if (this._componentCallbacks.has(componentCallbackKey))
             return this._componentCallbacks.get(componentCallbackKey)!.callback(ctx);
           if (this._componentCallbacks.has(globalCallbackKey))
             return this._componentCallbacks.get(globalCallbackKey)!.callback(ctx);
+          if (this._componentCallbacks.has(wildcardCallbackKey))
+            return this._componentCallbacks.get(wildcardCallbackKey)!.callback(ctx);
           break;
         } else
           return respond({

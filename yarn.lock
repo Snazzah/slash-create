@@ -132,9 +132,9 @@
   integrity sha512-eZxlbI8GZscaGS7kkc/trHTT5xgrjH3/1n2JDwusC9iahPKWMRvRjJSAN5mCXviuTGQ/lHnhvv8Q1YTpnfz9gA==
 
 "@types/aws-lambda@^8.10.82":
-  version "8.10.85"
-  resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.85.tgz#26cd76897b1972247cbc1a34b6f21d023e987437"
-  integrity sha512-cMRXVxb+NMb6EekKel1fPBfz2ZqE5cGhIS14G7FVUM4Bqilx0lHKnZbsDLWLSeckDpkvlp5six2F7UWyEEJSoQ==
+  version "8.10.87"
+  resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.87.tgz#5e90af2d4ffb41d3bf9c97080a5c4700ddf06436"
+  integrity sha512-fMYSgnIjFsTM3huCzqNvZm9gH4kFY5yIEOKYj9VtTG13TYd+wwweTbYAAO8OclcTbpezK+VsHNWIyHiAHgVCJg==
 
 "@types/chai-as-promised@^7.1.4":
   version "7.1.4"

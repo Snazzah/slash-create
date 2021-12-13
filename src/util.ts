@@ -53,8 +53,16 @@ export function formatAllowedMentions(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function oneLine(strings: TemplateStringsArray, ..._: any[]) {
-  return strings[0].replace(/(?:\n(?:\s*))+/g, ' ').trim();
+export function oneLine(strings: string | TemplateStringsArray, ..._: any[]) {
+  const l = arguments.length;
+  const substitutions = Array(l > 1 ? l - 1 : 0);
+  for (let k = 1; k < l; k++) substitutions[k - 1] = arguments[k];
+
+  if (typeof strings === 'string') return strings.replace(/(?:\n(?:\s*))+/g, ' ').trim();
+  return strings
+    .reduce((res, p) => ''.concat(res, substitutions.shift(), p))
+    .replace(/(?:\n(?:\s*))+/g, ' ')
+    .trim();
 }
 
 export function validateOptions(options: ApplicationCommandOption[], prefix = 'options') {

@@ -17,6 +17,7 @@ deploy/
 scripts/
 static/
 docs/
+src/
 
 # NPM ignore
 .eslintrc.json

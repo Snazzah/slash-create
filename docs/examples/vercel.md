@@ -5,10 +5,11 @@ You can deploy the template with [Vercel](https://vercel.com/) by clicking the b
 
 
 Fill out the environment variables with the credentials from your application's page.
+- **Note:** Due to an update in the package's dependencies, the Install Command MUST be `yarn config set ignore-engines true && yarn install` to disable node version checking until Vercel updates to the newest Node version.
 
 Your interactions URL will be the domain of the deployment with `/api/interactions` appended to it. (Example: `https://slash-create.vercel.app`)
 
-> If the build fails, set the Install Command to `yarn install --network-concurrency 1` on Vercel.
+> If the build fails, set the Install Command to `yarn config set ignore-engines true && yarn install --network-concurrency 1` on Vercel.
 
 
 The [template](https://github.com/Snazzah/slash-create-vercel) will handle syncing to Discord after building. You can create a new repo from the template and deploy with Vercel with that repository.

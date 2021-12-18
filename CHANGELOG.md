@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added:
 - **ResolvedMember:** Added guild-specific avatar properties and methods ([#185](https://github.com/Snazzah/slash-create/pull/185))
 - **MessageInteractionContext:** Added wildcard components specification to get all component events from one message ([#188](https://github.com/Snazzah/slash-create/pull/188))
+- **SlashCreator:** Add syncCommandsAsync
 ### Fixed:
 - **ComponentContext:** Fixed allowing editing of just components
 ## [4.3.1] - 2021-11-14

@@ -24,6 +24,8 @@
       path: command.md
     - name: Message Components
       path: components.md
+    - name: Cloudflare Workers
+      path: cfworker.md
     - name: Google Cloud Functions
       path: gcf.md
     - name: AWS Lambda

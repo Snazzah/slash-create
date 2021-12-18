@@ -12,7 +12,7 @@ Create [Discord slash commands](https://discord.com/developers/docs/interactions
 ## Features
 - Multiple server support ([Express](http://expressjs.com/), [Fastify](https://fastify.io/), etc.)
 - Hook into an existing Discord bot client
-- Command syncing - Sync commands with your creator automatically.
+- Sync loaded commands to Discord from slash-create
 - Load commands from a folder
 - Command throttling/cooldowns
 

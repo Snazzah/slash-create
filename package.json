@@ -42,7 +42,6 @@
     "@discordjs/collection": "^0.3.2",
     "eventemitter3": "^4.0.7",
     "lodash.isequal": "^4.5.0",
-    "lodash.uniq": "^4.5.0",
     "require-all": "^3.0.0",
     "tweetnacl": "^1.0.3"
   },
@@ -53,7 +52,6 @@
     "@types/chai-as-promised": "^7.1.4",
     "@types/lodash": "^4.14.165",
     "@types/lodash.isequal": "^4.5.5",
-    "@types/lodash.uniq": "^4.5.6",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.4.14",
     "@types/require-all": "^3.0.3",

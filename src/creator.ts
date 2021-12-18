@@ -25,7 +25,6 @@ import { SlashCreatorAPI } from './api';
 import { Server, TransformedRequest, RespondFunction, Response } from './server';
 import { CommandContext } from './structures/interfaces/commandContext';
 import isEqual from 'lodash.isequal';
-import uniq from 'lodash.uniq';
 import { ComponentContext } from './structures/interfaces/componentContext';
 import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
 
@@ -268,7 +267,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
 
     // Collect guild IDs with specific commands
     for (const [, command] of this.commands) {
-      if (command.guildIDs) guildIDs = uniq([...guildIDs, ...command.guildIDs]);
+      if (command.guildIDs) guildIDs = [...new Set([...guildIDs, ...command.guildIDs])];
     }
 
     await this.syncGlobalCommands(options.deleteCommands);
@@ -472,7 +471,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   async collectCommandIDs(skipGuildErrors = true) {
     let guildIDs: string[] = [];
     for (const [, command] of this.commands) {
-      if (command.guildIDs) guildIDs = uniq([...guildIDs, ...command.guildIDs]);
+      if (command.guildIDs) guildIDs = [...new Set([...guildIDs, ...command.guildIDs])];
     }
 
     const commands = await this.api.getCommands();

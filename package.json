@@ -1,6 +1,6 @@
 {
   "name": "slash-create",
-  "version": "4.4.0",
+  "version": "4.4.1",
   "description": "Create and sync Discord slash commands!",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -50,7 +50,7 @@
     "@types/aws-lambda": "^8.10.82",
     "@types/chai": "^4.2.21",
     "@types/chai-as-promised": "^7.1.4",
-    "@types/lodash": "^4.14.165",
+    "@types/lodash": "^4.14.178",
     "@types/lodash.isequal": "^4.5.5",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.4.14",

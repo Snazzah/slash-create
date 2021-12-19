@@ -19,7 +19,7 @@ export class ExpressServer extends Server {
   constructor(app?: any, opts?: ServerOptions) {
     super(opts);
     if (!app) {
-      if (!express) throw new Error('You must have the `express` module installed before using this server.');
+      if (!express) throw new Error('You must have the `express` package installed before using this server.');
       app = express();
       app.use(express.json());
     }

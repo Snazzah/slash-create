@@ -123,7 +123,7 @@ export interface PartialApplicationCommand {
   name: string;
   /** The description of the command. */
   description?: string;
-  /** The optoins for the command. */
+  /** The options for the command. */
   options?: ApplicationCommandOption[];
   /** Whether to enable this command for everyone by default. */
   default_permission?: boolean;

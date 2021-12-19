@@ -1,8 +1,10 @@
 import { Server, ServerRequestHandler, ServerOptions } from '../server';
 
 let fastify: any;
+let symbols: { [key: string]: symbol };
 try {
   fastify = require('fastify');
+  symbols = require('fastify/lib/symbols');
 } catch {}
 
 /**
@@ -18,10 +20,10 @@ export class FastifyServer extends Server {
    */
   constructor(app?: any, opts?: ServerOptions) {
     super(opts);
-    if (!fastify) throw new Error('You must have the `fastify` module installed before using this server.');
+    if (!fastify) throw new Error('You must have the `fastify` package installed before using this server.');
     if (!app) {
       app = fastify.default();
-    } else if (!(Symbol('fastify.state') in app)) {
+    } else if (!(symbols.kState in app)) {
       app = fastify.default(app);
     }
     this.app = app;

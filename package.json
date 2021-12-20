@@ -53,7 +53,7 @@
     "@types/lodash": "^4.14.178",
     "@types/lodash.isequal": "^4.5.5",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.4.14",
+    "@types/node": "^17.0.1",
     "@types/require-all": "^3.0.3",
     "@types/sinonjs__fake-timers": "6.0.1",
     "@typescript-eslint/eslint-plugin": "^4.29.1",

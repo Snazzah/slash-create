@@ -100,32 +100,35 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     if (typeof command === 'function') command = new command(this);
     else if (typeof command.default === 'function') command = new command.default(this);
 
-    if (!(command instanceof SlashCommand)) throw new Error(`Invalid command object to register: ${command}`);
+    if (command.creator !== this) throw new Error(`Invalid command object to register: ${command}`);
+    const slashCommand = command as SlashCommand;
 
     // Make sure there aren't any conflicts
-    if (this.commands.some((cmd) => cmd.keyName === command.keyName))
-      throw new Error(`A command with the name "${command.commandName}" (${command.keyName}) is already registered.`);
+    if (this.commands.some((cmd) => cmd.keyName === slashCommand.keyName))
+      throw new Error(
+        `A command with the name "${slashCommand.commandName}" (${slashCommand.keyName}) is already registered.`
+      );
     if (
-      command.guildIDs &&
+      slashCommand.guildIDs &&
       this.commands.some(
         (cmd) =>
           !!(
-            cmd.type === command.type &&
-            cmd.commandName === command.commandName &&
+            cmd.type === slashCommand.type &&
+            cmd.commandName === slashCommand.commandName &&
             cmd.guildIDs &&
-            cmd.guildIDs.map((gid) => command.guildIDs.includes(gid)).includes(true)
+            cmd.guildIDs.some((gid) => slashCommand.guildIDs?.includes(gid))
           )
       )
     )
-      throw new Error(`A command with the name "${command.commandName}" has a conflicting guild ID.`);
+      throw new Error(`A command with the name "${slashCommand.commandName}" has a conflicting guild ID.`);
 
-    if (command.unknown && this.unknownCommand) throw new Error('An unknown command is already registered.');
+    if (slashCommand.unknown && this.unknownCommand) throw new Error('An unknown command is already registered.');
 
-    if (command.unknown) this.unknownCommand = command;
-    else this.commands.set(command.keyName, command);
+    if (slashCommand.unknown) this.unknownCommand = slashCommand;
+    else this.commands.set(slashCommand.keyName, slashCommand);
 
-    this.emit('commandRegister', command, this);
-    this.emit('debug', `Registered command ${command.keyName}.`);
+    this.emit('commandRegister', slashCommand, this);
+    this.emit('debug', `Registered command ${slashCommand.keyName}.`);
 
     return this;
   }

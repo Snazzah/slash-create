@@ -19,7 +19,7 @@ Create [Discord slash commands](https://discord.com/developers/docs/interactions
 ## Quickstart
 If you want an easy start on getting slash commands on your bot, you can use the [Snazzah/slash-create-template](https://github.com/Snazzah/slash-create-template) template. (or its [TypeScript branch](https://github.com/Snazzah/slash-create-template/tree/typescript))
 ```sh
-npx degit Snazzah/slash-create-template slash-commands
+npx slash-up init typescript slash-commands
 cd slash-commands
 npm i -g yarn
 yarn

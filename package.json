@@ -38,6 +38,9 @@
   "funding": {
     "url": "https://github.com/sponsors/Snazzah"
   },
+  "engines": {
+    "node": ">=14"
+  },
   "dependencies": {
     "@discordjs/collection": "^0.3.2",
     "eventemitter3": "^4.0.7",

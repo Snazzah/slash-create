@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ## [4.4.2] - 2021-12-20
+### Changed:
+- Minimum Node Version is now v14
 ### Fixed:
 - **SlashCreator:** Fixed command invalidation when registering commands. This should allow for different instances of `slash-create` SlashCommand classes to work.
 ## [4.4.1] - 2021-12-19

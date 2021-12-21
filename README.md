@@ -17,15 +17,11 @@ Create [Discord slash commands](https://discord.com/developers/docs/interactions
 - Command throttling/cooldowns
 
 ## Quickstart
-If you want an easy start on getting slash commands on your bot, you can use the [Snazzah/slash-create-template](https://github.com/Snazzah/slash-create-template) template. (or its [TypeScript branch](https://github.com/Snazzah/slash-create-template/tree/typescript))
-```sh
-npx slash-up init typescript slash-commands
-cd slash-commands
-npm i -g yarn
-yarn
-cp .env.example .env # this copies the .env file, edit variables in this file!
+If you want an easy start on getting slash commands on your bot, you can use [slash-up](https://github.com/Snazzah/slash-up) to create a project using a template.
 ```
-After installing, you can edit commands to your liking and start it up with `yarn start`.
+npx slash-up init
+```
+After creating a project, you can edit commands to your liking and start it up with `yarn start`.
 
 ## Installation
 ```sh

@@ -38,7 +38,7 @@ await ctx.editParent('You clicked the button!', { components: [] });
 ## External Libraries
 
 ### How can I get the client from my slash command?
-Starting in version 4.5.0, slash-create allows you to pass a client object to the creator, so command can access the client object.
+Starting in version 6.0.0, slash-create allows you to pass a client object to the creator, so command can access the client object.
 ```js
 // bot.js
 const Discord = require('discord.js');

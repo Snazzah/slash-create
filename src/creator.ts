@@ -1,13 +1,19 @@
 import EventEmitter from 'eventemitter3';
 import Collection from '@discordjs/collection';
 import HTTPS from 'https';
-import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions, oneLine, verifyKey } from './util';
+import {
+  formatAllowedMentions,
+  FormattedAllowedMentions,
+  getFiles,
+  MessageAllowedMentions,
+  oneLine,
+  verifyKey
+} from './util';
 import {
   ImageFormat,
   InteractionType,
   AnyRequestData,
   RawRequest,
-  RequireAllOptions,
   InteractionResponseType,
   InteractionResponseFlags,
   PartialApplicationCommand,
@@ -144,39 +150,36 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   registerCommands(commands: any[], ignoreInvalid = false) {
     if (!Array.isArray(commands)) throw new TypeError('Commands must be an Array.');
     for (const command of commands) {
-      const valid =
-        typeof command === 'function' ||
-        typeof command.default === 'function' ||
-        command instanceof SlashCommand ||
-        command.default instanceof SlashCommand;
-      if (ignoreInvalid && !valid) {
-        this.emit('warn', `Attempting to register an invalid command object: ${command}; skipping.`);
-        continue;
+      try {
+        this.registerCommand(command);
+      } catch (e) {
+        if (ignoreInvalid) {
+          this.emit('warn', `Skipped an invalid command: ${e}`);
+          continue;
+        } else throw e;
       }
-      this.registerCommand(command);
     }
     return this;
   }
 
   /**
    * Registers all commands in a directory. The files must export a Command class constructor or instance.
-   * @param options The path to the directory, or a require-all options object
+   * @param commandsPath The path to the command directory
    * @example
    * const path = require('path');
    * creator.registerCommandsIn(path.join(__dirname, 'commands'));
    */
-  registerCommandsIn(options: RequireAllOptions | string) {
-    const obj: { [key: string]: any } = require('require-all')(options);
+  registerCommandsIn(commandPath: string) {
+    const paths = getFiles(commandPath);
     const commands: any[] = [];
-    function iterate(obj: any) {
-      for (const command of Object.values(obj)) {
-        if (typeof command === 'function') commands.push(command);
-        else if (typeof command === 'object') iterate(command);
+    for (const filePath of paths) {
+      try {
+        commands.push(require(filePath));
+      } catch (e) {
+        this.emit('error', new Error(`Failed to load command ${filePath}: ${e}`));
+        throw e;
       }
     }
-    iterate(obj);
-    if (typeof options === 'string' && !this.commandsPath) this.commandsPath = options;
-    else if (typeof options === 'object' && !this.commandsPath) this.commandsPath = options.dirname;
     return this.registerCommands(commands, true);
   }
 

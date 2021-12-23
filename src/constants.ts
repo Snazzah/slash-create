@@ -653,16 +653,6 @@ export interface ComponentSelectOption {
   default?: boolean;
 }
 
-/** @see https://www.npmjs.com/package/require-all#usage */
-export interface RequireAllOptions {
-  dirname: string;
-  filter?: ((name: string, path: string) => string | false | undefined) | RegExp;
-  excludeDirs?: RegExp;
-  map?: (name: string, path: string) => string;
-  resolve?: (module: any) => any;
-  recursive?: true | false;
-}
-
 /** Any image format supported by Discord. */
 export type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif';
 

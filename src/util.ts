@@ -1,12 +1,15 @@
 import { ApplicationCommandOption, CommandOptionType } from './constants';
 import nacl from 'tweetnacl';
+import fs from 'fs';
+import path from 'path';
+
 /**
  * Validates a payload from Discord against its signature and key.
  *
- * @param rawBody - The raw payload data
- * @param signature - The signature from the `X-Signature-Ed25519` header
- * @param timestamp - The timestamp from the `X-Signature-Timestamp` header
- * @param clientPublicKey - The public key from the Discord developer dashboard
+ * @param rawBody The raw payload data
+ * @param signature The signature from the `X-Signature-Ed25519` header
+ * @param timestamp The timestamp from the `X-Signature-Timestamp` header
+ * @param clientPublicKey The public key from the Discord developer dashboard
  * @returns Whether or not validation was successful
  */
 export async function verifyKey(
@@ -122,6 +125,18 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
       }
     }
   }
+}
+
+export function getFiles(folderPath: string) {
+  const fileList = fs.readdirSync(folderPath);
+  const files: string[] = [];
+  for (const file of fileList) {
+    const filePath = path.join(folderPath, file);
+    const stat = fs.lstatSync(filePath);
+    if (stat.isDirectory()) files.push(...getFiles(filePath));
+    else files.push(filePath);
+  }
+  return files;
 }
 
 /** The allowed mentions for a {@link Message}. */

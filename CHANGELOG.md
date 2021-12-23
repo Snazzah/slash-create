@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added:
 - **SlashCreator:** Add client passthrough option
+### Changed:
+- **SlashCreator:** Removed `require-all` dependency and replaced `registerCommandsIn` options to only use strings
+### Removed:
+- **types:** Removed `RequireAllOptions` type
 ## [4.4.2] - 2021-12-20
 ### Changed:
 - Minimum Node Version is now v14

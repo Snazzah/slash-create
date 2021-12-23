@@ -38,59 +38,44 @@ await ctx.editParent('You clicked the button!', { components: [] });
 ## External Libraries
 
 ### How can I get the client from my slash command?
-slash-create does not support passing a client through the command context, since the library is also used for webservers.
-You can do either of the following work-arounds:
-
-#### Extend the Command Class
-This requires you to manually register the command as `registerCommandsIn` will fail with commands with these constructor parameters.
+Starting in version 4.5.0, slash-create allows you to pass a client object to the creator, so command can access the client object.
 ```js
 // bot.js
 const Discord = require('discord.js');
 const { SlashCreator, GatewayServer } = require('slash-create');
-const ClientCommand = require('./commands/command.js');
 
 const client = new Discord.Client({ /* ... */ });
-const creator = new SlashCreator({ /* ... */ });
+const creator = new SlashCreator({
+  client,
+  /* ... */
+});
+
 creator
-    .registerCommand(new ClientCommand(client, creator))
-    // ...
+  .withServer(
+    new GatewayServer(
+      (handler) => client.ws.on('INTERACTION_CREATE', handler)
+    )
+  )
+  .registerCommandsIn(path.join(__dirname, 'commands'))
+  // ...
 ```
 ```js
 // commands/command.js
 const { SlashCommand } = require('slash-create');
 
 module.exports = class HelloCommand extends SlashCommand {
-    constructor(client, creator, opts) {
-        super(creator, opts);
-        this.client = client;
-    }
+  constructor(creator) {
+    super(creator, {
+      name: 'hello',
+      description: 'Says hello to you.'
+    });
 
-    // now you can use this.client ...
-}
-```
+    this.filePath = __filename;
+  }
 
-#### Putting the Client in the Creator
-This does nothing to the creator, however doing this in TypeScript will result in errors.
-```js
-// bot.js
-const Discord = require('discord.js');
-const { SlashCreator, GatewayServer } = require('slash-create');
-
-const client = new Discord.Client({ /* ... */ });
-const creator = new SlashCreator({ /* ... */ });
-creator.client = client;
-// ...
-```
-```js
-// commands/command.js
-const { SlashCommand, CommandOptionType } = require('slash-create');
-const client = require('../bot.js');
-
-module.exports = class HelloCommand extends SlashCommand {
-  // ...
   async run(ctx) {
-    const client = ctx.creator.client;
-    // do stuff with the client...
+    // this.client ...
+    return 'Hello!',
   }
 }
 ```

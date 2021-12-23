@@ -45,6 +45,8 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   commandsPath?: string;
   /** The server being used in the creator */
   server?: Server;
+  /** The client being passed to this creator */
+  client?: any;
   /** The formatted allowed mentions from the options */
   readonly allowedMentions: FormattedAllowedMentions;
   /** The command to run when an unknown command is used. */
@@ -61,6 +63,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     if (!opts.applicationID) throw new Error('An application ID must be defined!');
     if (opts.token && !opts.token.startsWith('Bot ') && !opts.token.startsWith('Bearer '))
       opts.token = 'Bot ' + opts.token;
+    this.client = opts.client;
 
     // Define default options
     this.options = Object.assign(
@@ -856,6 +859,8 @@ export interface SlashCreatorOptions {
   maxSignatureTimestamp?: number;
   /** A HTTP Agent used to proxy requests */
   agent?: HTTPS.Agent;
+  /** The client to pass to the creator */
+  client?: any;
 }
 
 /** The options for {@link SlashCreator#syncCommands}. */

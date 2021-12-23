@@ -11,7 +11,7 @@ import { oneLine, validateOptions } from './util';
 import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
 
 /** Represents a Discord slash command. */
-export class SlashCommand {
+export class SlashCommand<T = any> {
   /** The command's name. */
   readonly commandName: string;
   /** The type of command this is. */
@@ -103,6 +103,11 @@ export class SlashCommand {
   get keyName() {
     const prefix = this.guildIDs ? this.guildIDs.join(',') : 'global';
     return `${this.type}:${prefix}:${this.commandName}`;
+  }
+
+  /** The client passed from the creator */
+  get client(): T {
+    return this.creator.client;
   }
 
   /**

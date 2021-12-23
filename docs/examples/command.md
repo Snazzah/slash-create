@@ -14,7 +14,6 @@ module.exports = class HelloCommand extends SlashCommand {
       }]
     });
 
-    // Not required initially, but required for reloading with a fresh file.
     this.filePath = __filename;
   }
 
@@ -28,7 +27,7 @@ module.exports = class HelloCommand extends SlashCommand {
 ```js
 const { SlashCommand, ApplicationCommandPermissionType } = require('slash-create');
 
-module.exports = class HelloCommand extends SlashCommand {
+module.exports = class ExclusivityCommand extends SlashCommand {
   constructor(creator) {
     super(creator, {
       name: 'exclusivity',
@@ -59,7 +58,7 @@ module.exports = class HelloCommand extends SlashCommand {
 ### Command with Subcommands
 ```js
 const { SlashCommand, CommandOptionType } = require('slash-create');
-module.exports = class CharacterCommand extends SlashCommand {
+module.exports = class SubcommandsCommand extends SlashCommand {
     constructor(creator) {
         super(creator, {
             name: 'subcommands',
@@ -187,7 +186,6 @@ module.exports = class HelloCommand extends SlashCommand {
       }]
     });
 
-    // Not required initially, but required for reloading with a fresh file.
     this.filePath = __filename;
   }
 

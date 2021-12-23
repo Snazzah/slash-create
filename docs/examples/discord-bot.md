@@ -8,6 +8,7 @@ const creator = new SlashCreator({
   applicationID: '12345678901234567',
   publicKey: 'CLIENT_PUBLIC_KEY',
   token: 'BOT_TOKEN_HERE',
+  client
 });
 
 creator
@@ -31,6 +32,7 @@ const creator = new SlashCreator({
   applicationID: '12345678901234567',
   publicKey: 'CLIENT_PUBLIC_KEY',
   token: 'BOT_TOKEN_HERE',
+  client
 });
 
 creator

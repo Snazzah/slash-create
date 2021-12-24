@@ -33,6 +33,7 @@ import { CommandContext } from './structures/interfaces/commandContext';
 import isEqual from 'lodash.isequal';
 import { ComponentContext } from './structures/interfaces/componentContext';
 import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
+import path from 'path';
 
 /** The main class for using commands and interactions. */
 export class SlashCreator extends (EventEmitter as any as new () => TypedEventEmitter<SlashCreatorEvents>) {
@@ -170,14 +171,13 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    * creator.registerCommandsIn(path.join(__dirname, 'commands'));
    */
   registerCommandsIn(commandPath: string) {
-    const paths = getFiles(commandPath);
+    const paths = getFiles(commandPath).filter((file) => ['.js', '.cjs'].includes(path.extname(file)));
     const commands: any[] = [];
     for (const filePath of paths) {
       try {
         commands.push(require(filePath));
       } catch (e) {
         this.emit('error', new Error(`Failed to load command ${filePath}: ${e}`));
-        throw e;
       }
     }
     return this.registerCommands(commands, true);

@@ -192,22 +192,23 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     if (typeof command === 'function') command = new command(this);
     else if (typeof command.default === 'function') command = new command.default(this);
 
-    if (!(command instanceof SlashCommand)) throw new Error(`Invalid command object to reregister: ${command}`);
+    if (command.creator !== this) throw new Error(`Invalid command object to reregister: ${command}`);
+    const slashCommand = command as SlashCommand;
 
     oldCommand.onUnload();
 
-    if (!command.unknown) {
-      if (command.commandName !== oldCommand.commandName) throw new Error('Command name cannot change.');
-      if (!isEqual(command.guildIDs, oldCommand.guildIDs)) throw new Error('Command guild IDs cannot change.');
-      this.commands.set(command.keyName, command);
+    if (!slashCommand.unknown) {
+      if (slashCommand.commandName !== oldCommand.commandName) throw new Error('Command name cannot change.');
+      if (!isEqual(slashCommand.guildIDs, oldCommand.guildIDs)) throw new Error('Command guild IDs cannot change.');
+      this.commands.set(slashCommand.keyName, slashCommand);
     } else if (this.unknownCommand !== oldCommand) {
       throw new Error('An unknown command is already registered.');
     } else {
-      this.unknownCommand = command;
+      this.unknownCommand = slashCommand;
     }
 
-    this.emit('commandReregister', command, oldCommand);
-    this.emit('debug', `Reregistered command ${command.keyName}.`);
+    this.emit('commandReregister', slashCommand, oldCommand);
+    this.emit('debug', `Reregistered command ${slashCommand.keyName}.`);
   }
 
   /**

@@ -42,7 +42,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@discordjs/collection": "^0.3.2",
+    "@discordjs/collection": "^0.4.0",
     "eventemitter3": "^4.0.7",
     "lodash.isequal": "^4.5.0",
     "tweetnacl": "^1.0.3"

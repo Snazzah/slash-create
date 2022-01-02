@@ -638,6 +638,8 @@ export interface ComponentSelectMenu {
   min_values?: number;
   /** The maximum number of items to be chosen. */
   max_values?: number;
+  /** Whether this menu will show as disabled. */
+  disabled?: boolean;
 }
 
 export interface ComponentSelectOption {

@@ -4,7 +4,11 @@
   "description": "Create and sync Discord slash commands!",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
-  "author": "Snazzah",
+  "author": {
+    "name": "Snazzah",
+    "email": "me@snazzah.com",
+    "url": "https://snazzah.com/"
+  },
   "license": "MIT",
   "repository": "https://github.com/Snazzah/slash-create",
   "bugs": {

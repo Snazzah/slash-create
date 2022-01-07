@@ -328,6 +328,7 @@ export interface GuildInteractionRequestData {
   id: string;
   channel_id: string;
   guild_id: string;
+  guild_locale?: string;
   member: CommandMember;
   data: CommandData;
 }
@@ -474,6 +475,7 @@ export interface CommandUser {
   avatar: string | null;
   discriminator: string;
   public_flags: number;
+  locale?: string;
 }
 
 /** @private */

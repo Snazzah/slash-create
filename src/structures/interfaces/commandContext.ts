@@ -1,6 +1,6 @@
 import { RespondFunction } from '../../server';
 import { SlashCreator } from '../../creator';
-import { AnyCommandOption, ApplicationCommandType, InteractionRequestData } from '../../constants';
+import { AnyCommandOption, ApplicationCommandType, AttachmentData, InteractionRequestData } from '../../constants';
 import { User } from '../user';
 import Collection from '@discordjs/collection';
 import { Channel } from '../channel';
@@ -37,6 +37,8 @@ export class CommandContext extends MessageInteractionContext {
   readonly channels = new Collection<string, Channel>();
   /** The resolved messages of the interaction. */
   readonly messages = new Collection<string, Message>();
+  /** The resolved attachments of the interaction. */
+  readonly attachments = new Collection<string, AttachmentData>();
 
   /** Whether the context is from a webserver. */
   private webserverMode: boolean;
@@ -96,6 +98,10 @@ export class CommandContext extends MessageInteractionContext {
       if (data.data.resolved.messages)
         Object.keys(data.data.resolved.messages).forEach((id) =>
           this.messages.set(id, new Message(data.data.resolved!.messages![id], this.creator))
+        );
+      if (data.data.resolved.attachments)
+        Object.keys(data.data.resolved.attachments).forEach((id) =>
+          this.attachments.set(id, data.data.resolved!.attachments![id])
         );
     }
 

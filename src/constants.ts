@@ -454,6 +454,7 @@ export interface ResolvedMemberData {
   avatar?: string;
   roles: string[];
   premium_since: string | null;
+  communication_disabled_until: string | null;
   pending: boolean;
   nick: string | null;
   joined_at: string;

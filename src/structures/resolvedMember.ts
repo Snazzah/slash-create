@@ -22,6 +22,8 @@ export class ResolvedMember {
   readonly roles: string[];
   /** The time of when this member boosted the server. */
   readonly premiumSince?: number;
+  /** The timestamp when the member's timeout will expire */
+  readonly communicationDisabledUntil?: number;
   /** Whether the member is pending verification */
   readonly pending: boolean;
   /** The member's guild avatar hash */
@@ -47,6 +49,8 @@ export class ResolvedMember {
     this.joinedAt = Date.parse(data.joined_at);
     this.roles = data.roles;
     if (data.premium_since) this.premiumSince = Date.parse(data.premium_since);
+    if (data.communication_disabled_until)
+      this.communicationDisabledUntil = Date.parse(data.communication_disabled_until);
     this.pending = data.pending;
     this.guildID = guildID;
 

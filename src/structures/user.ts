@@ -14,8 +14,6 @@ export class User {
   readonly avatar?: string;
   /** Whether the user is a bot. */
   readonly bot: boolean;
-  /** The user's locale */
-  readonly locale?: string;
 
   /** The creator of the user class. */
   private readonly _creator: SlashCreator;
@@ -34,7 +32,6 @@ export class User {
     this.username = data.username;
     this.discriminator = data.discriminator;
     if (data.avatar) this.avatar = data.avatar;
-    if (data.locale) this.locale = data.locale;
     this._flags = data.public_flags;
     this.bot = data.bot || false;
   }

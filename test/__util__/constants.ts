@@ -127,6 +127,7 @@ export const basicMessageInteraction: MessageComponentRequestData = {
     mute: false,
     deaf: false,
     nick: null,
+    communication_disabled_until: null,
     joined_at: '2021-01-01T21:46:12.072Z'
   },
   message: followUpMessage,

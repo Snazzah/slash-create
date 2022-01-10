@@ -3,6 +3,38 @@
 /** A map with a subset of extra features from [@discordjs/collection](https://npm.im/@discordjs/collection). */
 export class Collection<K, V> extends Map<K, V> {
   /**
+   * Obtains the first value(s) in this collection.
+   * @param amount Amount of values to obtain from the beginning
+   * @returns A single value if no amount is provided or an array of values, starting from the end if
+   * amount is negative
+   */
+  public first(): V | undefined;
+  public first(amount: number): V[];
+  public first(amount?: number): V | V[] | undefined {
+    if (typeof amount === 'undefined') return this.values().next().value;
+    if (amount < 0) return this.last(amount * -1);
+    amount = Math.min(this.size, amount);
+    const iter = this.values();
+    return Array.from({ length: amount }, (): V => iter.next().value);
+  }
+
+  /**
+   * Obtains the last value(s) in this collection.
+   * @param amount Amount of values to obtain from the end
+   * @returns A single value if no amount is provided or an array of values, starting from the start if
+   * amount is negative
+   */
+  public last(): V | undefined;
+  public last(amount: number): V[];
+  public last(amount?: number): V | V[] | undefined {
+    const arr = [...this.values()];
+    if (typeof amount === 'undefined') return arr[arr.length - 1];
+    if (amount < 0) return this.first(amount * -1);
+    if (!amount) return [];
+    return arr.slice(-amount);
+  }
+
+  /**
    * Obtains unique random value(s) from this collection.
    * @param amount Amount of values to obtain randomly
    * @returns A single value if no amount is provided or an array of values

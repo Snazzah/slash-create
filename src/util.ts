@@ -30,10 +30,11 @@ export async function verifyKey(
 }
 
 export function formatAllowedMentions(
-  allowed: MessageAllowedMentions,
+  allowed: MessageAllowedMentions | FormattedAllowedMentions,
   defaultMentions?: FormattedAllowedMentions
 ): FormattedAllowedMentions {
   if (!allowed && defaultMentions) return defaultMentions;
+  if ('parse' in allowed) return allowed as FormattedAllowedMentions;
   const result: FormattedAllowedMentions = {
     parse: []
   };

@@ -7,6 +7,7 @@ export * from './creator';
 export * from './server';
 
 export * from './util/bitfield';
+export * from './util/collection';
 export * from './util/requestHandler';
 export * from './util/sequentialBucket';
 

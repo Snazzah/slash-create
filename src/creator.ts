@@ -1,5 +1,4 @@
 import EventEmitter from 'eventemitter3';
-import Collection from '@discordjs/collection';
 import HTTPS from 'https';
 import {
   formatAllowedMentions,
@@ -27,6 +26,7 @@ import {
 import { SlashCommand } from './command';
 import { TypedEventEmitter } from './util/typedEmitter';
 import { RequestHandler } from './util/requestHandler';
+import { Collection } from './util/collection';
 import { SlashCreatorAPI } from './api';
 import { Server, TransformedRequest, RespondFunction, Response } from './server';
 import { CommandContext } from './structures/interfaces/commandContext';

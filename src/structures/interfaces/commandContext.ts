@@ -2,7 +2,7 @@ import { RespondFunction } from '../../server';
 import { SlashCreator } from '../../creator';
 import { AnyCommandOption, ApplicationCommandType, InteractionRequestData } from '../../constants';
 import { User } from '../user';
-import Collection from '@discordjs/collection';
+import { Collection } from '../../util/collection';
 import { Channel } from '../channel';
 import { Role } from '../role';
 import { ResolvedMember } from '../resolvedMember';

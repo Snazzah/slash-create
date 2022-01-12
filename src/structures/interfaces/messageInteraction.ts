@@ -18,6 +18,10 @@ export class MessageInteractionContext {
   readonly channelID: string;
   /** The guild ID that the interaction was invoked in. */
   readonly guildID?: string;
+  /** The user's locale */
+  readonly locale?: string;
+  /** The guild's perferred locale, if invoked in a guild. */
+  readonly guildLocale?: string;
   /** The member that invoked the interaction. */
   readonly member?: Member;
   /** The user that invoked the interaction. */
@@ -47,6 +51,8 @@ export class MessageInteractionContext {
     this.interactionID = data.id;
     this.channelID = data.channel_id;
     this.guildID = 'guild_id' in data ? data.guild_id : undefined;
+    this.locale = 'locale' in data ? data.locale : undefined;
+    this.guildLocale = 'guild_locale' in data ? data.guild_locale : undefined;
     this.member = 'guild_id' in data ? new Member(data.member, this.creator, data.guild_id) : undefined;
     this.user = new User('guild_id' in data ? data.member.user : data.user, this.creator);
   }

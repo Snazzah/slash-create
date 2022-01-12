@@ -312,6 +312,7 @@ export interface DMInteractionRequestData {
   token: string;
   id: string;
   channel_id: string;
+  locale?: string;
   user: CommandUser;
   data: CommandData;
 }
@@ -328,6 +329,8 @@ export interface GuildInteractionRequestData {
   id: string;
   channel_id: string;
   guild_id: string;
+  locale?: string;
+  guild_locale?: string;
   member: CommandMember;
   data: CommandData;
 }
@@ -368,6 +371,8 @@ export interface DMMessageComponentRequestData {
   message: MessageData;
   id: string;
   channel_id: string;
+  locale?: string;
+  guild_locale?: string;
   user: CommandUser;
   data: {
     custom_id: string;

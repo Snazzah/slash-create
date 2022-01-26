@@ -166,12 +166,14 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   /**
    * Registers all commands in a directory. The files must export a Command class constructor or instance.
    * @param commandsPath The path to the command directory
+   * @param customExtensions An array of custom file extensions (`.js` and `.cjs` are already included)
    * @example
    * const path = require('path');
    * creator.registerCommandsIn(path.join(__dirname, 'commands'));
    */
-  registerCommandsIn(commandPath: string) {
-    const paths = getFiles(commandPath).filter((file) => ['.js', '.cjs'].includes(path.extname(file)));
+  registerCommandsIn(commandPath: string, customExtensions: string[] = []) {
+    const extensions = ['.js', '.cjs', ...customExtensions];
+    const paths = getFiles(commandPath).filter((file) => extensions.includes(path.extname(file)));
     const commands: any[] = [];
     for (const filePath of paths) {
       try {

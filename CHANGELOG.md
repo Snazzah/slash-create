@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ## [5.1.0] - 2022-02-04
 ### Added:
-- **MessateInteractionContext:** User locale and guild locale ([#216](https://github.com/Snazzah/slash-create/pull/216))
+- **MessageInteractionContext:** User locale and guild locale ([#216](https://github.com/Snazzah/slash-create/pull/216))
 - **SlashCreator:** Support registering custom file extensions ([#231](https://github.com/Snazzah/slash-create/pull/231))
 ## [5.0.3] - 2022-01-10
 ### Changed:

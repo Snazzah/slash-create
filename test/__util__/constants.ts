@@ -6,7 +6,9 @@ import {
   ComponentType,
   InteractionRequestData,
   InteractionType,
-  MessageComponentRequestData
+  MessageComponentRequestData,
+  ModalSubmitRequestData,
+  TextInputStyle
 } from '../../src/constants';
 import { SlashCreator } from '../../src/creator';
 import { RespondFunction } from '../../src/server';
@@ -260,6 +262,28 @@ export const autocompleteInteraction: CommandAutocompleteRequestData = {
             type: CommandOptionType.STRING,
             value: 'incomplete str',
             focused: true
+          }
+        ]
+      }
+    ]
+  }
+};
+
+export const modalInteraction: ModalSubmitRequestData = {
+  ...interactionDefaults,
+  type: InteractionType.MODAL_SUBMIT,
+  data: {
+    custom_id: 'modal',
+    components: [
+      {
+        type: ComponentType.ACTION_ROW,
+        components: [
+          {
+            type: ComponentType.TEXT_INPUT,
+            label: 'text',
+            style: TextInputStyle.SHORT,
+            custom_id: 'text',
+            value: 'hi'
           }
         ]
       }

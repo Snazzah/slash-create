@@ -14,10 +14,14 @@ describe('[index]', () => {
     expect(slashCreate.CommandContext).to.be.a('function');
     expect(slashCreate.ComponentContext).to.be.a('function');
     expect(slashCreate.MessageInteractionContext).to.be.a('function');
+    expect(slashCreate.ModalInteractionContext).to.be.a('function');
+    expect(slashCreate.ModalSendableContext).to.be.a('function');
     expect(slashCreate.ApplicationCommandType).to.be.a('object');
     expect(slashCreate.ApplicationCommandPermissionType).to.be.a('object');
     expect(slashCreate.CommandOptionType).to.be.a('object');
     expect(slashCreate.ComponentType).to.be.a('object');
+    expect(slashCreate.TextInputStyle).to.be.a('object');
+    expect(slashCreate.ButtonStyle).to.be.a('object');
     expect(slashCreate.Constants).to.be.a('object');
     expect(slashCreate.Context).to.be.a('function');
     expect(slashCreate.Creator).to.be.a('function');

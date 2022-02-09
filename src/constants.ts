@@ -311,21 +311,50 @@ export interface PingRequestData {
 }
 
 /**
- * A modal submission.
+ * A modal submission within a direct message.
  * @private
  */
-export interface ModalSubmitRequestData {
+export interface DMModalSubmitRequestData {
   version: 1;
   application_id: string;
   type: InteractionType.MODAL_SUBMIT;
-  user?: CommandUser;
   token: string;
   id: string;
+  channel_id: string;
+  locale?: string;
+  user: CommandUser;
   data: {
     custom_id: string;
     components: ComponentActionRow[];
   };
 }
+
+/**
+ * A modal submission within a guild.
+ * @private
+ */
+export interface GuildModalSubmitRequestData {
+  version: 1;
+  application_id: string;
+  type: InteractionType.MODAL_SUBMIT;
+  token: string;
+  id: string;
+  channel_id: string;
+  guild_id: string;
+  locale?: string;
+  guild_locale?: string;
+  member: CommandMember;
+  data: {
+    custom_id: string;
+    components: ComponentActionRow[];
+  };
+}
+
+/**
+ * Any modal submission.
+ * @private
+ */
+export type ModalSubmitRequestData = DMModalSubmitRequestData | GuildModalSubmitRequestData;
 
 /**
  * A command interaction within a direct message.

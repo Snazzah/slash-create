@@ -49,7 +49,6 @@ export class ComponentContext extends ModalSendableContext {
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
-      // @ts-ignore
       await this._respond({
         status: 200,
         body: {
@@ -87,7 +86,6 @@ export class ComponentContext extends ModalSendableContext {
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
-      // @ts-ignore
       await this._respond({
         status: 200,
         body: {

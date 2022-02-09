@@ -75,7 +75,9 @@ export enum CommandOptionType {
   /** Anything mentionable, returning the ID of the object. */
   MENTIONABLE = 9,
   /** A decimal. */
-  NUMBER = 10
+  NUMBER = 10,
+  /** An attachment. */
+  ATTACHMENT = 11
 }
 
 /** The types of application commands available. */
@@ -521,6 +523,7 @@ export interface CommandData {
     roles?: { [id: string]: ResolvedRole };
     channels?: { [id: string]: ResolvedChannel };
     messages?: { [id: string]: MessageData };
+    attachments?: { [id: string]: AttachmentData };
   };
   type: ApplicationCommandType;
   target_id?: string;
@@ -659,6 +662,30 @@ export interface ComponentSelectOption {
   value: string;
   /** Should this render by default */
   default?: boolean;
+}
+
+/** An attachment from an interaction. */
+export interface AttachmentData {
+  /** The ID of the attachment. */
+  id: string;
+  /** The filename of the attachment. */
+  filename: string;
+  /** The description of the attachment. */
+  description?: string;
+  /** The content type of the attachment. */
+  content_type?: string;
+  /** The size of the attachment in bytes. */
+  size: number;
+  /** The URL of the attachment. */
+  url: string;
+  /** The proxy URL of the attachment. */
+  proxy_url: string;
+  /** The height of the attachment. */
+  height?: number;
+  /** The width of the attachment. */
+  width?: number;
+  /** Whether the attachment is ephemeral */
+  ephermal?: boolean;
 }
 
 /** Any image format supported by Discord. */

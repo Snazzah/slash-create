@@ -11,11 +11,17 @@ export class ModalInteractionContext extends MessageInteractionContext {
   /** The values defined in the modal submission. */
   readonly values: { [key: string]: string };
 
+  /** @hidden */
+  private _timeout?: any;
+
   constructor(creator: SlashCreator, data: ModalSubmitRequestData, respond: RespondFunction) {
     super(creator, data, respond);
 
     this.customID = data.data.custom_id;
     this.values = ModalInteractionContext.convertComponents(data.data.components);
+
+    // Auto-defer if no response was given in 2 seconds
+    this._timeout = setTimeout(() => this.defer(false), 2000);
   }
 
   static convertComponents(components: ComponentActionRow[]): { [key: string]: string } {

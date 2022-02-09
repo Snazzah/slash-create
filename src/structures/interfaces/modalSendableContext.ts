@@ -13,18 +13,8 @@ export class ModalSendableContext extends MessageInteractionContext {
     if (this.expired) throw new Error('This interaction has expired');
     if (this.initiallyResponded) throw new Error('This interaction has already responded.');
 
-    this._respond({
-      status: 200,
-      body: {
-        type: InteractionResponseType.MODAL,
-        data: payload
-      }
-    });
-
     if (callback) {
-      if (!payload.custom_id) {
-        payload.custom_id = generateID();
-      }
+      if (!payload.custom_id) payload.custom_id = generateID();
 
       const key = `${this.user.id}-${payload.custom_id}`;
 
@@ -32,9 +22,18 @@ export class ModalSendableContext extends MessageInteractionContext {
         callback,
         expires: this.invokedAt + 1000 * 60 * 15
       });
-    } else if (!callback && !payload.custom_id) {
+    } else if (!callback && !payload.custom_id)
       throw new Error('Modal must have a custom_id if no callback is provided');
-    }
+
+    // @ts-expect-error
+    clearTimeout(this._timeout);
+    this._respond({
+      status: 200,
+      body: {
+        type: InteractionResponseType.MODAL,
+        data: payload
+      }
+    });
 
     return payload.custom_id!;
   }

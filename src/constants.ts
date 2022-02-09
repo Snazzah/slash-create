@@ -829,6 +829,13 @@ declare function unknownInteraction(interaction: any): void;
  */
 declare function rawInteraction(interaction: AnyRequestData): void;
 /**
+ * Emitted when any request is recieved.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param tred The transformed request
+ */
+declare function rawRequest(treq: TransformedRequest): void;
+/**
  * Emitted when a command interaction is given.
  * Only emits if `handleCommandsManually` in {@link SlashCreatorOptions} is true.
  * @event

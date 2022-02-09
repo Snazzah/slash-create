@@ -584,6 +584,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
 
   private async _onRequest(treq: TransformedRequest, respond: RespondFunction) {
     this.emit('debug', 'Got request');
+    this.emit('rawRequest', treq);
 
     // Verify request
     const signature = treq.headers['x-signature-ed25519'] as string;
@@ -846,6 +847,7 @@ interface SlashCreatorEvents {
   commandBlock: (command: SlashCommand, ctx: CommandContext, reason: string, data: any) => void;
   commandError: (command: SlashCommand, err: Error, ctx: CommandContext) => void;
   commandRun: (command: SlashCommand, promise: Promise<any>, ctx: CommandContext) => void;
+  rawRequest: (treq: TransformedRequest) => void;
 }
 
 /** The options for the {@link SlashCreator}. */

@@ -883,6 +883,13 @@ declare function unknownInteraction(interaction: any): void;
  */
 declare function rawInteraction(interaction: AnyRequestData): void;
 /**
+ * Emitted when any request is recieved.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param treq The transformed request
+ */
+declare function rawRequest(treq: TransformedRequest): void;
+/**
  * Emitted when a modal interaction is given.
  * @event
  * @asMemberOf SlashCreator

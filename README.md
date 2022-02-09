@@ -17,11 +17,18 @@ Create [Discord slash commands](https://discord.com/developers/docs/interactions
 - Command throttling/cooldowns
 
 ## Quickstart
+
 If you want an easy start on getting slash commands on your bot, you can use [slash-up](https://github.com/Snazzah/slash-up) to create a project using a template.
 ```
 npx slash-up init
 ```
 After creating a project, you can edit commands to your liking and start it up with `yarn start`.
+
+You can also deploy a slash-create template to the following services:
+
+| Cloudflare Workers | Vercel | Heroku | Railway |
+|:-:|:-:|:-:|:-:|
+| [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/Snazzah/slash-create-worker) | [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSnazzah%2Fslash-create-vercel&env=DISCORD_APP_ID,DISCORD_PUBLIC_KEY,DISCORD_BOT_TOKEN&envDescription=Variables%20needed%20to%20recognize%20and%20operate%20slash%20commands.&project-name=discord-interactions&repo-name=discord-slash-commands&demo-description=Deploy%20a%20slash-create%20server%20for%20Discord%20interactions.&demo-image=https%3A%2F%2Fget.snaz.in%2F4MVTTaR.png&demo-title=%2Fcreate&demo-url=https%3A%2F%2Fslash-create.js.org) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Snazzah/slash-create-template/tree/master) | [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2FSnazzah%2Fslash-create-template%2Ftree%2Fmaster&envs=DISCORD_APP_ID%2CDISCORD_PUBLIC_KEY%2CDISCORD_BOT_TOKEN&DISCORD_APP_IDDesc=The+application+ID+of+the+Discord+app&DISCORD_PUBLIC_KEYDesc=The+public+key+of+the+Discord+app&DISCORD_BOT_TOKENDesc=The+bot+token+of+the+Discord+app&referralCode=snazzah) |
 
 ## Installation
 ```sh

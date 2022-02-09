@@ -664,6 +664,10 @@ export interface AttachmentData {
   id: string;
   /** The filename of the attachment. */
   filename: string;
+  /** The description of the attachment. */
+  description?: string;
+  /** The content type of the attachment. */
+  content_type?: string;
   /** The size of the attachment in bytes. */
   size: number;
   /** The URL of the attachment. */
@@ -674,10 +678,8 @@ export interface AttachmentData {
   height?: number;
   /** The width of the attachment. */
   width?: number;
-  /** The content type of the attachment. */
-  content_type: string;
   /** Whether the attachment is ephemeral */
-  ephermal: boolean;
+  ephermal?: boolean;
 }
 
 /** Any image format supported by Discord. */

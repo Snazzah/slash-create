@@ -1,4 +1,6 @@
-import { ComponentActionRow, ComponentTextInput, ModalSubmitRequestData, RespondFunction, SlashCreator } from '../..';
+import { ComponentActionRow, ComponentTextInput, ModalSubmitRequestData } from '../../constants';
+import { SlashCreator } from '../../creator';
+import { RespondFunction } from '../../server';
 import { MessageInteractionContext } from './messageInteraction';
 
 /** Represents an interaction context from a modal submission. */

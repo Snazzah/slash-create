@@ -5,7 +5,7 @@ import { SlashCreator } from './creator';
 import { RespondFunction, TransformedRequest } from './server';
 import { ComponentContext } from './structures/interfaces/componentContext';
 import { MessageData } from './structures/message';
-import { AutocompleteContext } from '.';
+import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
 import { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
 
 export const VERSION: string = require('../package.json').version;

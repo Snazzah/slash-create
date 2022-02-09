@@ -1,10 +1,6 @@
-import {
-  ComponentActionRow,
-  InteractionResponseType,
-  ModalRegisterCallback,
-  RespondFunction,
-  SlashCreator
-} from '../..';
+import { ComponentActionRow, InteractionResponseType } from '../../constants';
+import { ModalRegisterCallback, SlashCreator } from '../../creator';
+import { RespondFunction } from '../../server';
 import { generateID } from '../../util';
 import { MessageInteractionContext } from './messageInteraction';
 

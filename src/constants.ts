@@ -6,6 +6,7 @@ import { RespondFunction, TransformedRequest } from './server';
 import { ComponentContext } from './structures/interfaces/componentContext';
 import { MessageData } from './structures/message';
 import { AutocompleteContext } from '.';
+import { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
 
 export const VERSION: string = require('../package.json').version;
 
@@ -25,10 +26,13 @@ export enum InteractionType {
   /** An invocation of a message component. */
   MESSAGE_COMPONENT = 3,
   /** An autocomplete invocation of a command. */
-  APPLICATION_COMMAND_AUTOCOMPLETE = 4
+  APPLICATION_COMMAND_AUTOCOMPLETE = 4,
+  /** A modal submission. */
+  MODAL_SUBMIT = 5
 }
 
 /** The types of interaction responses. */
+
 export enum InteractionResponseType {
   /** Acknowledge a `PING`. */
   PONG = 1,
@@ -43,7 +47,9 @@ export enum InteractionResponseType {
   /** Edits the message the component was attached to. */
   UPDATE_MESSAGE = 7,
   /** Responds to an autocomplete interaction request. */
-  APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = 8
+  APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = 8,
+  /** Respond to an interaction with a popup modal. */
+  MODAL = 9
 }
 
 /** Message flags for interaction responses. */
@@ -279,7 +285,8 @@ export type AnyRequestData =
   | PingRequestData
   | InteractionRequestData
   | MessageComponentRequestData
-  | CommandAutocompleteRequestData;
+  | CommandAutocompleteRequestData
+  | ModalSubmitRequestData;
 
 /** @private */
 export interface RequestData {
@@ -301,6 +308,23 @@ export interface PingRequestData {
   user?: CommandUser;
   token: string;
   id: string;
+}
+
+/**
+ * A modal submission.
+ * @private
+ */
+export interface ModalSubmitRequestData {
+  version: 1;
+  application_id: string;
+  type: InteractionType.MODAL_SUBMIT;
+  user?: CommandUser;
+  token: string;
+  id: string;
+  data: {
+    custom_id: string;
+    components: ComponentActionRow[];
+  };
 }
 
 /**
@@ -579,7 +603,9 @@ export enum ComponentType {
   /** A button component. */
   BUTTON = 2,
   /** A select component. */
-  SELECT = 3
+  SELECT = 3,
+  /** A text input. */
+  TEXT_INPUT = 4
 }
 
 /** The types of component button styles. */
@@ -596,15 +622,22 @@ export enum ButtonStyle {
   LINK = 5
 }
 
+export enum TextInputStyle {
+  /** A single-line input */
+  SHORT = 1,
+  /** A multi-line input */
+  PARAGRAPH = 2
+}
+
 /** Any component. */
-export type AnyComponent = ComponentActionRow | AnyComponentButton | ComponentSelectMenu;
+export type AnyComponent = ComponentActionRow | AnyComponentButton | ComponentSelectMenu | ComponentTextInput;
 
 /** A row of components. */
 export interface ComponentActionRow {
   /** The type of component to use. */
   type: ComponentType.ACTION_ROW;
   /** The components to show inside this row. */
-  components: (AnyComponentButton | ComponentSelectMenu)[];
+  components: (AnyComponentButton | ComponentSelectMenu | ComponentTextInput)[];
 }
 
 /** Any component button. */
@@ -662,6 +695,27 @@ export interface ComponentSelectOption {
   value: string;
   /** Should this render by default */
   default?: boolean;
+}
+
+export interface ComponentTextInput {
+  /** The type of component to use. */
+  type: ComponentType.TEXT_INPUT;
+  /** The identifier of the of the input. */
+  custom_id: string;
+  /** The label of the input. */
+  label: string;
+  /** The style of the input. */
+  style: TextInputStyle;
+  /** The minimum length of the input. */
+  min_length?: number;
+  /** The maximum length of the input. */
+  max_length?: number;
+  /** Whether this component is required to be filled. */
+  required?: boolean;
+  /** A pre-filled value for this input. */
+  value?: string;
+  /** Custom placeholder text if the input is empty. */
+  placeholder?: string;
 }
 
 /** An attachment from an interaction. */
@@ -828,6 +882,13 @@ declare function unknownInteraction(interaction: any): void;
  * @param interaction The interaction
  */
 declare function rawInteraction(interaction: AnyRequestData): void;
+/**
+ * Emitted when a modal interaction is given.
+ * @event
+ * @asMemberOf SlashCreator
+ * @param ctx The modal interaction context
+ */
+declare function modalInteraction(ctx: ModalInteractionContext): void;
 /**
  * Emitted when a command interaction is given.
  * Only emits if `handleCommandsManually` in {@link SlashCreatorOptions} is true.

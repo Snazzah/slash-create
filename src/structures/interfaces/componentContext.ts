@@ -1,12 +1,13 @@
 import { ComponentType, InteractionResponseType, MessageComponentRequestData } from '../../constants';
-import { MessageInteractionContext, EditMessageOptions } from './messageInteraction';
+import { EditMessageOptions } from './messageInteraction';
 import { SlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
 import { Message } from '../message';
 import { formatAllowedMentions, FormattedAllowedMentions } from '../../util';
+import { ModalSendableContext } from './modalSendableContext';
 
 /** Represents an interaction context from a message component. */
-export class ComponentContext extends MessageInteractionContext {
+export class ComponentContext extends ModalSendableContext {
   /** The request data. */
   readonly data: MessageComponentRequestData;
 

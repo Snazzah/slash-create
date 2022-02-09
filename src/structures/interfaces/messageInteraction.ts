@@ -36,7 +36,7 @@ export class MessageInteractionContext {
   /** The original message ID, automatically set when editing/fetching original message. */
   messageID?: string;
   /** @hidden */
-  private _respond: RespondFunction;
+  protected _respond: RespondFunction;
 
   /**
    * @param creator The instantiating creator.

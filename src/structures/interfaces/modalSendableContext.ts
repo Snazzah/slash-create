@@ -18,7 +18,7 @@ export class ModalSendableContext extends MessageInteractionContext {
    * @param callback The callback of the modal
    * @returns The custom ID of the modal
    */
-  sendModal(options: ModalOptions, callback?: ModalRegisterCallback): string {
+  async sendModal(options: ModalOptions, callback?: ModalRegisterCallback): Promise<string> {
     if (this.expired) throw new Error('This interaction has expired');
     if (this.initiallyResponded) throw new Error('This interaction has already responded.');
 
@@ -37,7 +37,7 @@ export class ModalSendableContext extends MessageInteractionContext {
     this.initiallyResponded = true;
     // @ts-expect-error
     clearTimeout(this._timeout);
-    this._respond({
+    await this._respond({
       status: 200,
       body: {
         type: InteractionResponseType.MODAL,

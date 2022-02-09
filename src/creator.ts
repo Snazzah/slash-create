@@ -34,6 +34,7 @@ import isEqual from 'lodash.isequal';
 import { ComponentContext } from './structures/interfaces/componentContext';
 import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
 import path from 'path';
+import { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
 
 /** The main class for using commands and interactions. */
 export class SlashCreator extends (EventEmitter as any as new () => TypedEventEmitter<SlashCreatorEvents>) {
@@ -61,6 +62,8 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
 
   /** @hidden */
   _componentCallbacks = new Map<string, ComponentCallback>();
+  /** @hidden */
+  _modalCallbacks = new Map<string, ModalCallback>();
 
   /** @param opts The options for the creator */
   constructor(opts: SlashCreatorOptions) {
@@ -555,6 +558,14 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           this._componentCallbacks.delete(key);
         }
       }
+
+    if (this._modalCallbacks.size)
+      for (const [key, callback] of this._modalCallbacks) {
+        if (callback.expires != null && callback.expires < Date.now()) {
+          if (callback.onExpired != null) callback.onExpired();
+          this._modalCallbacks.delete(key);
+        }
+      }
   }
 
   private _getCommandFromInteraction(interaction: InteractionRequestData | CommandAutocompleteRequestData) {
@@ -753,6 +764,23 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           }
         }
       }
+      case InteractionType.MODAL_SUBMIT: {
+        try {
+          const context = new ModalInteractionContext(this, interaction, respond);
+          this.emit('modalInteraction', context);
+
+          this.cleanRegisteredComponents();
+
+          const modalCallbackKey = `${context.user.id}-${context.customID}`;
+          if (this._modalCallbacks.has(modalCallbackKey)) {
+            this._modalCallbacks.get(modalCallbackKey)!.callback(context);
+            return;
+          }
+          return;
+        } catch (err) {
+          return this.emit('error', err as Error);
+        }
+      }
       default: {
         // @ts-ignore
         this.emit('debug', `Unknown interaction type received: ${interaction.type}`);
@@ -811,6 +839,7 @@ interface SlashCreatorEvents {
   rawInteraction: (interaction: AnyRequestData) => void;
   commandInteraction: (interaction: InteractionRequestData, respond: RespondFunction, webserverMode: boolean) => void;
   componentInteraction: (ctx: ComponentContext) => void;
+  modalInteraction: (ctx: ModalInteractionContext) => void;
   autocompleteInteraction: (ctx: AutocompleteContext, command?: SlashCommand) => void;
   commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
   commandUnregister: (command: SlashCommand) => void;
@@ -888,10 +917,17 @@ interface SyncCommandOptions {
 
 /** A component callback from {@see MessageInteractionContext#registerComponent}. */
 export type ComponentRegisterCallback = (ctx: ComponentContext) => void;
+export type ModalRegisterCallback = (ctx: ModalInteractionContext) => void;
 
 /** @hidden */
-interface ComponentCallback {
-  callback: ComponentRegisterCallback;
+interface BaseCallback<T> {
+  callback: T;
   expires?: number;
   onExpired?: () => void;
 }
+
+/** @hidden */
+interface ComponentCallback extends BaseCallback<ComponentRegisterCallback> {}
+
+/** @hidden */
+interface ModalCallback extends BaseCallback<ModalRegisterCallback> {}

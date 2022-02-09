@@ -6,11 +6,11 @@ import { Collection } from '../../util/collection';
 import { Channel } from '../channel';
 import { Role } from '../role';
 import { ResolvedMember } from '../resolvedMember';
-import { MessageInteractionContext } from './messageInteraction';
 import { Message } from '../message';
+import { ModalSendableContext } from './modalSendableContext';
 
 /** Context representing a command interaction. */
-export class CommandContext extends MessageInteractionContext {
+export class CommandContext extends ModalSendableContext {
   /** The full interaction data. */
   readonly data: InteractionRequestData;
 

@@ -1,12 +1,13 @@
 import { ComponentType, InteractionResponseType, MessageComponentRequestData } from '../../constants';
-import { MessageInteractionContext, EditMessageOptions } from './messageInteraction';
+import { EditMessageOptions } from './messageInteraction';
 import { SlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
 import { Message } from '../message';
 import { formatAllowedMentions, FormattedAllowedMentions } from '../../util';
+import { ModalSendableContext } from './modalSendableContext';
 
 /** Represents an interaction context from a message component. */
-export class ComponentContext extends MessageInteractionContext {
+export class ComponentContext extends ModalSendableContext {
   /** The request data. */
   readonly data: MessageComponentRequestData;
 
@@ -48,7 +49,6 @@ export class ComponentContext extends MessageInteractionContext {
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
-      // @ts-expect-error
       await this._respond({
         status: 200,
         body: {
@@ -86,7 +86,6 @@ export class ComponentContext extends MessageInteractionContext {
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
-      // @ts-expect-error
       await this._respond({
         status: 200,
         body: {

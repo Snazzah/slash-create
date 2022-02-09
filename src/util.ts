@@ -140,6 +140,10 @@ export function getFiles(folderPath: string) {
   return files;
 }
 
+export function generateID() {
+  return (Date.now() + Math.round(Math.random() * 1000)).toString(36);
+}
+
 /** The allowed mentions for a {@link Message}. */
 export interface MessageAllowedMentions {
   everyone: boolean;

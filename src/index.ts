@@ -32,5 +32,7 @@ export * from './structures/interfaces/autocompleteContext';
 export * from './structures/interfaces/componentContext';
 export * from './structures/interfaces/commandContext';
 export * from './structures/interfaces/messageInteraction';
+export * from './structures/interfaces/modalSendableContext';
+export * from './structures/interfaces/modalInteractionContext';
 
 export * from './constants';

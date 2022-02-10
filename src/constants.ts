@@ -162,7 +162,12 @@ export interface ApplicationCommand extends PartialApplicationCommand {
 
 export interface ApplicationCommandOptionBase {
   /** The type of option this one is. */
-  type: CommandOptionType.BOOLEAN | CommandOptionType.USER | CommandOptionType.ROLE | CommandOptionType.MENTIONABLE;
+  type:
+    | CommandOptionType.BOOLEAN
+    | CommandOptionType.USER
+    | CommandOptionType.ROLE
+    | CommandOptionType.MENTIONABLE
+    | CommandOptionType.ATTACHMENT;
   /** The name of the option. */
   name: string;
   /** The description of the option. */

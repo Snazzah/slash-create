@@ -21,7 +21,7 @@ export class ComponentContext extends ModalSendableContext {
   readonly message: Message;
 
   /** @hidden */
-  private _timeout?: any;
+  protected _timeout?: any;
 
   /**
    * @param creator The instantiating creator.

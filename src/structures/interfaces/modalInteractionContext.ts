@@ -12,7 +12,7 @@ export class ModalInteractionContext extends MessageInteractionContext {
   readonly values: { [key: string]: string };
 
   /** @hidden */
-  private _timeout?: any;
+  protected _timeout?: any;
 
   constructor(creator: SlashCreator, data: ModalSubmitRequestData, respond: RespondFunction) {
     super(creator, data, respond);

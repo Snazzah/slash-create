@@ -35,7 +35,7 @@ export class AutocompleteContext {
   /** Whether the interaction has been responded to. */
   responded = false;
   /** @hidden */
-  private _respond: RespondFunction;
+  protected _respond: RespondFunction;
 
   /**
    * @param creator The instantiating creator.

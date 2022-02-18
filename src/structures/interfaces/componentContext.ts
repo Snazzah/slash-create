@@ -20,9 +20,6 @@ export class ComponentContext extends ModalSendableContext {
   /** The message this interaction came from, will be partial for ephemeral messages. */
   readonly message: Message;
 
-  /** @hidden */
-  protected _timeout?: any;
-
   /**
    * @param creator The instantiating creator.
    * @param data The interaction data for the context.

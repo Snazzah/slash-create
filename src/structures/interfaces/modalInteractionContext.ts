@@ -11,9 +11,6 @@ export class ModalInteractionContext extends MessageInteractionContext {
   /** The values defined in the modal submission. */
   readonly values: { [key: string]: string };
 
-  /** @hidden */
-  protected _timeout?: any;
-
   constructor(creator: SlashCreator, data: ModalSubmitRequestData, respond: RespondFunction) {
     super(creator, data, respond);
 

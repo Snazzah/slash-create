@@ -35,7 +35,6 @@ export class ModalSendableContext extends MessageInteractionContext {
       throw new Error('Modal must have a custom_id if no callback is provided');
 
     this.initiallyResponded = true;
-    // @ts-expect-error
     clearTimeout(this._timeout);
     await this._respond({
       status: 200,

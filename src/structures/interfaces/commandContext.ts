@@ -42,8 +42,6 @@ export class CommandContext extends ModalSendableContext {
 
   /** Whether the context is from a webserver. */
   private webserverMode: boolean;
-  /** @hidden */
-  protected _timeout?: any;
 
   /**
    * @param creator The instantiating creator.

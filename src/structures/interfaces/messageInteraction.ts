@@ -37,6 +37,8 @@ export class MessageInteractionContext {
   messageID?: string;
   /** @hidden */
   protected _respond: RespondFunction;
+  /** @hidden */
+  protected _timeout?: any;
 
   /**
    * @param creator The instantiating creator.
@@ -106,7 +108,6 @@ export class MessageInteractionContext {
 
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
-      // @ts-expect-error
       clearTimeout(this._timeout);
       await this._respond({
         status: 200,
@@ -243,7 +244,6 @@ export class MessageInteractionContext {
     if (!this.initiallyResponded && !this.deferred) {
       this.initiallyResponded = true;
       this.deferred = true;
-      // @ts-expect-error
       clearTimeout(this._timeout);
       await this._respond({
         status: 200,

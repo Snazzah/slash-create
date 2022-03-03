@@ -323,6 +323,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       delete (partialCommand as any).guild_id;
       delete (partialCommand as any).id;
       delete (partialCommand as any).version;
+      delete (partialCommand as any).default_member_permissions;
 
       const command = this.commands.find(
         (command) =>
@@ -358,6 +359,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       delete (cmd as any).application_id;
       delete (cmd as any).guild_id;
       delete (cmd as any).version;
+      delete (cmd as any).default_member_permissions;
       return cmd;
     });
 
@@ -402,6 +404,8 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       delete (partialCommand as any).application_id;
       delete (partialCommand as any).id;
       delete (partialCommand as any).version;
+      delete (partialCommand as any).default_member_permissions;
+      delete (partialCommand as any).dm_permission;
 
       const command = this.commands.get(commandKey);
       if (command) {
@@ -429,6 +433,8 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     const commandsPayload = commands.map((cmd) => {
       delete (cmd as any).application_id;
       delete (cmd as any).version;
+      delete (cmd as any).default_member_permissions;
+      delete (cmd as any).dm_permission;
       return cmd;
     });
 

@@ -49,6 +49,7 @@ export class CommandContext extends ModalSendableContext {
    * @param respond The response function for the interaction.
    * @param webserverMode Whether the interaction was from a webserver.
    * @param deferEphemeral Whether the context should auto-defer ephemeral messages.
+   * @param useTimeout Whether to use the deferral timeout.
    */
   constructor(
     creator: SlashCreator,

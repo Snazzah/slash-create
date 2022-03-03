@@ -24,6 +24,7 @@ export class ComponentContext extends ModalSendableContext {
    * @param creator The instantiating creator.
    * @param data The interaction data for the context.
    * @param respond The response function for the interaction.
+   * @param useTimeout Whether to use the acknowledgement timeout.
    */
   constructor(creator: SlashCreator, data: MessageComponentRequestData, respond: RespondFunction, useTimeout = true) {
     super(creator, data, respond);

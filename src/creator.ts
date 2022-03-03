@@ -87,6 +87,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         defaultImageSize: 128,
         unknownCommandResponse: true,
         handleCommandsManually: false,
+        disableTimeouts: false,
         latencyThreshold: 30000,
         ratelimiterOffset: 0,
         requestTimeout: 15000,
@@ -654,7 +655,8 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
               interaction,
               respond,
               webserverMode,
-              this.unknownCommand.deferEphemeral
+              this.unknownCommand.deferEphemeral,
+              !this.options.disableTimeouts
             );
             return this._runCommand(this.unknownCommand, ctx);
           } else if (this.options.unknownCommandResponse)
@@ -676,7 +678,14 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
               status: 400
             });
         } else {
-          const ctx = new CommandContext(this, interaction, respond, webserverMode, command.deferEphemeral);
+          const ctx = new CommandContext(
+            this,
+            interaction,
+            respond,
+            webserverMode,
+            command.deferEphemeral,
+            !this.options.disableTimeouts
+          );
 
           // Ensure the user has permission to use the command
           const hasPermission = command.hasPermission(ctx);
@@ -709,7 +718,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         );
 
         if (this._componentCallbacks.size || this.listenerCount('componentInteraction') > 0) {
-          const ctx = new ComponentContext(this, interaction, respond);
+          const ctx = new ComponentContext(this, interaction, respond, !this.options.disableTimeouts);
           this.emit('componentInteraction', ctx);
 
           this.cleanRegisteredComponents();
@@ -766,7 +775,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       }
       case InteractionType.MODAL_SUBMIT: {
         try {
-          const context = new ModalInteractionContext(this, interaction, respond);
+          const context = new ModalInteractionContext(this, interaction, respond, !this.options.disableTimeouts);
           this.emit('modalInteraction', context);
 
           this.cleanRegisteredComponents();
@@ -880,6 +889,8 @@ export interface SlashCreatorOptions {
    * rather than handle it automatically.
    */
   handleCommandsManually?: boolean;
+  /** Whether to disable automatic defer/acknowledge timeouts. */
+  disableTimeouts?: boolean;
   /** The default allowed mentions for all messages. */
   allowedMentions?: MessageAllowedMentions;
   /** The default format to provide user avatars in. */

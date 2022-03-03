@@ -11,6 +11,12 @@ export class ModalInteractionContext extends MessageInteractionContext {
   /** The values defined in the modal submission. */
   readonly values: { [key: string]: string };
 
+  /**
+   * @param creator The instantiating creator.
+   * @param data The interaction data for the context.
+   * @param respond The response function for the interaction.
+   * @param useTimeout Whether to use the deferral timeout.
+   */
   constructor(creator: SlashCreator, data: ModalSubmitRequestData, respond: RespondFunction, useTimeout = true) {
     super(creator, data, respond);
 

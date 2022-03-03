@@ -25,7 +25,7 @@ export class ComponentContext extends ModalSendableContext {
    * @param data The interaction data for the context.
    * @param respond The response function for the interaction.
    */
-  constructor(creator: SlashCreator, data: MessageComponentRequestData, respond: RespondFunction) {
+  constructor(creator: SlashCreator, data: MessageComponentRequestData, respond: RespondFunction, useTimeout = true) {
     super(creator, data, respond);
     this.data = data;
 
@@ -35,7 +35,7 @@ export class ComponentContext extends ModalSendableContext {
     this.message = new Message(data.message, creator, this);
 
     // Auto-acknowledge if no response was given in 2 seconds
-    this._timeout = setTimeout(() => this.acknowledge(), 2000);
+    if (useTimeout) this._timeout = setTimeout(() => this.acknowledge(), 2000);
   }
 
   /**

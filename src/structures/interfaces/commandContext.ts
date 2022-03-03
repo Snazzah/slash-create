@@ -55,7 +55,8 @@ export class CommandContext extends ModalSendableContext {
     data: InteractionRequestData,
     respond: RespondFunction,
     webserverMode: boolean,
-    deferEphemeral = false
+    deferEphemeral = false,
+    useTimeout = true
   ) {
     super(creator, data, respond);
     this.data = data;
@@ -104,7 +105,7 @@ export class CommandContext extends ModalSendableContext {
     }
 
     // Auto-defer if no response was given in 2 seconds
-    this._timeout = setTimeout(() => this.defer(deferEphemeral || false), 2000);
+    if (useTimeout) this._timeout = setTimeout(() => this.defer(deferEphemeral || false), 2000);
   }
 
   /**

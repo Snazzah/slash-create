@@ -328,6 +328,7 @@ export interface DMModalSubmitRequestData {
   channel_id: string;
   locale?: string;
   user: CommandUser;
+  message?: MessageData;
   data: {
     custom_id: string;
     components: ComponentActionRow[];
@@ -349,6 +350,7 @@ export interface GuildModalSubmitRequestData {
   locale?: string;
   guild_locale?: string;
   member: CommandMember;
+  message?: MessageData;
   data: {
     custom_id: string;
     components: ComponentActionRow[];

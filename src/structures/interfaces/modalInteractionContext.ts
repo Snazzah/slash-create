@@ -12,6 +12,8 @@ import { EditMessageOptions, MessageInteractionContext } from './messageInteract
 
 /** Represents an interaction context from a modal submission. */
 export class ModalInteractionContext extends MessageInteractionContext {
+  /** The request data. */
+  readonly data: ModalSubmitRequestData;
   /** The ID of the component to identify its origin from. */
   readonly customID: string;
   /** The message this interaction came from, will be partial for ephemeral messages. */
@@ -29,6 +31,7 @@ export class ModalInteractionContext extends MessageInteractionContext {
   constructor(creator: SlashCreator, data: ModalSubmitRequestData, respond: RespondFunction, useTimeout = true) {
     super(creator, data, respond);
 
+    this.data = data;
     this.customID = data.data.custom_id;
     this.values = ModalInteractionContext.convertComponents(data.data.components);
 

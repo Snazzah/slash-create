@@ -1,4 +1,9 @@
-import { ComponentActionRow, ComponentTextInput, ModalSubmitRequestData } from '../../constants';
+import {
+  ComponentActionRow,
+  ComponentTextInput,
+  InteractionResponseType,
+  ModalSubmitRequestData
+} from '../../constants';
 import { SlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
 import { MessageInteractionContext } from './messageInteraction';
@@ -37,5 +42,25 @@ export class ModalInteractionContext extends MessageInteractionContext {
     }
 
     return values;
+  }
+
+  /**
+   * Acknowledges the interaction without replying.
+   * @returns Whether the acknowledgement passed
+   */
+  async acknowledge(): Promise<boolean> {
+    if (!this.initiallyResponded) {
+      this.initiallyResponded = true;
+      clearTimeout(this._timeout);
+      await this._respond({
+        status: 200,
+        body: {
+          type: InteractionResponseType.DEFERRED_UPDATE_MESSAGE
+        }
+      });
+      return true;
+    }
+
+    return false;
   }
 }

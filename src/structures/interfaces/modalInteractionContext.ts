@@ -46,7 +46,7 @@ export class ModalInteractionContext extends MessageInteractionContext {
 
   /**
    * Acknowledges the interaction without replying.
-   * @returns Whether the acknowledgement passed passed
+   * @returns Whether the acknowledgement passed
    */
   async acknowledge(): Promise<boolean> {
     if (!this.initiallyResponded) {

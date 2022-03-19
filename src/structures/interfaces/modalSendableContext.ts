@@ -4,7 +4,7 @@ import { RespondFunction } from '../../server';
 import { generateID } from '../../util';
 import { MessageInteractionContext } from './messageInteraction';
 
-/** Represents an interaction tha can send modals. */
+/** Represents an interaction that can send modals. */
 export class ModalSendableContext extends MessageInteractionContext {
   constructor(creator: SlashCreator, data: any, respond: RespondFunction) {
     super(creator, data, respond);

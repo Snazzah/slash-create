@@ -91,9 +91,9 @@ const embed = new Discord.MessageEmbed()
   .setTimestamp()
   .setDescription('Hello');
 
-ctx.send([
+ctx.send({
   embeds: [embed]
-])
+})
 ```
 ```js
 // Embed with files
@@ -101,13 +101,13 @@ const embed = new Discord.MessageEmbed()
   .setTitle('Look at this image')
   .setImage('attachment://coolimage.png');
 
-ctx.send([
+ctx.send({
   embeds: [embed],
   file: {
     name: 'coolimage.png',
     file: fs.readFileSync('coolimage.png')
   }
-])
+})
 ```
 
 ### My bot sent a message but it's still thinking.

@@ -129,8 +129,12 @@ export enum ChannelType {
 export interface PartialApplicationCommand {
   /** The name of the command. */
   name: string;
+  /** The localiztions for the command name. */
+  name_localizations?: Record<string, string>;
   /** The description of the command. */
   description?: string;
+  /** The localiztions for the command description. */
+  description_localizations?: Record<string, string>;
   /** The options for the command. */
   options?: ApplicationCommandOption[];
   /** Whether to enable this command for everyone by default. */
@@ -245,6 +249,10 @@ export interface ApplicationCommandOptionChoice {
   name: string;
   /** The value of the choice. */
   value: string | number;
+  /** The localiztions for the option name. */
+  name_localizations?: Record<string, string>;
+  /** The localiztions for the option description. */
+  description_localizations?: Record<string, string>;
 }
 
 /** The type of thing to apply the permission to. */

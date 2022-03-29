@@ -293,6 +293,12 @@ module.exports = class HelloCommand extends SlashCommand {
     this.filePath = __filename;
   }
 
+  // If you use any package like i18next and need to asyncronously set localization, this function is ran right before syncing the command.
+  async onLocaleUpdate() {
+    // this.nameLocalizations['da'] = i18next.getFixedT('da')('command.hello.name');
+    // this.ddescriptionLocalizationse['da'] = i18next.getFixedT('da')('command.hello.description');
+  }
+
   async run(ctx) {
     // ctx.locale
     // ctx.guildLocale

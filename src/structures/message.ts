@@ -23,7 +23,7 @@ export class Message {
   /** The message's embeds */
   readonly embeds: MessageEmbed[];
   /** The message's user mentions */
-  readonly mentions: string[];
+  readonly mentions: User[];
   /** The message's role mentions */
   readonly roleMentions: string[];
   /** Whether the message mentioned everyone/here */
@@ -63,7 +63,7 @@ export class Message {
     this.author = new User(data.author, creator);
     this.attachments = data.attachments;
     this.embeds = data.embeds;
-    this.mentions = data.mentions;
+    this.mentions = data.mentions.map((user) => new User(user, creator));
     this.roleMentions = data.mention_roles;
     this.mentionedEveryone = data.mention_everyone;
     this.tts = data.tts;
@@ -232,7 +232,7 @@ export interface MessageData {
   author: UserObject;
   attachments: MessageAttachment[];
   embeds: MessageEmbed[];
-  mentions: string[];
+  mentions: UserObject[];
   mention_roles: string[];
   pinned: boolean;
   mention_everyone: boolean;

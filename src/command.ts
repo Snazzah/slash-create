@@ -15,15 +15,15 @@ export class SlashCommand<T = any> {
   /** The command's name. */
   readonly commandName: string;
   /** The localiztions for the command name. */
-  readonly nameLocalizations?: Record<string, string>;
+  nameLocalizations?: Record<string, string>;
   /** The type of command this is. */
   readonly type: ApplicationCommandType;
   /** The command's description. */
   readonly description?: string;
   /** The localiztions for the command description. */
-  readonly descriptionLocalizations?: Record<string, string>;
+  descriptionLocalizations?: Record<string, string>;
   /** The options for the command. */
-  readonly options?: ApplicationCommandOption[];
+  options?: ApplicationCommandOption[];
   /** The guild ID(s) for the command. */
   readonly guildIDs?: string[];
   /** The permissions required to use this command. */
@@ -178,6 +178,11 @@ export class SlashCommand<T = any> {
     if (!ctx.expired && !ctx.initiallyResponded)
       return ctx.send('An error occurred while running the command.', { ephemeral: true });
   }
+
+  /**
+   * Called when the command's localization is requesting to be updated.
+   */
+  onLocaleUpdate(): any {}
 
   /**
    * Called when the command is being unloaded.

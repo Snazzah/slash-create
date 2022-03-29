@@ -27,7 +27,6 @@ describe('Message', () => {
         channelID: followUpMessage.channel_id,
         attachments: followUpMessage.attachments,
         embeds: followUpMessage.embeds,
-        mentions: followUpMessage.mentions,
         roleMentions: followUpMessage.mention_roles,
         mentionedEveryone: followUpMessage.mention_everyone,
         timestamp: Date.parse(followUpMessage.timestamp),

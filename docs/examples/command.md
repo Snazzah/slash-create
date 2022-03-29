@@ -255,3 +255,49 @@ module.exports = class ModalCommand extends SlashCommand {
   }
 }
 ```
+
+### Localized Command
+Check [here](https://discord.com/developers/docs/reference#locales) for supported locale codes, this example uses German.
+```js
+const { SlashCommand, CommandOptionType } = require('slash-create');
+
+module.exports = class HelloCommand extends SlashCommand {
+  constructor(creator) {
+    super(creator, {
+      name: 'hello',
+      nameLocalizations: {
+        de: 'hallo'
+      },
+
+      description: 'Says hello to you.',
+      descriptionLocalizations: {
+        de: 'Sagt hallo zu dir.
+      },
+
+      // It's important to note that since option localization is passed straight to Discord, the prop names are snake cased.
+      options: [{
+        type: CommandOptionType.STRING,
+
+        name: 'food',
+        name_localizations: {
+          de: 'lebensmittel'
+        },
+
+        description: 'What food do you like?',
+        description_localizations: {
+          de: 'Welches Essen magst du?'
+        }
+      }]
+    });
+
+    this.filePath = __filename;
+  }
+
+  async run(ctx) {
+    // ctx.locale
+    // ctx.guildLocale
+
+    return ctx.options.food ? `You like ${ctx.options.food}? Nice!` : `Hello, ${ctx.user.username}!`;
+  }
+}
+```

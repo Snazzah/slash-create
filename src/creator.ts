@@ -340,6 +340,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           'debug',
           `Found guild command "${applicationCommand.name}" (${applicationCommand.id}, type ${applicationCommand.type}, guild: ${guildID})`
         );
+        await command.onLocaleUpdate();
         updatePayload.push({
           id: applicationCommand.id,
           ...command.commandJSON
@@ -370,6 +371,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
 
     for (const [, command] of unhandledCommands) {
       this.emit('debug', `Creating guild command "${command.commandName}" (type ${command.type}, guild: ${guildID})`);
+      await command.onLocaleUpdate();
       updatePayload.push({
         ...command.commandJSON
       });
@@ -414,6 +416,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           'debug',
           `Found command "${applicationCommand.name}" (${applicationCommand.id}, type ${applicationCommand.type})`
         );
+        await command.onLocaleUpdate();
         updatePayload.push({
           id: applicationCommand.id,
           ...command.commandJSON
@@ -444,6 +447,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
 
     for (const [, command] of unhandledCommands) {
       this.emit('debug', `Creating command "${command.commandName}" (type ${command.type})`);
+      await command.onLocaleUpdate();
       updatePayload.push({
         ...command.commandJSON
       });

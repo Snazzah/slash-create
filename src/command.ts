@@ -14,12 +14,16 @@ import { AutocompleteContext } from './structures/interfaces/autocompleteContext
 export class SlashCommand<T = any> {
   /** The command's name. */
   readonly commandName: string;
+  /** The localiztions for the command name. */
+  nameLocalizations?: Record<string, string>;
   /** The type of command this is. */
   readonly type: ApplicationCommandType;
   /** The command's description. */
   readonly description?: string;
+  /** The localiztions for the command description. */
+  descriptionLocalizations?: Record<string, string>;
   /** The options for the command. */
-  readonly options?: ApplicationCommandOption[];
+  options?: ApplicationCommandOption[];
   /** The guild ID(s) for the command. */
   readonly guildIDs?: string[];
   /** The permissions required to use this command. */
@@ -64,7 +68,9 @@ export class SlashCommand<T = any> {
 
     this.type = opts.type || ApplicationCommandType.CHAT_INPUT;
     this.commandName = opts.name;
+    if (opts.nameLocalizations) this.nameLocalizations = opts.nameLocalizations;
     if (opts.description) this.description = opts.description;
+    if (opts.descriptionLocalizations) this.nameLocalizations = opts.descriptionLocalizations;
     this.options = opts.options;
     if (opts.guildIDs) this.guildIDs = typeof opts.guildIDs == 'string' ? [opts.guildIDs] : opts.guildIDs;
     this.requiredPermissions = opts.requiredPermissions;
@@ -83,13 +89,16 @@ export class SlashCommand<T = any> {
     return this.type === ApplicationCommandType.CHAT_INPUT
       ? {
           name: this.commandName,
+          ...(this.nameLocalizations ? { name_localizations: this.nameLocalizations } : {}),
           description: this.description,
+          ...(this.descriptionLocalizations ? { description_localizations: this.descriptionLocalizations } : {}),
           default_permission: this.defaultPermission,
           type: ApplicationCommandType.CHAT_INPUT,
           ...(this.options ? { options: this.options } : {})
         }
       : {
           name: this.commandName,
+          ...(this.nameLocalizations ? { name_localizations: this.nameLocalizations } : {}),
           description: '',
           type: this.type,
           default_permission: this.defaultPermission
@@ -169,6 +178,11 @@ export class SlashCommand<T = any> {
     if (!ctx.expired && !ctx.initiallyResponded)
       return ctx.send('An error occurred while running the command.', { ephemeral: true });
   }
+
+  /**
+   * Called when the command's localization is requesting to be updated.
+   */
+  onLocaleUpdate(): any {}
 
   /**
    * Called when the command is being unloaded.
@@ -296,8 +310,12 @@ export interface SlashCommandOptions {
   type?: ApplicationCommandType;
   /** The name of the command. */
   name: string;
+  /** The localiztions for the command name. */
+  nameLocalizations?: Record<string, string>;
   /** The description of the command. */
   description?: string;
+  /** The localiztions for the command description. */
+  descriptionLocalizations?: Record<string, string>;
   /** The guild ID(s) that this command will be assigned to. */
   guildIDs?: string | string[];
   /** The required permission(s) for this command. */

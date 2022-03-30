@@ -271,7 +271,7 @@ module.exports = class HelloCommand extends SlashCommand {
 
       description: 'Says hello to you.',
       descriptionLocalizations: {
-        de: 'Sagt hallo zu dir.
+        de: 'Sagt hallo zu dir.'
       },
 
       // It's important to note that since option localization is passed straight to Discord, the prop names are snake cased.

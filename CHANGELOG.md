@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [5.4.0] - 2022-03-30
+### Added:
+- **ModalInteractionContext:** Added `#data`, `#message`, and `#editParent` ([#263](https://github.com/Snazzah/slash-create/pull/263))
+- **ModalInteractionContext:** Added `#acknowledge` ([#262](https://github.com/Snazzah/slash-create/pull/262))
+- **SlashCommand:** Added command localization ([#270](https://github.com/Snazzah/slash-create/pull/270))
+### Fixed:
+- **Message:** Fixed message mentions not being parsed correctly ([#270](https://github.com/Snazzah/slash-create/issue/271))
 ## [5.3.0] - 2022-03-04
 ### Added:
 - **SlashCreator:** Added `disableTimeouts` option
@@ -395,7 +402,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v5.3.0...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v5.4.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -443,3 +450,4 @@ This release features mostly completed documentation and changes to the packages
 [5.2.0]: https://github.com/Snazzah/slash-create/compare/v5.1.0...v5.2.0
 [5.2.1]: https://github.com/Snazzah/slash-create/compare/v5.2.0...v5.2.1
 [5.3.0]: https://github.com/Snazzah/slash-create/compare/v5.2.1...v5.3.0
+[5.4.0]: https://github.com/Snazzah/slash-create/compare/v5.3.0...v5.4.0

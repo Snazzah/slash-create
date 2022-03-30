@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ModalInteractionContext:** Added `#acknowledge` ([#262](https://github.com/Snazzah/slash-create/pull/262))
 - **SlashCommand:** Added command localization ([#270](https://github.com/Snazzah/slash-create/pull/270))
 ### Fixed:
-- **Message:** Fixed message mentions not being parsed correctly ([#270](https://github.com/Snazzah/slash-create/issue/271))
+- **Message:** Fixed message mentions not being parsed correctly ([#271](https://github.com/Snazzah/slash-create/issue/271))
 ## [5.3.0] - 2022-03-04
 ### Added:
 - **SlashCreator:** Added `disableTimeouts` option

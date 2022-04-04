@@ -1,6 +1,7 @@
 import { Server, ServerRequestHandler } from '../server';
 // @ts-ignore
 import { VercelRequest, VercelResponse } from '@vercel/node';
+import { MultipartData } from '../util/multipartData';
 
 /**
  * A server for Vercel.
@@ -28,7 +29,13 @@ export class VercelServer extends Server {
       async (response) => {
         res.status(response.status || 200);
         if (response.headers) for (const key in response.headers) res.setHeader(key, response.headers[key] as string);
-        res.send(response.body);
+        if (response.files) {
+          const data = new MultipartData();
+          res.setHeader('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
+          for (const file of response.files) data.attach(file.name, file.file, file.name);
+          data.attach('payload_json', JSON.stringify(response.body));
+          res.send(Buffer.concat(data.finish()));
+        } else res.send(response.body);
       }
     );
   };

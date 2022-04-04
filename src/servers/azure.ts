@@ -1,6 +1,7 @@
 import { Server, ServerRequestHandler } from '../server';
 // @ts-ignore
 import type { Context, HttpRequest } from '@azure/functions';
+import { MultipartData } from '../util/multipartData';
 
 /**
  * A server for Azure Function integration
@@ -31,12 +32,17 @@ export class AzureFunctionServer extends Server {
         response: context.res
       },
       async (response) => {
-        context.res!.status = response ? response.status || 200 : 200;
-        context.res!.header('Content-type', 'application/json');
-        if (response) {
-          for (const key in response.headers) context.res!.header(key, response.headers[key]);
+        context.res!.status = response.status || 200;
+        if (response.files) {
+          const data = new MultipartData();
+          context.res!.header('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
+          for (const file of response.files) data.attach(file.name, file.file, file.name);
+          data.attach('payload_json', JSON.stringify(response.body));
+          context.res!.send(Buffer.concat(data.finish()));
+        } else {
+          context.res!.header('Content-Type', 'application/json');
+          context.res!.send(response.body);
         }
-        context.res!.send(response!.body);
       }
     );
   }

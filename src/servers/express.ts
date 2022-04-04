@@ -1,4 +1,5 @@
 import { Server, ServerRequestHandler, ServerOptions } from '../server';
+import { MultipartData } from '../util/multipartData';
 
 let express: any;
 try {
@@ -64,7 +65,13 @@ export class ExpressServer extends Server {
         async (response) => {
           res.status(response.status || 200);
           if (response.headers) for (const key in response.headers) res.set(key, response.headers[key]);
-          res.send(response.body);
+          if (response.files) {
+            const data = new MultipartData();
+            res.set('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
+            for (const file of response.files) data.attach(file.name, file.file, file.name);
+            data.attach('payload_json', JSON.stringify(response.body));
+            res.send(Buffer.concat(data.finish()));
+          } else res.send(response.body);
         }
       )
     );

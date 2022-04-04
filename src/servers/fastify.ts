@@ -1,4 +1,5 @@
 import { Server, ServerRequestHandler, ServerOptions } from '../server';
+import { MultipartData } from '../util/multipartData';
 
 let fastify: any;
 let symbols: { [key: string]: symbol };
@@ -63,7 +64,13 @@ export class FastifyServer extends Server {
         async (response) => {
           res.status(response.status || 200);
           if (response.headers) res.headers(response.headers);
-          res.send(response.body);
+          if (response.files) {
+            const data = new MultipartData();
+            res.header('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
+            for (const file of response.files) data.attach(file.name, file.file, file.name);
+            data.attach('payload_json', JSON.stringify(response.body));
+            res.send(Buffer.concat(data.finish()));
+          } else res.send(response.body);
         }
       )
     );

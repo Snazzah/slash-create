@@ -835,7 +835,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
 
   private _createGatewayRespond(interactionID: string, token: string): RespondFunction {
     return async (response: Response) => {
-      await this.api.interactionCallback(interactionID, token, response.body);
+      await this.api.interactionCallback(interactionID, token, response.body, response.files);
     };
   }
 }

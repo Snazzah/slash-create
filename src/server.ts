@@ -73,6 +73,8 @@ export interface Response {
   headers?: { [key: string]: string | string[] | undefined };
   /** The body of the response. */
   body?: any;
+  /** The files of the response. */
+  files?: any[];
 }
 
 /**

@@ -94,7 +94,8 @@ export class ComponentContext extends ModalSendableContext {
             allowed_mentions: allowedMentions,
             components: options.components
           }
-        }
+        },
+        files: options.file ? (Array.isArray(options.file) ? options.file : [options.file]) : undefined
       });
       return true;
     } else return this.edit(this.message.id, content, options);

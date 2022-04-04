@@ -2,6 +2,7 @@ import { Server, ServerRequestHandler } from '../server';
 import { joinHeaders, splitHeaders } from '../util/lambdaHeaders';
 // @ts-ignore
 import { APIGatewayProxyCallbackV2, APIGatewayProxyEventV2, Context } from 'aws-lambda';
+import { MultipartData } from '../util/multipartData';
 
 /**
  * A server for AWS Lambda proxy integrations
@@ -39,11 +40,25 @@ export class AWSLambdaServer extends Server {
         // Content-Type is not set automatically when overwriting headers
         responseHeaders['Content-Type'] = 'application/json';
 
-        callback(null, {
-          statusCode: response.status || 200,
-          headers: responseHeaders,
-          body: JSON.stringify(response.body)
-        });
+        if (response.files) {
+          const data = new MultipartData();
+          responseHeaders['Content-Type'] = 'multipart/form-data; boundary=' + data.boundary;
+          for (const file of response.files) data.attach(file.name, file.file, file.name);
+          data.attach('payload_json', JSON.stringify(response.body));
+          callback(null, {
+            statusCode: response.status || 200,
+            headers: responseHeaders,
+            body: Buffer.concat(data.finish()).toString('base64'),
+            isBase64Encoded: true
+          });
+        } else {
+          responseHeaders['Content-Type'] = 'application/json';
+          callback(null, {
+            statusCode: response.status || 200,
+            headers: responseHeaders,
+            body: JSON.stringify(response.body)
+          });
+        }
       }
     );
   }

@@ -121,7 +121,8 @@ export class MessageInteractionContext {
             allowed_mentions: allowedMentions,
             components: options.components
           }
-        }
+        },
+        files: options.file ? (Array.isArray(options.file) ? options.file : [options.file]) : undefined
       });
       return true;
     } else if (this.initiallyResponded && this.deferred) return this.editOriginal(content, options);

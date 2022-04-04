@@ -139,13 +139,15 @@ export class SlashCreatorAPI {
    * @param interactionID The interaction's ID.
    * @param interactionToken The interaction's token.
    * @param body The body to send.
+   * @param files The files to send.
    */
-  interactionCallback(interactionID: string, interactionToken: string, body: any): Promise<unknown> {
+  interactionCallback(interactionID: string, interactionToken: string, body: any, files?: any[]): Promise<unknown> {
     return this._creator.requestHandler.request(
       'POST',
       Endpoints.INTERACTION_CALLBACK(interactionID, interactionToken),
       false,
-      body
+      body,
+      files
     );
   }
 }

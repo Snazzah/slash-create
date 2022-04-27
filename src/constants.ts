@@ -264,7 +264,9 @@ export enum ApplicationCommandPermissionType {
   /** A Discord role. */
   ROLE = 1,
   /** A Discord user. */
-  USER = 2
+  USER = 2,
+  /** A Discord channel. */
+  CHANNEL = 3
 }
 
 /** A permission in a command. */

@@ -9,6 +9,7 @@ import { CommandContext } from './structures/interfaces/commandContext';
 import { SlashCreator } from './creator';
 import { oneLine, validateOptions } from './util';
 import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
+import { Permissions } from './structures/permissions';
 
 /** Represents a Discord slash command. */
 export class SlashCommand<T = any> {
@@ -27,15 +28,20 @@ export class SlashCommand<T = any> {
   /** The guild ID(s) for the command. */
   readonly guildIDs?: string[];
   /** The permissions required to use this command. */
-  readonly requiredPermissions?: Array<string>;
+  readonly requiredPermissions?: string[];
   /** The throttling options for this command. */
   readonly throttling?: ThrottlingOptions;
   /** Whether this command is used for unknown commands. */
   readonly unknown: boolean;
   /** Whether responses from this command should defer ephemeral messages. */
   readonly deferEphemeral: boolean;
-  /** Whether to enable this command for everyone by default. */
+  /**
+   * Whether to enable this command for everyone by default.'
+   * @deprecated
+   */
   readonly defaultPermission: boolean;
+  /** Whether to enable this command in direct messages. */
+  readonly dmPermission: boolean;
   /** The command permissions per guild. */
   readonly permissions?: CommandPermissions;
   /**
@@ -78,12 +84,14 @@ export class SlashCommand<T = any> {
     this.unknown = opts.unknown || false;
     this.deferEphemeral = opts.deferEphemeral || false;
     this.defaultPermission = typeof opts.defaultPermission === 'boolean' ? opts.defaultPermission : true;
+    this.dmPermission = typeof opts.dmPermission === 'boolean' ? opts.dmPermission : true;
     if (opts.permissions) this.permissions = opts.permissions;
   }
 
   /**
    * The JSON for using commands in Discord's API.
    * @private
+   * @deprecated
    */
   get commandJSON(): PartialApplicationCommand {
     return this.type === ApplicationCommandType.CHAT_INPUT
@@ -103,6 +111,32 @@ export class SlashCommand<T = any> {
           type: this.type,
           default_permission: this.defaultPermission
         };
+  }
+
+  /**
+   * The command object serialized into JSON.
+   * @param global Whether the command is global or not.
+   */
+  toCommandJSON(global = true): PartialApplicationCommand {
+    return {
+      type: this.type,
+      name: this.commandName,
+      ...(this.nameLocalizations ? { name_localizations: this.nameLocalizations } : {}),
+      ...(this.type === ApplicationCommandType.CHAT_INPUT
+        ? {
+            description: this.description,
+            ...(this.descriptionLocalizations ? { description_localizations: this.descriptionLocalizations } : {}),
+            ...(this.options ? { options: this.options } : {})
+          }
+        : {
+            description: ''
+          }),
+      default_permission: this.defaultPermission,
+      ...(global ? { dm_permission: this.dmPermission } : {}),
+      default_member_permissions: this.requiredPermissions
+        ? new Permissions(this.requiredPermissions).valueOf().toString()
+        : null
+    };
   }
 
   /**
@@ -328,8 +362,13 @@ export interface SlashCommandOptions {
   unknown?: boolean;
   /** Whether responses from this command should defer ephemeral messages. */
   deferEphemeral?: boolean;
-  /** Whether to enable this command for everyone by default. `true` by default. */
+  /**
+   * Whether to enable this command for everyone by default. `true` by default.
+   * @deprecated
+   */
   defaultPermission?: boolean;
+  /** Whether to enable this command in direct messages. `true` by default. */
+  dmPermission?: boolean;
   /** The command permissions per guild */
   permissions?: CommandPermissions;
 }

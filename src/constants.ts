@@ -139,6 +139,10 @@ export interface PartialApplicationCommand {
   options?: ApplicationCommandOption[];
   /** Whether to enable this command for everyone by default. */
   default_permission?: boolean;
+  /** Whether to enable this command in direct messages. */
+  dm_permission?: boolean | null;
+  /** The member permissions required to use this command. */
+  default_member_permissions?: string | null;
   /** The type of application this is representing. `1` by default. */
   type?: ApplicationCommandType;
 }

@@ -371,7 +371,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       this.emit('debug', `Creating guild command "${command.commandName}" (type ${command.type}, guild: ${guildID})`);
       if (command.onLocaleUpdate) await command.onLocaleUpdate();
       updatePayload.push({
-        ...command.commandJSON
+        ...command.toCommandJSON(false)
       });
     }
 

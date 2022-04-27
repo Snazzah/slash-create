@@ -222,7 +222,7 @@ describe('SlashCreator', () => {
         .registerCommand(
           createBasicCommand({
             name: 'to-update',
-            defaultPermission: false,
+            dmPermission: false,
             permissions: {
               '123': [
                 {
@@ -278,14 +278,18 @@ describe('SlashCreator', () => {
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
         {
           id: '1',
-          default_permission: false,
+          default_member_permissions: null,
+          default_permission: true,
+          dm_permission: false,
           name: 'to-update',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
           id: '3',
+          default_member_permissions: null,
           default_permission: true,
+          dm_permission: true,
           name: 'to-leave-alone',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
@@ -294,6 +298,7 @@ describe('SlashCreator', () => {
       await expect(guildCmdsScope, 'requests guild commands').to.have.been.requested;
       await expect(putGuildScope, 'updates guild commands').to.have.been.requestedWith([
         {
+          default_member_permissions: null,
           default_permission: true,
           name: 'to-create-guild',
           description: 'description',
@@ -345,6 +350,7 @@ describe('SlashCreator', () => {
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
         {
           id: '1',
+          default_member_permissions: null,
           default_permission: true,
           name: 'to-update',
           description: 'description',
@@ -352,12 +358,14 @@ describe('SlashCreator', () => {
         },
         {
           id: '3',
+          default_member_permissions: null,
           default_permission: true,
           name: 'to-leave-alone',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
+          default_member_permissions: null,
           default_permission: true,
           name: 'to-create',
           description: 'description',
@@ -396,20 +404,26 @@ describe('SlashCreator', () => {
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
         {
           id: '1',
+          default_member_permissions: null,
           default_permission: true,
+          dm_permission: true,
           name: 'to-update',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
           id: '3',
+          default_member_permissions: null,
           default_permission: true,
+          dm_permission: true,
           name: 'to-leave-alone',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
+          default_member_permissions: null,
           default_permission: true,
+          dm_permission: true,
           name: 'to-create',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT

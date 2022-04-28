@@ -10,16 +10,10 @@ import { SlashCreator } from '../src/creator';
 import { FastifyServer } from '../src/servers/fastify';
 import { GatewayServer } from '../src/servers/gateway';
 import { GCFServer } from '../src/servers/gcf';
-import { ApplicationCommandPermissionType, ApplicationCommandType } from '../src/constants';
+import { ApplicationCommandType } from '../src/constants';
 import { createBasicCommand } from './__util__/commands';
 import { basicCommands } from './__util__/constants';
-import {
-  globalCommands,
-  guildCommands,
-  updateGlobalCommands,
-  updateGuildCommandPermissions,
-  updateGuildCommands
-} from './__util__/nock';
+import { globalCommands, guildCommands, updateGlobalCommands, updateGuildCommands } from './__util__/nock';
 
 describe('SlashCreator', () => {
   describe('constructor', () => {
@@ -222,16 +216,7 @@ describe('SlashCreator', () => {
         .registerCommand(
           createBasicCommand({
             name: 'to-update',
-            defaultPermission: false,
-            permissions: {
-              '123': [
-                {
-                  type: ApplicationCommandPermissionType.USER,
-                  id: '1',
-                  permission: true
-                }
-              ]
-            }
+            dmPermission: false
           })
         )
         .registerCommand(createBasicCommand({ name: 'to-leave-alone' }));
@@ -257,20 +242,6 @@ describe('SlashCreator', () => {
             version: '1',
             type: ApplicationCommandType.CHAT_INPUT
           }
-        ]),
-        permissionsScope = updateGuildCommandPermissions([
-          {
-            application_id: '1',
-            id: '1',
-            guild_id: '123',
-            permissions: [
-              {
-                type: ApplicationCommandPermissionType.USER,
-                id: '1',
-                permission: true
-              }
-            ]
-          }
         ]);
 
       creator.syncCommands();
@@ -278,14 +249,18 @@ describe('SlashCreator', () => {
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
         {
           id: '1',
-          default_permission: false,
+          default_member_permissions: null,
+          default_permission: true,
+          dm_permission: false,
           name: 'to-update',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
           id: '3',
+          default_member_permissions: null,
           default_permission: true,
+          dm_permission: true,
           name: 'to-leave-alone',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
@@ -294,22 +269,11 @@ describe('SlashCreator', () => {
       await expect(guildCmdsScope, 'requests guild commands').to.have.been.requested;
       await expect(putGuildScope, 'updates guild commands').to.have.been.requestedWith([
         {
+          default_member_permissions: null,
           default_permission: true,
           name: 'to-create-guild',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
-        }
-      ]);
-      await expect(permissionsScope, 'updates command permissions').to.have.been.requestedWith([
-        {
-          id: '1',
-          permissions: [
-            {
-              type: ApplicationCommandPermissionType.USER,
-              id: '1',
-              permission: true
-            }
-          ]
         }
       ]);
     });
@@ -345,6 +309,7 @@ describe('SlashCreator', () => {
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
         {
           id: '1',
+          default_member_permissions: null,
           default_permission: true,
           name: 'to-update',
           description: 'description',
@@ -352,12 +317,14 @@ describe('SlashCreator', () => {
         },
         {
           id: '3',
+          default_member_permissions: null,
           default_permission: true,
           name: 'to-leave-alone',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
+          default_member_permissions: null,
           default_permission: true,
           name: 'to-create',
           description: 'description',
@@ -396,82 +363,32 @@ describe('SlashCreator', () => {
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
         {
           id: '1',
+          default_member_permissions: null,
           default_permission: true,
+          dm_permission: true,
           name: 'to-update',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
           id: '3',
+          default_member_permissions: null,
           default_permission: true,
+          dm_permission: true,
           name: 'to-leave-alone',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
+          default_member_permissions: null,
           default_permission: true,
+          dm_permission: true,
           name: 'to-create',
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         }
       ]);
       return promise;
-    });
-  });
-
-  describe('.syncCommandPermissions()', () => {
-    it('syncs command permissions correctly', async () => {
-      const creator = new SlashCreator({
-        applicationID: '1',
-        token: 'xxx'
-      });
-
-      creator.registerCommand(
-        createBasicCommand(
-          {
-            name: 'to-update',
-            permissions: {
-              '123': [
-                {
-                  type: ApplicationCommandPermissionType.USER,
-                  id: '1',
-                  permission: true
-                }
-              ]
-            }
-          },
-          [['123', '1']]
-        )
-      );
-
-      const permissionsScope = updateGuildCommandPermissions([
-        {
-          application_id: '1',
-          id: '1',
-          guild_id: '123',
-          permissions: [
-            {
-              type: ApplicationCommandPermissionType.USER,
-              id: '1',
-              permission: true
-            }
-          ]
-        }
-      ]);
-
-      creator.syncCommandPermissions();
-      await expect(permissionsScope, 'updates command permissions').to.have.been.requestedWith([
-        {
-          id: '1',
-          permissions: [
-            {
-              type: ApplicationCommandPermissionType.USER,
-              id: '1',
-              permission: true
-            }
-          ]
-        }
-      ]);
     });
   });
 

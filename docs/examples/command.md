@@ -31,26 +31,18 @@ module.exports = class ExclusivityCommand extends SlashCommand {
   constructor(creator) {
     super(creator, {
       name: 'exclusivity',
-      description: 'Only Snazzah can use this command.',
+      description: 'Only people who manage the guild can use this command.',
       // Whether to enable this command for everyone by default
       defaultPermission: false,
-      // Permissions are mapped by guild ID like this
-      permissions: {
-        '<guild_id>': [
-          {
-            type: ApplicationCommandPermissionType.USER,
-            id: '158049329150427136',
-            permission: true
-          }
-        ]
-      }
+      // This will be an array of permission flag names from here: https://discord.dev/topics/permissions#permissions-bitwise-permission-flags
+      requiredPermissions: ['MANAGE_GUILD']
     });
 
     this.filePath = __filename;
   }
 
   async run(ctx) {
-    return 'Hi Snazzah!';
+    return 'You can manage this guild!';
   }
 }
 ```

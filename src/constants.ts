@@ -139,6 +139,10 @@ export interface PartialApplicationCommand {
   options?: ApplicationCommandOption[];
   /** Whether to enable this command for everyone by default. */
   default_permission?: boolean;
+  /** Whether to enable this command in direct messages. */
+  dm_permission?: boolean | null;
+  /** The member permissions required to use this command. */
+  default_member_permissions?: string | null;
   /** The type of application this is representing. `1` by default. */
   type?: ApplicationCommandType;
 }
@@ -260,7 +264,9 @@ export enum ApplicationCommandPermissionType {
   /** A Discord role. */
   ROLE = 1,
   /** A Discord user. */
-  USER = 2
+  USER = 2,
+  /** A Discord channel. */
+  CHANNEL = 3
 }
 
 /** A permission in a command. */

@@ -1,23 +1,9 @@
-import { SlashCommand, CommandPermissions, ThrottlingOptions } from '../../src/command';
-import { ApplicationCommandOption } from '../../src/constants';
+import { SlashCommand, SlashCommandOptions } from '../../src/command';
 import { CommandContext } from '../../src/structures/interfaces/commandContext';
 import { SlashCreator } from '../../src/creator';
 
-interface SlashCommandPartialOptions {
-  name?: string;
-  description?: string;
-  guildIDs?: string | string[];
-  requiredPermissions?: Array<string>;
-  options?: ApplicationCommandOption[];
-  throttling?: ThrottlingOptions;
-  unknown?: boolean;
-  deferEphemeral?: boolean;
-  defaultPermission?: boolean;
-  permissions?: CommandPermissions;
-}
-
 export const createBasicCommand = (
-  opts: SlashCommandPartialOptions = {},
+  opts: Partial<SlashCommandOptions> = {},
   ids: [string, string][] = [],
   cb: (ctx: CommandContext) => any = () => {}
 ) => {

@@ -323,7 +323,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       delete (partialCommand as any).guild_id;
       delete (partialCommand as any).id;
       delete (partialCommand as any).version;
-      delete (partialCommand as any).default_member_permissions;
 
       const command = this.commands.find(
         (command) =>
@@ -343,7 +342,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         if (command.onLocaleUpdate) await command.onLocaleUpdate();
         updatePayload.push({
           id: applicationCommand.id,
-          ...command.commandJSON
+          ...command.toCommandJSON(false)
         });
         handledCommands.push(command.keyName);
       } else if (deleteCommands) {
@@ -360,7 +359,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       delete (cmd as any).application_id;
       delete (cmd as any).guild_id;
       delete (cmd as any).version;
-      delete (cmd as any).default_member_permissions;
       return cmd;
     });
 
@@ -373,7 +371,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       this.emit('debug', `Creating guild command "${command.commandName}" (type ${command.type}, guild: ${guildID})`);
       if (command.onLocaleUpdate) await command.onLocaleUpdate();
       updatePayload.push({
-        ...command.commandJSON
+        ...command.toCommandJSON(false)
       });
     }
 
@@ -406,8 +404,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       delete (partialCommand as any).application_id;
       delete (partialCommand as any).id;
       delete (partialCommand as any).version;
-      delete (partialCommand as any).default_member_permissions;
-      delete (partialCommand as any).dm_permission;
 
       const command = this.commands.get(commandKey);
       if (command) {
@@ -419,7 +415,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         if (command.onLocaleUpdate) await command.onLocaleUpdate();
         updatePayload.push({
           id: applicationCommand.id,
-          ...command.commandJSON
+          ...command.toCommandJSON()
         });
       } else if (deleteCommands) {
         this.emit(
@@ -436,8 +432,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     const commandsPayload = commands.map((cmd) => {
       delete (cmd as any).application_id;
       delete (cmd as any).version;
-      delete (cmd as any).default_member_permissions;
-      delete (cmd as any).dm_permission;
       return cmd;
     });
 
@@ -449,7 +443,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       this.emit('debug', `Creating command "${command.commandName}" (type ${command.type})`);
       if (command.onLocaleUpdate) await command.onLocaleUpdate();
       updatePayload.push({
-        ...command.commandJSON
+        ...command.toCommandJSON()
       });
     }
 
@@ -468,6 +462,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   /**
    * Sync command permissions.
    * <warn>This requires you to have your token set in the creator config AND have commands already synced previously.</warn>
+   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
    */
   async syncCommandPermissions() {
     const guildPayloads: { [guildID: string]: PartialApplicationCommandPermissions[] } = {};
@@ -486,7 +481,11 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       }
     }
 
-    for (const guildID in guildPayloads) await this.api.bulkUpdateCommandPermissions(guildID, guildPayloads[guildID]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const guildID in guildPayloads) {
+      this.emit('warn', 'Syncing command permissions has been deprecated and will be removed in the future.');
+      // await this.api.bulkUpdateCommandPermissions(guildID, guildPayloads[guildID]);
+    }
   }
 
   /**
@@ -932,7 +931,10 @@ interface SyncCommandOptions {
    * Guild syncs most likely can error if that guild no longer exists.
    */
   skipGuildErrors?: boolean;
-  /** Whether to sync command permissions after syncing commands. */
+  /**
+   * Whether to sync command permissions after syncing commands.
+   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
+   */
   syncPermissions?: boolean;
 }
 

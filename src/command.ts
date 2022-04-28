@@ -9,6 +9,7 @@ import { CommandContext } from './structures/interfaces/commandContext';
 import { SlashCreator } from './creator';
 import { oneLine, validateOptions } from './util';
 import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
+import { Permissions } from './structures/permissions';
 
 /** Represents a Discord slash command. */
 export class SlashCommand<T = any> {
@@ -27,16 +28,24 @@ export class SlashCommand<T = any> {
   /** The guild ID(s) for the command. */
   readonly guildIDs?: string[];
   /** The permissions required to use this command. */
-  readonly requiredPermissions?: Array<string>;
+  readonly requiredPermissions?: string[];
   /** The throttling options for this command. */
   readonly throttling?: ThrottlingOptions;
   /** Whether this command is used for unknown commands. */
   readonly unknown: boolean;
   /** Whether responses from this command should defer ephemeral messages. */
   readonly deferEphemeral: boolean;
-  /** Whether to enable this command for everyone by default. */
+  /**
+   * Whether to enable this command for everyone by default.'
+   * @deprecated
+   */
   readonly defaultPermission: boolean;
-  /** The command permissions per guild. */
+  /** Whether to enable this command in direct messages. */
+  readonly dmPermission: boolean;
+  /**
+   * The command permissions per guild.
+   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
+   */
   readonly permissions?: CommandPermissions;
   /**
    * The file path of the command.
@@ -78,12 +87,14 @@ export class SlashCommand<T = any> {
     this.unknown = opts.unknown || false;
     this.deferEphemeral = opts.deferEphemeral || false;
     this.defaultPermission = typeof opts.defaultPermission === 'boolean' ? opts.defaultPermission : true;
+    this.dmPermission = typeof opts.dmPermission === 'boolean' ? opts.dmPermission : true;
     if (opts.permissions) this.permissions = opts.permissions;
   }
 
   /**
    * The JSON for using commands in Discord's API.
    * @private
+   * @deprecated Use {@link SlashCommand#toCommandJSON} instead.
    */
   get commandJSON(): PartialApplicationCommand {
     return this.type === ApplicationCommandType.CHAT_INPUT
@@ -103,6 +114,32 @@ export class SlashCommand<T = any> {
           type: this.type,
           default_permission: this.defaultPermission
         };
+  }
+
+  /**
+   * The command object serialized into JSON.
+   * @param global Whether the command is global or not.
+   */
+  toCommandJSON(global = true): PartialApplicationCommand {
+    return {
+      type: this.type,
+      name: this.commandName,
+      ...(this.nameLocalizations ? { name_localizations: this.nameLocalizations } : {}),
+      ...(this.type === ApplicationCommandType.CHAT_INPUT
+        ? {
+            description: this.description,
+            ...(this.descriptionLocalizations ? { description_localizations: this.descriptionLocalizations } : {}),
+            ...(this.options ? { options: this.options } : {})
+          }
+        : {
+            description: ''
+          }),
+      default_permission: this.defaultPermission,
+      ...(global ? { dm_permission: this.dmPermission } : {}),
+      default_member_permissions: this.requiredPermissions
+        ? new Permissions(this.requiredPermissions).valueOf().toString()
+        : null
+    };
   }
 
   /**
@@ -130,12 +167,12 @@ export class SlashCommand<T = any> {
       if (missing.length > 0) {
         if (missing.length === 1) {
           return `The \`${this.commandName}\` command requires you to have the "${
-            PermissionNames[missing[0]]
+            PermissionNames[missing[0]] || missing[0]
           }" permission.`;
         }
         return oneLine`
           The \`${this.commandName}\` command requires you to have the following permissions:
-          ${missing.map((perm) => PermissionNames[perm]).join(', ')}
+          ${missing.map((perm) => PermissionNames[perm] || perm).join(', ')}
         `;
       }
     }
@@ -285,7 +322,7 @@ export class SlashCommand<T = any> {
       if (!Array.isArray(opts.requiredPermissions))
         throw new TypeError('Command required permissions must be an Array of permission key strings.');
       for (const perm of opts.requiredPermissions)
-        if (!PermissionNames[perm]) throw new RangeError(`Invalid command required permission: ${perm}`);
+        if (!Permissions.FLAGS[perm]) throw new RangeError(`Invalid command required permission: ${perm}`);
     }
 
     if (opts.throttling) {
@@ -319,7 +356,7 @@ export interface SlashCommandOptions {
   /** The guild ID(s) that this command will be assigned to. */
   guildIDs?: string | string[];
   /** The required permission(s) for this command. */
-  requiredPermissions?: Array<string>;
+  requiredPermissions?: string[];
   /** The command's options. */
   options?: ApplicationCommandOption[];
   /** The throttling options for the command. */
@@ -328,9 +365,17 @@ export interface SlashCommandOptions {
   unknown?: boolean;
   /** Whether responses from this command should defer ephemeral messages. */
   deferEphemeral?: boolean;
-  /** Whether to enable this command for everyone by default. `true` by default. */
+  /**
+   * Whether to enable this command for everyone by default. `true` by default.
+   * @deprecated Use {@link SlashCommandOptions.requiredPermissions} and {@link SlashCommandOptions.dmPermission} instead.
+   */
   defaultPermission?: boolean;
-  /** The command permissions per guild */
+  /** Whether to enable this command in direct messages. `true` by default. */
+  dmPermission?: boolean;
+  /**
+   * The command permissions per guild
+   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
+   */
   permissions?: CommandPermissions;
 }
 

@@ -122,6 +122,7 @@ export class SlashCreatorAPI {
     );
   }
 
+  /** @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd */
   bulkUpdateCommandPermissions(
     guildID: string,
     commands: PartialApplicationCommandPermissions[]

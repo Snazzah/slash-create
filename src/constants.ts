@@ -833,7 +833,16 @@ export const PermissionNames: { [perm: string]: string } = {
   MANAGE_NICKNAMES: 'Manage nicknames',
   MANAGE_ROLES: 'Manage roles',
   MANAGE_WEBHOOKS: 'Manage webhooks',
-  MANAGE_EMOJIS: 'Manage emojis'
+  MANAGE_EMOJIS_AND_STICKERS: 'Manage emojis and stickers',
+  USE_APPLICATION_COMMANDS: 'Use application commands',
+  REQUEST_TO_SPEAK: 'Request to speak',
+  MANAGE_THREADS: 'Manage threads',
+  USE_PUBLIC_THREADS: 'Use public threads',
+  USE_PRIVATE_THREADS: 'Use private threads',
+  USE_EXTERNAL_STICKERS: 'Use external stickers',
+  SEND_MESSAGES_IN_THREADS: 'Send messages in threads',
+  USE_EMBEDDED_ACTIVITIES: 'Use embedded activities',
+  MODERATE_MEMBERS: 'Moderate members'
 };
 
 export const Endpoints = {

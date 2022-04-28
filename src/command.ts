@@ -121,24 +121,23 @@ export class SlashCommand<T = any> {
    * @param global Whether the command is global or not.
    */
   toCommandJSON(global = true): PartialApplicationCommand {
+    const hasAnyLocalizations = !!this.nameLocalizations || !!this.descriptionLocalizations;
     return {
-      type: this.type,
-      name: this.commandName,
-      ...(this.nameLocalizations ? { name_localizations: this.nameLocalizations } : {}),
-      ...(this.type === ApplicationCommandType.CHAT_INPUT
-        ? {
-            description: this.description,
-            ...(this.descriptionLocalizations ? { description_localizations: this.descriptionLocalizations } : {}),
-            ...(this.options ? { options: this.options } : {})
-          }
-        : {
-            description: ''
-          }),
       default_permission: this.defaultPermission,
-      ...(global ? { dm_permission: this.dmPermission } : {}),
       default_member_permissions: this.requiredPermissions
         ? new Permissions(this.requiredPermissions).valueOf().toString()
-        : null
+        : null,
+      type: this.type,
+      name: this.commandName,
+      ...(hasAnyLocalizations ? { name_localizations: this.nameLocalizations || null } : {}),
+      description: this.description || '',
+      ...(hasAnyLocalizations ? { description_localizations: this.descriptionLocalizations || null } : {}),
+      ...(global ? { dm_permission: this.dmPermission } : {}),
+      ...(this.type === ApplicationCommandType.CHAT_INPUT
+        ? {
+            ...(this.options ? { options: this.options } : {})
+          }
+        : {})
     };
   }
 

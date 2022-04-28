@@ -483,7 +483,10 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const guildID in guildPayloads) {
-      this.emit('warn', 'Syncing command permissions has been deprecated and will be removed in the future.');
+      this.emit(
+        'warn',
+        'Syncing command permissions has been deprecated and will be removed in the future: https://link.snaz.in/sc-cpd'
+      );
       // await this.api.bulkUpdateCommandPermissions(guildID, guildPayloads[guildID]);
     }
   }

@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { API_BASE_URL, ApplicationCommand, Endpoints, GuildApplicationCommandPermissions } from '../../src/constants';
+import { API_BASE_URL, ApplicationCommand, Endpoints } from '../../src/constants';
 import { MOCK_TOKEN } from './constants';
 
 const DISCORD_URL = 'https://discord.com';
@@ -66,18 +66,6 @@ export const deleteGuildCommand = (id: string) =>
   nock(DISCORD_URL)
     .delete(API_BASE_URL + Endpoints.GUILD_COMMAND('1', '123', id))
     .reply(204, undefined, NOCK_HEADERS);
-// #endregion
-
-// #region Command Permissions
-export const guildCommandPermissions = (commands: GuildApplicationCommandPermissions[] = []) =>
-  nock(DISCORD_URL)
-    .get(API_BASE_URL + Endpoints.GUILD_COMMAND_PERMISSIONS('1', '123'))
-    .reply(200, commands, NOCK_HEADERS);
-
-export const updateGuildCommandPermissions = (commands: GuildApplicationCommandPermissions[] = []) =>
-  nock(DISCORD_URL)
-    .put(API_BASE_URL + Endpoints.GUILD_COMMAND_PERMISSIONS('1', '123'))
-    .reply(200, commands, NOCK_HEADERS);
 // #endregion
 
 // #region Interactions

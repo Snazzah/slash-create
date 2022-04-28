@@ -462,6 +462,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   /**
    * Sync command permissions.
    * <warn>This requires you to have your token set in the creator config AND have commands already synced previously.</warn>
+   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
    */
   async syncCommandPermissions() {
     const guildPayloads: { [guildID: string]: PartialApplicationCommandPermissions[] } = {};
@@ -480,7 +481,11 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       }
     }
 
-    for (const guildID in guildPayloads) await this.api.bulkUpdateCommandPermissions(guildID, guildPayloads[guildID]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const guildID in guildPayloads) {
+      this.emit('warn', 'Syncing command permissions has been deprecated and will be removed in the future.');
+      // await this.api.bulkUpdateCommandPermissions(guildID, guildPayloads[guildID]);
+    }
   }
 
   /**
@@ -926,7 +931,10 @@ interface SyncCommandOptions {
    * Guild syncs most likely can error if that guild no longer exists.
    */
   skipGuildErrors?: boolean;
-  /** Whether to sync command permissions after syncing commands. */
+  /**
+   * Whether to sync command permissions after syncing commands.
+   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
+   */
   syncPermissions?: boolean;
 }
 

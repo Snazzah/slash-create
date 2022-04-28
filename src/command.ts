@@ -42,7 +42,10 @@ export class SlashCommand<T = any> {
   readonly defaultPermission: boolean;
   /** Whether to enable this command in direct messages. */
   readonly dmPermission: boolean;
-  /** The command permissions per guild. */
+  /**
+   * The command permissions per guild.
+   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
+   */
   readonly permissions?: CommandPermissions;
   /**
    * The file path of the command.
@@ -91,7 +94,7 @@ export class SlashCommand<T = any> {
   /**
    * The JSON for using commands in Discord's API.
    * @private
-   * @deprecated
+   * @deprecated Use {@link SlashCommand#toCommandJSON} instead.
    */
   get commandJSON(): PartialApplicationCommand {
     return this.type === ApplicationCommandType.CHAT_INPUT
@@ -353,7 +356,7 @@ export interface SlashCommandOptions {
   /** The guild ID(s) that this command will be assigned to. */
   guildIDs?: string | string[];
   /** The required permission(s) for this command. */
-  requiredPermissions?: Array<string>;
+  requiredPermissions?: string[];
   /** The command's options. */
   options?: ApplicationCommandOption[];
   /** The throttling options for the command. */
@@ -364,12 +367,15 @@ export interface SlashCommandOptions {
   deferEphemeral?: boolean;
   /**
    * Whether to enable this command for everyone by default. `true` by default.
-   * @deprecated
+   * @deprecated Use {@link SlashCommandOptions.requiredPermissions} and {@link SlashCommandOptions.dmPermission} instead.
    */
   defaultPermission?: boolean;
   /** Whether to enable this command in direct messages. `true` by default. */
   dmPermission?: boolean;
-  /** The command permissions per guild */
+  /**
+   * The command permissions per guild
+   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
+   */
   permissions?: CommandPermissions;
 }
 

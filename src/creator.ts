@@ -313,7 +313,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    * @param deleteCommands Whether to delete command not found in the creator
    */
   async syncCommandsIn(guildID: string, deleteCommands = true) {
-    const commands = await this.api.getCommands(guildID);
+    const commands = await this.api.getCommands(guildID, true);
     const handledCommands: string[] = [];
     const updatePayload: BulkUpdateCommand[] = [];
 
@@ -394,7 +394,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    * @param deleteCommands Whether to delete command not found in the creator
    */
   async syncGlobalCommands(deleteCommands = true) {
-    const commands = await this.api.getCommands();
+    const commands = await this.api.getCommands(undefined, true);
     const handledCommands: string[] = [];
     const updatePayload: BulkUpdateCommand[] = [];
 

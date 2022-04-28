@@ -22,13 +22,16 @@ export class SlashCreatorAPI {
   /**
    * Gets the commands from an applicaton.
    * @param guildID The guild ID to get commands from. If undefined, global commands are fetched.
+   * @param withLocalizations Whether to include localizations within the commands.
    */
-  getCommands(guildID?: string): Promise<ApplicationCommand[]> {
+  getCommands(guildID?: string, withLocalizations = false): Promise<ApplicationCommand[]> {
     return this._creator.requestHandler.request(
       'GET',
-      guildID
+
+      (guildID
         ? Endpoints.GUILD_COMMANDS(this._creator.options.applicationID, guildID)
-        : Endpoints.COMMANDS(this._creator.options.applicationID)
+        : Endpoints.COMMANDS(this._creator.options.applicationID)) +
+        (withLocalizations ? '?with_localizations=true' : '')
     );
   }
 

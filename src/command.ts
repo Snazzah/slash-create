@@ -167,12 +167,12 @@ export class SlashCommand<T = any> {
       if (missing.length > 0) {
         if (missing.length === 1) {
           return `The \`${this.commandName}\` command requires you to have the "${
-            PermissionNames[missing[0]]
+            PermissionNames[missing[0]] || missing[0]
           }" permission.`;
         }
         return oneLine`
           The \`${this.commandName}\` command requires you to have the following permissions:
-          ${missing.map((perm) => PermissionNames[perm]).join(', ')}
+          ${missing.map((perm) => PermissionNames[perm] || perm).join(', ')}
         `;
       }
     }
@@ -322,7 +322,7 @@ export class SlashCommand<T = any> {
       if (!Array.isArray(opts.requiredPermissions))
         throw new TypeError('Command required permissions must be an Array of permission key strings.');
       for (const perm of opts.requiredPermissions)
-        if (!PermissionNames[perm]) throw new RangeError(`Invalid command required permission: ${perm}`);
+        if (!Permissions.FLAGS[perm]) throw new RangeError(`Invalid command required permission: ${perm}`);
     }
 
     if (opts.throttling) {

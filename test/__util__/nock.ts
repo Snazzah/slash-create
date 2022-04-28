@@ -15,9 +15,9 @@ const NOCK_HEADERS = {
 };
 
 // #region Global commands
-export const globalCommands = (commands: ApplicationCommand[] = []) =>
+export const globalCommands = (commands: ApplicationCommand[] = [], withLocalizations = true) =>
   nock(DISCORD_URL)
-    .get(API_BASE_URL + Endpoints.COMMANDS('1'))
+    .get(API_BASE_URL + Endpoints.COMMANDS('1') + (withLocalizations ? '?with_localizations=true' : ''))
     .reply(200, commands, NOCK_HEADERS);
 
 export const newGlobalCommand = (command: ApplicationCommand) =>
@@ -44,7 +44,7 @@ export const deleteGlobalCommand = (id: string) =>
 // #region Guild commands
 export const guildCommands = (commands: ApplicationCommand[] = []) =>
   nock(DISCORD_URL)
-    .get(API_BASE_URL + Endpoints.GUILD_COMMANDS('1', '123'))
+    .get(API_BASE_URL + Endpoints.GUILD_COMMANDS('1', '123') + '?with_localizations=true')
     .reply(200, commands, NOCK_HEADERS);
 
 export const newGuildCommand = (command: ApplicationCommand) =>

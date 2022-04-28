@@ -401,7 +401,7 @@ describe('SlashCreator', () => {
 
       creator.registerCommand(createBasicCommand({ name: 'to-update' }));
 
-      const cmdsScope = globalCommands(basicCommands);
+      const cmdsScope = globalCommands(basicCommands, false);
 
       const promise = expect(creator.collectCommandIDs()).to.eventually.be.fulfilled;
       await expect(cmdsScope, 'requests global commands').to.have.been.requested;

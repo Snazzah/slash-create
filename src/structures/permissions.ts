@@ -1,4 +1,4 @@
-import { BitField } from '../util/bitfield';
+import { BitField, BitFieldResolvable } from '../util/bitfield';
 
 const FLAGS: { [perm: string]: bigint } = {
   CREATE_INSTANT_INVITE: 1n << 0n,
@@ -50,4 +50,9 @@ const FLAGS: { [perm: string]: bigint } = {
 export class Permissions extends BitField {
   /** Permission flags. Check the source of this property for available permissions. */
   static FLAGS = FLAGS;
+
+  /** @param bits Bit(s) to read from. */
+  constructor(bits: BitFieldResolvable = 0) {
+    super(bits, true);
+  }
 }

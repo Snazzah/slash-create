@@ -342,7 +342,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         if (command.onLocaleUpdate) await command.onLocaleUpdate();
         updatePayload.push({
           id: applicationCommand.id,
-          ...command.toCommandJSON(false)
+          ...(command.toCommandJSON ? command.toCommandJSON(false) : command.commandJSON)
         });
         handledCommands.push(command.keyName);
       } else if (deleteCommands) {
@@ -371,7 +371,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       this.emit('debug', `Creating guild command "${command.commandName}" (type ${command.type}, guild: ${guildID})`);
       if (command.onLocaleUpdate) await command.onLocaleUpdate();
       updatePayload.push({
-        ...command.toCommandJSON(false)
+        ...(command.toCommandJSON ? command.toCommandJSON(false) : command.commandJSON)
       });
     }
 
@@ -415,7 +415,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         if (command.onLocaleUpdate) await command.onLocaleUpdate();
         updatePayload.push({
           id: applicationCommand.id,
-          ...command.toCommandJSON()
+          ...(command.toCommandJSON ? command.toCommandJSON() : command.commandJSON)
         });
       } else if (deleteCommands) {
         this.emit(
@@ -443,7 +443,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       this.emit('debug', `Creating command "${command.commandName}" (type ${command.type})`);
       if (command.onLocaleUpdate) await command.onLocaleUpdate();
       updatePayload.push({
-        ...command.toCommandJSON()
+        ...(command.toCommandJSON ? command.toCommandJSON() : command.commandJSON)
       });
     }
 

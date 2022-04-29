@@ -27,8 +27,10 @@ export class SlashCommand<T = any> {
   options?: ApplicationCommandOption[];
   /** The guild ID(s) for the command. */
   readonly guildIDs?: string[];
-  /** The permissions required to use this command. */
+  /** The default member permissions required to use the command. */
   readonly requiredPermissions?: string[];
+  /** Whether to check the member's permission within command execution, regardless of admin-set command permissions. */
+  readonly forcePermissions: boolean;
   /** The throttling options for this command. */
   readonly throttling?: ThrottlingOptions;
   /** Whether this command is used for unknown commands. */
@@ -83,6 +85,7 @@ export class SlashCommand<T = any> {
     this.options = opts.options;
     if (opts.guildIDs) this.guildIDs = typeof opts.guildIDs == 'string' ? [opts.guildIDs] : opts.guildIDs;
     this.requiredPermissions = opts.requiredPermissions;
+    this.forcePermissions = typeof opts.forcePermissions === 'boolean' ? opts.forcePermissions : false;
     this.throttling = opts.throttling;
     this.unknown = opts.unknown || false;
     this.deferEphemeral = opts.deferEphemeral || false;
@@ -161,7 +164,7 @@ export class SlashCommand<T = any> {
    * @return {boolean|string} Whether the member has permission, or an error message to respond with if they don't
    */
   hasPermission(ctx: CommandContext): boolean | string {
-    if (this.requiredPermissions && ctx.member) {
+    if (this.requiredPermissions && this.forcePermissions && ctx.member) {
       const missing = ctx.member.permissions.missing(this.requiredPermissions);
       if (missing.length > 0) {
         if (missing.length === 1) {
@@ -354,8 +357,10 @@ export interface SlashCommandOptions {
   descriptionLocalizations?: Record<string, string>;
   /** The guild ID(s) that this command will be assigned to. */
   guildIDs?: string | string[];
-  /** The required permission(s) for this command. */
+  /** The default member permissions required to use the command. Use an empty array to resemble a `false` default permission. */
   requiredPermissions?: string[];
+  /** Whether to check the member's permission within command execution, regardless of admin-set command permissions. */
+  forcePermissions?: boolean;
   /** The command's options. */
   options?: ApplicationCommandOption[];
   /** The throttling options for the command. */

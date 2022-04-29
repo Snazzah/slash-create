@@ -98,7 +98,8 @@ export class MessageInteractionContext {
 
     if (!options.content && typeof content === 'string') options.content = content;
 
-    if (!options.content && !options.embeds) throw new Error('Message content and embeds are both not given.');
+    if (!options.content && !options.embeds && !options.file)
+      throw new Error('Message content, embeds and files are not given.');
 
     if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 

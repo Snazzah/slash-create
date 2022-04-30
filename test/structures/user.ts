@@ -19,6 +19,7 @@ describe('User', () => {
         username: userAvatar.username,
         discriminator: userAvatar.discriminator,
         avatar: userAvatar.avatar,
+        avatarDecoration: userAvatar.avatar_decoration,
         _flags: userAvatar.public_flags
       });
     });

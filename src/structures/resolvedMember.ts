@@ -79,6 +79,11 @@ export class ResolvedMember {
     return this.dynamicAvatarURL();
   }
 
+  /**
+   * Get the user's avatar with the given format and size.
+   * @param format The format of the avatar
+   * @param size The size of the avatar
+   */
   dynamicAvatarURL(format?: ImageFormat, size?: number) {
     if (!this.avatar) return this.user.dynamicAvatarURL(format, size);
     if (!format || !ImageFormats.includes(format.toLowerCase())) {

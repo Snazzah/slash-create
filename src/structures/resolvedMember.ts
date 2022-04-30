@@ -86,12 +86,10 @@ export class ResolvedMember {
    */
   dynamicAvatarURL(format?: ImageFormat, size?: number) {
     if (!this.avatar) return this.user.dynamicAvatarURL(format, size);
-    if (!format || !ImageFormats.includes(format.toLowerCase())) {
+    if (!format || !ImageFormats.includes(format.toLowerCase()))
       format = this.avatar.startsWith('a_') ? 'gif' : this._creator.options.defaultImageFormat;
-    }
-    if (!size || size < ImageSizeBoundaries.MINIMUM || size > ImageSizeBoundaries.MAXIMUM) {
+    if (!size || size < ImageSizeBoundaries.MINIMUM || size > ImageSizeBoundaries.MAXIMUM)
       size = this._creator.options.defaultImageSize;
-    }
 
     return `${CDN_URL}${Endpoints.GUILD_MEMBER_AVATAR(this.guildID, this.id, this.avatar)}.${format}?size=${size}`;
   }

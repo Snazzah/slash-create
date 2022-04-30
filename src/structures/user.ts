@@ -12,6 +12,8 @@ export class User {
   readonly discriminator: string;
   /** The user's avatar hash. */
   readonly avatar?: string;
+  /** The user's avatar decoration hash. */
+  readonly avatarDecoration?: string;
   /** Whether the user is a bot. */
   readonly bot: boolean;
 
@@ -32,6 +34,7 @@ export class User {
     this.username = data.username;
     this.discriminator = data.discriminator;
     if (data.avatar) this.avatar = data.avatar;
+    if (data.avatar_decoration) this.avatarDecoration = data.avatar_decoration;
     this._flags = data.public_flags;
     this.bot = data.bot || false;
   }
@@ -74,13 +77,30 @@ export class User {
    */
   dynamicAvatarURL(format?: ImageFormat, size?: number) {
     if (!this.avatar) return this.defaultAvatarURL;
-    if (!format || !ImageFormats.includes(format.toLowerCase())) {
+    if (!format || !ImageFormats.includes(format.toLowerCase()))
       format = this.avatar.startsWith('a_') ? 'gif' : this._creator.options.defaultImageFormat;
-    }
-    if (!size || size < ImageSizeBoundaries.MINIMUM || size > ImageSizeBoundaries.MAXIMUM || size & (size - 1)) {
+    if (!size || size < ImageSizeBoundaries.MINIMUM || size > ImageSizeBoundaries.MAXIMUM || size & (size - 1))
       size = this._creator.options.defaultImageSize;
-    }
 
     return `${CDN_URL}${Endpoints.USER_AVATAR(this.id, this.avatar)}.${format}?size=${size}`;
+  }
+
+  /** The URL of the user's avatar decoration. */
+  get avatarDecorationURL() {
+    return this.dynamicAvatarDecorationURL();
+  }
+
+  /**
+   * Get the user's avatar decoration with the given format and size.
+   * @param format The format of the avatar
+   * @param size The size of the avatar
+   */
+  dynamicAvatarDecorationURL(format?: ImageFormat, size?: number) {
+    if (!this.avatarDecoration) return null;
+    if (!format || !ImageFormats.includes(format.toLowerCase())) format = this._creator.options.defaultImageFormat;
+    if (!size || size < ImageSizeBoundaries.MINIMUM || size > ImageSizeBoundaries.MAXIMUM || size & (size - 1))
+      size = this._creator.options.defaultImageSize;
+
+    return `${CDN_URL}${Endpoints.USER_AVATAR_DECORATION(this.id, this.avatarDecoration)}.${format}?size=${size}`;
   }
 }

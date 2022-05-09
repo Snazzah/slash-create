@@ -283,7 +283,7 @@ export class MessageInteractionContext {
 
     this.creator._componentCallbacks.set(`${this.messageID}-${custom_id}`, {
       callback,
-      expires: expiration != null ? this.invokedAt + expiration : undefined,
+      expires: expiration != null ? Date.now() + expiration : undefined,
       onExpired
     });
   }
@@ -306,7 +306,7 @@ export class MessageInteractionContext {
   ) {
     this.creator._componentCallbacks.set(`${message_id}-${custom_id}`, {
       callback,
-      expires: expiration != null ? this.invokedAt + expiration : undefined,
+      expires: expiration != null ? Date.now() + expiration : undefined,
       onExpired
     });
   }

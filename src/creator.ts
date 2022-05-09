@@ -88,6 +88,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         unknownCommandResponse: true,
         handleCommandsManually: false,
         disableTimeouts: false,
+        componentTimeouts: false,
         latencyThreshold: 30000,
         ratelimiterOffset: 0,
         requestTimeout: 15000,
@@ -903,6 +904,8 @@ export interface SlashCreatorOptions {
   handleCommandsManually?: boolean;
   /** Whether to disable automatic defer/acknowledge timeouts. */
   disableTimeouts?: boolean;
+  /** Whether to enable automatic component timeouts. */
+  componentTimeouts?: boolean;
   /** The default allowed mentions for all messages. */
   allowedMentions?: MessageAllowedMentions;
   /** The default format to provide user avatars in. */

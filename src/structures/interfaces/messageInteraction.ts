@@ -286,6 +286,14 @@ export class MessageInteractionContext {
       expires: expiration != null ? Date.now() + expiration : undefined,
       onExpired
     });
+
+    if (expiration != null && this.creator.options.componentTimeouts)
+      setTimeout(() => {
+        if (this.creator._componentCallbacks.has(`${this.messageID}-${custom_id}`)) {
+          if (onExpired) onExpired();
+          this.creator._componentCallbacks.delete(`${this.messageID}-${custom_id}`);
+        }
+      }, expiration);
   }
 
   /**
@@ -309,6 +317,14 @@ export class MessageInteractionContext {
       expires: expiration != null ? Date.now() + expiration : undefined,
       onExpired
     });
+
+    if (expiration != null && this.creator.options.componentTimeouts)
+      setTimeout(() => {
+        if (this.creator._componentCallbacks.has(`${message_id}-${custom_id}`)) {
+          if (onExpired) onExpired();
+          this.creator._componentCallbacks.delete(`${message_id}-${custom_id}`);
+        }
+      }, expiration);
   }
 
   /**
@@ -345,6 +361,14 @@ export class MessageInteractionContext {
       expires: expiration != null ? this.invokedAt + expiration : undefined,
       onExpired
     });
+
+    if (expiration != null && this.creator.options.componentTimeouts)
+      setTimeout(() => {
+        if (this.creator._componentCallbacks.has(`${message_id}-*`)) {
+          if (onExpired) onExpired();
+          this.creator._componentCallbacks.delete(`${message_id}-*`);
+        }
+      }, expiration);
   }
 
   /**

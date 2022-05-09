@@ -276,7 +276,6 @@ export class MessageInteractionContext {
     expiration: number = 1000 * 60 * 15,
     onExpired?: () => void
   ) {
-    if (this.expired) throw new Error('This interaction has expired');
     if (!this.initiallyResponded || this.deferred)
       throw new Error('You must send a message before registering components');
     if (!this.messageID)
@@ -305,8 +304,6 @@ export class MessageInteractionContext {
     expiration: number = 1000 * 60 * 15,
     onExpired?: () => void
   ) {
-    if (this.expired) throw new Error('This interaction has expired');
-
     this.creator._componentCallbacks.set(`${message_id}-${custom_id}`, {
       callback,
       expires: expiration != null ? this.invokedAt + expiration : undefined,

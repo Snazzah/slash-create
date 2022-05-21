@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [5.6.1] - 2022-05-21
+### Fixed:
+- **Permissions:** fixed type mixing in class functions
 ## [5.6.0] - 2022-05-16
 ### Added:
 - **SlashCreator:** Added `componentTimeouts` option to enable automatic component timeouts.
@@ -438,7 +441,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v5.6.0...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v5.6.1...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -493,3 +496,4 @@ This release features mostly completed documentation and changes to the packages
 [5.5.2]: https://github.com/Snazzah/slash-create/compare/v5.5.1...v5.5.2
 [5.5.3]: https://github.com/Snazzah/slash-create/compare/v5.5.2...v5.5.3
 [5.6.0]: https://github.com/Snazzah/slash-create/compare/v5.5.3...v5.6.0
+[5.6.1]: https://github.com/Snazzah/slash-create/compare/v5.6.0...v5.6.1

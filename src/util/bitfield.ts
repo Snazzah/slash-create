@@ -18,13 +18,18 @@ export class BitField {
     return typeof this.bitfield === 'bigint' ? 0n : 0;
   }
 
+  /** @private */
+  get isBigInt() {
+    return typeof this.defaultBit === 'bigint';
+  }
+
   /**
    * Checks whether the bitfield has a bit, or any of multiple bits.
    * @param bit Bit(s) to check for
    */
   any(bit: BitFieldResolvable): boolean {
     // @ts-ignore
-    return (this.bitfield & this.constructor.resolve(bit)) !== this.defaultBit;
+    return (this.bitfield & this.constructor.resolve(bit, this.isBigInt)) !== this.defaultBit;
   }
 
   /**
@@ -33,7 +38,7 @@ export class BitField {
    */
   equals(bit: BitFieldResolvable): boolean {
     // @ts-ignore
-    return this.bitfield === this.constructor.resolve(bit);
+    return this.bitfield === this.constructor.resolve(bit, this.isBigInt);
   }
 
   /**
@@ -43,7 +48,7 @@ export class BitField {
   has(bit: BitFieldResolvable): boolean {
     if (Array.isArray(bit)) return bit.every((p) => this.has(p));
     // @ts-ignore
-    bit = this.constructor.resolve(bit);
+    bit = this.constructor.resolve(bit, this.isBigInt);
     // @ts-ignore
     return (this.bitfield & bit) === bit;
   }
@@ -54,7 +59,7 @@ export class BitField {
    */
   missing(bits: BitFieldResolvable): string[] {
     // @ts-ignore
-    const bitsArray: string[] = new this.constructor(bits).toArray();
+    const bitsArray: string[] = new this.constructor(bits, this.isBigInt).toArray();
     return bitsArray.filter((p) => !this.has(p));
   }
 

@@ -601,8 +601,8 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     this.emit('rawRequest', treq);
 
     // Verify request
-    const signature = treq.headers['x-signature-ed25519'] as string;
-    const timestamp = treq.headers['x-signature-timestamp'] as string;
+    const signature = treq.headers['X-Signature-Ed25519'] as string;
+    const timestamp = treq.headers['X-Signature-Timestamp'] as string;
 
     // Check if both signature and timestamp exists, and the timestamp isn't past due.
     if (

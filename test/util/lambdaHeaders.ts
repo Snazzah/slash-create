@@ -14,20 +14,24 @@ describe('util/lambdaHeaders', () => {
     it('should pass single value headers', () => {
       const singleValueHeaders = { testName: 'testValue', testName2: 'testValue2' };
       const arrayHeaders = splitHeaders(singleValueHeaders);
-      expect(arrayHeaders).to.deep.equal(singleValueHeaders);
+
+      const expectedHeaders = { testname: 'testValue', testname2: 'testValue2' };
+      expect(arrayHeaders).to.deep.equal(expectedHeaders);
     });
 
     it('should pass undefined header values', () => {
       const undefinedHeader = { undefinedName: undefined };
       const arrayHeaders = splitHeaders(undefinedHeader);
-      expect(arrayHeaders).to.deep.equal(undefinedHeader);
+
+      const expectedHeader = { undefinedname: undefined };
+      expect(arrayHeaders).to.deep.equal(expectedHeader);
     });
 
     it('should split multi-value headers', () => {
       const multiValueHeader = { multiValue: 'test1,test2' };
       const arrayHeaders = splitHeaders(multiValueHeader);
 
-      const expectedHeader = { multiValue: ['test1', 'test2'] };
+      const expectedHeader = { multivalue: ['test1', 'test2'] };
       expect(arrayHeaders).to.deep.equal(expectedHeader);
     });
 
@@ -35,7 +39,7 @@ describe('util/lambdaHeaders', () => {
       const mixedHeaders = { singleType: 'abc', multiType: 'def,ghi' };
       const arrayHeaders = splitHeaders(mixedHeaders);
 
-      const expectedHeaders = { singleType: 'abc', multiType: ['def', 'ghi'] };
+      const expectedHeaders = { singletype: 'abc', multitype: ['def', 'ghi'] };
       expect(arrayHeaders).to.deep.equal(expectedHeaders);
     });
 
@@ -57,7 +61,9 @@ describe('util/lambdaHeaders', () => {
     it('should pass single value headers', () => {
       const singleValueHeaders = { testName: 'testValue', testName2: 'testValue2' };
       const arrayHeaders = joinHeaders(singleValueHeaders);
-      expect(arrayHeaders).to.deep.equal(singleValueHeaders);
+
+      const expectedHeaders = { testname: 'testValue', testname2: 'testValue2' };
+      expect(arrayHeaders).to.deep.equal(expectedHeaders);
     });
 
     it('should drop headers with undefined values', () => {
@@ -70,7 +76,7 @@ describe('util/lambdaHeaders', () => {
       const multiValueHeader = { multiValue: ['test1', 'test2'] };
       const arrayHeaders = joinHeaders(multiValueHeader);
 
-      const expectedHeader = { multiValue: 'test1,test2' };
+      const expectedHeader = { multivalue: 'test1,test2' };
       expect(arrayHeaders).to.deep.equal(expectedHeader);
     });
 
@@ -78,7 +84,7 @@ describe('util/lambdaHeaders', () => {
       const mixedHeaders = { singleType: 'abc', multiType: ['def', 'ghi'] };
       const arrayHeaders = joinHeaders(mixedHeaders);
 
-      const expectedHeaders = { singleType: 'abc', multiType: 'def,ghi' };
+      const expectedHeaders = { singletype: 'abc', multitype: 'def,ghi' };
       expect(arrayHeaders).to.deep.equal(expectedHeaders);
     });
 

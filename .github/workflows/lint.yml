@@ -29,10 +29,10 @@ jobs:
           node-version: 14.x
 
       - name: Install dependencies
-        run: npm install
+        run: yarn
 
       - name: Run ESLint
-        run: npm run lint:fix
+        run: yarn lint:fix
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v4

@@ -5,9 +5,9 @@ export function splitHeaders(headers?: CommaDelimitedHeaders, separator = ',') {
 
   Object.entries(headers).forEach(([headerKey, headerValue]) => {
     if (headerValue !== undefined && headerValue.includes(separator)) {
-      arrayHeaders[headerKey] = headerValue.split(separator);
+      arrayHeaders[headerKey.toLowerCase()] = headerValue.split(separator);
     } else {
-      arrayHeaders[headerKey] = headerValue;
+      arrayHeaders[headerKey.toLowerCase()] = headerValue;
     }
   });
 
@@ -23,9 +23,9 @@ export function joinHeaders(headers?: ArrayHeaders, separator = ',') {
     if (headerValue === undefined) return;
 
     if (Array.isArray(headerValue)) {
-      commaDelimitedHeaders[headerKey] = headerValue.join(separator);
+      commaDelimitedHeaders[headerKey.toLowerCase()] = headerValue.join(separator);
     } else {
-      commaDelimitedHeaders[headerKey] = headerValue;
+      commaDelimitedHeaders[headerKey.toLowerCase()] = headerValue;
     }
   });
 

@@ -276,7 +276,6 @@ export class MessageInteractionContext {
     expiration: number = 1000 * 60 * 15,
     onExpired?: () => void
   ) {
-    if (this.expired) throw new Error('This interaction has expired');
     if (!this.initiallyResponded || this.deferred)
       throw new Error('You must send a message before registering components');
     if (!this.messageID)
@@ -284,9 +283,17 @@ export class MessageInteractionContext {
 
     this.creator._componentCallbacks.set(`${this.messageID}-${custom_id}`, {
       callback,
-      expires: expiration != null ? this.invokedAt + expiration : undefined,
+      expires: expiration != null ? Date.now() + expiration : undefined,
       onExpired
     });
+
+    if (expiration != null && this.creator.options.componentTimeouts)
+      setTimeout(() => {
+        if (this.creator._componentCallbacks.has(`${this.messageID}-${custom_id}`)) {
+          if (onExpired) onExpired();
+          this.creator._componentCallbacks.delete(`${this.messageID}-${custom_id}`);
+        }
+      }, expiration);
   }
 
   /**
@@ -305,13 +312,19 @@ export class MessageInteractionContext {
     expiration: number = 1000 * 60 * 15,
     onExpired?: () => void
   ) {
-    if (this.expired) throw new Error('This interaction has expired');
-
     this.creator._componentCallbacks.set(`${message_id}-${custom_id}`, {
       callback,
-      expires: expiration != null ? this.invokedAt + expiration : undefined,
+      expires: expiration != null ? Date.now() + expiration : undefined,
       onExpired
     });
+
+    if (expiration != null && this.creator.options.componentTimeouts)
+      setTimeout(() => {
+        if (this.creator._componentCallbacks.has(`${message_id}-${custom_id}`)) {
+          if (onExpired) onExpired();
+          this.creator._componentCallbacks.delete(`${message_id}-${custom_id}`);
+        }
+      }, expiration);
   }
 
   /**
@@ -348,6 +361,14 @@ export class MessageInteractionContext {
       expires: expiration != null ? this.invokedAt + expiration : undefined,
       onExpired
     });
+
+    if (expiration != null && this.creator.options.componentTimeouts)
+      setTimeout(() => {
+        if (this.creator._componentCallbacks.has(`${message_id}-*`)) {
+          if (onExpired) onExpired();
+          this.creator._componentCallbacks.delete(`${message_id}-*`);
+        }
+      }, expiration);
   }
 
   /**

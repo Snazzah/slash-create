@@ -59,7 +59,7 @@
   resolved "https://registry.yarnpkg.com/@fastify/error/-/error-3.0.0.tgz#bfcb7b33cec0196413083a91ef2edc7b2c88455b"
   integrity sha512-dPRyT40GiHRzSCll3/Jn2nPe25+E1VXc9tDwRAIKwFCxd5Np5wzgz1tmooWG3sV0qKgrBibihVoCna2ru4SEFg==
 
-"@fastify/fast-json-stringify-compiler@^3.0.0":
+"@fastify/fast-json-stringify-compiler@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@fastify/fast-json-stringify-compiler/-/fast-json-stringify-compiler-3.0.1.tgz#78dfd3989f1e991a2fed1b0abfe1ffb29fcc3fe8"
   integrity sha512-X9BL9/N7827M9UTBVsa5G3xOoD3MQ6EqX+D6EyJyF8LdvWTHQJ//BDN4FAEaGZUA2sL+GEMC6+KNjHESnPwQuw==
@@ -985,7 +985,7 @@ fast-json-stable-stringify@^2.0.0:
   resolved "https://registry.yarnpkg.com/fast-json-stable-stringify/-/fast-json-stable-stringify-2.1.0.tgz#874bf69c6f404c2b5d99c481341399fd55892633"
   integrity sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==
 
-fast-json-stringify@^4.1.0, fast-json-stringify@^4.2.0:
+fast-json-stringify@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/fast-json-stringify/-/fast-json-stringify-4.2.0.tgz#eb49243c79d1deca85eeb488caf69007b7336c7c"
   integrity sha512-9RWBl82H7jwnPlkZ/ghi0VD5OFZVdwgwVui0nYzjnXbPQxJ3ES1+SQcWIoeCJOgrY7JkBkY/69UNZSroFPDRdQ==
@@ -1018,16 +1018,15 @@ fast-uri@^2.0.0:
   integrity sha512-qKRta6N7BWEFVlyonVY/V+BMLgFqktCUV0QjT259ekAIlbVrMaFnFLxJ4s/JPl4tou56S1BzPufI60bLe29fHA==
 
 fastify@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/fastify/-/fastify-4.0.2.tgz#c4c68de1056539a16fcccb8d9bea7dd16ac95563"
-  integrity sha512-1DYyRyIqdPbvu/c5Xtt5MF7wQRLO+GbCibRWq+5JhntQVdod9oCy7rGsSNDMjvRgvJY5EUm2UYnBtAsDr5NdFA==
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/fastify/-/fastify-4.0.3.tgz#8eab1e1087c502d2e1543bc4d76ec8e1f4ed9525"
+  integrity sha512-ACb3SXYQaN3zbRRND/51Dk/lmMkEJmGZ1YjSayzefCGX4UeHPw1it9PfJrfiuiG07FO2UxRC7Vxl+GwKfDi1Vw==
   dependencies:
     "@fastify/ajv-compiler" "^3.1.0"
     "@fastify/error" "^3.0.0"
-    "@fastify/fast-json-stringify-compiler" "^3.0.0"
+    "@fastify/fast-json-stringify-compiler" "^3.0.1"
     abstract-logging "^2.0.1"
     avvio "^8.1.3"
-    fast-json-stringify "^4.1.0"
     find-my-way "^6.3.0"
     light-my-request "^5.0.0"
     pino "^8.0.0"

@@ -2,6 +2,7 @@ name: Release
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   tag:
@@ -32,10 +33,10 @@ jobs:
           node-version: 14.x
 
       - name: Install dependencies
-        run: yarn
+        run: npm install
 
       - name: Build documentation
-        run: yarn docs
+        run: npm run docs
 
       - name: Deploy documentation
         uses: dbots-pkg/action-docs@v1

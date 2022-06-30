@@ -314,6 +314,7 @@ export interface RequestData {
   type: InteractionType;
   token: string;
   id: string;
+  app_permissions?: string;
 }
 
 /**
@@ -327,6 +328,7 @@ export interface PingRequestData {
   user?: CommandUser;
   token: string;
   id: string;
+  app_permissions?: string;
 }
 
 /**
@@ -343,6 +345,7 @@ export interface DMModalSubmitRequestData {
   locale?: string;
   user: CommandUser;
   message?: MessageData;
+  app_permissions?: string;
   data: {
     custom_id: string;
     components: ComponentActionRow[];
@@ -365,6 +368,7 @@ export interface GuildModalSubmitRequestData {
   guild_locale?: string;
   member: CommandMember;
   message?: MessageData;
+  app_permissions?: string;
   data: {
     custom_id: string;
     components: ComponentActionRow[];
@@ -390,6 +394,7 @@ export interface DMInteractionRequestData {
   channel_id: string;
   locale?: string;
   user: CommandUser;
+  app_permissions?: string;
   data: CommandData;
 }
 
@@ -408,6 +413,7 @@ export interface GuildInteractionRequestData {
   locale?: string;
   guild_locale?: string;
   member: CommandMember;
+  app_permissions?: string;
   data: CommandData;
 }
 
@@ -450,6 +456,7 @@ export interface DMMessageComponentRequestData {
   locale?: string;
   guild_locale?: string;
   user: CommandUser;
+  app_permissions?: string;
   data: {
     custom_id: string;
     component_type: ComponentType;
@@ -471,6 +478,7 @@ export interface GuildMessageComponentRequestData {
   channel_id: string;
   guild_id: string;
   member: CommandMember;
+  app_permissions?: string;
   data: {
     custom_id: string;
     component_type: ComponentType;
@@ -496,6 +504,7 @@ export interface DMCommandAutocompleteRequestData {
   id: string;
   channel_id: string;
   user: CommandUser;
+  app_permissions?: string;
   data: AutocompleteData;
 }
 
@@ -512,6 +521,7 @@ export interface GuildCommandAutocompleteRequestData {
   channel_id: string;
   guild_id: string;
   member: CommandMember;
+  app_permissions?: string;
   data: AutocompleteData;
 }
 

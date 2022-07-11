@@ -627,6 +627,8 @@ export interface CommandStringOption {
   type?: CommandOptionType.STRING | CommandOptionType.USER | CommandOptionType.CHANNEL | CommandOptionType.ROLE;
   value: string;
   focused?: boolean;
+  min_length?: number;
+  max_length?: number;
 }
 
 /** @private */

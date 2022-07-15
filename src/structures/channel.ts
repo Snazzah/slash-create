@@ -1,4 +1,3 @@
-/* global BigInt */
 import { ResolvedChannel } from '../constants';
 import { Permissions } from './permissions';
 

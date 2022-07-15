@@ -5,6 +5,7 @@ import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions
 import { Member } from '../member';
 import { User } from '../user';
 import { Message, MessageEmbedOptions } from '../message';
+import { Permissions } from '../permissions';
 
 /** Represents a interaction context that handles messages. */
 export class MessageInteractionContext {
@@ -28,6 +29,8 @@ export class MessageInteractionContext {
   readonly user: User;
   /** The time when the interaction was created. */
   readonly invokedAt: number = Date.now();
+  /** The permissions the application has. */
+  readonly appPermissions?: Permissions;
 
   /** Whether the initial response was sent. */
   initiallyResponded = false;
@@ -57,6 +60,7 @@ export class MessageInteractionContext {
     this.guildLocale = 'guild_locale' in data ? data.guild_locale : undefined;
     this.member = 'guild_id' in data ? new Member(data.member, this.creator, data.guild_id) : undefined;
     this.user = new User('guild_id' in data ? data.member.user : data.user, this.creator);
+    this.appPermissions = data.app_permissions ? new Permissions(BigInt(data.app_permissions)) : undefined;
   }
 
   /** Whether the interaction has expired. Interactions last 15 minutes. */
@@ -186,7 +190,8 @@ export class MessageInteractionContext {
 
     if (!options.content && typeof content === 'string') options.content = content;
 
-    if (!options.content && !options.embeds && !options.components) throw new Error('No valid options were given.');
+    if (!options.content && !options.embeds && !options.components && !options.file)
+      throw new Error('No valid options were given.');
 
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)

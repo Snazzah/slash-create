@@ -796,6 +796,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           const modalCallbackKey = `${context.user.id}-${context.customID}`;
           if (this._modalCallbacks.has(modalCallbackKey)) {
             this._modalCallbacks.get(modalCallbackKey)!.callback(context);
+            this._modalCallbacks.delete(modalCallbackKey);
             return;
           }
           return;

@@ -1,4 +1,3 @@
-/* global BigInt */
 import { CDN_URL, Endpoints, ImageFormat, ImageFormats, ImageSizeBoundaries, ResolvedRole } from '../constants';
 import { SlashCreator } from '../creator';
 import { Permissions } from './permissions';

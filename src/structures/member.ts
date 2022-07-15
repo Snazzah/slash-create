@@ -1,4 +1,3 @@
-/* global BigInt */
 import { CommandMember } from '../constants';
 import { SlashCreator } from '../creator';
 import { Permissions } from './permissions';

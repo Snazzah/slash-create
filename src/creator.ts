@@ -609,11 +609,17 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       !signature ||
       !timestamp ||
       parseInt(timestamp) < (Date.now() - (this.options.maxSignatureTimestamp as number)) / 1000
-    )
+    ) {
+      this.emit(
+        'debug',
+        'A request failed to be verified due to a bad timestamp. If this error persists, consider increasing maxSignatureTimestamp'
+      );
+      this.emit('unverifiedRequest', treq);
       return respond({
         status: 401,
         body: 'Invalid signature'
       });
+    }
 
     const verified = await verifyKey(JSON.stringify(treq.body), signature, timestamp, this.options.publicKey as string);
 

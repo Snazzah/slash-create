@@ -35,6 +35,7 @@ export const user = {
   username: 'Clyde',
   discriminator: '0000',
   avatar: null,
+  avatar_decoration: null,
   public_flags: 0
 };
 

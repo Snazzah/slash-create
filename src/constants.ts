@@ -564,6 +564,7 @@ export interface CommandUser {
   id: string;
   username: string;
   avatar: string | null;
+  avatar_decoration: string | null;
   discriminator: string;
   public_flags: number;
 }
@@ -883,6 +884,7 @@ export const Endpoints = {
   // CDN
   DEFAULT_USER_AVATAR: (userDiscriminator: string | number) => `/embed/avatars/${userDiscriminator}`,
   USER_AVATAR: (userID: string, userAvatar: string) => `/avatars/${userID}/${userAvatar}`,
+  USER_AVATAR_DECORATION: (userID: string, userDecoration: string) => `/avatar-decorations/${userID}/${userDecoration}`,
   ROLE_ICON: (roleID: string, roleIcon: string) => `/role-icons/${roleID}/${roleIcon}`,
   GUILD_MEMBER_AVATAR: (guildID: string, memberID: string, memberAvatar: string) =>
     `/guilds/${guildID}/users/${memberID}/avatars/${memberAvatar}`

@@ -81,7 +81,7 @@ export class SlashCommand<T = any> {
     this.commandName = opts.name;
     if (opts.nameLocalizations) this.nameLocalizations = opts.nameLocalizations;
     if (opts.description) this.description = opts.description;
-    if (opts.descriptionLocalizations) this.nameLocalizations = opts.descriptionLocalizations;
+    if (opts.descriptionLocalizations) this.descriptionLocalizations = opts.descriptionLocalizations;
     this.options = opts.options;
     if (opts.guildIDs) this.guildIDs = typeof opts.guildIDs == 'string' ? [opts.guildIDs] : opts.guildIDs;
     this.requiredPermissions = opts.requiredPermissions;

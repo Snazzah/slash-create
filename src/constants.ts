@@ -178,8 +178,12 @@ export interface ApplicationCommandOptionBase {
     | CommandOptionType.ATTACHMENT;
   /** The name of the option. */
   name: string;
+  /** The localiztions for the option name. */
+  name_localizations?: Record<string, string>;
   /** The description of the option. */
   description: string;
+  /** The localiztions for the option description. */
+  description_localizations?: Record<string, string>;
   /** Whether the parameter is required. */
   required?: boolean;
 }
@@ -255,8 +259,6 @@ export interface ApplicationCommandOptionChoice {
   value: string | number;
   /** The localiztions for the option name. */
   name_localizations?: Record<string, string>;
-  /** The localiztions for the option description. */
-  description_localizations?: Record<string, string>;
 }
 
 /** The type of thing to apply the permission to. */

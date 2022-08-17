@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [5.8.0] - 2022-08-17
+### Added:
+- **User**: Avatar Decorations
+  - Note that this isn't even out yet in *canary* but as an experiment, so this may change later or just get removed in general. This change also had some fixes with it and doesn't break anything, so it's there for *whenever* it exists since it is an existing prop in user objects.
+### Fixed:
+- **types**: Fixed option localization types
+- **SlashCreator**: Modal callbacks actually get removed after use
+- **SlashCreator**: Emit `unverifiedRequest` on bad timestamps
+- **MessageInteractionContext**: Options should no longer be modified when used in sending messages
 ## [5.7.1] - 2022-07-12
 ### Added:
 - **types**: Add types for `min_length` and `max_length`
@@ -449,7 +458,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v5.7.1...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v5.8.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -507,3 +516,4 @@ This release features mostly completed documentation and changes to the packages
 [5.6.1]: https://github.com/Snazzah/slash-create/compare/v5.6.0...v5.6.1
 [5.7.0]: https://github.com/Snazzah/slash-create/compare/v5.6.1...v5.7.0
 [5.7.1]: https://github.com/Snazzah/slash-create/compare/v5.7.0...v5.7.1
+[5.8.0]: https://github.com/Snazzah/slash-create/compare/v5.7.1...v5.8.0

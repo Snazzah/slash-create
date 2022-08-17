@@ -100,12 +100,12 @@ export class MessageInteractionContext {
 
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
 
-    if (!options.content && typeof content === 'string') options.content = content;
+    if (!options.content && typeof content === 'string') options = { ...options, content };
 
     if (!options.content && !options.embeds && !options.file)
       throw new Error('Message content, embeds and files are not given.');
 
-    if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
+    if (options.ephemeral && !options.flags) options = { ...options, flags: InteractionResponseFlags.EPHEMERAL };
 
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
@@ -147,11 +147,11 @@ export class MessageInteractionContext {
 
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
 
-    if (!options.content && typeof content === 'string') options.content = content;
+    if (!options.content && typeof content === 'string') options = { ...options, content };
 
     if (!options.content && !options.embeds) throw new Error('Message content or embeds need to be given.');
 
-    if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
+    if (options.ephemeral && !options.flags) options = { ...options, flags: InteractionResponseFlags.EPHEMERAL };
 
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
@@ -188,7 +188,7 @@ export class MessageInteractionContext {
 
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
 
-    if (!options.content && typeof content === 'string') options.content = content;
+    if (!options.content && typeof content === 'string') options = { ...options, content };
 
     if (!options.content && !options.embeds && !options.components && !options.file)
       throw new Error('No valid options were given.');

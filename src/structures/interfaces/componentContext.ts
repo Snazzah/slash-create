@@ -73,7 +73,7 @@ export class ComponentContext extends ModalSendableContext {
 
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
 
-    if (!options.content && typeof content === 'string') options.content = content;
+    if (!options.content && typeof content === 'string') options = { ...options, content };
 
     if (!options.content && !options.embeds && !options.components) throw new Error('No valid options were given.');
 

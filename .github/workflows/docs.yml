@@ -28,10 +28,10 @@ jobs:
           node-version: 16.x
 
       - name: Install dependencies
-        run: yarn
+        run: npm ci
 
       - name: Build documentation
-        run: yarn docs
+        run: npm run docs
 
       - name: Deploy documentation
         uses: dbots-pkg/action-docs@v1

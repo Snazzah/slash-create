@@ -21,12 +21,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Install Node v14
-        uses: actions/setup-node@v1
+      - name: Install Node v16
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 16.x
 
       - name: Install dependencies
         run: yarn
@@ -35,7 +35,7 @@ jobs:
         run: yarn lint:fix
 
       - name: Commit changes
-        uses: EndBug/add-and-commit@v4
+        uses: EndBug/add-and-commit@v9
         with:
           add: src
           message: "chore(lint): auto-lint source code"

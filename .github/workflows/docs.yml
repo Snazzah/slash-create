@@ -16,7 +16,7 @@ on:
 jobs:
   docs:
     name: Documentation
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository

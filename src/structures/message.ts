@@ -198,7 +198,7 @@ export interface EmbedField {
 
 export interface EmbedFooter extends EmbedFooterOptions {
   text: string;
-  icon_url?: string
+  icon_url?: string;
   proxy_icon_url?: string;
 }
 

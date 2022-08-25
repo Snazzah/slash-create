@@ -177,6 +177,9 @@ export interface MessageEmbed extends Omit<MessageEmbedOptions, 'footer' | 'imag
 }
 
 export interface EmbedAuthor extends EmbedAuthorOptions {
+  name: string;
+  url?: string;
+  icon_url?: string;
   proxy_icon_url?: string;
 }
 
@@ -184,6 +187,7 @@ export interface EmbedAuthorOptions {
   icon_url?: string;
   name: string;
   url?: string;
+  proxy_icon_url?: string;
 }
 
 export interface EmbedField {
@@ -193,6 +197,8 @@ export interface EmbedField {
 }
 
 export interface EmbedFooter extends EmbedFooterOptions {
+  text: string;
+  icon_url?: string
   proxy_icon_url?: string;
 }
 
@@ -219,6 +225,7 @@ export interface EmbedProvider {
 export interface EmbedVideo {
   height?: number;
   url?: string;
+  proxy_url?: string;
   width?: number;
 }
 

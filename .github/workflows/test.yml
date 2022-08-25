@@ -9,7 +9,7 @@ on:
       - "test/**"
       - "package.json"
       - ".github/workflows/test.yml"
-  pull_request:
+  pull_request_target:
     branches:
       - "*"
       - "!docs"

@@ -151,7 +151,8 @@ export function formatAttachmentData(files?: MessageFile | MessageFile[]): Messa
 
   return files.map((file, index) => ({
     id: `${index}`,
-    name: file.name
+    name: file.name,
+    description: file.description
   }));
 }
 

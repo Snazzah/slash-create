@@ -118,7 +118,7 @@ export class MessageInteractionContext {
       : this.creator.allowedMentions;
 
     if (!this.initiallyResponded) {
-      const resolvedAttachmentData = options.attachments ?? formatAttachmentData(options.file);
+      const resolvedAttachmentData = formatAttachmentData(options.file);
 
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
@@ -164,7 +164,7 @@ export class MessageInteractionContext {
 
     if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 
-    const resolvedAttachmentData = options.attachments ?? formatAttachmentData(options.file);
+    const resolvedAttachmentData = formatAttachmentData(options.file);
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
       : this.creator.allowedMentions;
@@ -207,7 +207,7 @@ export class MessageInteractionContext {
     if (!options.content && !options.embeds && !options.components && !options.file)
       throw new Error('No valid options were given.');
 
-    const resolvedAttachmentData = options.attachments ?? formatAttachmentData(options.file);
+    const resolvedAttachmentData = formatAttachmentData(options.file);
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
       : this.creator.allowedMentions;
@@ -418,17 +418,19 @@ export interface EditMessageOptions {
   /** The components of the message. */
   components?: ComponentActionRow[];
   /** The attachment data of the message. */
-  attachments?: MessageAttachmentOptions[];
+  // attachments?: MessageAttachmentOptions[];
 }
 
 /** A file within {@link EditMessageOptions}. */
 export interface MessageFile {
   /** The attachment to send. */
-  file: Buffer;
+  file?: Buffer;
   /** The name of the file. */
   name: string;
   /** The index of the file. */
-  id?: number;
+  id?: string | number;
+  /** The description of the file. */
+  description?: string;
 }
 
 /** A message attachment describing a file. */

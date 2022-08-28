@@ -150,7 +150,7 @@ export function formatAttachmentData(files?: MessageFile | MessageFile[]): Messa
   if (!Array.isArray(files)) files = [files];
 
   return files.map((file, index) => ({
-    id: `${index}`,
+    id: (file.id ?? index).toString(),
     name: file.name,
     description: file.description
   }));

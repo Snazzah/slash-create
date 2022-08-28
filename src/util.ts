@@ -1,4 +1,5 @@
 import { ApplicationCommandOption, CommandOptionType } from './constants';
+import { MessageAttachmentOptions, MessageFile } from './structures/interfaces/messageInteraction';
 import nacl from 'tweetnacl';
 import fs from 'fs';
 import path from 'path';
@@ -142,6 +143,16 @@ export function getFiles(folderPath: string) {
 
 export function generateID() {
   return (Date.now() + Math.round(Math.random() * 1000)).toString(36);
+}
+
+export function formatAttachmentData(files?: MessageFile | MessageFile[]): MessageAttachmentOptions[] | undefined {
+  if (!files) return undefined;
+  if (!Array.isArray(files)) files = [files];
+
+  return files.map((file, index) => ({
+    id: `${index}`,
+    name: file.name
+  }));
 }
 
 /** The allowed mentions for a {@link Message}. */

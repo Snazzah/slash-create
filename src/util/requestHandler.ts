@@ -102,18 +102,18 @@ export class RequestHandler {
             if (Array.isArray(file)) {
               data = new MultipartData();
               headers['Content-Type'] = 'multipart/form-data; boundary=' + data.boundary;
-              file.forEach((f) => {
+              file.forEach((f, index) => {
                 if (!f.file) {
                   return;
                 }
-                (data as MultipartData).attach(f.name, f.file, f.name);
+                (data as MultipartData).attach(`files[${f.id ?? index}]`, f.file, f.name);
               });
               if (body) data.attach('payload_json', body);
               data = data.finish();
             } else if (file.file) {
               data = new MultipartData();
               headers['Content-Type'] = 'multipart/form-data; boundary=' + data.boundary;
-              data.attach('file', file.file, file.name);
+              data.attach(`files[${file.id ?? 0}]`, file.file, file.name);
               if (body) data.attach('payload_json', body);
               data = data.finish();
             } else {

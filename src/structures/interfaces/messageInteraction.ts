@@ -1,7 +1,12 @@
 import { ComponentActionRow, Endpoints, InteractionResponseFlags, InteractionResponseType } from '../../constants';
 import { SlashCreator, ComponentRegisterCallback } from '../../creator';
 import { RespondFunction } from '../../server';
-import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from '../../util';
+import {
+  formatAllowedMentions,
+  formatAttachmentData,
+  FormattedAllowedMentions,
+  MessageAllowedMentions
+} from '../../util';
 import { Member } from '../member';
 import { User } from '../user';
 import { Message, MessageEmbedOptions } from '../message';
@@ -99,19 +104,22 @@ export class MessageInteractionContext {
     else if (typeof options !== 'object') options = {};
 
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
+    options = { ...options };
 
-    if (!options.content && typeof content === 'string') options = { ...options, content };
+    if (!options.content && typeof content === 'string') options.content = content;
 
     if (!options.content && !options.embeds && !options.file)
       throw new Error('Message content, embeds and files are not given.');
 
-    if (options.ephemeral && !options.flags) options = { ...options, flags: InteractionResponseFlags.EPHEMERAL };
+    if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
       : this.creator.allowedMentions;
 
     if (!this.initiallyResponded) {
+      const resolvedAttachmentData = options.attachments ?? formatAttachmentData(options.file);
+
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
       await this._respond({
@@ -124,7 +132,8 @@ export class MessageInteractionContext {
             embeds: options.embeds,
             flags: options.flags,
             allowed_mentions: allowedMentions,
-            components: options.components
+            components: options.components,
+            attachments: resolvedAttachmentData
           }
         },
         files: options.file ? (Array.isArray(options.file) ? options.file : [options.file]) : undefined
@@ -146,13 +155,16 @@ export class MessageInteractionContext {
     else if (typeof options !== 'object') options = {};
 
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
+    options = { ...options };
 
-    if (!options.content && typeof content === 'string') options = { ...options, content };
+    if (!options.content && typeof content === 'string') options.content = content;
 
-    if (!options.content && !options.embeds) throw new Error('Message content or embeds need to be given.');
+    if (!options.content && !options.embeds && !options.file)
+      throw new Error('Message content, embeds or files need to be given.');
 
-    if (options.ephemeral && !options.flags) options = { ...options, flags: InteractionResponseFlags.EPHEMERAL };
+    if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 
+    const resolvedAttachmentData = options.attachments ?? formatAttachmentData(options.file);
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
       : this.creator.allowedMentions;
@@ -167,7 +179,8 @@ export class MessageInteractionContext {
         embeds: options.embeds,
         allowed_mentions: allowedMentions,
         components: options.components,
-        flags: options.flags
+        flags: options.flags,
+        attachments: resolvedAttachmentData
       },
       options.file
     );
@@ -187,12 +200,14 @@ export class MessageInteractionContext {
     else if (typeof options !== 'object') options = {};
 
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
+    options = { ...options };
 
-    if (!options.content && typeof content === 'string') options = { ...options, content };
+    if (!options.content && typeof content === 'string') options.content = content;
 
     if (!options.content && !options.embeds && !options.components && !options.file)
       throw new Error('No valid options were given.');
 
+    const resolvedAttachmentData = options.attachments ?? formatAttachmentData(options.file);
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
       : this.creator.allowedMentions;
@@ -205,7 +220,8 @@ export class MessageInteractionContext {
         content: options.content,
         embeds: options.embeds,
         allowed_mentions: allowedMentions,
-        components: options.components
+        components: options.components,
+        attachments: resolvedAttachmentData
       },
       options.file
     );
@@ -401,6 +417,8 @@ export interface EditMessageOptions {
   file?: MessageFile | MessageFile[];
   /** The components of the message. */
   components?: ComponentActionRow[];
+  /** The attachment data of the message. */
+  attachments?: MessageAttachmentOptions[];
 }
 
 /** A file within {@link EditMessageOptions}. */
@@ -409,6 +427,18 @@ export interface MessageFile {
   file: Buffer;
   /** The name of the file. */
   name: string;
+  /** The index of the file. */
+  id?: number;
+}
+
+/** A message attachment describing a file. */
+export interface MessageAttachmentOptions {
+  /** The name of the attachment. */
+  name: string;
+  /** The index of the attachment. */
+  id?: string;
+  /** The description of the attachment. */
+  description?: string;
 }
 
 /** The options for {@link MessageInteractionContext#send} and {@link MessageInteractionContext#sendFollowUp}. */

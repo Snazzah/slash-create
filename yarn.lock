@@ -339,7 +339,7 @@ ajv@^6.10.0, ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^8.0.0, ajv@^8.1.0, ajv@^8.10.0:
+ajv@^8.0.0, ajv@^8.10.0:
   version "8.11.0"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.11.0.tgz#977e91dd96ca669f54a11e23e378e33b884a565f"
   integrity sha512-wGgprdCvMalC0BztXvitD2hC04YffAvtsUn93JbGXYLAtCUO4xd17mCCZQxUOItiBwZvJScWo8NIvQMQ71rdpg==
@@ -1012,9 +1012,9 @@ fast-uri@^2.0.0, fast-uri@^2.1.0:
   integrity sha512-qKRta6N7BWEFVlyonVY/V+BMLgFqktCUV0QjT259ekAIlbVrMaFnFLxJ4s/JPl4tou56S1BzPufI60bLe29fHA==
 
 fastify@^4.0.2:
-  version "4.5.2"
-  resolved "https://registry.yarnpkg.com/fastify/-/fastify-4.5.2.tgz#6da18ee9c8a466b365614a377a7f448f8c50a46b"
-  integrity sha512-cDLhc0bh1ftzMoS7ccGGPUW/xTUnk6I51TktQqKFeJnhoAfk56tfn+xDs8JcJYfouPK23Ljx4OpMaEi+kIDwEg==
+  version "4.5.3"
+  resolved "https://registry.yarnpkg.com/fastify/-/fastify-4.5.3.tgz#df4f00347f06e8f3d6ab35788d2d140668c2533c"
+  integrity sha512-Q8Zvkmg7GnioMCDX1jT2Q7iRqjywlnDZ1735D2Ipf7ashCM/3/bqPKv2Jo1ZF2iDExct2eP1C/tdhcj0GG/OuQ==
   dependencies:
     "@fastify/ajv-compiler" "^3.1.1"
     "@fastify/error" "^3.0.0"
@@ -1022,7 +1022,7 @@ fastify@^4.0.2:
     abstract-logging "^2.0.1"
     avvio "^8.1.3"
     find-my-way "^7.0.0"
-    light-my-request "^5.0.0"
+    light-my-request "^5.5.1"
     pino "^8.0.0"
     process-warning "^2.0.0"
     proxy-addr "^2.0.7"
@@ -1458,14 +1458,13 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-light-my-request@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/light-my-request/-/light-my-request-5.0.0.tgz#2ac329d472c5c74c74be62fb2a8790c444c22ab0"
-  integrity sha512-0OPHKV+uHgBOnRokzL1LqeMCnSAo5l/rZS7kyB6G1I8qxGCvhXpq1M6WK565Y9A5CSn50l3DVaHnJ5FCdpguZQ==
+light-my-request@^5.5.1:
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/light-my-request/-/light-my-request-5.5.1.tgz#566d90928b9b960d44b6b2b74e072eec1f7015e4"
+  integrity sha512-Zd4oZjF7axSyc5rYQsbB0qsgY4LFFviZSbEywxf7Vi5UE3y3c7tYF/GeheQjBNYY+pQ55BF8UGGJTjneoxOS1w==
   dependencies:
-    ajv "^8.1.0"
     cookie "^0.5.0"
-    process-warning "^1.0.0"
+    process-warning "^2.0.0"
     set-cookie-parser "^2.4.1"
 
 lilconfig@2.0.5:
@@ -1899,11 +1898,6 @@ prettier@^2.3.2:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
   integrity sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==
-
-process-warning@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/process-warning/-/process-warning-1.0.0.tgz#980a0b25dc38cd6034181be4b7726d89066b4616"
-  integrity sha512-du4wfLyj4yCZq1VupnVSZmRsPJsNuxoDQFdCFHLaYiEbFBD7QE0a+I4D7hOxrVnh78QE/YipFAj9lXHiXocV+Q==
 
 process-warning@^2.0.0:
   version "2.0.0"

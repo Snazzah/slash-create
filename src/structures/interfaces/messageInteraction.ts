@@ -426,7 +426,7 @@ export interface MessageFile {
 export interface MessageAttachmentOptions {
   /** The name of the attachment. */
   name?: string;
-  /** The index of the attachment. */
+  /** The ID of the attachment. For existing attachments, this must be the ID snowflake of the attachment, otherwise, this will be the index of the files being sent to Discord. */
   id: string | number;
   /** The description of the attachment. */
   description?: string;

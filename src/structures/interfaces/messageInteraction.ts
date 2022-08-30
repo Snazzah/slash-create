@@ -418,8 +418,6 @@ export interface MessageFile {
   file: Buffer;
   /** The name of the file. */
   name: string;
-  /** The index of the file. */
-  id?: number;
 }
 
 /** A message attachment describing a file. */

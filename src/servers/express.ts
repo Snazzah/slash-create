@@ -68,7 +68,7 @@ export class ExpressServer extends Server {
           if (response.files) {
             const data = new MultipartData();
             res.set('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
-            for (const i in response.files) data.attach(`files[${i}]`, response.files[i].file, response.file[i].name);
+            for (const i in response.files) data.attach(`files[${i}]`, response.files[i].file, response.files[i].name);
             data.attach('payload_json', JSON.stringify(response.body));
             res.send(Buffer.concat(data.finish()));
           } else res.send(response.body);

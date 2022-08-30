@@ -1,12 +1,7 @@
 import { ComponentActionRow, Endpoints, InteractionResponseFlags, InteractionResponseType } from '../../constants';
 import { SlashCreator, ComponentRegisterCallback } from '../../creator';
 import { RespondFunction } from '../../server';
-import {
-  formatAllowedMentions,
-  formatAttachmentData,
-  FormattedAllowedMentions,
-  MessageAllowedMentions
-} from '../../util';
+import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from '../../util';
 import { Member } from '../member';
 import { User } from '../user';
 import { Message, MessageEmbedOptions } from '../message';
@@ -118,8 +113,6 @@ export class MessageInteractionContext {
       : this.creator.allowedMentions;
 
     if (!this.initiallyResponded) {
-      const resolvedAttachmentData = formatAttachmentData(options.file);
-
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
       await this._respond({
@@ -133,7 +126,7 @@ export class MessageInteractionContext {
             flags: options.flags,
             allowed_mentions: allowedMentions,
             components: options.components,
-            attachments: resolvedAttachmentData
+            attachments: options.attachments
           }
         },
         files: options.file ? (Array.isArray(options.file) ? options.file : [options.file]) : undefined
@@ -164,7 +157,6 @@ export class MessageInteractionContext {
 
     if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 
-    const resolvedAttachmentData = formatAttachmentData(options.file);
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
       : this.creator.allowedMentions;
@@ -180,7 +172,7 @@ export class MessageInteractionContext {
         allowed_mentions: allowedMentions,
         components: options.components,
         flags: options.flags,
-        attachments: resolvedAttachmentData
+        attachments: options.attachments
       },
       options.file
     );
@@ -204,10 +196,9 @@ export class MessageInteractionContext {
 
     if (!options.content && typeof content === 'string') options.content = content;
 
-    if (!options.content && !options.embeds && !options.components && !options.file)
+    if (!options.content && !options.embeds && !options.components && !options.file && !options.attachments)
       throw new Error('No valid options were given.');
 
-    const resolvedAttachmentData = formatAttachmentData(options.file);
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
       : this.creator.allowedMentions;
@@ -221,7 +212,7 @@ export class MessageInteractionContext {
         embeds: options.embeds,
         allowed_mentions: allowedMentions,
         components: options.components,
-        attachments: resolvedAttachmentData
+        attachments: options.attachments
       },
       options.file
     );
@@ -418,7 +409,7 @@ export interface EditMessageOptions {
   /** The components of the message. */
   components?: ComponentActionRow[];
   /** The attachment data of the message. */
-  // attachments?: MessageAttachmentOptions[];
+  attachments?: MessageAttachmentOptions[];
 }
 
 /** A file within {@link EditMessageOptions}. */
@@ -428,17 +419,15 @@ export interface MessageFile {
   /** The name of the file. */
   name: string;
   /** The index of the file. */
-  id?: string | number;
-  /** The description of the file. */
-  description?: string;
+  id?: number;
 }
 
 /** A message attachment describing a file. */
 export interface MessageAttachmentOptions {
   /** The name of the attachment. */
-  name: string;
+  name?: string;
   /** The index of the attachment. */
-  id?: string;
+  id: string | number;
   /** The description of the attachment. */
   description?: string;
 }

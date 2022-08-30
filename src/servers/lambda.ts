@@ -43,7 +43,7 @@ export class AWSLambdaServer extends Server {
         if (response.files) {
           const data = new MultipartData();
           responseHeaders['Content-Type'] = 'multipart/form-data; boundary=' + data.boundary;
-          for (const file of response.files) data.attach(file.name, file.file, file.name);
+          for (const i in response.files) data.attach(`files[${i}]`, response.files[i].file, response.file[i].name);
           data.attach('payload_json', JSON.stringify(response.body));
           callback(null, {
             statusCode: response.status || 200,

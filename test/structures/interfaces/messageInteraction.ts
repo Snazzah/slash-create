@@ -84,7 +84,8 @@ describe('MessageInteractionContext', () => {
             embeds: undefined,
             flags: undefined,
             tts: undefined,
-            components: undefined
+            components: undefined,
+            attachments: undefined
           }
         });
         expect(treq.status).to.equal(200);
@@ -106,7 +107,8 @@ describe('MessageInteractionContext', () => {
             embeds: undefined,
             flags: InteractionResponseFlags.EPHEMERAL,
             tts: undefined,
-            components: undefined
+            components: undefined,
+            attachments: undefined
           }
         });
         expect(treq.status).to.equal(200);

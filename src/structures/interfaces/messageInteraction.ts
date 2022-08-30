@@ -415,7 +415,7 @@ export interface EditMessageOptions {
 /** A file within {@link EditMessageOptions}. */
 export interface MessageFile {
   /** The attachment to send. */
-  file?: Buffer;
+  file: Buffer;
   /** The name of the file. */
   name: string;
   /** The index of the file. */

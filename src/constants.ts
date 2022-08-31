@@ -297,6 +297,7 @@ export interface RawRequest {
   auth: boolean;
   body: any;
   route: string;
+  reason?: string;
   short: boolean;
   resp: IncomingMessage;
 }

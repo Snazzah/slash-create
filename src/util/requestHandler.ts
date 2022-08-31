@@ -73,6 +73,7 @@ export class RequestHandler {
     auth = true,
     body?: any,
     file?: any,
+    reason?: string,
     _route?: string,
     short = false
   ): Promise<any> {
@@ -88,7 +89,8 @@ export class RequestHandler {
         const headers: { [key: string]: string } = {
           'User-Agent': this.userAgent,
           'Accept-Encoding': 'gzip,deflate',
-          'X-RateLimit-Precision': 'millisecond'
+          'X-RateLimit-Precision': 'millisecond',
+          ...(reason ? { 'X-Audit-Log-Reason': reason } : {})
         };
         let data: any;
         const finalURL = url;
@@ -157,6 +159,7 @@ export class RequestHandler {
               url,
               auth,
               body,
+              reason,
               route,
               short,
               resp
@@ -325,18 +328,18 @@ export class RequestHandler {
                   if (retryAfter) {
                     setTimeout(() => {
                       cb();
-                      this.request(method, url, auth, body, file, route, true).then(resolve).catch(reject);
+                      this.request(method, url, auth, body, file, reason, route, true).then(resolve).catch(reject);
                     }, retryAfter);
                     return;
                   } else {
                     cb();
-                    this.request(method, url, auth, body, file, route, true).then(resolve).catch(reject);
+                    this.request(method, url, auth, body, file, reason, route, true).then(resolve).catch(reject);
                     return;
                   }
                 } else if (resp.statusCode === 502 && ++attempts < 4) {
                   this._creator.emit('debug', 'A wild 502 appeared! Thanks CloudFlare!');
                   setTimeout(() => {
-                    this.request(method, url, auth, body, file, route, true).then(resolve).catch(reject);
+                    this.request(method, url, auth, body, file, reason, route, true).then(resolve).catch(reject);
                   }, Math.floor(Math.random() * 1900 + 100));
                   return cb();
                 }

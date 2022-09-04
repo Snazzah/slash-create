@@ -48,15 +48,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Node.js for NPM
         uses: actions/setup-node@v3
         with:
           registry-url: 'https://registry.npmjs.org'
 
-      - run: npm install
-      - run: npm publish
+      - run: yarn
+      - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -65,7 +66,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Node.js for GPR
         uses: actions/setup-node@v3
@@ -73,8 +75,8 @@ jobs:
           registry-url: 'https://npm.pkg.github.com/'
           scope: '@snazzah'
 
-      - run: npm install
-      - run: npm run gpr
-      - run: npm publish
+      - run: yarn
+      - run: yarn run gpr
+      - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

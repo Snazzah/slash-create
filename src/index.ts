@@ -10,6 +10,7 @@ export * from './util/bitfield';
 export * from './util/collection';
 export * from './util/requestHandler';
 export * from './util/sequentialBucket';
+export * from './util/multipartData';
 
 export * from './errors/DiscordHTTPError';
 export * from './errors/DiscordRESTError';
@@ -28,6 +29,7 @@ export * from './structures/permissions';
 export * from './structures/user';
 export * from './structures/userFlags';
 
+export * from './structures/interfaces/baseInteraction';
 export * from './structures/interfaces/autocompleteContext';
 export * from './structures/interfaces/componentContext';
 export * from './structures/interfaces/commandContext';

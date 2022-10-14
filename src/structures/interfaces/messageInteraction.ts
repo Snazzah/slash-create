@@ -2,36 +2,11 @@ import { ComponentActionRow, Endpoints, InteractionResponseFlags, InteractionRes
 import { SlashCreator, ComponentRegisterCallback } from '../../creator';
 import { RespondFunction } from '../../server';
 import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from '../../util';
-import { Member } from '../member';
-import { User } from '../user';
 import { Message, MessageEmbedOptions } from '../message';
-import { Permissions } from '../permissions';
+import { BaseInteractionContext } from './baseInteraction';
 
 /** Represents a interaction context that handles messages. */
-export class MessageInteractionContext {
-  /** The creator of the interaction request. */
-  readonly creator: SlashCreator;
-  /** The interaction's token. */
-  readonly interactionToken: string;
-  /** The interaction's ID. */
-  readonly interactionID: string;
-  /** The channel ID that the interaction was invoked in. */
-  readonly channelID: string;
-  /** The guild ID that the interaction was invoked in. */
-  readonly guildID?: string;
-  /** The user's locale */
-  readonly locale?: string;
-  /** The guild's perferred locale, if invoked in a guild. */
-  readonly guildLocale?: string;
-  /** The member that invoked the interaction. */
-  readonly member?: Member;
-  /** The user that invoked the interaction. */
-  readonly user: User;
-  /** The time when the interaction was created. */
-  readonly invokedAt: number = Date.now();
-  /** The permissions the application has. */
-  readonly appPermissions?: Permissions;
-
+export class MessageInteractionContext extends BaseInteractionContext {
   /** Whether the initial response was sent. */
   initiallyResponded = false;
   /** Whether there is a deferred message available. */
@@ -49,23 +24,8 @@ export class MessageInteractionContext {
    * @param respond The response function for the interaction.
    */
   constructor(creator: SlashCreator, data: any, respond: RespondFunction) {
-    this.creator = creator;
+    super(creator, data);
     this._respond = respond;
-
-    this.interactionToken = data.token;
-    this.interactionID = data.id;
-    this.channelID = data.channel_id;
-    this.guildID = 'guild_id' in data ? data.guild_id : undefined;
-    this.locale = 'locale' in data ? data.locale : undefined;
-    this.guildLocale = 'guild_locale' in data ? data.guild_locale : undefined;
-    this.member = 'guild_id' in data ? new Member(data.member, this.creator, data.guild_id) : undefined;
-    this.user = new User('guild_id' in data ? data.member.user : data.user, this.creator);
-    this.appPermissions = data.app_permissions ? new Permissions(BigInt(data.app_permissions)) : undefined;
-  }
-
-  /** Whether the interaction has expired. Interactions last 15 minutes. */
-  get expired() {
-    return this.invokedAt + 1000 * 60 * 15 < Date.now();
   }
 
   /**

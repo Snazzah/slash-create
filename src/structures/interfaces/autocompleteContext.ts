@@ -1,39 +1,19 @@
 import { AnyCommandOption, CommandAutocompleteRequestData, InteractionResponseType } from '../../constants';
 import { SlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
-import { Member } from '../member';
-import { Permissions } from '../permissions';
-import { User } from '../user';
+import { BaseInteractionContext } from './baseInteraction';
 import { CommandContext } from './commandContext';
 
 /** Represents a autocomplete interaction context. */
-export class AutocompleteContext {
+export class AutocompleteContext extends BaseInteractionContext {
   /** The full interaction data. */
   readonly data: CommandAutocompleteRequestData;
-  /** The creator of the interaction request. */
-  readonly creator: SlashCreator;
-  /** The interaction's token. */
-  readonly interactionToken: string;
-  /** The interaction's ID. */
-  readonly interactionID: string;
-  /** The channel ID that the interaction was invoked in. */
-  readonly channelID: string;
-  /** The guild ID that the interaction was invoked in. */
-  readonly guildID?: string;
-  /** The member that invoked the interaction. */
-  readonly member?: Member;
-  /** The user that invoked the interaction. */
-  readonly user: User;
   /** The options given to the command. */
   readonly options: { [key: string]: any };
   /** The option name that is currently focused.  */
   readonly focused: string;
   /** The subcommands the member used in order. */
   readonly subcommands: string[];
-  /** The time when the interaction was created. */
-  readonly invokedAt: number = Date.now();
-  /** The permissions the application has. */
-  readonly appPermissions?: Permissions;
 
   /** Whether the interaction has been responded to. */
   responded = false;
@@ -46,25 +26,13 @@ export class AutocompleteContext {
    * @param respond The response function for the interaction.
    */
   constructor(creator: SlashCreator, data: CommandAutocompleteRequestData, respond: RespondFunction) {
-    this.creator = creator;
+    super(creator, data);
     this._respond = respond;
 
     this.data = data;
-    this.interactionToken = data.token;
-    this.interactionID = data.id;
-    this.channelID = data.channel_id;
-    this.guildID = 'guild_id' in data ? data.guild_id : undefined;
-    this.member = 'guild_id' in data ? new Member(data.member, this.creator, data.guild_id) : undefined;
-    this.user = new User('guild_id' in data ? data.member.user : data.user, this.creator);
     this.options = CommandContext.convertOptions(data.data.options);
     this.subcommands = CommandContext.getSubcommandArray(data.data.options);
     this.focused = AutocompleteContext.getFocusedOption(data.data.options)!;
-    this.appPermissions = data.app_permissions ? new Permissions(BigInt(data.app_permissions)) : undefined;
-  }
-
-  /** Whether the interaction has expired. Interactions last 15 minutes. */
-  get expired() {
-    return this.invokedAt + 1000 * 60 * 15 < Date.now();
   }
 
   /**

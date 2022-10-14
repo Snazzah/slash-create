@@ -119,7 +119,11 @@ export enum ChannelType {
   /** A temporary sub-channel within a `GUILD_TEXT` channel. */
   GUILD_PRIVATE_THREAD = 12,
   /** A voice channel for hosting events with an audience. */
-  GUILD_STAGE_VOICE = 13
+  GUILD_STAGE_VOICE = 13,
+  /** The channel in a hub containing the listed servers. */
+  GUILD_DIRECTORY = 14,
+  /** A channel that can only contain threads. */
+  GUILD_FORUM = 13
 }
 
 /**

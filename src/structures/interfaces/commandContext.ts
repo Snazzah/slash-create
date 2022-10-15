@@ -1,12 +1,6 @@
 import { RespondFunction } from '../../server';
 import { SlashCreator } from '../../creator';
-import { AnyCommandOption, ApplicationCommandType, AttachmentData, InteractionRequestData } from '../../constants';
-import { User } from '../user';
-import { Collection } from '../../util/collection';
-import { Channel } from '../channel';
-import { Role } from '../role';
-import { ResolvedMember } from '../resolvedMember';
-import { Message } from '../message';
+import { AnyCommandOption, ApplicationCommandType, InteractionRequestData } from '../../constants';
 import { ModalSendableContext } from './modalSendableContext';
 
 /** Context representing a command interaction. */
@@ -26,19 +20,6 @@ export class CommandContext extends ModalSendableContext {
   readonly options: { [key: string]: any };
   /** The subcommands the member used in order. */
   readonly subcommands: string[];
-
-  /** The resolved users of the interaction. */
-  readonly users = new Collection<string, User>();
-  /** The resolved members of the interaction. */
-  readonly members = new Collection<string, ResolvedMember>();
-  /** The resolved roles of the interaction. */
-  readonly roles = new Collection<string, Role>();
-  /** The resolved channels of the interaction. */
-  readonly channels = new Collection<string, Channel>();
-  /** The resolved messages of the interaction. */
-  readonly messages = new Collection<string, Message>();
-  /** The resolved attachments of the interaction. */
-  readonly attachments = new Collection<string, AttachmentData>();
 
   /** Whether the context is from a webserver. */
   private webserverMode: boolean;
@@ -69,41 +50,6 @@ export class CommandContext extends ModalSendableContext {
     if (data.data.target_id) this.targetID = data.data.target_id;
     this.options = data.data.options ? CommandContext.convertOptions(data.data.options) : {};
     this.subcommands = data.data.options ? CommandContext.getSubcommandArray(data.data.options) : [];
-
-    if (data.data.resolved) {
-      if (data.data.resolved.users)
-        Object.keys(data.data.resolved.users).forEach((id) =>
-          this.users.set(id, new User(data.data.resolved!.users![id], this.creator))
-        );
-      if (data.data.resolved.members)
-        Object.keys(data.data.resolved.members).forEach((id) =>
-          this.members.set(
-            id,
-            new ResolvedMember(
-              data.data.resolved!.members![id],
-              data.data.resolved!.users![id],
-              this.creator,
-              this.guildID!
-            )
-          )
-        );
-      if (data.data.resolved.roles)
-        Object.keys(data.data.resolved.roles).forEach((id) =>
-          this.roles.set(id, new Role(data.data.resolved!.roles![id], this.creator))
-        );
-      if (data.data.resolved.channels)
-        Object.keys(data.data.resolved.channels).forEach((id) =>
-          this.channels.set(id, new Channel(data.data.resolved!.channels![id]))
-        );
-      if (data.data.resolved.messages)
-        Object.keys(data.data.resolved.messages).forEach((id) =>
-          this.messages.set(id, new Message(data.data.resolved!.messages![id], this.creator))
-        );
-      if (data.data.resolved.attachments)
-        Object.keys(data.data.resolved.attachments).forEach((id) =>
-          this.attachments.set(id, data.data.resolved!.attachments![id])
-        );
-    }
 
     // Auto-defer if no response was given in 2 seconds
     if (useTimeout) this._timeout = setTimeout(() => this.defer(deferEphemeral || false), 2000);

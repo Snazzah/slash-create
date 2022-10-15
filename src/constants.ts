@@ -672,10 +672,20 @@ export enum ComponentType {
   ACTION_ROW = 1,
   /** A button component. */
   BUTTON = 2,
-  /** A select component. */
+  /** @deprecated Use STRING_SELECT instead. */
   SELECT = 3,
+  /** A string select component. */
+  STRING_SELECT = 3,
   /** A text input. */
-  TEXT_INPUT = 4
+  TEXT_INPUT = 4,
+  /** A user select component. */
+  USER_SELECT = 5,
+  /** A role select component. */
+  ROLE_SELECT = 6,
+  /** A user/role select component. */
+  MENTIONABLE_SELECT = 7,
+  /** A channel select component. */
+  CHANNEL_SELECT = 8
 }
 
 /** The types of component button styles. */
@@ -739,11 +749,16 @@ export interface ComponentButtonLink extends Omit<ComponentButton, 'custom_id' |
 
 export interface ComponentSelectMenu {
   /** The type of component to use. */
-  type: ComponentType.SELECT;
+  type:
+    | ComponentType.STRING_SELECT
+    | ComponentType.USER_SELECT
+    | ComponentType.ROLE_SELECT
+    | ComponentType.MENTIONABLE_SELECT
+    | ComponentType.CHANNEL_SELECT;
   /** The identifier of the of the menu. */
   custom_id: string;
-  /** The options to show inside this menu. */
-  options: ComponentSelectOption[];
+  /** The options to show inside this menu. Only used for string selects. */
+  options?: ComponentSelectOption[];
   /** The string to show in absence of a selected option. */
   placeholder?: string;
   /** The minimum number of items to be chosen. */
@@ -752,6 +767,8 @@ export interface ComponentSelectMenu {
   max_values?: number;
   /** Whether this menu will show as disabled. */
   disabled?: boolean;
+  /** An array of channel types this select can use. Only used for channel selects. */
+  channel_types?: ChannelType[];
 }
 
 export interface ComponentSelectOption {

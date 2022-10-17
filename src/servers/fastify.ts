@@ -83,6 +83,6 @@ export class FastifyServer extends Server {
   /** @private */
   async listen(port = 8030, host = 'localhost') {
     if (this.alreadyListening) return;
-    await this.app.listen(port, host);
+    await this.app.listen({ port, host });
   }
 }

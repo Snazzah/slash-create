@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [5.10.0] - 2022-10-17
+### Changed:
+- **Context**: Refactored duplicate methods into a single `BaseInteractionContext` ([#384](https://github.com/Snazzah/slash-create/issues/384))
+- **Server**: Deprecated `.use` and `.addMiddleware` and made `app` member public
+- **FastifyServer**: Support for v4
+### Added:
+- **types**: `GUILD_FORUM` and `GUILD_DIRECTORY` to `ChannelType`
+- **types**: Added `USER_SELECT`, `ROLE_SELECT`, `MENTIONABLE_SELECT`, `CHANNEL_SELECT` and renamed `SELECT` to `STRING_SELECT` ([#264](https://github.com/Snazzah/slash-create/issues/264))
 ## [5.9.0] - 2022-09-04
 ### Changed:
 - **RequestHandler**: Updated API version to v10
@@ -467,7 +475,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v5.9.0...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v5.10.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -527,3 +535,4 @@ This release features mostly completed documentation and changes to the packages
 [5.7.1]: https://github.com/Snazzah/slash-create/compare/v5.7.0...v5.7.1
 [5.8.0]: https://github.com/Snazzah/slash-create/compare/v5.7.1...v5.8.0
 [5.9.0]: https://github.com/Snazzah/slash-create/compare/v5.8.0...v5.9.0
+[5.10.0]: https://github.com/Snazzah/slash-create/compare/v5.9.0...v5.10.0

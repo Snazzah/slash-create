@@ -1036,9 +1036,9 @@ fast-uri@^2.0.0, fast-uri@^2.1.0:
   integrity sha512-qKRta6N7BWEFVlyonVY/V+BMLgFqktCUV0QjT259ekAIlbVrMaFnFLxJ4s/JPl4tou56S1BzPufI60bLe29fHA==
 
 fastify@^4.0.2:
-  version "4.8.1"
-  resolved "https://registry.yarnpkg.com/fastify/-/fastify-4.8.1.tgz#45a341daa47e87e295ede5de31868ced2a1728c5"
-  integrity sha512-3an6yyXg7j5XPHTRxgFqUwIRaJPR7F8OPR8Uboo0SIgHx1orOqc9Y8Sl5Kz8+xK7JCy3c3mfRujskDjMu/nFfA==
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/fastify/-/fastify-4.9.0.tgz#4bd589a968ffca5b3a2c4d28b9128d044cde3035"
+  integrity sha512-q7/UE8NVdxIeHTpaFOXbavGH+AhX7qN/t601bCsTlW5baN+Anzb9MJ3lFctJVCnMDe29YNqU0htoXbJAkVLVmA==
   dependencies:
     "@fastify/ajv-compiler" "^3.3.1"
     "@fastify/error" "^3.0.0"

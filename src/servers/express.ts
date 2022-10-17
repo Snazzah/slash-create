@@ -11,7 +11,7 @@ try {
  * @see http://expressjs.com
  */
 export class ExpressServer extends Server {
-  private readonly app: any;
+  readonly app: any;
 
   /**
    * @param app The express application. Must have express.json installed as a middleware.
@@ -30,13 +30,17 @@ export class ExpressServer extends Server {
   /**
    * Adds middleware to the Express server.
    * @param middleware The middleware to add.
+   * @deprecated Use server.app.use
    */
   addMiddleware(middleware: any) {
     this.app.use(middleware);
     return this;
   }
 
-  /** Alias for {@link ExpressServer#addMiddleware} */
+  /**
+   * Alias for {@link ExpressServer#addMiddleware}
+   * @deprecated Use server.app.use
+   */
   use(middleware: any) {
     return this.addMiddleware(middleware);
   }
@@ -46,6 +50,7 @@ export class ExpressServer extends Server {
    * @param setting Express setting string
    * @param value The value to set the setting to
    * @see http://expressjs.com/en/4x/api.html#app.settings.table
+   * @deprecated Use server.app.set
    */
   set(setting: string, value: any) {
     this.app.set(setting, value);

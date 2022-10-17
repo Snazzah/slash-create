@@ -13,7 +13,7 @@ try {
  * @see https://fastify.io
  */
 export class FastifyServer extends Server {
-  private readonly app: any;
+  readonly app: any;
 
   /**
    * @param app The fastify application, or the options for initialization
@@ -35,6 +35,7 @@ export class FastifyServer extends Server {
    * <warn>This requires you to have the 'middie' module registered to the server before using.</warn>
    * @param middleware The middleware to add.
    * @see https://www.fastify.io/docs/latest/Middleware/
+   * @deprecated Use server.app.use
    */
   addMiddleware(middleware: Function) {
     // @ts-ignore
@@ -46,7 +47,10 @@ export class FastifyServer extends Server {
     return this;
   }
 
-  /** Alias for {@link FastifyServer#addMiddleware} */
+  /**
+   * Alias for {@link FastifyServer#addMiddleware}
+   * @deprecated Use server.app.use
+   * */
   use(middleware: Function) {
     return this.addMiddleware(middleware);
   }

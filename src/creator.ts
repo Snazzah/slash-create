@@ -558,6 +558,30 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   }
 
   /**
+   * Registers a global modal callback. Note that this will have no expiration, and should be invoked by the returned name.
+   * @param custom_id The custom ID of the modal to register
+   * @param callback The callback to use on interaction
+   */
+  registerGlobalModal(custom_id: string, callback: ModalRegisterCallback) {
+    const newName = `global-${custom_id}`;
+    if (this._modalCallbacks.has(newName))
+      throw new Error(`A global model with the ID "${newName}" is already registered.`);
+    this._modalCallbacks.set(newName, {
+      callback,
+      expires: undefined,
+      onExpired: undefined
+    });
+  }
+
+  /**
+   * Unregisters a global modal callback.
+   * @param custom_id The custom ID of the component to unregister
+   */
+  unregisterGlobalModal(custom_id: string) {
+    return this._modalCallbacks.delete(`global-${custom_id}`);
+  }
+
+  /**
    * Cleans any awaiting component callbacks from command contexts.
    */
   cleanRegisteredComponents() {

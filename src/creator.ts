@@ -820,11 +820,15 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           this.cleanRegisteredComponents();
 
           const modalCallbackKey = `${context.user.id}-${context.customID}`;
+          const globalCallbackKey = `global-${context.customID}`;
           if (this._modalCallbacks.has(modalCallbackKey)) {
             this._modalCallbacks.get(modalCallbackKey)!.callback(context);
             this._modalCallbacks.delete(modalCallbackKey);
             return;
           }
+          if (this._modalCallbacks.has(globalCallbackKey))
+            this._modalCallbacks.get(modalCallbackKey)!.callback(context);
+
           return;
         } catch (err) {
           return this.emit('error', err as Error);

@@ -176,6 +176,46 @@ module.exports = class HelloCommand extends SlashCommand {
 
 ```
 
+
+### Global Modal
+
+Global modal allow action callbacks to be registered when the bot starts up, thus creating reproductible responses no matter how much time has passed since the message was sent.
+They are quite useful for server welcome messages, for example.
+
+```typescript
+module.exports = class HelloCommand extends SlashCommand {
+  constructor(creator: SlashCreator) {
+    super(creator, {
+      name: 'aeon',
+
+      description: 'Says hello to you.',
+      options: []
+    });
+
+    // Since this is registered globally in the constructor, it will remain the same forever.
+    creator.registerGlobalModal('hello', (interact) => {
+      interact.sendFollowUp(`Hello ${interact.values.name}, This modal will never expire!`);
+    })
+  }
+
+
+  async run(ctx: CommandContext) {
+    return ctx.sendModal({
+      title: 'Welcome',
+      custom_id: 'hello',
+      componenets: [{type: ComponentType.ACTION_ROW, components: [{type: ComponentType.TEXT_INPUT,
+        custom_id: 'name',
+        placeholder: 'What is your name?',
+        label: 'Name',
+        style: TextInputStyle.SHORT,
+        required: true,
+      }]}]
+    })
+  }
+}
+
+```
+
 ### Expirations and Callbacks
 You can also set a custom expiration time for your components, and register a callback to be called when the component expires.
 Note that such callbacks are only called when the component receives an invokation after the expiration time has elapsed, not instantly when the component expires.

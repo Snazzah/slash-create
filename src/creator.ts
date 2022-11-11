@@ -19,7 +19,6 @@ import {
   BulkUpdateCommand,
   CommandUser,
   InteractionRequestData,
-  PartialApplicationCommandPermissions,
   ApplicationCommandType,
   CommandAutocompleteRequestData
 } from './constants';
@@ -466,22 +465,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
    */
   async syncCommandPermissions() {
-    const guildPayloads: { [guildID: string]: PartialApplicationCommandPermissions[] } = {};
-
-    for (const [, command] of this.commands) {
-      if (command.permissions) {
-        for (const guildID in command.permissions) {
-          const commandID = command.ids.get(guildID) || command.ids.get('global');
-          if (!commandID) continue;
-          if (!(guildID in guildPayloads)) guildPayloads[guildID] = [];
-          guildPayloads[guildID].push({
-            id: commandID,
-            permissions: command.permissions[guildID]
-          });
-        }
-      }
-    }
-
     this.emit(
       'warn',
       'Syncing command permissions has been deprecated and will be removed in the future: https://link.snaz.in/sc-cpd'

@@ -37,6 +37,8 @@ export class SlashCommand<T = any> {
   readonly unknown: boolean;
   /** Whether responses from this command should defer ephemeral messages. */
   readonly deferEphemeral: boolean;
+  /** Whether this command is age-restricted. */
+  readonly nsfw: boolean;
   /**
    * Whether to enable this command for everyone by default.'
    * @deprecated
@@ -86,6 +88,7 @@ export class SlashCommand<T = any> {
     if (opts.guildIDs) this.guildIDs = typeof opts.guildIDs == 'string' ? [opts.guildIDs] : opts.guildIDs;
     this.requiredPermissions = opts.requiredPermissions;
     this.forcePermissions = typeof opts.forcePermissions === 'boolean' ? opts.forcePermissions : false;
+    this.nsfw = typeof opts.nsfw === 'boolean' ? opts.nsfw : false;
     this.throttling = opts.throttling;
     this.unknown = opts.unknown || false;
     this.deferEphemeral = opts.deferEphemeral || false;
@@ -381,6 +384,8 @@ export interface SlashCommandOptions {
    * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
    */
   permissions?: CommandPermissions;
+  /** Whether this command is age-restricted. `false` by default. */
+  nsfw?: boolean;
 }
 
 /**

@@ -147,6 +147,8 @@ export interface PartialApplicationCommand {
   dm_permission?: boolean | null;
   /** The member permissions required to use this command. */
   default_member_permissions?: string | null;
+  /** Whether this command is age-restricted. */
+  nsfw?: boolean | null;
   /** The type of application this is representing. `1` by default. */
   type?: ApplicationCommandType;
 }

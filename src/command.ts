@@ -111,6 +111,7 @@ export class SlashCommand<T = any> {
           ...(this.descriptionLocalizations ? { description_localizations: this.descriptionLocalizations } : {}),
           default_permission: this.defaultPermission,
           type: ApplicationCommandType.CHAT_INPUT,
+          nsfw: this.nsfw,
           ...(this.options ? { options: this.options } : {})
         }
       : {
@@ -118,6 +119,7 @@ export class SlashCommand<T = any> {
           ...(this.nameLocalizations ? { name_localizations: this.nameLocalizations } : {}),
           description: '',
           type: this.type,
+          nsfw: this.nsfw,
           default_permission: this.defaultPermission
         };
   }
@@ -139,6 +141,7 @@ export class SlashCommand<T = any> {
       description: this.description || '',
       ...(hasAnyLocalizations ? { description_localizations: this.descriptionLocalizations || null } : {}),
       ...(global ? { dm_permission: this.dmPermission } : {}),
+      nsfw: this.nsfw,
       ...(this.type === ApplicationCommandType.CHAT_INPUT
         ? {
             ...(this.options ? { options: this.options } : {})

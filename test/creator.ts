@@ -254,6 +254,7 @@ describe('SlashCreator', () => {
           default_permission: true,
           dm_permission: false,
           name: 'to-update',
+          nsfw: false,
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
@@ -263,6 +264,7 @@ describe('SlashCreator', () => {
           default_permission: true,
           dm_permission: true,
           name: 'to-leave-alone',
+          nsfw: false,
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         }
@@ -273,6 +275,7 @@ describe('SlashCreator', () => {
           default_member_permissions: null,
           default_permission: true,
           name: 'to-create-guild',
+          nsfw: false,
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         }
@@ -313,6 +316,7 @@ describe('SlashCreator', () => {
           default_member_permissions: null,
           default_permission: true,
           name: 'to-update',
+          nsfw: false,
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
@@ -321,6 +325,7 @@ describe('SlashCreator', () => {
           default_member_permissions: null,
           default_permission: true,
           name: 'to-leave-alone',
+          nsfw: false,
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
@@ -328,6 +333,7 @@ describe('SlashCreator', () => {
           default_member_permissions: null,
           default_permission: true,
           name: 'to-create',
+          nsfw: false,
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         }
@@ -368,6 +374,7 @@ describe('SlashCreator', () => {
           default_permission: true,
           dm_permission: true,
           name: 'to-update',
+          nsfw: false,
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
@@ -377,6 +384,7 @@ describe('SlashCreator', () => {
           default_permission: true,
           dm_permission: true,
           name: 'to-leave-alone',
+          nsfw: false,
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         },
@@ -385,6 +393,7 @@ describe('SlashCreator', () => {
           default_permission: true,
           dm_permission: true,
           name: 'to-create',
+          nsfw: false,
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         }

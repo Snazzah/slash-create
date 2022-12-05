@@ -46,7 +46,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "eventemitter3": "^4.0.7",
+    "eventemitter3": "^5.0.0",
     "lodash.isequal": "^4.5.0",
     "tweetnacl": "^1.0.3"
   },

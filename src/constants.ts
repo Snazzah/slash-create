@@ -123,7 +123,7 @@ export enum ChannelType {
   /** The channel in a hub containing the listed servers. */
   GUILD_DIRECTORY = 14,
   /** A channel that can only contain threads. */
-  GUILD_FORUM = 13
+  GUILD_FORUM = 15
 }
 
 /**

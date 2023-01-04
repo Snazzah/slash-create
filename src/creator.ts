@@ -599,7 +599,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       : this.commands.get(`${interaction.data.type}:global:${interaction.data.name}`);
   }
 
-  private async _onRequest(treq: TransformedRequest, respond: RespondFunction) {
+  protected async _onRequest(treq: TransformedRequest, respond: RespondFunction) {
     this.emit('debug', 'Got request');
     this.emit('rawRequest', treq);
 
@@ -640,7 +640,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     } catch (e) {}
   }
 
-  private async _onInteraction(interaction: AnyRequestData, respond: RespondFunction | null, webserverMode: boolean) {
+  protected async _onInteraction(interaction: AnyRequestData, respond: RespondFunction | null, webserverMode: boolean) {
     this.emit('rawInteraction', interaction);
 
     if (!respond || !webserverMode) respond = this._createGatewayRespond(interaction.id, interaction.token);

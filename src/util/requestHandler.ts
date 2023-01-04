@@ -34,7 +34,7 @@ export class RequestHandler {
   readonly readyQueue: any[] = [];
 
   /** The creator that initialized the handler. */
-  private _creator: SlashCreator;
+  protected _creator: SlashCreator;
 
   /** @param creator The instantiating creator. */
   constructor(creator: SlashCreator) {

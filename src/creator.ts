@@ -289,14 +289,16 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     await this.syncGlobalCommands(options.deleteCommands);
 
     // Sync guild commands
-    for (const guildID of guildIDs) {
-      try {
-        await this.syncCommandsIn(guildID, options.deleteCommands);
-      } catch (e) {
-        if (options.skipGuildErrors) {
-          this.emit('warn', `An error occurred during guild sync (${guildID}): ${(e as Error).message}`);
-        } else {
-          throw e;
+    if (syncGuilds) {
+      for (const guildID of guildIDs) {
+        try {
+          await this.syncCommandsIn(guildID, options.deleteCommands);
+        } catch (e) {
+          if (options.skipGuildErrors) {
+            this.emit('warn', `An error occurred during guild sync (${guildID}): ${(e as Error).message}`);
+          } else {
+            throw e;
+          }
         }
       }
     }

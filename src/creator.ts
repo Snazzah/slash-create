@@ -289,7 +289,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     await this.syncGlobalCommands(options.deleteCommands);
 
     // Sync guild commands
-    if (syncGuilds) {
+    if (options.syncGuilds) {
       for (const guildID of guildIDs) {
         try {
           await this.syncCommandsIn(guildID, options.deleteCommands);

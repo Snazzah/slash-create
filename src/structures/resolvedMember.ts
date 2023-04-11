@@ -24,6 +24,8 @@ export class ResolvedMember {
   readonly premiumSince?: number;
   /** The timestamp when the member's timeout will expire */
   readonly communicationDisabledUntil?: number;
+  /** The guild member flags represented as a bit set */
+  readonly flags?: number;
   /** Whether the member is pending verification */
   readonly pending: boolean;
   /** The member's guild avatar hash */
@@ -51,6 +53,7 @@ export class ResolvedMember {
     if (data.premium_since) this.premiumSince = Date.parse(data.premium_since);
     if (data.communication_disabled_until)
       this.communicationDisabledUntil = Date.parse(data.communication_disabled_until);
+    this.flags = data.flags;
     this.pending = data.pending;
     this.guildID = guildID;
 

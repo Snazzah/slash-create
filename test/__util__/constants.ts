@@ -89,6 +89,7 @@ export const interactionDefaults: InteractionRequestData = {
     user,
     roles: [],
     premium_since: null,
+    flags: 0,
     permissions: '0',
     pending: false,
     mute: false,
@@ -124,6 +125,7 @@ export const basicMessageInteraction: MessageComponentRequestData = {
   member: {
     user,
     roles: [],
+    flags: 0,
     premium_since: null,
     permissions: '0',
     pending: false,

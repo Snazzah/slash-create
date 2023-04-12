@@ -553,6 +553,7 @@ export type CommandAutocompleteRequestData = DMCommandAutocompleteRequestData | 
 export interface ResolvedMemberData {
   avatar?: string;
   roles: string[];
+  flags: number;
   premium_since: string | null;
   communication_disabled_until: string | null;
   pending: boolean;

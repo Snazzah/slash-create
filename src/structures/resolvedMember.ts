@@ -83,7 +83,8 @@ export class ResolvedMember {
   }
 
   /**
-   * Get the user's avatar with the given format and size.
+   * Get the member's avatar with the given format and size.
+   * If the member does not have a server avatar, their user avatar is used instead.
    * @param format The format of the avatar
    * @param size The size of the avatar
    */

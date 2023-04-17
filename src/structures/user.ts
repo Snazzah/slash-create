@@ -101,6 +101,9 @@ export class User {
     if (!size || size < ImageSizeBoundaries.MINIMUM || size > ImageSizeBoundaries.MAXIMUM || size & (size - 1))
       size = this._creator.options.defaultImageSize;
 
-    return `${CDN_URL}${Endpoints.USER_AVATAR_DECORATION(this.id, this.avatarDecoration)}.${format}?size=${size}`;
+    let path = Endpoints.USER_AVATAR_DECORATION(this.id, this.avatarDecoration);
+    if (this.avatarDecoration.startsWith('v2_')) path = Endpoints.USER_AVATAR_DECORATION_PRESET(this.avatarDecoration);
+
+    return `${CDN_URL}${path}.${format}?size=${size}`;
   }
 }

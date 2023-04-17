@@ -29,6 +29,8 @@ export class BaseInteractionContext {
   readonly member?: Member;
   /** The user that invoked the interaction. */
   readonly user: User;
+  /** The channel that interaction was used in. */
+  readonly channel: Channel;
   /** The time when the interaction was created. */
   readonly invokedAt: number = Date.now();
   /** The permissions the application has. */
@@ -62,6 +64,7 @@ export class BaseInteractionContext {
     this.guildLocale = 'guild_locale' in data ? data.guild_locale : undefined;
     this.member = 'guild_id' in data ? new Member(data.member, this.creator, data.guild_id) : undefined;
     this.user = new User('guild_id' in data ? data.member.user : data.user, this.creator);
+    this.channel = new Channel(data.channel);
     this.appPermissions = data.app_permissions ? new Permissions(BigInt(data.app_permissions)) : undefined;
 
     if (data.data.resolved) {

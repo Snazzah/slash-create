@@ -403,6 +403,7 @@ export interface DMInteractionRequestData {
   channel_id: string;
   locale?: string;
   user: CommandUser;
+  channel: CommandChannel;
   app_permissions?: string;
   data: CommandData;
 }
@@ -422,6 +423,7 @@ export interface GuildInteractionRequestData {
   locale?: string;
   guild_locale?: string;
   member: CommandMember;
+  channel: CommandChannel;
   app_permissions?: string;
   data: CommandData;
 }
@@ -465,6 +467,7 @@ export interface DMMessageComponentRequestData {
   locale?: string;
   guild_locale?: string;
   user: CommandUser;
+  channel: CommandChannel;
   app_permissions?: string;
   data: {
     custom_id: string;
@@ -487,6 +490,7 @@ export interface GuildMessageComponentRequestData {
   channel_id: string;
   guild_id: string;
   member: CommandMember;
+  channel: CommandChannel;
   app_permissions?: string;
   data: {
     custom_id: string;
@@ -513,6 +517,7 @@ export interface DMCommandAutocompleteRequestData {
   id: string;
   channel_id: string;
   user: CommandUser;
+  channel: CommandChannel;
   app_permissions?: string;
   data: AutocompleteData;
 }
@@ -530,6 +535,7 @@ export interface GuildCommandAutocompleteRequestData {
   channel_id: string;
   guild_id: string;
   member: CommandMember;
+  channel: CommandChannel;
   app_permissions?: string;
   data: AutocompleteData;
 }
@@ -594,12 +600,83 @@ export interface ResolvedRole {
 }
 
 /** @private */
-export interface ResolvedChannel {
+export interface CommandChannel {
+  type: ChannelType;
+  last_message_id: string | null;
   id: string;
-  name: string;
-  permissions: string;
-  type: number;
+  flags: number;
+
+  // Guild channels
+  topic?: string | null;
+  rate_limit_per_user?: number;
+  position?: number;
+  permissions?: string;
+  parent_id?: string | null;
+  nsfw?: boolean;
+  name?: string;
+  guild_id?: string;
+
+  // Voice/Stage channels
+  rtc_region?: string | null;
+  bitrate?: number;
+
+  // Thread channels
+  total_message_sent?: number;
+  thread_metadata?: ThreadMetadata;
+  message_count?: number;
+  member_ids_preview?: string[];
+  member_count?: number;
+
+  // Forum channels
+  default_thread_rate_limit_per_user?: number;
+  default_sort_order?: number | null;
+  default_reaction_emoji?: ForumDefaultReaction | null;
+  default_forum_layout?: number;
+  default_auto_archive_duration?: number;
+  available_tags?: ForumTag[];
 }
+
+/** Channel metadata for thread-specific channel fields */
+export interface ThreadMetadata {
+  /** Whether the thread has been locked */
+  locked: boolean;
+  /** The timestamp of when the thread was created */
+  create_timestamp?: string;
+  /** The time, in minutes, of inactivity in the thread until its automatically archived  */
+  auto_archive_duration: number;
+  /** Whether the thread has been archived */
+  archived: boolean;
+  /** The timestamp of the last time the archived status was changed */
+  archive_timestamp: string;
+}
+
+/** A forum channel's tag */
+export interface ForumTag {
+  /** The name of the tag */
+  name: string;
+  /** Whether this tag can be added/removed by moderators */
+  moderated: boolean;
+  /** The ID of the tag */
+  id: string;
+  /** The name of the emoji associated with the tag */
+  emoji_name: string;
+  /** The ID of the custom emoji associated with the tag */
+  emoji_id: string | null;
+}
+
+/** A forum channel's default reaction */
+export interface ForumDefaultReaction {
+  /** The name of the emoji */
+  emoji_name: string;
+  /** The ID of the custom emoji */
+  emoji_id: string | null;
+}
+
+/**
+ * @hidden
+ * @deprecated
+ */
+export type ResolvedChannel = CommandChannel;
 
 /** @hidden */
 export interface UserObject extends CommandUser {
@@ -616,7 +693,7 @@ export interface CommandData {
     users?: { [id: string]: CommandUser };
     members?: { [id: string]: ResolvedMemberData };
     roles?: { [id: string]: ResolvedRole };
-    channels?: { [id: string]: ResolvedChannel };
+    channels?: { [id: string]: CommandChannel };
     messages?: { [id: string]: MessageData };
     attachments?: { [id: string]: AttachmentData };
   };

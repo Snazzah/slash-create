@@ -98,6 +98,12 @@ export const interactionDefaults: InteractionRequestData = {
     communication_disabled_until: null,
     joined_at: '2021-01-01T21:46:12.072Z'
   },
+  channel: {
+    type: 1,
+    last_message_id: null,
+    id: '00000000000000000',
+    flags: 0
+  },
   data: {
     id: '0',
     name: 'command',
@@ -134,6 +140,12 @@ export const basicMessageInteraction: MessageComponentRequestData = {
     nick: null,
     communication_disabled_until: null,
     joined_at: '2021-01-01T21:46:12.072Z'
+  },
+  channel: {
+    type: 1,
+    last_message_id: null,
+    id: '00000000000000000',
+    flags: 0
   },
   message: followUpMessage,
   data: {

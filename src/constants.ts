@@ -597,6 +597,7 @@ export interface ResolvedRole {
   permissions: string;
   position: number;
   unicode_emoji?: string;
+  tags?: RoleTags;
 }
 
 /** @private */
@@ -670,6 +671,22 @@ export interface ForumDefaultReaction {
   emoji_name: string;
   /** The ID of the custom emoji */
   emoji_id: string | null;
+}
+
+/** A role's tags */
+export interface RoleTags {
+  /** The ID of the bot that belongs to the role */
+  bot_id?: string;
+  /** The ID of the integration that belongs to the role */
+  integration_id?: string;
+  /** Whether this is the guild's booster role */
+  premium_subscriber?: null;
+  /** The ID of this role's subscription SKU and listing */
+  subscription_listing_id?: string;
+  /** Whether this role can be purchased */
+  available_for_purchase?: null;
+  /** Whether this is a guild's linked role */
+  guild_connections?: null;
 }
 
 /**

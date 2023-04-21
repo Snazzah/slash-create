@@ -1,4 +1,12 @@
-import { CDN_URL, Endpoints, ImageFormat, ImageFormats, ImageSizeBoundaries, ResolvedRole } from '../constants';
+import {
+  CDN_URL,
+  Endpoints,
+  ImageFormat,
+  ImageFormats,
+  ImageSizeBoundaries,
+  ResolvedRole,
+  RoleTags
+} from '../constants';
 import { SlashCreator } from '../creator';
 import { Permissions } from './permissions';
 
@@ -22,6 +30,8 @@ export class Role {
   readonly mentionable: boolean;
   /** The role unicode emoji */
   readonly unicodeEmoji?: string;
+  /** The role's tags */
+  readonly tags?: RoleTags;
 
   /** The creator of the role class. */
   private _creator: SlashCreator;
@@ -45,6 +55,7 @@ export class Role {
     this.mentionable = data.mentionable;
     if (data.unicode_emoji) this.unicodeEmoji = data.unicode_emoji;
     this._permissions = data.permissions;
+    if (data.tags) this.tags = data.tags;
   }
 
   /** The URL of the role icon. */

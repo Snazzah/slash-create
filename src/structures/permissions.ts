@@ -34,6 +34,7 @@ const FLAGS: { [perm: string]: bigint } = {
   MANAGE_EMOJIS_AND_STICKERS: 1n << 30n,
   USE_APPLICATION_COMMANDS: 1n << 31n,
   REQUEST_TO_SPEAK: 1n << 32n,
+  MANAGE_EVENTS: 1n << 33n,
   MANAGE_THREADS: 1n << 34n,
   USE_PUBLIC_THREADS: 1n << 35n,
   USE_PRIVATE_THREADS: 1n << 36n,

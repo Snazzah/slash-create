@@ -919,12 +919,18 @@ export interface AttachmentData {
   url: string;
   /** The proxy URL of the attachment. */
   proxy_url: string;
+  /** Whether the attachment is ephemeral */
+  ephermal?: boolean;
+
   /** The height of the attachment. */
   height?: number;
   /** The width of the attachment. */
   width?: number;
-  /** Whether the attachment is ephemeral */
-  ephermal?: boolean;
+
+  /** The base64-encoded byte array of the voice messsage's waveform */
+  waveform?: string;
+  /** The duration of the voice message attachment in seconds */
+  duration_secs?: number;
 }
 
 /** Any image format supported by Discord. */

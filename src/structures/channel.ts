@@ -31,6 +31,8 @@ export class Channel {
   readonly rtcRegion?: string | null;
   /** The voice channel's bitrate (Voice channels only) */
   readonly bitrate?: number;
+  /** The voice channel's user limit (Voice channels only) */
+  readonly userLimit?: number;
 
   /** The thread metadata (Threads only) */
   readonly threadMetadata?: ThreadMetadata;
@@ -79,6 +81,7 @@ export class Channel {
 
     this.rtcRegion = data.rtc_region;
     this.bitrate = data.bitrate;
+    this.userLimit = data.user_limit;
 
     this.threadMetadata = data.thread_metadata;
     this.totalMessageSent = data.total_message_sent;

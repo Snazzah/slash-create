@@ -620,6 +620,7 @@ export interface CommandChannel {
   // Voice/Stage channels
   rtc_region?: string | null;
   bitrate?: number;
+  user_limit?: number;
 
   // Thread channels
   total_message_sent?: number;

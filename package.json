@@ -27,12 +27,12 @@
   "scripts": {
     "build": "npx rimraf lib && npx tsc",
     "build:prepare": "npx shx test -d ./lib || npm run build",
-    "changelog": "npx ts-node scripts/changelog",
-    "docs": "npx typedoc --json .tmp/typedoc-out.json --plugin typedoc-plugin-as-member-of && ts-node scripts/docs",
+    "changelog": "tsx scripts/changelog",
+    "docs": "npx typedoc --json .tmp/typedoc-out.json --plugin typedoc-plugin-as-member-of && tsx scripts/docs",
     "lint": "npx eslint --ext .ts ./src",
     "lint:fix": "npx eslint --ext .ts ./src --fix",
-    "test": "npx mocha -r ts-node/register --extension ts 'test/**/*.ts'",
-    "gpr": "npx ts-node scripts/gpr",
+    "test": "npx mocha -r tsx --extension ts 'test/**/*.ts'",
+    "gpr": "tsx scripts/gpr",
     "prepare": "npx husky install && npm run build:prepare",
     "prepublishOnly": "(npx shx test -d ./lib || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
   },
@@ -76,7 +76,7 @@
     "nock": "^13.1.1",
     "prettier": "^2.3.2",
     "ts-docgen": "github:dbots-pkg/ts-docgen#main",
-    "ts-node": "^10.2.0",
+    "tsx": "^3.12.6",
     "typedoc": "0.19.2",
     "typedoc-plugin-as-member-of": "^1.0.2",
     "typescript": "4.3.5"

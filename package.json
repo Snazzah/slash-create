@@ -25,19 +25,14 @@
     "wrapper"
   ],
   "scripts": {
-    "build": "npx rimraf lib && npx tsc",
-    "build:prepare": "npx shx test -d ./lib || npm run build",
+    "build": "rimraf lib && tsc",
     "changelog": "tsx scripts/changelog",
-    "docs": "npx typedoc --json .tmp/typedoc-out.json --plugin typedoc-plugin-as-member-of && tsx scripts/docs",
-    "lint": "npx eslint --ext .ts ./src",
-    "lint:fix": "npx eslint --ext .ts ./src --fix",
-    "test": "npx mocha -r tsx --extension ts 'test/**/*.ts'",
+    "docs": "typedoc --json .tmp/typedoc-out.json --plugin typedoc-plugin-as-member-of && tsx scripts/docs",
+    "lint": "eslint --ext .ts ./src",
+    "lint:fix": "eslint --ext .ts ./src --fix",
+    "test": "mocha -r tsx --extension ts 'test/**/*.ts'",
     "gpr": "tsx scripts/gpr",
-    "prepare": "npx husky install && npm run build:prepare",
-    "prepublishOnly": "(npx shx test -d ./lib || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
-  },
-  "lint-staged": {
-    "*.ts": "eslint --fix"
+    "prepublishOnly": "(shx test -d ./lib || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
   },
   "funding": {
     "url": "https://github.com/sponsors/Snazzah"
@@ -62,7 +57,7 @@
     "@types/sinonjs__fake-timers": "6.0.1",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
-    "chai": "^4.3.4",
+    "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "chai-nock": "^1.3.0",
     "colors": "1.4.0",
@@ -70,13 +65,12 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "fastify": "^4.9.0",
-    "husky": "^8.0.1",
-    "lint-staged": "^13.0.0",
     "mocha": "^10.0.0",
     "nock": "^13.1.1",
     "prettier": "^2.3.2",
+    "shx": "^0.3.4",
     "ts-docgen": "github:dbots-pkg/ts-docgen#main",
-    "tsx": "^3.12.6",
+    "tsx": "^3.12.7",
     "typedoc": "0.19.2",
     "typedoc-plugin-as-member-of": "^1.0.2",
     "typescript": "4.3.5"

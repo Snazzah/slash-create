@@ -274,7 +274,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         deleteCommands: true,
         syncGuilds: true,
         skipGuildErrors: true,
-        syncPermissions: true
+        syncPermissions: false
       },
       opts
     ) as SyncCommandOptions;

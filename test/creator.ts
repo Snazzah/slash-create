@@ -245,13 +245,12 @@ describe('SlashCreator', () => {
           }
         ]);
 
-      creator.syncCommands();
+      const promise = expect(creator.syncCommands()).to.be.fulfilled;
       await expect(cmdsScope, 'requests commands').to.have.been.requested;
       await expect(putScope, 'updates commands').to.have.been.requestedWith([
         {
           id: '1',
           default_member_permissions: null,
-          default_permission: true,
           dm_permission: false,
           name: 'to-update',
           nsfw: false,
@@ -261,7 +260,6 @@ describe('SlashCreator', () => {
         {
           id: '3',
           default_member_permissions: null,
-          default_permission: true,
           dm_permission: true,
           name: 'to-leave-alone',
           nsfw: false,
@@ -273,13 +271,13 @@ describe('SlashCreator', () => {
       await expect(putGuildScope, 'updates guild commands').to.have.been.requestedWith([
         {
           default_member_permissions: null,
-          default_permission: true,
           name: 'to-create-guild',
           nsfw: false,
           description: 'description',
           type: ApplicationCommandType.CHAT_INPUT
         }
       ]);
+      return promise;
     });
   });
 

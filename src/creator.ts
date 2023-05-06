@@ -257,18 +257,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    * Sync all commands to Discord. This ensures that commands exist when handling them.
    * <warn>This requires you to have your token set in the creator config.</warn>
    */
-  syncCommands(opts?: SyncCommandOptions) {
-    this.syncCommandsAsync(opts)
-      .then(() => this.emit('synced'))
-      .catch((err) => this.emit('error', err));
-    return this;
-  }
-
-  /**
-   * Sync all commands to Discord asyncronously. This ensures that commands exist when handling them.
-   * <warn>This requires you to have your token set in the creator config.</warn>
-   */
-  async syncCommandsAsync(opts?: SyncCommandOptions) {
+  async syncCommands(opts?: SyncCommandOptions) {
     const options = Object.assign(
       {
         deleteCommands: true,
@@ -369,9 +358,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     for (const [, command] of unhandledCommands) {
       this.emit('debug', `Creating guild command "${command.commandName}" (type ${command.type}, guild: ${guildID})`);
       if (command.onLocaleUpdate) await command.onLocaleUpdate();
-      updatePayload.push({
-        ...command.toCommandJSON(false)
-      });
+      updatePayload.push(command.toCommandJSON(false));
     }
 
     if (!isEqual(updatePayload, commandsPayload)) {
@@ -441,7 +428,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     for (const [, command] of unhandledCommands) {
       this.emit('debug', `Creating command "${command.commandName}" (type ${command.type})`);
       if (command.onLocaleUpdate) await command.onLocaleUpdate();
-      updatePayload.push({ ...command.toCommandJSON() });
+      updatePayload.push(command.toCommandJSON());
     }
 
     if (!isEqual(updatePayload, commandsPayload)) {

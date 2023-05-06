@@ -19,8 +19,9 @@ creator
     // The first argument is required, the second argument is the name or "target" of the export.
     // It defaults to 'interactions', so it would not be strictly necessary here.
     .withServer(new AWSLambdaServer(module.exports, 'interactions'))
-    .registerCommandsIn(path.join(__dirname, 'commands'))
-    .syncCommands();
+    .registerCommandsIn(path.join(__dirname, 'commands'));
+
+await creator.syncCommands();
 ```
 
 5. Make sure to create some example commands in the *commands* directory.

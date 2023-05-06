@@ -1,6 +1,5 @@
 import {
   ApplicationCommandOption,
-  ApplicationCommandPermissions,
   ApplicationCommandType,
   PartialApplicationCommand,
   PermissionNames
@@ -39,18 +38,8 @@ export class SlashCommand<T = any> {
   readonly deferEphemeral: boolean;
   /** Whether this command is age-restricted. */
   readonly nsfw: boolean;
-  /**
-   * Whether to enable this command for everyone by default.'
-   * @deprecated
-   */
-  readonly defaultPermission: boolean;
   /** Whether to enable this command in direct messages. */
   readonly dmPermission: boolean;
-  /**
-   * The command permissions per guild.
-   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
-   */
-  readonly permissions?: CommandPermissions;
   /**
    * The file path of the command.
    * Used for refreshing the require cache.
@@ -92,36 +81,7 @@ export class SlashCommand<T = any> {
     this.throttling = opts.throttling;
     this.unknown = opts.unknown || false;
     this.deferEphemeral = opts.deferEphemeral || false;
-    this.defaultPermission = typeof opts.defaultPermission === 'boolean' ? opts.defaultPermission : true;
     this.dmPermission = typeof opts.dmPermission === 'boolean' ? opts.dmPermission : true;
-    if (opts.permissions) this.permissions = opts.permissions;
-  }
-
-  /**
-   * The JSON for using commands in Discord's API.
-   * @private
-   * @deprecated Use {@link SlashCommand#toCommandJSON} instead.
-   */
-  get commandJSON(): PartialApplicationCommand {
-    return this.type === ApplicationCommandType.CHAT_INPUT
-      ? {
-          name: this.commandName,
-          ...(this.nameLocalizations ? { name_localizations: this.nameLocalizations } : {}),
-          description: this.description,
-          ...(this.descriptionLocalizations ? { description_localizations: this.descriptionLocalizations } : {}),
-          default_permission: this.defaultPermission,
-          type: ApplicationCommandType.CHAT_INPUT,
-          nsfw: this.nsfw,
-          ...(this.options ? { options: this.options } : {})
-        }
-      : {
-          name: this.commandName,
-          ...(this.nameLocalizations ? { name_localizations: this.nameLocalizations } : {}),
-          description: '',
-          type: this.type,
-          nsfw: this.nsfw,
-          default_permission: this.defaultPermission
-        };
   }
 
   /**
@@ -131,7 +91,6 @@ export class SlashCommand<T = any> {
   toCommandJSON(global = true): PartialApplicationCommand {
     const hasAnyLocalizations = !!this.nameLocalizations || !!this.descriptionLocalizations;
     return {
-      default_permission: this.defaultPermission,
       default_member_permissions: this.requiredPermissions
         ? new Permissions(this.requiredPermissions).valueOf().toString()
         : null,
@@ -375,38 +334,10 @@ export interface SlashCommandOptions {
   unknown?: boolean;
   /** Whether responses from this command should defer ephemeral messages. */
   deferEphemeral?: boolean;
-  /**
-   * Whether to enable this command for everyone by default. `true` by default.
-   * @deprecated Use {@link SlashCommandOptions.requiredPermissions} and {@link SlashCommandOptions.dmPermission} instead.
-   */
-  defaultPermission?: boolean;
   /** Whether to enable this command in direct messages. `true` by default. */
   dmPermission?: boolean;
-  /**
-   * The command permissions per guild
-   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
-   */
-  permissions?: CommandPermissions;
   /** Whether this command is age-restricted. `false` by default. */
   nsfw?: boolean;
-}
-
-/**
- * The command permission for a {@link SlashCommand}.
- * The object is a guild ID mapped to an array of {@link ApplicationCommandPermissions}.
- * @example
- * {
- *   '<guild_id>': [
- *     {
- *       type: ApplicationCommandPermissionType.USER,
- *       id: '<user_id>',
- *       permission: true
- *     }
- *   ]
- * }
- */
-export interface CommandPermissions {
-  [guildID: string]: ApplicationCommandPermissions[];
 }
 
 /** The throttling options for a {@link SlashCommand}. */

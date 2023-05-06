@@ -27,36 +27,6 @@ export class ExpressServer extends Server {
     this.app = app;
   }
 
-  /**
-   * Adds middleware to the Express server.
-   * @param middleware The middleware to add.
-   * @deprecated Use server.app.use
-   */
-  addMiddleware(middleware: any) {
-    this.app.use(middleware);
-    return this;
-  }
-
-  /**
-   * Alias for {@link ExpressServer#addMiddleware}
-   * @deprecated Use server.app.use
-   */
-  use(middleware: any) {
-    return this.addMiddleware(middleware);
-  }
-
-  /**
-   * Sets an Express setting.
-   * @param setting Express setting string
-   * @param value The value to set the setting to
-   * @see http://expressjs.com/en/4x/api.html#app.settings.table
-   * @deprecated Use server.app.set
-   */
-  set(setting: string, value: any) {
-    this.app.set(setting, value);
-    return this;
-  }
-
   /** @private */
   createEndpoint(path: string, handler: ServerRequestHandler) {
     this.app.post(path, (req: any, res: any) =>

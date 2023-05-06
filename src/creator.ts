@@ -273,8 +273,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       {
         deleteCommands: true,
         syncGuilds: true,
-        skipGuildErrors: true,
-        syncPermissions: false
+        skipGuildErrors: true
       },
       opts
     ) as SyncCommandOptions;
@@ -304,8 +303,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     }
 
     this.emit('debug', 'Finished syncing commands');
-
-    if (options.syncPermissions) await this.syncCommandPermissions();
   }
 
   /**
@@ -344,7 +341,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         if (command.onLocaleUpdate) await command.onLocaleUpdate();
         updatePayload.push({
           id: applicationCommand.id,
-          ...(command.toCommandJSON ? command.toCommandJSON(false) : command.commandJSON)
+          ...command.toCommandJSON(false)
         });
         handledCommands.push(command.keyName);
       } else if (deleteCommands) {
@@ -373,7 +370,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       this.emit('debug', `Creating guild command "${command.commandName}" (type ${command.type}, guild: ${guildID})`);
       if (command.onLocaleUpdate) await command.onLocaleUpdate();
       updatePayload.push({
-        ...(command.toCommandJSON ? command.toCommandJSON(false) : command.commandJSON)
+        ...command.toCommandJSON(false)
       });
     }
 
@@ -417,7 +414,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         if (command.onLocaleUpdate) await command.onLocaleUpdate();
         updatePayload.push({
           id: applicationCommand.id,
-          ...(command.toCommandJSON ? command.toCommandJSON() : command.commandJSON)
+          ...command.toCommandJSON()
         });
       } else if (deleteCommands) {
         this.emit(
@@ -444,9 +441,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     for (const [, command] of unhandledCommands) {
       this.emit('debug', `Creating command "${command.commandName}" (type ${command.type})`);
       if (command.onLocaleUpdate) await command.onLocaleUpdate();
-      updatePayload.push({
-        ...(command.toCommandJSON ? command.toCommandJSON() : command.commandJSON)
-      });
+      updatePayload.push({ ...command.toCommandJSON() });
     }
 
     if (!isEqual(updatePayload, commandsPayload)) {
@@ -459,18 +454,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         if (command) command.ids.set('global', newCommand.id);
       }
     }
-  }
-
-  /**
-   * Sync command permissions.
-   * <warn>This requires you to have your token set in the creator config AND have commands already synced previously.</warn>
-   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
-   */
-  async syncCommandPermissions() {
-    this.emit(
-      'warn',
-      'Syncing command permissions has been deprecated and will be removed in the future: https://link.snaz.in/sc-cpd'
-    );
   }
 
   /**
@@ -953,11 +936,6 @@ interface SyncCommandOptions {
    * Guild syncs most likely can error if that guild no longer exists.
    */
   skipGuildErrors?: boolean;
-  /**
-   * Whether to sync command permissions after syncing commands.
-   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
-   */
-  syncPermissions?: boolean;
 }
 
 /** A component callback from {@see MessageInteractionContext#registerComponent}. */

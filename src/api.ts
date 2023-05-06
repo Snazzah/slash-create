@@ -1,11 +1,9 @@
 import {
   ApplicationCommand,
-  ApplicationCommandPermissions,
   BulkUpdateCommand,
   Endpoints,
   GuildApplicationCommandPermissions,
-  PartialApplicationCommand,
-  PartialApplicationCommandPermissions
+  PartialApplicationCommand
 } from './constants';
 import { SlashCreator } from './creator';
 
@@ -109,32 +107,6 @@ export class SlashCreatorAPI {
     return this._creator.requestHandler.request(
       'GET',
       Endpoints.COMMAND_PERMISSIONS(this._creator.options.applicationID, guildID, commandID)
-    );
-  }
-
-  updateCommandPermissions(
-    guildID: string,
-    commandID: string,
-    permissions: ApplicationCommandPermissions[]
-  ): Promise<GuildApplicationCommandPermissions> {
-    return this._creator.requestHandler.request(
-      'PUT',
-      Endpoints.COMMAND_PERMISSIONS(this._creator.options.applicationID, guildID, commandID),
-      true,
-      { permissions }
-    );
-  }
-
-  /** @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd */
-  bulkUpdateCommandPermissions(
-    guildID: string,
-    commands: PartialApplicationCommandPermissions[]
-  ): Promise<GuildApplicationCommandPermissions[]> {
-    return this._creator.requestHandler.request(
-      'PUT',
-      Endpoints.GUILD_COMMAND_PERMISSIONS(this._creator.options.applicationID, guildID),
-      true,
-      commands
     );
   }
 

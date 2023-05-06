@@ -19,8 +19,6 @@ export const CDN_URL = 'https://cdn.discordapp.com';
 export enum InteractionType {
   /** A ping. */
   PING = 1,
-  /** @deprecated */
-  COMMAND = 2,
   /** A command invocation. */
   APPLICATION_COMMAND = 2,
   /** An invocation of a message component. */
@@ -690,12 +688,6 @@ export interface RoleTags {
   guild_connections?: null;
 }
 
-/**
- * @hidden
- * @deprecated
- */
-export type ResolvedChannel = CommandChannel;
-
 /** @hidden */
 export interface UserObject extends CommandUser {
   /** Whether this user is a bot. */
@@ -770,8 +762,6 @@ export enum ComponentType {
   ACTION_ROW = 1,
   /** A button component. */
   BUTTON = 2,
-  /** @deprecated Use STRING_SELECT instead. */
-  SELECT = 3,
   /** A string select component. */
   STRING_SELECT = 3,
   /** A text input. */

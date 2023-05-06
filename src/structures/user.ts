@@ -8,6 +8,8 @@ export class User {
   readonly id: string;
   /** The user's username. */
   readonly username: string;
+  /** The user's display name. */
+  readonly globalName: string | null;
   /** The user's discriminator. */
   readonly discriminator: string;
   /** The user's avatar hash. */
@@ -33,6 +35,7 @@ export class User {
     this.id = data.id;
     this.username = data.username;
     this.discriminator = data.discriminator;
+    this.globalName = data.global_name;
     if (data.avatar) this.avatar = data.avatar;
     if (data.avatar_decoration) this.avatarDecoration = data.avatar_decoration;
     this._flags = data.public_flags;
@@ -57,6 +60,7 @@ export class User {
 
   /** The hash for the default avatar of a user if there is no avatar set. */
   get defaultAvatar() {
+    if (this.discriminator === '0') return Number((BigInt(this.id) << 22n) % 5n);
     return parseInt(this.discriminator) % 5;
   }
 

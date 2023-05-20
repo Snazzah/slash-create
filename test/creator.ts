@@ -212,15 +212,14 @@ describe('SlashCreator', () => {
         token: 'xxx'
       });
 
-      creator
-        .registerCommand(createBasicCommand({ name: 'to-create-guild', guildIDs: '123' }))
-        .registerCommand(
-          createBasicCommand({
-            name: 'to-update',
-            dmPermission: false
-          })
-        )
-        .registerCommand(createBasicCommand({ name: 'to-leave-alone' }));
+      creator.registerCommand(createBasicCommand({ name: 'to-create-guild', guildIDs: '123' }));
+      creator.registerCommand(
+        createBasicCommand({
+          name: 'to-update',
+          dmPermission: false
+        })
+      );
+      creator.registerCommand(createBasicCommand({ name: 'to-leave-alone' }));
 
       const cmdsScope = globalCommands(basicCommands),
         guildCmdsScope = guildCommands([]),
@@ -288,10 +287,9 @@ describe('SlashCreator', () => {
         token: 'xxx'
       });
 
-      creator
-        .registerCommand(createBasicCommand({ name: 'to-create', guildIDs: '123' }))
-        .registerCommand(createBasicCommand({ name: 'to-update', guildIDs: '123' }))
-        .registerCommand(createBasicCommand({ name: 'to-leave-alone', guildIDs: '123' }));
+      creator.registerCommand(createBasicCommand({ name: 'to-create', guildIDs: '123' }));
+      creator.registerCommand(createBasicCommand({ name: 'to-update', guildIDs: '123' }));
+      creator.registerCommand(createBasicCommand({ name: 'to-leave-alone', guildIDs: '123' }));
 
       const cmdsScope = guildCommands(basicCommands),
         putScope = updateGuildCommands([
@@ -347,10 +345,9 @@ describe('SlashCreator', () => {
         token: 'xxx'
       });
 
-      creator
-        .registerCommand(createBasicCommand({ name: 'to-create' }))
-        .registerCommand(createBasicCommand({ name: 'to-update' }))
-        .registerCommand(createBasicCommand({ name: 'to-leave-alone' }));
+      creator.registerCommand(createBasicCommand({ name: 'to-create' }));
+      creator.registerCommand(createBasicCommand({ name: 'to-update' }));
+      creator.registerCommand(createBasicCommand({ name: 'to-leave-alone' }));
 
       const cmdsScope = globalCommands(basicCommands),
         putScope = updateGlobalCommands([

@@ -16,8 +16,9 @@ creator
     new GatewayServer(
       (handler) => client.ws.on('INTERACTION_CREATE', handler)
     )
-  )
-  .registerCommandsIn(path.join(__dirname, 'commands'));
+  );
+
+await creator.registerCommandsIn(path.join(__dirname, 'commands'));
 
 await creator.syncCommands();
 
@@ -44,7 +45,8 @@ creator
       })
     )
   )
-  .registerCommandsIn(path.join(__dirname, 'commands'));
+
+await creator.registerCommandsIn(path.join(__dirname, 'commands'));
 
 await creator.syncCommands();
 

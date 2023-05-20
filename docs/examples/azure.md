@@ -43,11 +43,11 @@ const creator = new SlashCreator({
     token: process.env.DISCORD_BOT_TOKEN
 });
 
-creator
-  // The first argument is required, but the second argument is the "target" or the name of the export.
-  // By default, the target is "interactions".
-  .withServer(new AzureFunctionServer(module.exports))
-  .registerCommandsIn(path.join(__dirname, 'commands'));
+// The first argument is required, but the second argument is the "target" or the name of the export.
+// By default, the target is "interactions".
+creator.withServer(new AzureFunctionServer(module.exports))
+
+await creator.registerCommandsIn(path.join(__dirname, 'commands'));
 
 // Syncing the commands each time the function is executed is wasting computing time
 await creator.syncCommands();

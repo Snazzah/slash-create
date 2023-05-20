@@ -144,7 +144,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     this.emit('commandRegister', slashCommand, this);
     this.emit('debug', `Registered command ${slashCommand.keyName}.`);
 
-    return this;
+    return slashCommand;
   }
 
   /**
@@ -154,9 +154,10 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    */
   registerCommands(commands: any[], ignoreInvalid = false) {
     if (!Array.isArray(commands)) throw new TypeError('Commands must be an Array.');
+    const registeredCommands = [];
     for (const command of commands) {
       try {
-        this.registerCommand(command);
+        registeredCommands.push(this.registerCommand(command));
       } catch (e) {
         if (ignoreInvalid) {
           this.emit('warn', `Skipped an invalid command: ${e}`);
@@ -164,7 +165,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         } else throw e;
       }
     }
-    return this;
+    return registeredCommands;
   }
 
   /**
@@ -173,19 +174,23 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    * @param customExtensions An array of custom file extensions (`.js` and `.cjs` are already included)
    * @example
    * const path = require('path');
-   * creator.registerCommandsIn(path.join(__dirname, 'commands'));
+   * await creator.registerCommandsIn(path.join(__dirname, 'commands'));
    */
-  registerCommandsIn(commandPath: string, customExtensions: string[] = []) {
-    const extensions = ['.js', '.cjs', ...customExtensions];
-    const paths = getFiles(commandPath).filter((file) => extensions.includes(path.extname(file)));
+  async registerCommandsIn(commandPath: string, extensionsOrFilter: string[] | FileFilter = []) {
+    const extensions = ['.js', '.cjs', ...(Array.isArray(extensionsOrFilter) ? extensionsOrFilter : [])];
+    const files = await getFiles(commandPath);
+    const filter: FileFilter =
+      typeof extensionsOrFilter == 'function' ? extensionsOrFilter : (file) => extensions.includes(path.extname(file));
+    const filteredFiles = files.filter(filter);
     const commands: any[] = [];
-    for (const filePath of paths) {
+    for (const filePath of filteredFiles) {
       try {
-        commands.push(require(filePath));
+        commands.push(await import(filePath));
       } catch (e) {
         this.emit('error', new Error(`Failed to load command ${filePath}: ${e}`));
       }
     }
+
     return this.registerCommands(commands, true);
   }
 
@@ -927,7 +932,12 @@ interface SyncCommandOptions {
 
 /** A component callback from {@see MessageInteractionContext#registerComponent}. */
 export type ComponentRegisterCallback = (ctx: ComponentContext) => void;
+
+/** A component callback from {@see ModalSendableContext#sendModal}. */
 export type ModalRegisterCallback = (ctx: ModalInteractionContext) => void;
+
+/** A function to filter files in {@see SlashCreator#registerCommandsIn}. */
+export type FileFilter = (path: string, index: number, array: string[]) => boolean;
 
 /** @hidden */
 interface BaseCallback<T> {

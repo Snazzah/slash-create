@@ -7,6 +7,7 @@ const creator = new SlashCreator({
 });
 
 // Registers all of your commands in the ./commands/ directory
-creator.registerCommandsIn(path.join(__dirname, 'commands'))
+await creator.registerCommandsIn(path.join(__dirname, 'commands'))
+
 // This will sync commands to Discord, it must be called after commands are loaded.
 await creator.syncCommands();

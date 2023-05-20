@@ -1,7 +1,7 @@
 import { ApplicationCommandOption, CommandOptionType } from './constants';
 import nacl from 'tweetnacl';
-import fs from 'fs';
-import path from 'path';
+import path from 'node:path';
+import { readdir, lstat } from 'node:fs/promises';
 
 /**
  * Validates a payload from Discord against its signature and key.
@@ -128,13 +128,13 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
   }
 }
 
-export function getFiles(folderPath: string) {
-  const fileList = fs.readdirSync(folderPath);
+export async function getFiles(folderPath: string) {
+  const fileList = await readdir(folderPath);
   const files: string[] = [];
   for (const file of fileList) {
     const filePath = path.join(folderPath, file);
-    const stat = fs.lstatSync(filePath);
-    if (stat.isDirectory()) files.push(...getFiles(filePath));
+    const stat = await lstat(filePath);
+    if (stat.isDirectory()) files.push(...(await getFiles(filePath)));
     else files.push(filePath);
   }
   return files;

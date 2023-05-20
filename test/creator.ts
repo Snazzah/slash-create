@@ -310,7 +310,6 @@ describe('SlashCreator', () => {
         {
           id: '1',
           default_member_permissions: null,
-          default_permission: true,
           name: 'to-update',
           nsfw: false,
           description: 'description',
@@ -319,7 +318,6 @@ describe('SlashCreator', () => {
         {
           id: '3',
           default_member_permissions: null,
-          default_permission: true,
           name: 'to-leave-alone',
           nsfw: false,
           description: 'description',
@@ -327,7 +325,6 @@ describe('SlashCreator', () => {
         },
         {
           default_member_permissions: null,
-          default_permission: true,
           name: 'to-create',
           nsfw: false,
           description: 'description',
@@ -366,7 +363,6 @@ describe('SlashCreator', () => {
         {
           id: '1',
           default_member_permissions: null,
-          default_permission: true,
           dm_permission: true,
           name: 'to-update',
           nsfw: false,
@@ -376,7 +372,6 @@ describe('SlashCreator', () => {
         {
           id: '3',
           default_member_permissions: null,
-          default_permission: true,
           dm_permission: true,
           name: 'to-leave-alone',
           nsfw: false,
@@ -385,7 +380,6 @@ describe('SlashCreator', () => {
         },
         {
           default_member_permissions: null,
-          default_permission: true,
           dm_permission: true,
           name: 'to-create',
           nsfw: false,

@@ -60,7 +60,7 @@ export class User {
 
   /** The hash for the default avatar of a user if there is no avatar set. */
   get defaultAvatar() {
-    if (this.discriminator === '0') return Number((BigInt(this.id) << 22n) % 5n);
+    if (this.discriminator === '0') return Number((BigInt(this.id) >> 22n) % 5n);
     return parseInt(this.discriminator) % 5;
   }
 

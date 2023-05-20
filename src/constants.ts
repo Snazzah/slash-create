@@ -579,6 +579,7 @@ export interface CommandUser {
   username: string;
   avatar: string | null;
   avatar_decoration: string | null;
+  global_name: string | null;
   discriminator: string;
   public_flags: number;
 }

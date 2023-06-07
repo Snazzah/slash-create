@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [5.13.0] - 2023-06-07
+### Added:
+- **User**: added support new username system ([#470](https://github.com/Snazzah/slash-create/pull/470))
+### Fixed:
+- **SlashCreator**: Set `syncPermissions` to false by default
 ## [5.12.0] - 2023-04-27
 ### Changed:
 - **Channel**: Updated channel object to include almost all available channel properties

@@ -192,7 +192,7 @@ export class SlashCommand<T = any> {
    * Called when the command is prevented from running.
    * @param ctx Command context the command is running from
    * @param reason Reason that the command was blocked
-   * (built-in reasons are `permission`, `throttling`)
+   * (built-in reasons are `permission`, `throttling`, `precommand`)
    * @param data Additional data associated with the block.
    * - permission: `response` ({@link string}) to send
    * - throttling: `throttle` ({@link Object}), `remaining` ({@link number}) time in seconds
@@ -206,6 +206,12 @@ export class SlashCommand<T = any> {
       case 'throttling': {
         return ctx.send(
           `You may not use the \`${this.commandName}\` command again for another ${data.remaining.toFixed(1)} seconds.`,
+          { ephemeral: true }
+        );
+      }
+      case 'precommand': {
+        return ctx.send(
+          `The \`${this.commandName}\` command was blocked from running.`,
           { ephemeral: true }
         );
       }

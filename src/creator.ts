@@ -727,9 +727,19 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
             this.emit('commandBlock', command, ctx, 'throttling', data);
             return command.onBlock(ctx, 'throttling', data);
           }
+          if (throttle) throttle.usages++;
+
+          // Run precommand callback
+          if (this.options.precommandCallback) {
+            const cb = await this.options.precommandCallback(command, ctx);
+            if (!cb) {
+              // Response was already have been handled by the callback.
+              if (ctx.initiallyResponded && ctx.deferred) return;
+              return command.onBlock(ctx, 'precommand');
+            }
+          }
 
           // Run the command
-          if (throttle) throttle.usages++;
           return this._runCommand(command, ctx);
         }
       }
@@ -918,6 +928,11 @@ export interface SlashCreatorOptions {
    * rather than handle it automatically.
    */
   handleCommandsManually?: boolean;
+  /**
+   * Add your own custom handlers to execute before the command is ran.
+   * @returns true to continue, otherwise false to stop.
+   */
+  precommandCallback?: (command: SlashCommand<any>, ctx: CommandContext) => boolean;
   /** Whether to disable automatic defer/acknowledge timeouts. */
   disableTimeouts?: boolean;
   /** Whether to enable automatic component timeouts. */

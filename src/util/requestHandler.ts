@@ -338,9 +338,12 @@ export class RequestHandler {
                   }
                 } else if (resp.statusCode === 502 && ++attempts < 4) {
                   this._creator.emit('debug', 'A wild 502 appeared! Thanks CloudFlare!');
-                  setTimeout(() => {
-                    this.request(method, url, auth, body, file, reason, route, true).then(resolve).catch(reject);
-                  }, Math.floor(Math.random() * 1900 + 100));
+                  setTimeout(
+                    () => {
+                      this.request(method, url, auth, body, file, reason, route, true).then(resolve).catch(reject);
+                    },
+                    Math.floor(Math.random() * 1900 + 100)
+                  );
                   return cb();
                 }
                 cb();

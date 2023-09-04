@@ -71,7 +71,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "fastify": "^4.9.0",
     "husky": "^8.0.1",
-    "lint-staged": "^13.0.0",
+    "lint-staged": "^14.0.1",
     "mocha": "^10.0.0",
     "nock": "^13.1.1",
     "prettier": "^2.3.2",

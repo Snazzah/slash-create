@@ -868,6 +868,15 @@ export interface ComponentSelectMenu {
   disabled?: boolean;
   /** An array of channel types this select can use. Only used for channel selects. */
   channel_types?: ChannelType[];
+  /** An array of default values. */
+  default_values?: SelectDefaultValue[];
+}
+
+export interface SelectDefaultValue {
+  /** The ID of the object */
+  id: string;
+  /** The type that the ID represents. */
+  type: 'user' | 'role' | 'channel';
 }
 
 export interface ComponentSelectOption {

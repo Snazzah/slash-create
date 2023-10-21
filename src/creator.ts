@@ -90,7 +90,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         latencyThreshold: 30000,
         ratelimiterOffset: 0,
         requestTimeout: 15000,
-        maxSignatureTimestamp: 5000,
         endpointPath: '/interactions',
         serverPort: 8030,
         serverHost: 'localhost'
@@ -555,23 +554,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     const signature = treq.headers['x-signature-ed25519'] as string;
     const timestamp = treq.headers['x-signature-timestamp'] as string;
 
-    // Check if both signature and timestamp exists, and the timestamp isn't past due.
-    if (
-      !signature ||
-      !timestamp ||
-      parseInt(timestamp) < (Date.now() - (this.options.maxSignatureTimestamp as number)) / 1000
-    ) {
-      this.emit(
-        'debug',
-        'A request failed to be verified due to a bad timestamp. If this error persists, consider increasing maxSignatureTimestamp'
-      );
-      this.emit('unverifiedRequest', treq);
-      return respond({
-        status: 401,
-        body: 'Invalid signature'
-      });
-    }
-
     const verified = await verifyKey(JSON.stringify(treq.body), signature, timestamp, this.options.publicKey as string);
 
     if (!verified) {
@@ -880,8 +862,6 @@ export interface SlashCreatorOptions {
   ratelimiterOffset?: number;
   /** A number of milliseconds before requests are considered timed out. */
   requestTimeout?: number;
-  /** A number of milliseconds before requests with a timestamp past that time get rejected. */
-  maxSignatureTimestamp?: number;
   /** A HTTP Agent used to proxy requests */
   agent?: HTTPS.Agent;
   /** The client to pass to the creator */

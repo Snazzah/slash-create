@@ -59,7 +59,6 @@ describe('SlashCreator', () => {
         latencyThreshold: 30000,
         ratelimiterOffset: 0,
         requestTimeout: 15000,
-        maxSignatureTimestamp: 5000,
         endpointPath: '/interactions',
         serverPort: 8030,
         serverHost: 'localhost'

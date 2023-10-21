@@ -32,10 +32,11 @@ export const creatorNoToken = new SlashCreator({
 
 export const user = {
   id: '0',
-  username: 'Clyde',
-  discriminator: '0000',
+  username: 'clyde',
+  discriminator: '0',
+  global_name: 'Clyde',
   avatar: null,
-  avatar_decoration: null,
+  avatar_decoration_data: null,
   public_flags: 0
 };
 
@@ -85,6 +86,7 @@ export const interactionDefaults: InteractionRequestData = {
   id: '00000000000000000',
   channel_id: '00000000000000000',
   guild_id: '00000000000000000',
+  entitlements: [],
   member: {
     user,
     roles: [],
@@ -128,6 +130,7 @@ export const basicMessageInteraction: MessageComponentRequestData = {
   id: '00000000000000000',
   channel_id: '00000000000000000',
   guild_id: '00000000000000000',
+  entitlements: [],
   member: {
     user,
     roles: [],

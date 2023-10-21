@@ -235,6 +235,28 @@ export class MessageInteractionContext extends BaseInteractionContext {
   }
 
   /**
+   * Creates a message that prompts the user for a premium subscription.
+   * @returns Whether the message passed
+   */
+  async promptPremium(): Promise<boolean> {
+    if (!this.initiallyResponded && !this.deferred) {
+      this.initiallyResponded = true;
+      this.deferred = true;
+      clearTimeout(this._timeout);
+      await this._respond({
+        status: 200,
+        body: {
+          type: InteractionResponseType.PREMIUM_REQUIRED,
+          data: {}
+        }
+      });
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
    * Registers a component callback from the initial message.
    * This unregisters automatically when the context expires.
    * @param custom_id The custom ID of the component to register

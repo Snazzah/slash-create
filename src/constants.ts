@@ -47,7 +47,9 @@ export enum InteractionResponseType {
   /** Responds to an autocomplete interaction request. */
   APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = 8,
   /** Respond to an interaction with a popup modal. */
-  MODAL = 9
+  MODAL = 9,
+  /** Respond to an interaction with prompt for a premium subscription. */
+  PREMIUM_REQUIRED = 10
 }
 
 /** Message flags for interaction responses. */
@@ -353,6 +355,7 @@ export interface DMModalSubmitRequestData {
   user: CommandUser;
   message?: MessageData;
   app_permissions?: string;
+  entitlements: AppEntitlement[];
   data: {
     custom_id: string;
     components: ComponentActionRow[];
@@ -376,6 +379,7 @@ export interface GuildModalSubmitRequestData {
   member: CommandMember;
   message?: MessageData;
   app_permissions?: string;
+  entitlements: AppEntitlement[];
   data: {
     custom_id: string;
     components: ComponentActionRow[];
@@ -403,6 +407,7 @@ export interface DMInteractionRequestData {
   user: CommandUser;
   channel: CommandChannel;
   app_permissions?: string;
+  entitlements: AppEntitlement[];
   data: CommandData;
 }
 
@@ -423,6 +428,7 @@ export interface GuildInteractionRequestData {
   member: CommandMember;
   channel: CommandChannel;
   app_permissions?: string;
+  entitlements: AppEntitlement[];
   data: CommandData;
 }
 
@@ -467,6 +473,7 @@ export interface DMMessageComponentRequestData {
   user: CommandUser;
   channel: CommandChannel;
   app_permissions?: string;
+  entitlements: AppEntitlement[];
   data: {
     custom_id: string;
     component_type: ComponentType;
@@ -489,12 +496,29 @@ export interface GuildMessageComponentRequestData {
   guild_id: string;
   member: CommandMember;
   channel: CommandChannel;
+  entitlements: AppEntitlement[];
   app_permissions?: string;
   data: {
     custom_id: string;
     component_type: ComponentType;
     values?: string[];
   };
+}
+
+export interface AppEntitlement {
+  id: string;
+  sku_id: string;
+  user_id?: string;
+  guild_id?: string;
+  application_id: string;
+  type: EntitlementType;
+  consumed: false;
+  starts_at?: string;
+  ends_at?: string;
+}
+
+export enum EntitlementType {
+  APPLICATION_SUBSCRIPTION = 8
 }
 
 /**
@@ -578,10 +602,15 @@ export interface CommandUser {
   id: string;
   username: string;
   avatar: string | null;
-  avatar_decoration: string | null;
+  avatar_decoration_data: AvatarDecorationData | null;
   global_name: string | null;
   discriminator: string;
   public_flags: number;
+}
+
+export interface AvatarDecorationData {
+  sku_id: string;
+  asset: string;
 }
 
 /** @private */
@@ -858,6 +887,15 @@ export interface ComponentSelectMenu {
   disabled?: boolean;
   /** An array of channel types this select can use. Only used for channel selects. */
   channel_types?: ChannelType[];
+  /** An array of default values. */
+  default_values?: SelectDefaultValue[];
+}
+
+export interface SelectDefaultValue {
+  /** The ID of the object */
+  id: string;
+  /** The type that the ID represents. */
+  type: 'user' | 'role' | 'channel';
 }
 
 export interface ComponentSelectOption {

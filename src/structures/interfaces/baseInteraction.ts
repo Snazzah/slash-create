@@ -2,7 +2,7 @@ import { SlashCreator } from '../../creator';
 import { Member } from '../member';
 import { User } from '../user';
 import { Permissions } from '../permissions';
-import { AttachmentData } from '../../constants';
+import { AppEntitlement, AttachmentData } from '../../constants';
 import { Collection } from '../../util/collection';
 import { Channel } from '../channel';
 import { Message } from '../message';
@@ -35,6 +35,8 @@ export class BaseInteractionContext {
   readonly invokedAt: number = Date.now();
   /** The permissions the application has. */
   readonly appPermissions?: Permissions;
+  /** The entitlements the invoking user has. */
+  readonly entitlements: AppEntitlement[];
 
   /** The resolved users of the interaction. */
   readonly users = new Collection<string, User>();
@@ -66,6 +68,7 @@ export class BaseInteractionContext {
     this.user = new User('guild_id' in data ? data.member.user : data.user, this.creator);
     this.channel = new Channel(data.channel);
     this.appPermissions = data.app_permissions ? new Permissions(BigInt(data.app_permissions)) : undefined;
+    this.entitlements = data.entitlements;
 
     if (data.data.resolved) {
       if (data.data.resolved.users)

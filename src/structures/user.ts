@@ -1,4 +1,12 @@
-import { CDN_URL, Endpoints, ImageFormat, ImageFormats, ImageSizeBoundaries, UserObject } from '../constants';
+import {
+  AvatarDecorationData,
+  CDN_URL,
+  Endpoints,
+  ImageFormat,
+  ImageFormats,
+  ImageSizeBoundaries,
+  UserObject
+} from '../constants';
 import { SlashCreator } from '../creator';
 import { UserFlags } from './userFlags';
 
@@ -14,8 +22,8 @@ export class User {
   readonly discriminator: string;
   /** The user's avatar hash. */
   readonly avatar?: string;
-  /** The user's avatar decoration hash. */
-  readonly avatarDecoration?: string;
+  /** The user's avatar decoration data. */
+  readonly avatarDecorationData?: AvatarDecorationData;
   /** Whether the user is a bot. */
   readonly bot: boolean;
 
@@ -37,7 +45,7 @@ export class User {
     this.discriminator = data.discriminator;
     this.globalName = data.global_name;
     if (data.avatar) this.avatar = data.avatar;
-    if (data.avatar_decoration) this.avatarDecoration = data.avatar_decoration;
+    if (data.avatar_decoration_data) this.avatarDecorationData = data.avatar_decoration_data;
     this._flags = data.public_flags;
     this.bot = data.bot || false;
   }
@@ -60,7 +68,7 @@ export class User {
 
   /** The hash for the default avatar of a user if there is no avatar set. */
   get defaultAvatar() {
-    if (this.discriminator === '0') return Number((BigInt(this.id) >> 22n) % 5n);
+    if (this.discriminator === '0') return Number((BigInt(this.id) >> 22n) % 6n);
     return parseInt(this.discriminator) % 5;
   }
 
@@ -91,23 +99,7 @@ export class User {
 
   /** The URL of the user's avatar decoration. */
   get avatarDecorationURL() {
-    return this.dynamicAvatarDecorationURL();
-  }
-
-  /**
-   * Get the user's avatar decoration with the given format and size.
-   * @param format The format of the avatar
-   * @param size The size of the avatar
-   */
-  dynamicAvatarDecorationURL(format?: ImageFormat, size?: number) {
-    if (!this.avatarDecoration) return null;
-    if (!format || !ImageFormats.includes(format.toLowerCase())) format = this._creator.options.defaultImageFormat;
-    if (!size || size < ImageSizeBoundaries.MINIMUM || size > ImageSizeBoundaries.MAXIMUM || size & (size - 1))
-      size = this._creator.options.defaultImageSize;
-
-    let path = Endpoints.USER_AVATAR_DECORATION(this.id, this.avatarDecoration);
-    if (this.avatarDecoration.startsWith('v2_')) path = Endpoints.USER_AVATAR_DECORATION_PRESET(this.avatarDecoration);
-
-    return `${CDN_URL}${path}.${format}?size=${size}`;
+    if (!this.avatarDecorationData) return null;
+    return `${CDN_URL}${Endpoints.USER_AVATAR_DECORATION_PRESET(this.avatarDecorationData.asset)}.png`;
   }
 }

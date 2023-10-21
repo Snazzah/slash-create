@@ -216,14 +216,6 @@ export class SlashCommand<T = any> {
     return throttle;
   }
 
-  /** Reloads the command. */
-  reload() {
-    if (!this.filePath) throw new Error('Cannot reload a command without a file path defined!');
-    if (require.cache[this.filePath]) delete require.cache[this.filePath];
-    const newCommand = require(this.filePath);
-    this.creator.reregisterCommand(newCommand, this);
-  }
-
   /** Unloads the command. */
   unload() {
     if (this.filePath && require.cache[this.filePath]) delete require.cache[this.filePath];

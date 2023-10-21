@@ -161,7 +161,7 @@ export const selectMessageInteraction: MessageComponentRequestData = {
   ...basicMessageInteraction,
   data: {
     custom_id: '0',
-    component_type: ComponentType.SELECT,
+    component_type: ComponentType.STRING_SELECT,
     values: ['1', '2']
   }
 };

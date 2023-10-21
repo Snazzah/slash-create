@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import HTTPS from 'https';
+import type HTTPS from 'node:https';
 import {
   formatAllowedMentions,
   FormattedAllowedMentions,
@@ -32,7 +32,6 @@ import { CommandContext } from './structures/interfaces/commandContext';
 import isEqual from 'lodash.isequal';
 import { ComponentContext } from './structures/interfaces/componentContext';
 import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
-import path from 'path';
 import { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
 
 /** The main class for using commands and interactions. */
@@ -171,16 +170,16 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   /**
    * Registers all commands in a directory. The files must export a Command class constructor or instance.
    * @param commandsPath The path to the command directory
-   * @param customExtensions An array of custom file extensions (`.js` and `.cjs` are already included)
+   * @param extensionsOrFilter An array of custom file extensions (with `.js` and `.cjs` already included) or a function that filters file names
    * @example
-   * const path = require('path');
-   * await creator.registerCommandsIn(path.join(__dirname, 'commands'));
+   * await creator.registerCommandsIn(require('path').join(__dirname, 'commands'));
    */
   async registerCommandsIn(commandPath: string, extensionsOrFilter: string[] | FileFilter = []) {
+    const { extname } = await import('node:path');
     const extensions = ['.js', '.cjs', ...(Array.isArray(extensionsOrFilter) ? extensionsOrFilter : [])];
     const files = await getFiles(commandPath);
     const filter: FileFilter =
-      typeof extensionsOrFilter == 'function' ? extensionsOrFilter : (file) => extensions.includes(path.extname(file));
+      typeof extensionsOrFilter == 'function' ? extensionsOrFilter : (file) => extensions.includes(extname(file));
     const filteredFiles = files.filter(filter);
     const commands: any[] = [];
     for (const filePath of filteredFiles) {
@@ -192,34 +191,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     }
 
     return this.registerCommands(commands, true);
-  }
-
-  /**
-   * Reregisters a command. (does not support changing name, or guild IDs)
-   * @param command New command
-   * @param oldCommand Old command
-   */
-  reregisterCommand(command: any, oldCommand: SlashCommand) {
-    if (typeof command === 'function') command = new command(this);
-    else if (typeof command.default === 'function') command = new command.default(this);
-
-    if (command.creator !== this) throw new Error(`Invalid command object to reregister: ${command}`);
-    const slashCommand = command as SlashCommand;
-
-    oldCommand.onUnload();
-
-    if (!slashCommand.unknown) {
-      if (slashCommand.commandName !== oldCommand.commandName) throw new Error('Command name cannot change.');
-      if (!isEqual(slashCommand.guildIDs, oldCommand.guildIDs)) throw new Error('Command guild IDs cannot change.');
-      this.commands.set(slashCommand.keyName, slashCommand);
-    } else if (this.unknownCommand !== oldCommand) {
-      throw new Error('An unknown command is already registered.');
-    } else {
-      this.unknownCommand = slashCommand;
-    }
-
-    this.emit('commandReregister', slashCommand, oldCommand);
-    this.emit('debug', `Reregistered command ${slashCommand.keyName}.`);
   }
 
   /**

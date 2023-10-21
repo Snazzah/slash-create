@@ -144,6 +144,22 @@ export function generateID() {
   return (Date.now() + Math.round(Math.random() * 1000)).toString(36);
 }
 
+/**
+ * Calculates the timestamp in milliseconds associated with a Discord ID/snowflake
+ * @param id The ID of a structure
+ */
+export function getCreatedAt(id: string) {
+  return getDiscordEpoch(id) + 1420070400000;
+}
+
+/**
+ * Gets the number of milliseconds since epoch represented by an ID/snowflake
+ * @param id The ID of a structure
+ */
+export function getDiscordEpoch(id: string) {
+  return Math.floor(Math.floor(Number(BigInt(id) / 4194304n)));
+}
+
 /** The allowed mentions for a {@link Message}. */
 export interface MessageAllowedMentions {
   everyone: boolean;

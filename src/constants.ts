@@ -12,6 +12,8 @@ export const VERSION: string = require('../package.json').version;
 
 export const API_VERSION = 10;
 export const INTERACTION_VERSION = 1;
+export const BASE_URL = 'https://discord.com/api/v' + API_VERSION;
+/** @deprecated */
 export const API_BASE_URL = `/api/v${API_VERSION}`;
 export const CDN_URL = 'https://cdn.discordapp.com';
 

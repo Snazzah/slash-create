@@ -90,11 +90,10 @@ export class Message {
   /**
    * Edits this message.
    * @param content The content of the message
-   * @param options The message options
    */
-  edit(content: string | EditMessageOptions, options?: EditMessageOptions) {
+  edit(content: string | EditMessageOptions) {
     if (!this._ctx) throw new Error('This message was not created from a command context.');
-    return this._ctx.edit(this.id, content, options);
+    return this._ctx.edit(this.id, content);
   }
 
   /** Deletes this message. */

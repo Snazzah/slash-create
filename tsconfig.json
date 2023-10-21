@@ -5,7 +5,8 @@
     "lib": [
       "es2017",
       "es7",
-      "es6"
+      "es6",
+      "dom"
     ],
     "declaration": true,
     "outDir": "lib",

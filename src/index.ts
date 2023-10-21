@@ -8,12 +8,9 @@ export * from './server';
 
 export * from './util/bitfield';
 export * from './util/collection';
-export * from './util/requestHandler';
-export * from './util/sequentialBucket';
-export * from './util/multipartData';
 
-export * from './errors/DiscordHTTPError';
-export * from './errors/DiscordRESTError';
+export * from './rest/DiscordHTTPError';
+export * from './rest/DiscordRESTError';
 
 export * from './servers/lambda';
 export * from './servers/azure';

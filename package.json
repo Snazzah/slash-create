@@ -48,7 +48,8 @@
   "dependencies": {
     "eventemitter3": "^5.0.1",
     "lodash.isequal": "^4.5.0",
-    "tweetnacl": "^1.0.3"
+    "tweetnacl": "^1.0.3",
+    "undici": "^5.26.4"
   },
   "devDependencies": {
     "@sinonjs/fake-timers": "6.0.1",

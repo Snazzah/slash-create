@@ -1,11 +1,7 @@
-import {
-  ApplicationCommand,
-  BulkUpdateCommand,
-  Endpoints,
-  GuildApplicationCommandPermissions,
-  PartialApplicationCommand
-} from './constants';
+import { ApplicationCommand, BulkUpdateCommand, Endpoints, PartialApplicationCommand } from './constants';
 import { SlashCreator } from './creator';
+import type { FileContent } from './rest/requestHandler';
+import type { MessageData } from './structures/message';
 
 /** The API handler for {@link SlashCreator}. */
 export class SlashCreatorAPI {
@@ -25,11 +21,10 @@ export class SlashCreatorAPI {
   getCommands(guildID?: string, withLocalizations = false): Promise<ApplicationCommand[]> {
     return this._creator.requestHandler.request(
       'GET',
-
-      (guildID
+      guildID
         ? Endpoints.GUILD_COMMANDS(this._creator.options.applicationID, guildID)
-        : Endpoints.COMMANDS(this._creator.options.applicationID)) +
-        (withLocalizations ? '?with_localizations=true' : '')
+        : Endpoints.COMMANDS(this._creator.options.applicationID),
+      { auth: true, query: { with_localizations: withLocalizations } }
     );
   }
 
@@ -44,8 +39,7 @@ export class SlashCreatorAPI {
       guildID
         ? Endpoints.GUILD_COMMANDS(this._creator.options.applicationID, guildID)
         : Endpoints.COMMANDS(this._creator.options.applicationID),
-      true,
-      command
+      { auth: true, body: command }
     );
   }
 
@@ -61,8 +55,7 @@ export class SlashCreatorAPI {
       guildID
         ? Endpoints.GUILD_COMMAND(this._creator.options.applicationID, guildID, commandID)
         : Endpoints.COMMAND(this._creator.options.applicationID, commandID),
-      true,
-      command
+      { auth: true, body: command }
     );
   }
 
@@ -77,8 +70,7 @@ export class SlashCreatorAPI {
       guildID
         ? Endpoints.GUILD_COMMANDS(this._creator.options.applicationID, guildID)
         : Endpoints.COMMANDS(this._creator.options.applicationID),
-      true,
-      commands
+      { auth: true, body: commands }
     );
   }
 
@@ -92,21 +84,82 @@ export class SlashCreatorAPI {
       'DELETE',
       guildID
         ? Endpoints.GUILD_COMMAND(this._creator.options.applicationID, guildID, commandID)
-        : Endpoints.COMMAND(this._creator.options.applicationID, commandID)
+        : Endpoints.COMMAND(this._creator.options.applicationID, commandID),
+      { auth: true }
     );
   }
 
-  getGuildCommandPermissions(guildID: string): Promise<GuildApplicationCommandPermissions[]> {
+  /**
+   * Creates a follow up message.
+   * @param interactionID The interaction's ID.
+   * @param interactionToken The interaction's token.
+   * @param body The body to send.
+   * @param files The files to send.
+   */
+  followUpMessage(
+    interactionID: string,
+    interactionToken: string,
+    body: any,
+    files?: FileContent[]
+  ): Promise<MessageData> {
+    return this._creator.requestHandler.request('POST', Endpoints.FOLLOWUP_MESSAGE(interactionID, interactionToken), {
+      auth: true,
+      body,
+      files
+    });
+  }
+
+  /**
+   * Fetches a message from an interaction.
+   * @param interactionID The interaction's ID.
+   * @param interactionToken The interaction's token.
+   * @param messageID The message ID to fetch.
+   */
+  fetchInteractionMessage(interactionID: string, interactionToken: string, messageID: string): Promise<MessageData> {
+    return this._creator.requestHandler.request('GET', Endpoints.MESSAGE(interactionID, interactionToken, messageID), {
+      auth: true
+    });
+  }
+
+  /**
+   * Updates a message from an interaction.
+   * @param interactionID The interaction's ID.
+   * @param interactionToken The interaction's token.
+   * @param messageID The message ID to update.
+   * @param body The body to send.
+   * @param files The files to send.
+   */
+  updateInteractionMessage(
+    interactionID: string,
+    interactionToken: string,
+    messageID: string,
+    body: any,
+    files?: FileContent[]
+  ): Promise<MessageData> {
     return this._creator.requestHandler.request(
-      'GET',
-      Endpoints.GUILD_COMMAND_PERMISSIONS(this._creator.options.applicationID, guildID)
+      'PATCH',
+      Endpoints.MESSAGE(interactionID, interactionToken, messageID),
+      {
+        auth: true,
+        body,
+        files
+      }
     );
   }
 
-  getCommandPermissions(guildID: string, commandID: string): Promise<GuildApplicationCommandPermissions> {
+  /**
+   * Deletes a message from an interaction.
+   * @param interactionID The interaction's ID.
+   * @param interactionToken The interaction's token.
+   * @param messageID The message ID to delete.
+   */
+  deleteInteractionMessage(interactionID: string, interactionToken: string, messageID = '@original'): Promise<void> {
     return this._creator.requestHandler.request(
-      'GET',
-      Endpoints.COMMAND_PERMISSIONS(this._creator.options.applicationID, guildID, commandID)
+      'DELETE',
+      Endpoints.MESSAGE(interactionID, interactionToken, messageID),
+      {
+        auth: true
+      }
     );
   }
 
@@ -117,13 +170,16 @@ export class SlashCreatorAPI {
    * @param body The body to send.
    * @param files The files to send.
    */
-  interactionCallback(interactionID: string, interactionToken: string, body: any, files?: any[]): Promise<unknown> {
+  interactionCallback(
+    interactionID: string,
+    interactionToken: string,
+    body: any,
+    files?: FileContent[]
+  ): Promise<unknown> {
     return this._creator.requestHandler.request(
       'POST',
       Endpoints.INTERACTION_CALLBACK(interactionID, interactionToken),
-      false,
-      body,
-      files
+      { auth: false, body, files }
     );
   }
 }

@@ -1,5 +1,4 @@
 import EventEmitter from 'eventemitter3';
-import type HTTPS from 'node:https';
 import {
   formatAllowedMentions,
   FormattedAllowedMentions,
@@ -24,7 +23,6 @@ import {
 } from './constants';
 import { SlashCommand } from './command';
 import { TypedEventEmitter } from './util/typedEmitter';
-import { RequestHandler } from './util/requestHandler';
 import { Collection } from './util/collection';
 import { SlashCreatorAPI } from './api';
 import { Server, TransformedRequest, RespondFunction, Response } from './server';
@@ -33,6 +31,7 @@ import isEqual from 'lodash.isequal';
 import { ComponentContext } from './structures/interfaces/componentContext';
 import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
 import { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
+import { RequestHandler, RESTOptions } from './rest/requestHandler';
 
 /** The main class for using commands and interactions. */
 export class SlashCreator extends (EventEmitter as any as new () => TypedEventEmitter<SlashCreatorEvents>) {
@@ -98,8 +97,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     );
 
     this.allowedMentions = formatAllowedMentions(this.options.allowedMentions as MessageAllowedMentions);
-
-    this.requestHandler = new RequestHandler(this);
+    this.requestHandler = new RequestHandler(this, { ...(this.options.rest ?? {}), token: this.options.token });
     this.api = new SlashCreatorAPI(this);
   }
 
@@ -856,14 +854,8 @@ export interface SlashCreatorOptions {
   defaultImageFormat?: ImageFormat;
   /** The default image size to provide user avatars in. */
   defaultImageSize?: number;
-  /** The average latency where SlashCreate will start emitting warnings for. */
-  latencyThreshold?: number;
-  /** A number of milliseconds to offset the ratelimit timing calculations by. */
-  ratelimiterOffset?: number;
-  /** A number of milliseconds before requests are considered timed out. */
-  requestTimeout?: number;
-  /** A HTTP Agent used to proxy requests */
-  agent?: HTTPS.Agent;
+  /** The options passed to the request handler. */
+  rest?: RESTOptions;
   /** The client to pass to the creator */
   client?: any;
 }

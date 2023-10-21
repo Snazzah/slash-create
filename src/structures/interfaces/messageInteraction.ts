@@ -1,4 +1,4 @@
-import { ComponentActionRow, Endpoints, InteractionResponseFlags, InteractionResponseType } from '../../constants';
+import { ComponentActionRow, InteractionResponseFlags, InteractionResponseType } from '../../constants';
 import { SlashCreator, ComponentRegisterCallback } from '../../creator';
 import { RespondFunction } from '../../server';
 import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from '../../util';
@@ -33,9 +33,10 @@ export class MessageInteractionContext extends BaseInteractionContext {
    * @param messageID The ID of the message, defaults to the original message
    */
   async fetch(messageID = '@original') {
-    const data = await this.creator.requestHandler.request(
-      'GET',
-      Endpoints.MESSAGE(this.creator.options.applicationID, this.interactionToken, messageID)
+    const data = await this.creator.api.fetchInteractionMessage(
+      this.creator.options.applicationID,
+      this.interactionToken,
+      messageID
     );
 
     if (messageID === '@original') this.messageID = data.id;
@@ -50,22 +51,13 @@ export class MessageInteractionContext extends BaseInteractionContext {
    * This will return a boolean if it's an initial response, otherwise a {@link Message} will be returned.
    * Note that when making a follow-up message, the `ephemeral` option is ignored.
    * @param content The content of the message
-   * @param options The message options
    */
-  async send(content: string | MessageOptions, options?: MessageOptions): Promise<boolean | Message> {
+  async send(content: string | MessageOptions): Promise<boolean | Message> {
     if (this.expired) throw new Error('This interaction has expired');
 
-    if (typeof content !== 'string') options = content;
-    else if (typeof options !== 'object') options = {};
-
+    const options = typeof content === 'string' ? { content } : content;
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
-    options = { ...options };
-
-    if (!options.content && typeof content === 'string') options.content = content;
-
-    if (!options.content && !options.embeds && !options.file)
-      throw new Error('Message content, embeds and files are not given.');
-
+    if (!options.content && !options.embeds && !options.files) throw new Error('No valid options were given.');
     if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 
     const allowedMentions = options.allowedMentions
@@ -89,42 +81,33 @@ export class MessageInteractionContext extends BaseInteractionContext {
             attachments: options.attachments
           }
         },
-        files: options.file ? (Array.isArray(options.file) ? options.file : [options.file]) : undefined
+        files: options.files
       });
       return true;
-    } else if (this.initiallyResponded && this.deferred) return this.editOriginal(content, options);
-    else return this.sendFollowUp(content, options);
+    } else if (this.initiallyResponded && this.deferred) return this.editOriginal(content);
+    else return this.sendFollowUp(options);
   }
 
   /**
    * Sends a follow-up message.
    * @param content The content of the message
-   * @param options The message options
    */
-  async sendFollowUp(content: string | MessageOptions, options?: MessageOptions): Promise<Message> {
+  async sendFollowUp(content: string | MessageOptions): Promise<Message> {
     if (this.expired) throw new Error('This interaction has expired');
 
-    if (typeof content !== 'string') options = content;
-    else if (typeof options !== 'object') options = {};
-
+    const options = typeof content === 'string' ? { content } : content;
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
-    options = { ...options };
-
-    if (!options.content && typeof content === 'string') options.content = content;
-
-    if (!options.content && !options.embeds && !options.file)
+    if (!options.content && !options.embeds && !options.files)
       throw new Error('Message content, embeds or files need to be given.');
-
     if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
       : this.creator.allowedMentions;
 
-    const data = await this.creator.requestHandler.request(
-      'POST',
-      Endpoints.FOLLOWUP_MESSAGE(this.creator.options.applicationID, this.interactionToken),
-      true,
+    const data = await this.creator.api.followUpMessage(
+      this.creator.options.applicationID,
+      this.interactionToken,
       {
         tts: options.tts,
         content: options.content,
@@ -134,7 +117,7 @@ export class MessageInteractionContext extends BaseInteractionContext {
         flags: options.flags,
         attachments: options.attachments
       },
-      options.file
+      options.files
     );
     return new Message(data, this.creator, this);
   }
@@ -143,30 +126,23 @@ export class MessageInteractionContext extends BaseInteractionContext {
    * Edits a message.
    * @param messageID The message's ID
    * @param content The content of the message
-   * @param options The message options
    */
-  async edit(messageID: string, content: string | EditMessageOptions, options?: EditMessageOptions) {
+  async edit(messageID: string, content: string | EditMessageOptions) {
     if (this.expired) throw new Error('This interaction has expired');
 
-    if (typeof content !== 'string') options = content;
-    else if (typeof options !== 'object') options = {};
-
+    const options = typeof content === 'string' ? { content } : content;
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
-    options = { ...options };
-
-    if (!options.content && typeof content === 'string') options.content = content;
-
-    if (!options.content && !options.embeds && !options.components && !options.file && !options.attachments)
+    if (!options.content && !options.embeds && !options.components && !options.files && !options.attachments)
       throw new Error('No valid options were given.');
 
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
       : this.creator.allowedMentions;
 
-    const data = await this.creator.requestHandler.request(
-      'PATCH',
-      Endpoints.MESSAGE(this.creator.options.applicationID, this.interactionToken, messageID),
-      true,
+    const data = await this.creator.api.updateInteractionMessage(
+      this.creator.options.applicationID,
+      this.interactionToken,
+      messageID,
       {
         content: options.content,
         embeds: options.embeds,
@@ -174,7 +150,7 @@ export class MessageInteractionContext extends BaseInteractionContext {
         components: options.components,
         attachments: options.attachments
       },
-      options.file
+      options.files
     );
     return new Message(data, this.creator, this);
   }
@@ -185,9 +161,9 @@ export class MessageInteractionContext extends BaseInteractionContext {
    * @param content The content of the message
    * @param options The message options
    */
-  async editOriginal(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<Message> {
+  async editOriginal(content: string | EditMessageOptions): Promise<Message> {
     this.deferred = false;
-    const message = await this.edit('@original', content, options);
+    const message = await this.edit('@original', content);
     this.messageID = message.id;
     return message;
   }
@@ -199,13 +175,12 @@ export class MessageInteractionContext extends BaseInteractionContext {
   async delete(messageID?: string) {
     if (this.expired) throw new Error('This interaction has expired');
 
-    const res = await this.creator.requestHandler.request(
-      'DELETE',
-      Endpoints.MESSAGE(this.creator.options.applicationID, this.interactionToken, messageID)
+    await this.creator.api.deleteInteractionMessage(
+      this.creator.options.applicationID,
+      this.interactionToken,
+      messageID
     );
-
     if (!messageID || messageID === '@original') this.messageID = undefined;
-    return res;
   }
 
   /**
@@ -382,12 +357,8 @@ export interface EditMessageOptions {
   embeds?: MessageEmbedOptions[];
   /** The mentions allowed to be used in this message. */
   allowedMentions?: MessageAllowedMentions;
-  /**
-   * The attachment(s) to send with the message.
-   * Note that ephemeral messages and initial messages cannot have
-   * attachments.
-   */
-  file?: MessageFile | MessageFile[];
+  /** The attachment(s) to send with the message. */
+  files?: MessageFile[];
   /** The components of the message. */
   components?: ComponentActionRow[];
   /** The attachment data of the message. */

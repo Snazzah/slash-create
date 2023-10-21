@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { AnyRequestData } from './constants';
+import type { FileContent } from './rest/requestHandler';
 
 /**
  * The base Server for {@link SlashCreator}.
@@ -74,7 +75,7 @@ export interface Response {
   /** The body of the response. */
   body?: any;
   /** The files of the response. */
-  files?: any[];
+  files?: FileContent[];
 }
 
 /**

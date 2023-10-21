@@ -604,10 +604,15 @@ export interface CommandUser {
   id: string;
   username: string;
   avatar: string | null;
-  avatar_decoration: string | null;
+  avatar_decoration_data: AvatarDecorationData | null;
   global_name: string | null;
   discriminator: string;
   public_flags: number;
+}
+
+export interface AvatarDecorationData {
+  sku_id: string;
+  asset: string;
 }
 
 /** @private */

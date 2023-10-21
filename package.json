@@ -33,7 +33,7 @@
     "lint:fix": "npx eslint --ext .ts ./src --fix",
     "test": "npx mocha -r tsx --extension ts 'test/**/*.ts'",
     "gpr": "tsx scripts/gpr",
-    "prepare": "npx husky install && npm run build:prepare",
+    "prepare": "npm run build:prepare",
     "prepublishOnly": "(npx shx test -d ./lib || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
   },
   "lint-staged": {
@@ -71,7 +71,6 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "fastify": "^4.22.2",
-    "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "mocha": "^10.2.0",
     "nock": "^13.3.3",

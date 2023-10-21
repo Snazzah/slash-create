@@ -153,7 +153,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    */
   registerCommands(commands: any[], ignoreInvalid = false) {
     if (!Array.isArray(commands)) throw new TypeError('Commands must be an Array.');
-    const registeredCommands = [];
+    const registeredCommands: SlashCommand<this>[] = [];
     for (const command of commands) {
       try {
         registeredCommands.push(this.registerCommand(command));

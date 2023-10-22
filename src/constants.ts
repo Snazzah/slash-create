@@ -187,11 +187,11 @@ export interface ApplicationCommandOptionBase {
   /** The name of the option. */
   name: string;
   /** The localiztions for the option name. */
-  name_localizations?: Record<string, string>;
+  name_localizations?: Record<string, string> | null;
   /** The description of the option. */
   description: string;
   /** The localiztions for the option description. */
-  description_localizations?: Record<string, string>;
+  description_localizations?: Record<string, string> | null;
   /** Whether the parameter is required. */
   required?: boolean;
 }
@@ -266,7 +266,7 @@ export interface ApplicationCommandOptionChoice {
   /** The value of the choice. */
   value: string | number;
   /** The localiztions for the option name. */
-  name_localizations?: Record<string, string>;
+  name_localizations?: Record<string, string> | null;
 }
 
 /** The type of thing to apply the permission to. */

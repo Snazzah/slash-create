@@ -89,21 +89,28 @@ export class SlashCommand<T = any> {
    * @param global Whether the command is global or not.
    */
   toCommandJSON(global = true): PartialApplicationCommand {
-    const hasAnyLocalizations = !!this.nameLocalizations || !!this.descriptionLocalizations;
     return {
       default_member_permissions: this.requiredPermissions
         ? new Permissions(this.requiredPermissions).valueOf().toString()
         : null,
       type: this.type,
       name: this.commandName,
-      ...(hasAnyLocalizations ? { name_localizations: this.nameLocalizations || null } : {}),
+      name_localizations: this.nameLocalizations || null,
       description: this.description || '',
-      ...(hasAnyLocalizations ? { description_localizations: this.descriptionLocalizations || null } : {}),
+      description_localizations: this.descriptionLocalizations || null,
       ...(global ? { dm_permission: this.dmPermission } : {}),
       nsfw: this.nsfw,
       ...(this.type === ApplicationCommandType.CHAT_INPUT
         ? {
-            ...(this.options ? { options: this.options } : {})
+            ...(this.options
+              ? {
+                  options: this.options.map((o) => ({
+                    ...o,
+                    name_localizations: o.name_localizations || null,
+                    description_localizations: o.description_localizations || null
+                  }))
+                }
+              : {})
           }
         : {})
     };
@@ -159,14 +166,19 @@ export class SlashCommand<T = any> {
   onBlock(ctx: CommandContext, reason: string, data?: any): any {
     switch (reason) {
       case 'permission': {
-        if (data.response) return ctx.send(data.response, { ephemeral: true });
-        return ctx.send(`You do not have permission to use the \`${this.commandName}\` command.`, { ephemeral: true });
+        if (data.response) return ctx.send({ content: data.response, ephemeral: true });
+        return ctx.send({
+          content: `You do not have permission to use the \`${this.commandName}\` command.`,
+          ephemeral: true
+        });
       }
       case 'throttling': {
-        return ctx.send(
-          `You may not use the \`${this.commandName}\` command again for another ${data.remaining.toFixed(1)} seconds.`,
-          { ephemeral: true }
-        );
+        return ctx.send({
+          content: `You may not use the \`${this.commandName}\` command again for another ${data.remaining.toFixed(
+            1
+          )} seconds.`,
+          ephemeral: true
+        });
       }
       default:
         return null;
@@ -180,7 +192,7 @@ export class SlashCommand<T = any> {
    */
   onError(err: Error, ctx: CommandContext): any {
     if (!ctx.expired && !ctx.initiallyResponded)
-      return ctx.send('An error occurred while running the command.', { ephemeral: true });
+      return ctx.send({ content: 'An error occurred while running the command.', ephemeral: true });
   }
 
   /**

@@ -6,12 +6,15 @@ export * from './command';
 export * from './creator';
 export * from './server';
 
+export * from './node/creator';
+
 export * from './util/bitfield';
 export * from './util/collection';
 
 export * from './rest/DiscordHTTPError';
 export * from './rest/DiscordRESTError';
 
+export * from './servers/cfworker';
 export * from './servers/lambda';
 export * from './servers/azure';
 export * from './servers/express';

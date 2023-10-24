@@ -1,12 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import {
-  formatAllowedMentions,
-  FormattedAllowedMentions,
-  getFiles,
-  MessageAllowedMentions,
-  oneLine,
-  verifyKey
-} from './util';
+import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions, oneLine } from './util';
 import {
   ImageFormat,
   InteractionType,
@@ -33,8 +26,8 @@ import { AutocompleteContext } from './structures/interfaces/autocompleteContext
 import { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
 import { RequestHandler, RESTOptions } from './rest/requestHandler';
 
-/** The main class for using commands and interactions. */
-export class SlashCreator extends (EventEmitter as any as new () => TypedEventEmitter<SlashCreatorEvents>) {
+/** The base class for SlashCreators. */
+export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEventEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */
@@ -43,11 +36,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   readonly api = new SlashCreatorAPI(this);
   /** The commands loaded onto the creator */
   readonly commands = new Collection<string, SlashCommand>();
-  /**
-   * The path where the commands were loaded from
-   * @see #registerCommandsIn
-   */
-  commandsPath?: string;
   /** The server being used in the creator */
   server?: Server;
   /** The client being passed to this creator */
@@ -63,7 +51,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   _modalCallbacks = new Map<string, ModalCallback>();
 
   /** @param opts The options for the creator */
-  constructor(opts: SlashCreatorOptions) {
+  constructor(opts: SlashCreatorOptions, requestHandlerOverrides?: any) {
     // eslint-disable-next-line constructor-super
     super();
 
@@ -97,7 +85,11 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     );
 
     this.allowedMentions = formatAllowedMentions(this.options.allowedMentions as MessageAllowedMentions);
-    this.requestHandler = new RequestHandler(this, { ...(this.options.rest ?? {}), token: this.options.token });
+    this.requestHandler = new RequestHandler(this, {
+      ...(this.options.rest ?? {}),
+      token: this.options.token,
+      overrides: requestHandlerOverrides
+    });
     this.api = new SlashCreatorAPI(this);
   }
 
@@ -137,7 +129,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     if (slashCommand.unknown) this.unknownCommand = slashCommand;
     else this.commands.set(slashCommand.keyName, slashCommand);
 
-    this.emit('commandRegister', slashCommand, this);
+    this.emit('commandRegister', slashCommand);
     this.emit('debug', `Registered command ${slashCommand.keyName}.`);
 
     return slashCommand;
@@ -171,23 +163,12 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    * @example
    * await creator.registerCommandsIn(require('path').join(__dirname, 'commands'));
    */
-  async registerCommandsIn(commandPath: string, extensionsOrFilter: string[] | FileFilter = []) {
-    const { extname } = await import('node:path');
-    const extensions = ['.js', '.cjs', ...(Array.isArray(extensionsOrFilter) ? extensionsOrFilter : [])];
-    const files = await getFiles(commandPath);
-    const filter: FileFilter =
-      typeof extensionsOrFilter == 'function' ? extensionsOrFilter : (file) => extensions.includes(extname(file));
-    const filteredFiles = files.filter(filter);
-    const commands: any[] = [];
-    for (const filePath of filteredFiles) {
-      try {
-        commands.push(await import(filePath));
-      } catch (e) {
-        this.emit('error', new Error(`Failed to load command ${filePath}: ${e}`));
-      }
-    }
-
-    return this.registerCommands(commands, true);
+  async registerCommandsIn(
+    commandPath: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    extensionsOrFilter: string[] | FileFilter = []
+  ): Promise<SlashCommand<this>[]> {
+    throw new Error('registerCommandsIn() is not availble in this environment.');
   }
 
   /**
@@ -530,7 +511,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       }
   }
 
-  private _getCommandFromInteraction(interaction: InteractionRequestData | CommandAutocompleteRequestData) {
+  protected _getCommandFromInteraction(interaction: InteractionRequestData | CommandAutocompleteRequestData) {
     return 'guild_id' in interaction
       ? this.commands.find(
           (command) =>
@@ -544,6 +525,11 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       : this.commands.get(`${interaction.data.type}:global:${interaction.data.name}`);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected async _verify(body: string, signature: string, timestamp: string): Promise<boolean> {
+    throw new Error(`${this.constructor.name} doesn't have a _verify() method.`);
+  }
+
   protected async _onRequest(treq: TransformedRequest, respond: RespondFunction) {
     this.emit('debug', 'Got request');
     this.emit('rawRequest', treq);
@@ -552,7 +538,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     const signature = treq.headers['x-signature-ed25519'] as string;
     const timestamp = treq.headers['x-signature-timestamp'] as string;
 
-    const verified = await verifyKey(JSON.stringify(treq.body), signature, timestamp, this.options.publicKey as string);
+    const verified = await this._verify(JSON.stringify(treq.body), signature, timestamp);
 
     if (!verified) {
       this.emit('debug', 'A request failed to be verified');
@@ -785,10 +771,8 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   }
 }
 
-export const Creator = SlashCreator;
-
 /**
- * The events typings for the {@link SlashCreator}.
+ * The events typings for the {@link BaseSlashCreator}.
  * @private
  */
 interface SlashCreatorEvents {
@@ -805,7 +789,7 @@ interface SlashCreatorEvents {
   componentInteraction: (ctx: ComponentContext) => void;
   modalInteraction: (ctx: ModalInteractionContext) => void;
   autocompleteInteraction: (ctx: AutocompleteContext, command?: SlashCommand) => void;
-  commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
+  commandRegister: (command: SlashCommand) => void;
   commandUnregister: (command: SlashCommand) => void;
   commandReregister: (command: SlashCommand, oldCommand: SlashCommand) => void;
   commandBlock: (command: SlashCommand, ctx: CommandContext, reason: string, data: any) => void;

@@ -4,6 +4,18 @@
   "description": "Create and sync Discord slash commands!",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./web": {
+      "types": "./lib/web/index.d.ts",
+      "default": "./lib/web/index.js"
+    },
+    "./lib/*.js": "./lib/*.js",
+    "./package.json": "./package.json"
+  },
   "author": {
     "name": "Snazzah",
     "email": "me@snazzah.com",
@@ -52,6 +64,7 @@
     "undici": "^5.26.4"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231016.0",
     "@sinonjs/fake-timers": "6.0.1",
     "@types/aws-lambda": "^8.10.119",
     "@types/chai": "^4.3.6",

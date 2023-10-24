@@ -1,11 +1,9 @@
-  {
+{
   "compilerOptions": {
     "target": "es2020",
     "module": "commonjs",
     "lib": [
-      "es2017",
-      "es7",
-      "es6",
+      "es2020",
       "dom"
     ],
     "declaration": true,
@@ -25,6 +23,7 @@
     "testing",
     "scripts",
     "examples",
-    "docs"
+    "docs",
+    "./web.d.ts"
   ]
 }

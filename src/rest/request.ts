@@ -1,15 +1,11 @@
 import type { fetch as UndiciFetch, FormData as UndiciFormData, Response } from 'undici';
 import type { FileContent, RequestHandler, RequestOptions } from './requestHandler';
-import type { Blob as NodeBlob, Buffer as NodeBuffer } from 'node:buffer';
+import type { Blob as NodeBlob } from 'node:buffer';
 import { getCreatedAt } from '../util';
 
-const { fetch, FormData }: { fetch: typeof UndiciFetch; FormData: typeof UndiciFormData } =
-  // eslint-disable-next-line no-undef
-  typeof window !== 'undefined' ? window : require('undici');
-
-const { Blob, Buffer }: { Blob: typeof NodeBlob; Buffer: typeof NodeBuffer } =
-  // eslint-disable-next-line no-undef
-  typeof window !== 'undefined' ? window : require('node:buffer');
+// const fetch: typeof UndiciFetch = 'fetch' in globalThis ? globalThis.fetch : require('undici').fetch;
+// const FormData: typeof UndiciFormData = 'FormData' in globalThis ? globalThis.FormData : require('undici').FormData;
+// const Blob: typeof NodeBlob = 'Blob' in globalThis ? globalThis.Blob : require('node:buffer').Blob;
 
 const USER_AGENT = `DiscordBot (https://github.com/Snazzah/slash-create, ${require('../../package.json').version})`;
 
@@ -50,6 +46,9 @@ export class Request {
   /** The URL to make the request to. */
   url: URL;
 
+  /** Overrides for requests. */
+  #overrides?: any;
+
   /**
    * Represents the request.
    * @arg handler Represents the RequestHandler.
@@ -57,25 +56,28 @@ export class Request {
    * @arg path The endpoint to make the request to.
    * @arg options Data regarding the request.
    */
-  constructor(handler: RequestHandler, method: string, path: string, options: RequestOptions) {
+  constructor(
+    handler: RequestHandler,
+    method: string,
+    path: string,
+    options: RequestOptions,
+    overrides?: { fetch?: typeof UndiciFetch; FormData?: typeof UndiciFormData; Blob?: typeof NodeBlob }
+  ) {
     this.handler = handler;
     this.method = method;
     this.path = path;
     this.options = options;
+    this.#overrides = overrides;
 
     this.url = new URL(handler.options.baseURL + path);
     if (typeof options.query === 'object') {
       for (const key in options.query) {
-        if (options.query[key] !== undefined) {
-          this.url.searchParams.append(key, options.query[key]);
-        }
+        if (options.query[key] !== undefined) this.url.searchParams.append(key, options.query[key]);
       }
     }
 
     if (typeof options.headers === 'object') {
-      for (const key in options.headers) {
-        this.headers[key] = options.headers[key];
-      }
+      for (const key in options.headers) this.headers[key] = options.headers[key];
     }
 
     if (options.reason) {
@@ -103,7 +105,7 @@ export class Request {
     const controller = new AbortController();
     setTimeout(() => controller.abort(), this.handler.options.requestTimeout);
 
-    return fetch(this.url, {
+    return (this.#overrides?.fetch || fetch)(this.url, {
       body: this.data,
       dispatcher: this.handler.options.agent,
       headers: this.headers,
@@ -119,20 +121,16 @@ export class Request {
    */
   setBody(body?: Record<string, any>, files?: FileContent[]): Request {
     if (files?.length) {
-      const form = new FormData();
+      const form: UndiciFormData = new (this.#overrides?.FormData || FormData)();
       for (let i = 0; i < files.length; i++) {
         if (files[i]) {
           let file = files[i].file;
-          if (Buffer && file instanceof Buffer) file = new Blob([file]);
+          if ('Buffer' in globalThis && file instanceof Buffer) file = new (this.#overrides?.Blob || Blob)([file]);
           form.append(`files[${i}]`, file, files[i].name);
         }
       }
 
-      if (body) {
-        if (this.options.formData) {
-          for (const key in body) form.append(key, body[key]);
-        } else form.append('payload_json', JSON.stringify(body));
-      }
+      if (body) form.append('payload_json', JSON.stringify(body));
 
       this.data = form;
     } else if (body) {

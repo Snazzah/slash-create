@@ -1,12 +1,12 @@
 import { ComponentActionRow, InteractionResponseType } from '../../constants';
-import { ModalRegisterCallback, SlashCreator } from '../../creator';
+import { ModalRegisterCallback, BaseSlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
 import { generateID } from '../../util';
 import { MessageInteractionContext } from './messageInteraction';
 
 /** Represents an interaction that can send modals. */
 export class ModalSendableContext extends MessageInteractionContext {
-  constructor(creator: SlashCreator, data: any, respond: RespondFunction) {
+  constructor(creator: BaseSlashCreator, data: any, respond: RespondFunction) {
     super(creator, data, respond);
   }
 

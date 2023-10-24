@@ -1,5 +1,5 @@
 import { AnyCommandOption, CommandAutocompleteRequestData, InteractionResponseType } from '../../constants';
-import { SlashCreator } from '../../creator';
+import { BaseSlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
 import { BaseInteractionContext } from './baseInteraction';
 import { CommandContext } from './commandContext';
@@ -25,7 +25,7 @@ export class AutocompleteContext extends BaseInteractionContext {
    * @param data The interaction data.
    * @param respond The response function for the interaction.
    */
-  constructor(creator: SlashCreator, data: CommandAutocompleteRequestData, respond: RespondFunction) {
+  constructor(creator: BaseSlashCreator, data: CommandAutocompleteRequestData, respond: RespondFunction) {
     super(creator, data);
     this._respond = respond;
 

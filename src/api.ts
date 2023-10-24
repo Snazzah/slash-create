@@ -1,15 +1,15 @@
 import { ApplicationCommand, BulkUpdateCommand, Endpoints, PartialApplicationCommand } from './constants';
-import { SlashCreator } from './creator';
+import { BaseSlashCreator } from './creator';
 import type { FileContent } from './rest/requestHandler';
 import type { MessageData } from './structures/message';
 
 /** The API handler for {@link SlashCreator}. */
 export class SlashCreatorAPI {
   /** The parent creator. */
-  private readonly _creator: SlashCreator;
+  private readonly _creator: BaseSlashCreator;
 
   /** @param creator The instantiating creator. */
-  constructor(creator: SlashCreator) {
+  constructor(creator: BaseSlashCreator) {
     this._creator = creator;
   }
 

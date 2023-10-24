@@ -2,7 +2,7 @@ import { SequentialBucket } from './sequentialBucket';
 import { Request } from './request';
 import type { Agent } from 'undici';
 import { BASE_URL } from '../constants';
-import type { SlashCreator } from '../creator';
+import type { BaseSlashCreator } from '../creator';
 
 export interface RESTOptions {
   /** The dispatcher to use for undici. */
@@ -31,8 +31,6 @@ export interface RequestOptions {
   headers?: Record<string, string>;
   /** The files to attach to the request body. */
   files?: FileContent[];
-  /** Whether to attach the body directly to form data instead of "payload_json" when sending files. */
-  formData?: boolean;
   /** An object of query keys and their values. */
   query?: Record<string, any>;
   /** The reason to display in the audit log. */
@@ -50,7 +48,7 @@ export interface FileContent {
  */
 export class RequestHandler {
   /** The creator that instansiated this handler. */
-  creator?: SlashCreator;
+  creator?: BaseSlashCreator;
 
   /** A map with SequentialBuckets. */
   buckets = new Map<string, SequentialBucket>();
@@ -73,12 +71,15 @@ export class RequestHandler {
   /** The authentication token. */
   #token?: string;
 
+  /** Overrides for requests. */
+  #overrides?: any;
+
   /**
    * Represents a class to handle requests.
    * @arg creator The creator that created the handler, if any.
    * @arg options Options for the RequestHandler.
    */
-  constructor(creator?: SlashCreator, options: RESTOptions & { token?: string } = {}) {
+  constructor(creator?: BaseSlashCreator, options: RESTOptions & { token?: string; overrides?: any } = {}) {
     this.creator = creator;
 
     this.options = {
@@ -90,6 +91,7 @@ export class RequestHandler {
     };
 
     if (options.token) this.#token = options.token;
+    if (options.overrides) this.#overrides = options.overrides;
   }
 
   /**
@@ -108,7 +110,7 @@ export class RequestHandler {
    * @returns Resolves with the returned JSON data.
    */
   async request<T = unknown>(method: string, path: string, options: RequestOptions = {}): Promise<T> {
-    const request = new Request(this, method, path, options);
+    const request = new Request(this, method, path, options, this.#overrides);
     if (options.auth) {
       if (!this.#token) throw new Error('Missing required token');
       request.headers['Authorization'] = this.#token;

@@ -1,5 +1,5 @@
 import { ComponentActionRow, InteractionResponseFlags, InteractionResponseType } from '../../constants';
-import { SlashCreator, ComponentRegisterCallback } from '../../creator';
+import { BaseSlashCreator, ComponentRegisterCallback } from '../../creator';
 import { RespondFunction } from '../../server';
 import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from '../../util';
 import { Message, MessageEmbedOptions } from '../message';
@@ -23,7 +23,7 @@ export class MessageInteractionContext extends BaseInteractionContext {
    * @param data The interaction data.
    * @param respond The response function for the interaction.
    */
-  constructor(creator: SlashCreator, data: any, respond: RespondFunction) {
+  constructor(creator: BaseSlashCreator, data: any, respond: RespondFunction) {
     super(creator, data);
     this._respond = respond;
   }

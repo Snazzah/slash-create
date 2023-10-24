@@ -7,7 +7,7 @@ import {
   ResolvedRole,
   RoleTags
 } from '../constants';
-import { SlashCreator } from '../creator';
+import { BaseSlashCreator } from '../creator';
 import { Permissions } from './permissions';
 
 /** Represents a resolved role object. */
@@ -34,7 +34,7 @@ export class Role {
   readonly tags?: RoleTags;
 
   /** The creator of the role class. */
-  private _creator: SlashCreator;
+  private _creator: BaseSlashCreator;
 
   private _permissionsBitfield?: Permissions;
   private _permissions: string;
@@ -42,7 +42,7 @@ export class Role {
   /**
    * @param data The data for the member
    */
-  constructor(data: ResolvedRole, creator: SlashCreator) {
+  constructor(data: ResolvedRole, creator: BaseSlashCreator) {
     this._creator = creator;
 
     this.id = data.id;

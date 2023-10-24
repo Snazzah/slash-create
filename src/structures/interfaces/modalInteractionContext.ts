@@ -4,7 +4,7 @@ import {
   InteractionResponseType,
   ModalSubmitRequestData
 } from '../../constants';
-import { SlashCreator } from '../../creator';
+import { BaseSlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
 import { formatAllowedMentions, FormattedAllowedMentions } from '../../util';
 import { Message } from '../message';
@@ -28,7 +28,7 @@ export class ModalInteractionContext extends MessageInteractionContext {
    * @param respond The response function for the interaction.
    * @param useTimeout Whether to use the deferral timeout.
    */
-  constructor(creator: SlashCreator, data: ModalSubmitRequestData, respond: RespondFunction, useTimeout = true) {
+  constructor(creator: BaseSlashCreator, data: ModalSubmitRequestData, respond: RespondFunction, useTimeout = true) {
     super(creator, data, respond);
 
     this.data = data;

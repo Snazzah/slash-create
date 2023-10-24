@@ -1,13 +1,6 @@
 import { Server, ServerRequestHandler, ServerOptions } from '../server';
 import { MultipartData } from '../util/multipartData';
 
-let fastify: any;
-let symbols: { [key: string]: symbol };
-try {
-  fastify = require('fastify');
-  symbols = require('fastify/lib/symbols');
-} catch {}
-
 /**
  * A server for Fastify applications.
  * @see https://fastify.io
@@ -21,11 +14,16 @@ export class FastifyServer extends Server {
    */
   constructor(app?: any, opts?: ServerOptions) {
     super(opts);
-    if (!fastify) throw new Error('You must have the `fastify` package installed before using this server.');
-    if (!app) {
-      app = fastify.default();
-    } else if (!(symbols.kState in app)) {
-      app = fastify.default(app);
+    try {
+      const fastify = require('fastify');
+      const symbols = require('fastify/lib/symbols');
+      if (!app) {
+        app = fastify.default();
+      } else if (!(symbols.kState in app)) {
+        app = fastify.default(app);
+      }
+    } catch (e) {
+      throw new Error('You must have the `fastify` package installed before using this server.');
     }
     this.app = app;
   }

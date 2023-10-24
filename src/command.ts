@@ -5,7 +5,7 @@ import {
   PermissionNames
 } from './constants';
 import { CommandContext } from './structures/interfaces/commandContext';
-import { SlashCreator } from './creator';
+import { BaseSlashCreator } from './creator';
 import { oneLine, validateOptions } from './util';
 import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
 import { Permissions } from './structures/permissions';
@@ -53,7 +53,7 @@ export class SlashCommand<T = any> {
   ids = new Map<string, string>();
 
   /** The creator responsible for this command. */
-  readonly creator: SlashCreator;
+  readonly creator: BaseSlashCreator;
 
   /** Current throttle objects for the command, mapped by user ID. */
   private _throttles = new Map<string, ThrottleObject>();
@@ -62,7 +62,7 @@ export class SlashCommand<T = any> {
    * @param creator The instantiating creator.
    * @param opts The options for the command.
    */
-  constructor(creator: SlashCreator, opts: SlashCommandOptions) {
+  constructor(creator: BaseSlashCreator, opts: SlashCommandOptions) {
     if (this.constructor.name === 'SlashCommand') throw new Error('The base SlashCommand cannot be instantiated.');
     this.creator = creator;
 

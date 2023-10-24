@@ -88,7 +88,7 @@ export type RespondFunction = (response: Response) => Promise<void>;
  * The handler for pushing requests to a {@link SlashCreator}.
  * @private
  */
-export type ServerRequestHandler = (treq: TransformedRequest, respond: RespondFunction) => void;
+export type ServerRequestHandler = (treq: TransformedRequest, respond: RespondFunction) => Promise<void>;
 
 /**
  * The handler for pushing interaction events to a {@link SlashCreator}.

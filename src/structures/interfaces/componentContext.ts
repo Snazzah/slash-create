@@ -1,6 +1,6 @@
 import { ComponentType, InteractionResponseType, MessageComponentRequestData } from '../../constants';
 import { EditMessageOptions } from './messageInteraction';
-import { SlashCreator } from '../../creator';
+import { BaseSlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
 import { Message } from '../message';
 import { formatAllowedMentions, FormattedAllowedMentions } from '../../util';
@@ -26,7 +26,12 @@ export class ComponentContext extends ModalSendableContext {
    * @param respond The response function for the interaction.
    * @param useTimeout Whether to use the acknowledgement timeout.
    */
-  constructor(creator: SlashCreator, data: MessageComponentRequestData, respond: RespondFunction, useTimeout = true) {
+  constructor(
+    creator: BaseSlashCreator,
+    data: MessageComponentRequestData,
+    respond: RespondFunction,
+    useTimeout = true
+  ) {
     super(creator, data, respond);
     this.data = data;
 

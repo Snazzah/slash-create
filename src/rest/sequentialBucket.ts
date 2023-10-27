@@ -154,18 +154,15 @@ export class SequentialBucket {
       return this.#execute(request, ++attempts);
     }
 
-    // TODO replace
-    // if (this.#handler.rest.listenerCount('response')) {
-    //   this.#handler.rest.emit('response', {
-    //     auth: request.options.auth ?? false,
-    //     body: request.options.body,
-    //     files: request.options.files,
-    //     latency: latency,
-    //     method: request.method,
-    //     response: res.clone(),
-    //     url: request.url
-    //   });
-    // }
+    this.#handler.creator?.emit('rawREST', {
+      auth: request.options.auth ?? false,
+      body: request.options.body,
+      files: request.options.files,
+      latency: latency,
+      method: request.method,
+      response: res.clone() as any,
+      url: request.url
+    });
 
     const retryAfter = this.#handle(request, res, latency);
     this.#handler.creator?.emit(

@@ -13,7 +13,14 @@ export class CloudflareWorkerServer extends Server {
     super({ alreadyListening: true });
   }
 
-  cfEndpoint = async (request: WorkerRequest, env: Record<string, object>, ctx: ExecutionContext) => {
+  /**
+   * The fetch handler for the server. Export this as your fetch handler to utilize this server.
+   * @example
+   * export const workerServer = new CloudflareWorkerServer();
+   * creator.withServer(workerServer);
+   * export default { fetch: workerServer.fetchHandler }
+   */
+  readonly fetchHandler = async (request: WorkerRequest, env: Record<string, object>, ctx: ExecutionContext) => {
     if (!this._handler) return new Response('Server has no handler.', { status: 503 });
     if (request.method !== 'POST') return new Response('Server only supports POST requests.', { status: 405 });
     const body = await request.text();
@@ -50,7 +57,7 @@ export class CloudflareWorkerServer extends Server {
           }
         ).catch(reject)
       );
-    });
+    }) as Promise<Response>;
   };
 
   /** @private */

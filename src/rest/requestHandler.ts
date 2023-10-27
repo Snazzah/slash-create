@@ -37,7 +37,7 @@ export interface RequestOptions {
   reason?: string;
 }
 
-/** @hidden */
+/** @private */
 export interface FileContent {
   file: any;
   name: string;

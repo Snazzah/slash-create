@@ -1,4 +1,3 @@
-import type { IncomingMessage } from 'http';
 import type { SlashCommand } from './command';
 import type { CommandContext } from './structures/interfaces/commandContext';
 import type { RespondFunction, TransformedRequest } from './server';
@@ -7,6 +6,7 @@ import type { MessageData } from './structures/message';
 import type { AutocompleteContext } from './structures/interfaces/autocompleteContext';
 import type { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
 import type { BaseSlashCreator } from './creator';
+import type { FileContent } from './rest/requestHandler';
 
 export const VERSION: string = require('../package.json').version;
 
@@ -298,14 +298,13 @@ export interface GuildApplicationCommandPermissions extends PartialApplicationCo
 
 /** @private */
 export interface RawRequest {
-  method: string;
-  url: string;
   auth: boolean;
-  body: any;
-  route: string;
-  reason?: string;
-  short: boolean;
-  resp: IncomingMessage;
+  body: Record<string, any> | undefined;
+  files: FileContent[] | undefined;
+  latency: number;
+  method: string;
+  response: Response;
+  url: URL;
 }
 
 /** Any interaction request from Discord. */

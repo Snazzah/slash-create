@@ -1,4 +1,5 @@
 import { Server, ServerRequestHandler } from '../server';
+// @ts-ignore
 import type { Request as WorkerRequest, ExecutionContext } from '@cloudflare/workers-types';
 
 /**

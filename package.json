@@ -40,7 +40,7 @@
     "build": "npx rimraf lib && npx tsc",
     "build:prepare": "npx shx test -d ./lib || npm run build",
     "changelog": "tsx scripts/changelog",
-    "docs": "npx typedoc --json .tmp/typedoc-out.json --plugin typedoc-plugin-as-member-of && tsx scripts/docs",
+    "docs": "npx typedoc --json .tmp/typedoc-out.json --excludeExternals --plugin typedoc-plugin-as-member-of && tsx scripts/docs",
     "lint": "npx eslint --ext .ts ./src",
     "lint:fix": "npx eslint --ext .ts ./src --fix",
     "test": "npx mocha -r tsx --extension ts 'test/**/*.ts'",

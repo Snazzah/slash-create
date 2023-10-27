@@ -632,16 +632,14 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
           }
 
           // Throttle the command
-          const throttle = command.throttle(ctx.user.id);
-          if (throttle && command.throttling && throttle.usages + 1 > command.throttling.usages) {
-            const remaining = (throttle.start + command.throttling.duration * 1000 - Date.now()) / 1000;
-            const data = { throttle, remaining };
+          const throttleResult = await command.throttle(ctx);
+          if (throttleResult) {
+            const data = { throttle: throttleResult, remaining: throttleResult.retryAfter };
             this.emit('commandBlock', command, ctx, 'throttling', data);
             return command.onBlock(ctx, 'throttling', data);
           }
 
           // Run the command
-          if (throttle) throttle.usages++;
           return this._runCommand(command, ctx);
         }
       }

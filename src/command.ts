@@ -55,7 +55,7 @@ export class SlashCommand<T = any> {
   /** The creator responsible for this command. */
   readonly creator: BaseSlashCreator;
 
-  /** Current throttle objects for the command, mapped by user ID. */
+  /** @private */
   private _throttles = new Map<string, ThrottleObject>();
 
   /**
@@ -206,26 +206,32 @@ export class SlashCommand<T = any> {
   onUnload(): any {}
 
   /**
-   * Creates/obtains the throttle object for a user, if necessary.
-   * @param userID ID of the user to throttle for
-   * @private
+   * Called in order to throttle command usages before running.
+   * @param ctx The context being throttled
    */
-  throttle(userID: string): ThrottleObject | null {
+  async throttle(ctx: CommandContext): Promise<ThrottleResult | null> {
     if (!this.throttling) return null;
+    const userID = ctx.user.id;
 
     let throttle = this._throttles.get(userID);
-    if (!throttle) {
+    if (!throttle || throttle.start + this.throttling.duration * 1000 - Date.now() < 0) {
+      if (throttle) clearTimeout(throttle.timeout);
       throttle = {
         start: Date.now(),
         usages: 0,
-        timeout: setTimeout(() => {
-          this._throttles.delete(userID);
-        }, this.throttling.duration * 1000)
+        timeout: setTimeout(() => this._throttles.delete(userID), this.throttling.duration * 1000)
       };
       this._throttles.set(userID, throttle);
     }
 
-    return throttle;
+    // Return throttle result if the user has been throttled
+    if (throttle.usages + 1 > this.throttling.usages) {
+      const retryAfter = (throttle.start + this.throttling.duration * 1000 - Date.now()) / 1000;
+      return { retryAfter };
+    }
+    throttle.usages++;
+
+    return null;
   }
 
   /** Unloads the command. */
@@ -357,4 +363,12 @@ export interface ThrottleObject {
   start: number;
   usages: number;
   timeout: any;
+}
+
+/** @private */
+export interface ThrottleResult {
+  start?: number;
+  limit?: number;
+  remaining?: number;
+  retryAfter: number;
 }

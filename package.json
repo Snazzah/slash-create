@@ -52,7 +52,7 @@
     "url": "https://github.com/sponsors/Snazzah"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "dependencies": {
     "eventemitter3": "^5.0.1",

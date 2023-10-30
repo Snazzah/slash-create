@@ -124,7 +124,7 @@ describe('SlashCreator', () => {
     });
   });
 
-  describe.skip('.registerCommands()', () => {
+  describe('.registerCommands()', () => {
     it('registers commands, filtering out non-command objects', () => {
       const creator = new SlashCreator({
         applicationID: '1'
@@ -336,7 +336,7 @@ describe('SlashCreator', () => {
     });
   });
 
-  describe.skip('.collectCommandIDs()', () => {
+  describe('.collectCommandIDs()', () => {
     it('collects command IDs', async () => {
       const creator = new SlashCreator({
         applicationID: '1',

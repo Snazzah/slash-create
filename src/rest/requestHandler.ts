@@ -1,7 +1,7 @@
 import { SequentialBucket } from './sequentialBucket';
 import { Request } from './request';
 import type { Agent } from 'undici';
-import { BASE_URL } from '../constants';
+import { API_BASE_URL } from '../constants';
 import type { BaseSlashCreator } from '../creator';
 
 export interface RESTOptions {
@@ -84,7 +84,7 @@ export class RequestHandler {
 
     this.options = {
       agent: options.agent,
-      baseURL: options.baseURL ?? BASE_URL,
+      baseURL: options.baseURL ?? API_BASE_URL,
       ratelimiterOffset: options.ratelimiterOffset ?? 0,
       requestTimeout: options.requestTimeout ?? 15000,
       retryLimit: options.retryLimit ?? 3

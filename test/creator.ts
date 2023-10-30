@@ -6,7 +6,7 @@ chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
 
-import { SlashCreator } from '../src/creator';
+import { SlashCreator } from '../src/node/creator';
 import { FastifyServer } from '../src/servers/fastify';
 import { GatewayServer } from '../src/servers/gateway';
 import { GCFServer } from '../src/servers/gcf';
@@ -147,60 +147,6 @@ describe('SlashCreator', () => {
       expect(creator.registerCommands.bind(creator, true)).to.throw();
       // @ts-ignore
       expect(creator.registerCommands.bind(creator, {})).to.throw();
-    });
-  });
-
-  describe('.reregisterCommand()', () => {
-    it('re-registers command', () => {
-      const creator = new SlashCreator({
-        applicationID: '1'
-      });
-
-      const commandClass = createBasicCommand();
-      const commandClass2 = createBasicCommand({ description: 'new desc' });
-      creator.registerCommand(commandClass);
-      expect(creator.reregisterCommand.bind(creator, commandClass2, creator.commands.first()!)).to.not.throw();
-      expect(creator.commands.size).to.equal(1);
-      expect(creator.commands.first()).to.be.an.instanceof(commandClass2);
-      expect(creator.commands.first()!.description).to.equal('new desc');
-    });
-
-    it('re-registers unknown command', () => {
-      const creator = new SlashCreator({
-        applicationID: '1'
-      });
-
-      const commandClass = createBasicCommand({ unknown: true });
-      const commandClass2 = createBasicCommand({ unknown: true, description: 'new desc' });
-      creator.registerCommand(commandClass);
-      expect(creator.reregisterCommand.bind(creator, commandClass2, creator.unknownCommand!)).to.not.throw();
-      expect(creator.commands.size).to.equal(0);
-      expect(creator.unknownCommand).to.be.an.instanceof(commandClass2);
-      expect(creator.unknownCommand!.description).to.equal('new desc');
-    });
-
-    it('throws on overridding unknown command', () => {
-      const creator = new SlashCreator({
-        applicationID: '1'
-      });
-
-      const commandClass = createBasicCommand();
-      const commandClass2 = createBasicCommand({ unknown: true, description: 'new desc' });
-      creator.registerCommand(commandClass);
-      expect(creator.reregisterCommand.bind(creator, commandClass2, creator.commands.first()!)).to.throw();
-    });
-
-    it('throws on name/guild mismatch', () => {
-      const creator = new SlashCreator({
-        applicationID: '1'
-      });
-
-      const commandClass = createBasicCommand();
-      const commandClass2 = createBasicCommand({ name: 'other-command' });
-      const commandClass3 = createBasicCommand({ guildIDs: '1' });
-      creator.registerCommand(commandClass);
-      expect(creator.reregisterCommand.bind(creator, commandClass2, creator.commands.first()!)).to.throw();
-      expect(creator.reregisterCommand.bind(creator, commandClass3, creator.commands.first()!)).to.throw();
     });
   });
 

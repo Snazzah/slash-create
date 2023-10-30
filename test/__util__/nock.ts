@@ -1,8 +1,9 @@
 import nock from 'nock';
-import { API_BASE_URL, ApplicationCommand, Endpoints } from '../../src/constants';
+import { API_VERSION, ApplicationCommand, Endpoints } from '../../src/constants';
 import { MOCK_TOKEN } from './constants';
 
 const DISCORD_URL = 'https://discord.com';
+const API_BASE_URL = '/api/v' + API_VERSION;
 
 const NOCK_HEADERS = {
   'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import { fetch, FormData } from 'undici';
 import { Blob } from 'node:buffer';
+import { extname } from 'node:path';
 import { BaseSlashCreator, FileFilter, SlashCreatorOptions } from '../creator';
 import { getFiles } from '../node/util';
 import nacl from 'tweetnacl';
@@ -20,7 +21,6 @@ export class SlashCreator extends BaseSlashCreator {
    * await creator.registerCommandsIn(require('path').join(__dirname, 'commands'));
    */
   async registerCommandsIn(commandPath: string, extensionsOrFilter: string[] | FileFilter = []) {
-    const { extname } = await import('node:path');
     const extensions = ['.js', '.cjs', ...(Array.isArray(extensionsOrFilter) ? extensionsOrFilter : [])];
     const files = await getFiles(commandPath);
     const filter: FileFilter =

@@ -3,10 +3,6 @@ import type { FileContent, RequestHandler, RequestOptions } from './requestHandl
 import type { Blob as NodeBlob } from 'node:buffer';
 import { getCreatedAt } from '../util';
 
-// const fetch: typeof UndiciFetch = 'fetch' in globalThis ? globalThis.fetch : require('undici').fetch;
-// const FormData: typeof UndiciFormData = 'FormData' in globalThis ? globalThis.FormData : require('undici').FormData;
-// const Blob: typeof NodeBlob = 'Blob' in globalThis ? globalThis.Blob : require('node:buffer').Blob;
-
 const USER_AGENT = `DiscordBot (https://github.com/Snazzah/slash-create, ${require('../../package.json').version})`;
 
 /**

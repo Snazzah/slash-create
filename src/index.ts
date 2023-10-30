@@ -13,6 +13,8 @@ export * from './util/collection';
 
 export * from './rest/DiscordHTTPError';
 export * from './rest/DiscordRESTError';
+export * from './rest/requestHandler';
+export * from './rest/sequentialBucket';
 
 export * from './servers/cfworker';
 export * from './servers/lambda';

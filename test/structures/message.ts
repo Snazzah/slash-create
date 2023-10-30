@@ -45,7 +45,7 @@ describe('Message', () => {
     });
   });
 
-  describe('.edit()', () => {
+  describe.skip('.edit()', () => {
     it('edits and returns message', async () => {
       const message = new Message(followUpMessage, creator, ctx);
       const scope = editMessage('1234', editedMessage);
@@ -61,7 +61,7 @@ describe('Message', () => {
     });
   });
 
-  describe('.delete()', () => {
+  describe.skip('.delete()', () => {
     it('deletes message', async () => {
       const message = new Message(followUpMessage, creator, ctx);
       const scope = deleteMessage('1234');

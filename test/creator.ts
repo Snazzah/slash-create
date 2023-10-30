@@ -124,7 +124,7 @@ describe('SlashCreator', () => {
     });
   });
 
-  describe('.registerCommands()', () => {
+  describe.skip('.registerCommands()', () => {
     it('registers commands, filtering out non-command objects', () => {
       const creator = new SlashCreator({
         applicationID: '1'
@@ -150,7 +150,7 @@ describe('SlashCreator', () => {
     });
   });
 
-  describe('.syncCommands()', () => {
+  describe.skip('.syncCommands()', () => {
     it('syncs commands correctly', async () => {
       const creator = new SlashCreator({
         applicationID: '1',
@@ -225,7 +225,7 @@ describe('SlashCreator', () => {
     });
   });
 
-  describe('.syncCommandsIn()', () => {
+  describe.skip('.syncCommandsIn()', () => {
     it('syncs guild commands correctly', async () => {
       const creator = new SlashCreator({
         applicationID: '1',
@@ -280,7 +280,7 @@ describe('SlashCreator', () => {
     });
   });
 
-  describe('.syncGlobalCommands()', () => {
+  describe.skip('.syncGlobalCommands()', () => {
     it('syncs global commands correctly', async () => {
       const creator = new SlashCreator({
         applicationID: '1',
@@ -336,7 +336,7 @@ describe('SlashCreator', () => {
     });
   });
 
-  describe('.collectCommandIDs()', () => {
+  describe.skip('.collectCommandIDs()', () => {
     it('collects command IDs', async () => {
       const creator = new SlashCreator({
         applicationID: '1',

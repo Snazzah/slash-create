@@ -242,9 +242,9 @@
     "@sinonjs/commons" "^1.7.0"
 
 "@types/aws-lambda@^8.10.119":
-  version "8.10.121"
-  resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.121.tgz#2702b77a77fadea98bbef43502a289882361854b"
-  integrity sha512-Y/jsUwO18HuC0a39BuMQkSOd/kMGATh/h5LNksw8FlTafbQ3Ge3578ZoT8w8gSOsWl2qH1p/SS/R61vc0X5jIQ==
+  version "8.10.125"
+  resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.125.tgz#c2ba86f7d98fe1827a7b048e0d31a65a8b5aed8c"
+  integrity sha512-Vqw/WMlV4O1fJT6capim01v7VLDZkcX1n6Yhb52E7IfnMqYbNfwHfyDV8rRN42NLBtdDvfaqcCqs2K0fr5ljZw==
 
 "@types/chai-as-promised@^7.1.6":
   version "7.1.6"

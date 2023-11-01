@@ -167,7 +167,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
     commandPath: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     extensionsOrFilter: string[] | FileFilter = []
-  ): Promise<SlashCommand<this>[]> {
+  ): Promise<SlashCommand[]> {
     throw new Error('registerCommandsIn() is not availble in this environment.');
   }
 

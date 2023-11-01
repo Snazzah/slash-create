@@ -248,6 +248,20 @@ export interface ApplicationCommandOptionLimitedNumber extends Omit<ApplicationC
   max_value?: number;
 }
 
+/**
+ * @private
+ */
+export interface ApplicationCommandOptionLimitedString extends Omit<ApplicationCommandOptionBase, 'type'> {
+  /** The type of option this one is. */
+  type: CommandOptionType.STRING;
+  /** Whether this option can be autocompleted. */
+  autocomplete?: boolean;
+  /** The minimum length permitted. */
+  min_length?: number;
+  /** The maximum length permitted. */
+  max_length?: number;
+}
+
 /** An option in an application command. */
 export type ApplicationCommandOption =
   | ApplicationCommandOptionBase
@@ -255,7 +269,8 @@ export type ApplicationCommandOption =
   | ApplicationCommandOptionArgument
   | ApplicationCommandOptionAutocompletable
   | ApplicationCommandOptionChannel
-  | ApplicationCommandOptionLimitedNumber;
+  | ApplicationCommandOptionLimitedNumber
+  | ApplicationCommandOptionLimitedString;
 
 /** A choice for a user to pick from. */
 export interface ApplicationCommandOptionChoice {

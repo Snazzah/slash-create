@@ -29,7 +29,7 @@ export class SlashCreator extends BaseSlashCreator {
     const commands: any[] = [];
     for (const filePath of filteredFiles) {
       try {
-        commands.push(await import(filePath));
+        commands.push(require(filePath));
       } catch (e) {
         this.emit('error', new Error(`Failed to load command ${filePath}: ${e}`));
       }

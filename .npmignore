@@ -30,6 +30,7 @@ src/
 .gitignore
 .github/
 .dependabot/
+.npmrc
 test/
 testing/
 tsconfig.json

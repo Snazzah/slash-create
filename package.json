@@ -37,16 +37,16 @@
     "wrapper"
   ],
   "scripts": {
-    "build": "npx rimraf lib && npx tsc",
-    "build:prepare": "npx shx test -d ./lib || npm run build",
+    "build": "rimraf lib && tsc",
+    "build:prepare": "shx test -d ./lib || npm run build",
     "changelog": "tsx scripts/changelog",
-    "docs": "npx typedoc --json .tmp/typedoc-out.json --excludeExternals --plugin typedoc-plugin-as-member-of && tsx scripts/docs",
-    "lint": "npx eslint --ext .ts ./src",
-    "lint:fix": "npx eslint --ext .ts ./src --fix",
-    "test": "npx mocha -r tsx --extension ts 'test/**/*.ts'",
+    "docs": "typedoc --json .tmp/typedoc-out.json --excludeExternals --plugin typedoc-plugin-as-member-of && tsx scripts/docs",
+    "lint": "eslint --ext .ts ./src",
+    "lint:fix": "eslint --ext .ts ./src --fix",
+    "test": "mocha -r tsx --extension ts 'test/**/*.ts'",
     "gpr": "tsx scripts/gpr",
     "prepare": "npm run build:prepare",
-    "prepublishOnly": "(npx shx test -d ./lib || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
+    "prepublishOnly": "(shx test -d ./lib || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
   },
   "funding": {
     "url": "https://github.com/sponsors/Snazzah"
@@ -85,6 +85,8 @@
     "mocha": "^10.2.0",
     "nock": "^13.3.6",
     "prettier": "^3.0.3",
+    "rimraf": "^5.0.5",
+    "shx": "^0.3.4",
     "ts-docgen": "github:dbots-pkg/ts-docgen#main",
     "tsx": "^3.14.0",
     "typedoc": "0.19.2",

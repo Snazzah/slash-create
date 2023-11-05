@@ -13,8 +13,6 @@ module.exports = class HelloCommand extends SlashCommand {
         description: 'What food do you like?'
       }]
     });
-
-    this.filePath = __filename;
   }
 
   async run(ctx) {
@@ -37,8 +35,6 @@ module.exports = class ExclusivityCommand extends SlashCommand {
       // This will be an array of permission flag names from here: https://discord.dev/topics/permissions#permissions-bitwise-permission-flags
       requiredPermissions: ['MANAGE_GUILD']
     });
-
-    this.filePath = __filename;
   }
 
   async run(ctx) {
@@ -84,7 +80,6 @@ module.exports = class SubcommandsCommand extends SlashCommand {
                 }]
             }]
         });
-        this.filePath = __filename;
     }
     async run(ctx) {
         // returns the subcommand, option, and option value
@@ -127,8 +122,6 @@ module.exports = class AvatarCommand extends SlashCommand {
       type: ApplicationCommandType.USER,
       name: 'Get Avatar URL',
     });
-
-    this.filePath = __filename;
   }
 
   async run(ctx) {
@@ -148,8 +141,6 @@ module.exports = class ReverseCommand extends SlashCommand {
       type: ApplicationCommandType.MESSAGE,
       name: 'Reverse this Message',
     });
-
-    this.filePath = __filename;
   }
 
   async run(ctx) {
@@ -177,8 +168,6 @@ module.exports = class HelloCommand extends SlashCommand {
         autocomplete: true
       }]
     });
-
-    this.filePath = __filename;
   }
 
   async autocomplete(ctx) {
@@ -203,8 +192,6 @@ module.exports = class ModalCommand extends SlashCommand {
       name: 'modal',
       description: 'Send a cool modal.'
     });
-
-    this.filePath = __filename;
   }
 
   async run(ctx) {
@@ -281,8 +268,6 @@ module.exports = class HelloCommand extends SlashCommand {
         }
       }]
     });
-
-    this.filePath = __filename;
   }
 
   // If you use any package like i18next and need to asyncronously set localization, this function is ran right before syncing the command.

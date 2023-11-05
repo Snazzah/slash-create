@@ -1,4 +1,6 @@
 
+<warn>This is example was created in slash-create v5, things may not work properly.  Join the Discord Server if this example has issues.</warn>
+
 ## Creating the Function
 
  - Create a new empty directory, and open it with VS Code

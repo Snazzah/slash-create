@@ -1,3 +1,5 @@
+<warn>This is example was created in slash-create v5, things may not work properly.  Join the Discord Server if this example has issues.</warn>
+
 Before using the server, check out [how to use the functions module](https://www.npmjs.com/package/@google-cloud/functions-framework).
 
 ```js

@@ -1,3 +1,5 @@
+<warn>This is example was created in slash-create v5, things may not work properly.  Join the Discord Server if this example has issues.</warn>
+
 ### Minimal Setup Example
 
 1. Login to the [AWS Management Console](https://console.aws.amazon.com/).

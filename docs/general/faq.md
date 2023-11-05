@@ -66,7 +66,7 @@ await ctx.editOriginal({
       id: 1
     }
   ],
-  file: [
+  files: [
     {
       name: 'test.txt',
       file: Buffer.from('a')
@@ -116,8 +116,6 @@ module.exports = class HelloCommand extends SlashCommand {
       name: 'hello',
       description: 'Says hello to you.'
     });
-
-    this.filePath = __filename;
   }
 
   async run(ctx) {

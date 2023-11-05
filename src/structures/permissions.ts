@@ -44,6 +44,7 @@ const FLAGS: { [perm: string]: bigint } = {
   MODERATE_MEMBERS: 1n << 40n,
   VIEW_CREATOR_MONETIZATION_ANALYTICS: 1n << 41n,
   USE_SOUNDBOARD: 1n << 42n,
+  USE_EXTERNAL_SOUNDS: 1n << 45n,
   SEND_VOICE_MESSAGES: 1n << 46n
 };
 

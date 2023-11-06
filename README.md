@@ -43,6 +43,8 @@ yarn add slash-create
 In order to use a specific webserver, you will need to install the dependency associated with that server. The following server types require these dependencies:
 - `AWSLambdaServer`: none technically, meant for use with [AWS Lambda](https://aws.amazon.com/lambda) and [Amazon API Gateway](https://aws.amazon.com/api-gateway), see [example](https://slash-create.js.org/#/docs/main/latest/examples/lambda)
 - `AzureFunctionServer`: none technically, meant for use with [Azure Functions](https://docs.microsoft.com/en-us/azure/azure-functions/), see [example](https://slash-create.js.org/#/docs/main/latest/examples/azure)
+- `BunServer`: none, meant for use in the [Bun](https://bun.sh) runtime
+- `CloudflareWorkerServer`: none, only available in the web export via `slash-create/web`
 - `ExpressServer`: `express`
 - `FastifyServer`: `fastify`
 - `GatewayServer`: none, see [example](https://slash-create.js.org/#/docs/main/latest/examples/discord-bot)

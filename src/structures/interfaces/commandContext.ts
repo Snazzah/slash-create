@@ -1,5 +1,5 @@
 import { RespondFunction } from '../../server';
-import { SlashCreator } from '../../creator';
+import { BaseSlashCreator } from '../../creator';
 import { AnyCommandOption, ApplicationCommandType, InteractionRequestData } from '../../constants';
 import { ModalSendableContext } from './modalSendableContext';
 
@@ -33,7 +33,7 @@ export class CommandContext extends ModalSendableContext {
    * @param useTimeout Whether to use the deferral timeout.
    */
   constructor(
-    creator: SlashCreator,
+    creator: BaseSlashCreator,
     data: InteractionRequestData,
     respond: RespondFunction,
     webserverMode: boolean,

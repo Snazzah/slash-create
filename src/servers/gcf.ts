@@ -1,6 +1,6 @@
 import { Server, ServerRequestHandler } from '../server';
 // @ts-ignore
-import * as Express from 'express';
+import type * as Express from 'express';
 import { MultipartData } from '../util/multipartData';
 
 /**

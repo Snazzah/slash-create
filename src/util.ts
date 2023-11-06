@@ -1,33 +1,4 @@
 import { ApplicationCommandOption, CommandOptionType } from './constants';
-import nacl from 'tweetnacl';
-import fs from 'fs';
-import path from 'path';
-
-/**
- * Validates a payload from Discord against its signature and key.
- *
- * @param rawBody The raw payload data
- * @param signature The signature from the `X-Signature-Ed25519` header
- * @param timestamp The timestamp from the `X-Signature-Timestamp` header
- * @param clientPublicKey The public key from the Discord developer dashboard
- * @returns Whether or not validation was successful
- */
-export async function verifyKey(
-  body: string,
-  signature: string,
-  timestamp: string,
-  clientPublicKey: string
-): Promise<boolean> {
-  try {
-    return nacl.sign.detached.verify(
-      Buffer.from(timestamp + body),
-      Buffer.from(signature, 'hex'),
-      Buffer.from(clientPublicKey, 'hex')
-    );
-  } catch {
-    return false;
-  }
-}
 
 export function formatAllowedMentions(
   allowed: MessageAllowedMentions | FormattedAllowedMentions,
@@ -128,20 +99,24 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
   }
 }
 
-export function getFiles(folderPath: string) {
-  const fileList = fs.readdirSync(folderPath);
-  const files: string[] = [];
-  for (const file of fileList) {
-    const filePath = path.join(folderPath, file);
-    const stat = fs.lstatSync(filePath);
-    if (stat.isDirectory()) files.push(...getFiles(filePath));
-    else files.push(filePath);
-  }
-  return files;
-}
-
 export function generateID() {
   return (Date.now() + Math.round(Math.random() * 1000)).toString(36);
+}
+
+/**
+ * Calculates the timestamp in milliseconds associated with a Discord ID/snowflake
+ * @param id The ID of a structure
+ */
+export function getCreatedAt(id: string) {
+  return getDiscordEpoch(id) + 1420070400000;
+}
+
+/**
+ * Gets the number of milliseconds since epoch represented by an ID/snowflake
+ * @param id The ID of a structure
+ */
+export function getDiscordEpoch(id: string) {
+  return Math.floor(Math.floor(Number(BigInt(id) / 4194304n)));
 }
 
 /** The allowed mentions for a {@link Message}. */

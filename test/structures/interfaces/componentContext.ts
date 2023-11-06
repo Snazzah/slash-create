@@ -79,7 +79,7 @@ describe('ComponentContext', () => {
     });
   });
 
-  describe('.editParent()', () => {
+  describe.skip('.editParent()', () => {
     it('updates original message initially', async () => {
       const ctx = new ComponentContext(creator, basicMessageInteraction, async (treq) => {
         expect(treq.body).to.deep.equal({

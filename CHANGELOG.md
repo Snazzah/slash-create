@@ -5,6 +5,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [6.0.0] - 2023-11-05
+### Breaking Changes:
+- `SlashCreator#syncCommands` is now an asynchronous function, replacing `#syncCommandsAsync`.
+- All old command permission functions have been removed.
+- Command reregistering has been removed.
+- The request handler has been rewritten to use `undici` using [this PR by @HeadTriXz](https://github.com/projectdysnomia/dysnomia/pull/52).
+- Setting a maximum signature timestamp (`SlashCreatorOptions#maxSignatureTimestamp`) has been removed. This has caused more issues and timestamps are not checked from other implementations of slash commands.
+- The minimum Node version of slash-create is now v16.
+- `SlashCreator#registerCommandsIn` is now async.
+- `SlashCreator#registerCommand` and `SlashCreator#registerCommands` now return the commands that have been registered.
+### Additions:
+- Commands can now use the `throttle()` function which takes a CommandContext and allows you to asynchronously ratelimit users before running the command itself.
+- slash-create now has a web export for built-in Cloudflare Worker compatibility.
+- Support for the Bun runtime with `BunServer`.
+- Added the `USE_EXTERNAL_SOUNDS` permission. (1 << 46)
+### Fixed:
+- **types**: `min_length` and `max_length` to string options now exists
 ## [5.14.0] - 2023-09-27
 ### Added:
 - Premium Subscription attributes and functions
@@ -504,7 +521,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v5.14.0...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v6.0.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -568,3 +585,4 @@ This release features mostly completed documentation and changes to the packages
 [5.11.0]: https://github.com/Snazzah/slash-create/compare/v5.10.0...v5.11.0
 [5.12.0]: https://github.com/Snazzah/slash-create/compare/v5.11.0...v5.12.0
 [5.14.0]: https://github.com/Snazzah/slash-create/compare/v5.12.0...v5.14.0
+[6.0.0]: https://github.com/Snazzah/slash-create/compare/v5.14.0...v6.0.0

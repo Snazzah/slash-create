@@ -1,7 +1,7 @@
 import { Server, ServerRequestHandler } from '../server';
 import { joinHeaders, splitHeaders } from '../util/lambdaHeaders';
 // @ts-ignore
-import { APIGatewayProxyCallbackV2, APIGatewayProxyEventV2, Context } from 'aws-lambda';
+import type { APIGatewayProxyCallbackV2, APIGatewayProxyEventV2, Context } from 'aws-lambda';
 import { MultipartData } from '../util/multipartData';
 
 /**

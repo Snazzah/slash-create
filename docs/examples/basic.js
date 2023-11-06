@@ -6,9 +6,8 @@ const creator = new SlashCreator({
   token: 'BOT_TOKEN_HERE',
 });
 
-creator
-    // Registers all of your commands in the ./commands/ directory
-    .registerCommandsIn(path.join(__dirname, 'commands'))
-    // This will sync commands to Discord, it must be called after commands are loaded.
-    // This also returns itself for more chaining capabilities.
-    .syncCommands();
+// Registers all of your commands in the ./commands/ directory
+await creator.registerCommandsIn(path.join(__dirname, 'commands'))
+
+// This will sync commands to Discord, it must be called after commands are loaded.
+await creator.syncCommands();

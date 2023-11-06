@@ -1,4 +1,6 @@
 
+<warn>This is example was created in slash-create v5, things may not work properly.  Join the Discord Server if this example has issues.</warn>
+
 ## Creating the Function
 
  - Create a new empty directory, and open it with VS Code
@@ -12,14 +14,14 @@
  - Select **Anonymous** when prompted for the "Authorization Level"
  - A new function should be created!
 
- Be aware that you can also do all these steps in the Azure Portal. 
+ Be aware that you can also do all these steps in the Azure Portal.
 
 ## Building and deploying the Function
 
 
-### Building the Function 
+### Building the Function
 
-Now that you created a Function, your folder structure should look like this: 
+Now that you created a Function, your folder structure should look like this:
 
 ```
 ├── [Function name]
@@ -43,13 +45,14 @@ const creator = new SlashCreator({
     token: process.env.DISCORD_BOT_TOKEN
 });
 
-creator
-  // The first argument is required, but the second argument is the "target" or the name of the export.
-  // By default, the target is "interactions".
-  .withServer(new AzureFunctionServer(module.exports))
-  .registerCommandsIn(path.join(__dirname, 'commands'))
-  // Syncing the commands each time the function is executed is wasting computing time
-  .syncCommands();
+// The first argument is required, but the second argument is the "target" or the name of the export.
+// By default, the target is "interactions".
+creator.withServer(new AzureFunctionServer(module.exports))
+
+await creator.registerCommandsIn(path.join(__dirname, 'commands'));
+
+// Syncing the commands each time the function is executed is wasting computing time
+await creator.syncCommands();
 
 ```
 
@@ -78,26 +81,26 @@ Next, open `function.json` and replace the `bindings` property to the following.
 
 The last thing is to deploy the function.
 
-### Deploying the Function 
+### Deploying the Function
  - Press <kbd>CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>P</kbd> to open the command prompt again
  - Search for **Azure Functions: Deploy to Function App...**
  - Follow the prompts, creating a new function app when prompted
  - Once deployed, open the command prompt and select "Azure Functions: Retrieve Function URL"
- - Follow the prompts and you should have the function's invocation URL in the clipboard. This URL should follow this pattern:   
- 
+ - Follow the prompts and you should have the function's invocation URL in the clipboard. This URL should follow this pattern:
+
     https://[function-app-name].azurewebsites.net/api/[function-name]
 
 You can also retrieve this URL in the Azure Portal.
 
 ## Discord configuration
 
-- Go to to [Discord Developers Portal Applications Page](https://discord.com/developers/applications). 
-- Select / Create a new application. On the application's page, fill the "Interactions endpoint URL" input with the retrieved Function URL.  
+- Go to to [Discord Developers Portal Applications Page](https://discord.com/developers/applications).
+- Select / Create a new application. On the application's page, fill the "Interactions endpoint URL" input with the retrieved Function URL.
 - Invite your application to your server using this URL: `https://discord.com/oauth2/authorize?client_id=[client-id]&scope=applications.commands`
 - You're ready to go!
 
-## Debugging locally 
-Waiting for the function to deploy over and over again each time you are a experimenting with a new feature can be tedious. To circumvent this problem, it is possible to create a local server. 
+## Debugging locally
+Waiting for the function to deploy over and over again each time you are a experimenting with a new feature can be tedious. To circumvent this problem, it is possible to create a local server.
 
 1. Install [azure-cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli), and the [Azure Functions runtime](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local) **Version 3.x**.
 2. Start the function locally by running `func start` or `npm run start` in the [Function name] directory.

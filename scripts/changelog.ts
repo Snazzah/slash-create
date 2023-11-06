@@ -33,8 +33,7 @@ arr = futureChangelog
       : line
   );
 
-// eslint-disable-next-line no-useless-escape
-const lastVersion = ([...arr].reverse()[1].match(/\[([^\][]*)]/) || [])[0].replace(/[[\]']+/g, '');
+const lastVersion = ([...arr].reverse()[1].match(/\[([^\][]*)]/) || [])[0]!.replace(/[[\]']+/g, '');
 if (!lastVersion) throw new Error("Can't find last version in changelog.");
 
 const lastLine = `[${currentVersion}]: https://github.com/Snazzah/slash-create/compare/v${lastVersion}...v${currentVersion}`;

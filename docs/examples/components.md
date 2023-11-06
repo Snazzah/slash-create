@@ -40,8 +40,6 @@ module.exports = class ButtonCommand extends SlashCommand {
       name: 'button',
       description: 'Show some buttons.'
     });
-
-    this.filePath = __filename;
   }
 
   async run(ctx) {

@@ -1,6 +1,6 @@
 import { ComponentType, InteractionResponseType, MessageComponentRequestData } from '../../constants';
 import { EditMessageOptions } from './messageInteraction';
-import { SlashCreator } from '../../creator';
+import { BaseSlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
 import { Message } from '../message';
 import { formatAllowedMentions, FormattedAllowedMentions } from '../../util';
@@ -26,7 +26,12 @@ export class ComponentContext extends ModalSendableContext {
    * @param respond The response function for the interaction.
    * @param useTimeout Whether to use the acknowledgement timeout.
    */
-  constructor(creator: SlashCreator, data: MessageComponentRequestData, respond: RespondFunction, useTimeout = true) {
+  constructor(
+    creator: BaseSlashCreator,
+    data: MessageComponentRequestData,
+    respond: RespondFunction,
+    useTimeout = true
+  ) {
     super(creator, data, respond);
     this.data = data;
 
@@ -63,19 +68,14 @@ export class ComponentContext extends ModalSendableContext {
    * Edits the message that the component interaction came from.
    * This will return a boolean if it's an initial response, otherwise a {@link Message} will be returned.
    * @param content The content of the message
-   * @param options The message options
    */
-  async editParent(content: string | EditMessageOptions, options?: EditMessageOptions): Promise<boolean | Message> {
+  async editParent(content: string | EditMessageOptions): Promise<boolean | Message> {
     if (this.expired) throw new Error('This interaction has expired');
 
-    if (typeof content !== 'string') options = content;
-    else if (typeof options !== 'object') options = {};
-
+    const options = typeof content === 'string' ? { content } : content;
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
-
-    if (!options.content && typeof content === 'string') options = { ...options, content };
-
-    if (!options.content && !options.embeds && !options.components) throw new Error('No valid options were given.');
+    if (!options.content && !options.embeds && !options.components && !options.files && !options.attachments)
+      throw new Error('No valid options were given.');
 
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
@@ -95,9 +95,9 @@ export class ComponentContext extends ModalSendableContext {
             components: options.components
           }
         },
-        files: options.file ? (Array.isArray(options.file) ? options.file : [options.file]) : undefined
+        files: options.files
       });
       return true;
-    } else return this.edit(this.message.id, content, options);
+    } else return this.edit(this.message.id, content);
   }
 }

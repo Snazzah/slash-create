@@ -3,7 +3,8 @@ module.exports = {
     commonjs: true,
     es6: true,
     es2020: true,
-    node: true
+    node: true,
+    browser: true
   },
   extends: ['eslint:recommended', 'plugin:prettier/recommended'],
   globals: {},

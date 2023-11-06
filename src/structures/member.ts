@@ -1,5 +1,5 @@
 import { CommandMember } from '../constants';
-import { SlashCreator } from '../creator';
+import { BaseSlashCreator } from '../creator';
 import { Permissions } from './permissions';
 import { ResolvedMember } from './resolvedMember';
 
@@ -17,7 +17,7 @@ export class Member extends ResolvedMember {
    * @param data The data for the member
    * @param creator The instantiating creator
    */
-  constructor(data: CommandMember, creator: SlashCreator, guildID: string) {
+  constructor(data: CommandMember, creator: BaseSlashCreator, guildID: string) {
     super(data, data.user, creator, guildID);
     this.mute = data.mute;
     this.deaf = data.deaf;

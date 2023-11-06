@@ -1,4 +1,4 @@
-import { runGenerator } from 'ts-docgen';
+import { runGenerator } from 'ts-docgen/src/index';
 
 runGenerator({
   existingOutput: '.tmp/typedoc-out.json',

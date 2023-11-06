@@ -1,4 +1,4 @@
-import { SlashCreator } from '../../creator';
+import { BaseSlashCreator } from '../../creator';
 import { Member } from '../member';
 import { User } from '../user';
 import { Permissions } from '../permissions';
@@ -12,7 +12,7 @@ import { Role } from '../role';
 /** Represents a basic interaction context. */
 export class BaseInteractionContext {
   /** The creator of the interaction request. */
-  readonly creator: SlashCreator;
+  readonly creator: BaseSlashCreator;
   /** The interaction's token. */
   readonly interactionToken: string;
   /** The interaction's ID. */
@@ -55,7 +55,7 @@ export class BaseInteractionContext {
    * @param creator The instantiating creator.
    * @param data The interaction data.
    */
-  constructor(creator: SlashCreator, data: any) {
+  constructor(creator: BaseSlashCreator, data: any) {
     this.creator = creator;
 
     this.interactionToken = data.token;

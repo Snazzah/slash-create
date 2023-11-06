@@ -1,3 +1,5 @@
+<warn>This is example was created in slash-create v5, things may not work properly.  Join the Discord Server if this example has issues.</warn>
+
 ### Minimal Setup Example
 
 1. Login to the [AWS Management Console](https://console.aws.amazon.com/).
@@ -15,12 +17,13 @@ const creator = new SlashCreator({
     token: process.env.DISCORD_BOT_TOKEN
 });
 
-creator
-    // The first argument is required, the second argument is the name or "target" of the export.
-    // It defaults to 'interactions', so it would not be strictly necessary here.
-    .withServer(new AWSLambdaServer(module.exports, 'interactions'))
-    .registerCommandsIn(path.join(__dirname, 'commands'))
-    .syncCommands();
+// The first argument is required, the second argument is the name or "target" of the export.
+// It defaults to 'interactions', so it would not be strictly necessary here.
+creator.withServer(new AWSLambdaServer(module.exports, 'interactions'))
+
+await creator.registerCommandsIn(path.join(__dirname, 'commands'));
+
+await creator.syncCommands();
 ```
 
 5. Make sure to create some example commands in the *commands* directory.

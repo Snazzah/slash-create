@@ -1,9 +1,21 @@
 {
   "name": "slash-create",
-  "version": "5.14.0",
+  "version": "6.0.0",
   "description": "Create and sync Discord slash commands!",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./web": {
+      "types": "./lib/web/index.d.ts",
+      "default": "./lib/web/index.js"
+    },
+    "./lib/*.js": "./lib/*.js",
+    "./package.json": "./package.json"
+  },
   "author": {
     "name": "Snazzah",
     "email": "me@snazzah.com",
@@ -25,58 +37,60 @@
     "wrapper"
   ],
   "scripts": {
-    "build": "npx rimraf lib && npx tsc",
-    "build:prepare": "npx shx test -d ./lib || npm run build",
+    "build": "rimraf lib && tsc",
+    "build:prepare": "shx test -d ./lib || npm run build",
     "changelog": "tsx scripts/changelog",
-    "docs": "npx typedoc --json .tmp/typedoc-out.json --plugin typedoc-plugin-as-member-of && tsx scripts/docs",
-    "lint": "npx eslint --ext .ts ./src",
-    "lint:fix": "npx eslint --ext .ts ./src --fix",
-    "test": "npx mocha -r tsx --extension ts 'test/**/*.ts'",
+    "docs": "typedoc --json .tmp/typedoc-out.json --excludeExternals --plugin typedoc-plugin-as-member-of && tsx scripts/docs",
+    "lint": "eslint --ext .ts ./src",
+    "lint:sarif": "eslint --ext .ts ./src -f @microsoft/sarif -o eslint-results.sarif --quiet",
+    "lint:fix": "eslint --ext .ts ./src --fix",
+    "test": "mocha -r tsx --extension ts 'test/**/*.ts'",
     "gpr": "tsx scripts/gpr",
-    "prepare": "npx husky install && npm run build:prepare",
-    "prepublishOnly": "(npx shx test -d ./lib || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
-  },
-  "lint-staged": {
-    "*.ts": "eslint --fix"
+    "prepare": "npm run build:prepare",
+    "prepublishOnly": "(shx test -d ./lib || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
   },
   "funding": {
     "url": "https://github.com/sponsors/Snazzah"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "dependencies": {
     "eventemitter3": "^5.0.1",
     "lodash.isequal": "^4.5.0",
-    "tweetnacl": "^1.0.3"
+    "tweetnacl": "^1.0.3",
+    "undici": "^5.27.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231025.0",
+    "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@sinonjs/fake-timers": "6.0.1",
-    "@types/aws-lambda": "^8.10.119",
-    "@types/chai": "^4.3.6",
-    "@types/chai-as-promised": "^7.1.6",
-    "@types/lodash": "^4.14.197",
-    "@types/lodash.isequal": "^4.5.6",
+    "@types/aws-lambda": "^8.10.125 ",
+    "@types/chai": "^4.3.9",
+    "@types/chai-as-promised": "^7.1.7",
+    "@types/lodash": "^4.14.200",
+    "@types/lodash.isequal": "^4.5.7",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.5.9",
     "@types/sinonjs__fake-timers": "6.0.1",
-    "@typescript-eslint/eslint-plugin": "^6.6.0",
-    "@typescript-eslint/parser": "^6.6.0",
-    "chai": "^4.3.8",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
     "chai-nock": "^1.3.0",
     "colors": "1.4.0",
-    "eslint": "^8.48.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "fastify": "^4.22.2",
-    "husky": "^8.0.3",
-    "lint-staged": "^14.0.1",
+    "eslint-plugin-prettier": "^5.0.1",
+    "fastify": "^4.24.3",
     "mocha": "^10.2.0",
-    "nock": "^13.3.3",
+    "nock": "^13.3.6",
     "prettier": "^3.0.3",
+    "rimraf": "^5.0.5",
+    "shx": "^0.3.4",
     "ts-docgen": "github:dbots-pkg/ts-docgen#main",
-    "tsx": "^3.12.8",
+    "tsx": "^3.14.0",
     "typedoc": "0.19.2",
     "typedoc-plugin-as-member-of": "^1.0.2",
     "typescript": "4.4.2"

@@ -7,7 +7,7 @@ import {
   ImageSizeBoundaries,
   UserObject
 } from '../constants';
-import { SlashCreator } from '../creator';
+import { BaseSlashCreator } from '../creator';
 import { UserFlags } from './userFlags';
 
 /** Represents a user on Discord. */
@@ -28,7 +28,7 @@ export class User {
   readonly bot: boolean;
 
   /** The creator of the user class. */
-  private readonly _creator: SlashCreator;
+  private readonly _creator: BaseSlashCreator;
 
   private _flagsBitfield?: UserFlags;
   private _flags: number;
@@ -37,7 +37,7 @@ export class User {
    * @param data The data for the user
    * @param creator The instantiating creator
    */
-  constructor(data: UserObject, creator: SlashCreator) {
+  constructor(data: UserObject, creator: BaseSlashCreator) {
     this._creator = creator;
 
     this.id = data.id;

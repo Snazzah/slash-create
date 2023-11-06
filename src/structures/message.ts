@@ -1,6 +1,6 @@
 import { AnyComponent, InteractionType, UserObject } from '../constants';
 import { EditMessageOptions } from './interfaces/messageInteraction';
-import { SlashCreator } from '../creator';
+import { BaseSlashCreator } from '../creator';
 import { MessageInteractionContext } from './interfaces/messageInteraction';
 import { User } from './user';
 
@@ -52,7 +52,7 @@ export class Message {
    * @param data The data for the message
    * @param ctx The instantiating context
    */
-  constructor(data: MessageData, creator: SlashCreator, ctx?: MessageInteractionContext) {
+  constructor(data: MessageData, creator: BaseSlashCreator, ctx?: MessageInteractionContext) {
     if (ctx) this._ctx = ctx;
 
     this.id = data.id;
@@ -90,11 +90,10 @@ export class Message {
   /**
    * Edits this message.
    * @param content The content of the message
-   * @param options The message options
    */
-  edit(content: string | EditMessageOptions, options?: EditMessageOptions) {
+  edit(content: string | EditMessageOptions) {
     if (!this._ctx) throw new Error('This message was not created from a command context.');
-    return this._ctx.edit(this.id, content, options);
+    return this._ctx.edit(this.id, content);
   }
 
   /** Deletes this message. */

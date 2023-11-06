@@ -16,9 +16,11 @@ creator
     new GatewayServer(
       (handler) => client.ws.on('INTERACTION_CREATE', handler)
     )
-  )
-  .registerCommandsIn(path.join(__dirname, 'commands'))
-  .syncCommands();
+  );
+
+await creator.registerCommandsIn(path.join(__dirname, 'commands'));
+
+await creator.syncCommands();
 
 client.login('BOT_TOKEN_HERE');
 ```
@@ -43,8 +45,10 @@ creator
       })
     )
   )
-  .registerCommandsIn(path.join(__dirname, 'commands'))
-  .syncCommands();
+
+await creator.registerCommandsIn(path.join(__dirname, 'commands'));
+
+await creator.syncCommands();
 
 client.connect();
 ```

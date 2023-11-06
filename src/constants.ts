@@ -1,26 +1,24 @@
-import { IncomingMessage } from 'http';
-import { SlashCommand } from './command';
-import { CommandContext } from './structures/interfaces/commandContext';
-import { SlashCreator } from './creator';
-import { RespondFunction, TransformedRequest } from './server';
-import { ComponentContext } from './structures/interfaces/componentContext';
-import { MessageData } from './structures/message';
-import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
-import { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
+import type { SlashCommand } from './command';
+import type { CommandContext } from './structures/interfaces/commandContext';
+import type { RespondFunction, TransformedRequest } from './server';
+import type { ComponentContext } from './structures/interfaces/componentContext';
+import type { MessageData } from './structures/message';
+import type { AutocompleteContext } from './structures/interfaces/autocompleteContext';
+import type { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
+import type { BaseSlashCreator } from './creator';
+import type { FileContent } from './rest/requestHandler';
 
 export const VERSION: string = require('../package.json').version;
 
 export const API_VERSION = 10;
 export const INTERACTION_VERSION = 1;
-export const API_BASE_URL = `/api/v${API_VERSION}`;
+export const API_BASE_URL = 'https://discord.com/api/v' + API_VERSION;
 export const CDN_URL = 'https://cdn.discordapp.com';
 
 /** The types of interactions. */
 export enum InteractionType {
   /** A ping. */
   PING = 1,
-  /** @deprecated */
-  COMMAND = 2,
   /** A command invocation. */
   APPLICATION_COMMAND = 2,
   /** An invocation of a message component. */
@@ -187,11 +185,11 @@ export interface ApplicationCommandOptionBase {
   /** The name of the option. */
   name: string;
   /** The localiztions for the option name. */
-  name_localizations?: Record<string, string>;
+  name_localizations?: Record<string, string> | null;
   /** The description of the option. */
   description: string;
   /** The localiztions for the option description. */
-  description_localizations?: Record<string, string>;
+  description_localizations?: Record<string, string> | null;
   /** Whether the parameter is required. */
   required?: boolean;
 }
@@ -250,6 +248,20 @@ export interface ApplicationCommandOptionLimitedNumber extends Omit<ApplicationC
   max_value?: number;
 }
 
+/**
+ * @private
+ */
+export interface ApplicationCommandOptionLimitedString extends Omit<ApplicationCommandOptionBase, 'type'> {
+  /** The type of option this one is. */
+  type: CommandOptionType.STRING;
+  /** Whether this option can be autocompleted. */
+  autocomplete?: boolean;
+  /** The minimum length permitted. */
+  min_length?: number;
+  /** The maximum length permitted. */
+  max_length?: number;
+}
+
 /** An option in an application command. */
 export type ApplicationCommandOption =
   | ApplicationCommandOptionBase
@@ -257,7 +269,8 @@ export type ApplicationCommandOption =
   | ApplicationCommandOptionArgument
   | ApplicationCommandOptionAutocompletable
   | ApplicationCommandOptionChannel
-  | ApplicationCommandOptionLimitedNumber;
+  | ApplicationCommandOptionLimitedNumber
+  | ApplicationCommandOptionLimitedString;
 
 /** A choice for a user to pick from. */
 export interface ApplicationCommandOptionChoice {
@@ -266,7 +279,7 @@ export interface ApplicationCommandOptionChoice {
   /** The value of the choice. */
   value: string | number;
   /** The localiztions for the option name. */
-  name_localizations?: Record<string, string>;
+  name_localizations?: Record<string, string> | null;
 }
 
 /** The type of thing to apply the permission to. */
@@ -300,14 +313,13 @@ export interface GuildApplicationCommandPermissions extends PartialApplicationCo
 
 /** @private */
 export interface RawRequest {
-  method: string;
-  url: string;
   auth: boolean;
-  body: any;
-  route: string;
-  reason?: string;
-  short: boolean;
-  resp: IncomingMessage;
+  body: Record<string, any> | undefined;
+  files: FileContent[] | undefined;
+  latency: number;
+  method: string;
+  response: Response;
+  url: URL;
 }
 
 /** Any interaction request from Discord. */
@@ -720,12 +732,6 @@ export interface RoleTags {
   guild_connections?: null;
 }
 
-/**
- * @hidden
- * @deprecated
- */
-export type ResolvedChannel = CommandChannel;
-
 /** @hidden */
 export interface UserObject extends CommandUser {
   /** Whether this user is a bot. */
@@ -800,8 +806,6 @@ export enum ComponentType {
   ACTION_ROW = 1,
   /** A button component. */
   BUTTON = 2,
-  /** @deprecated Use STRING_SELECT instead. */
-  SELECT = 3,
   /** A string select component. */
   STRING_SELECT = 3,
   /** A text input. */
@@ -1058,82 +1062,82 @@ export const Endpoints = {
     `/guilds/${guildID}/users/${memberID}/avatars/${memberAvatar}`
 };
 
-// SlashCreator events for documentation.
+// BaseSlashCreator events for documentation.
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 /**
  * Emitted when Discord pings the interaction endpoint.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param user The user that requested the ping
  */
 declare function ping(user?: CommandUser): void;
 /**
  * Emitted when the creator successfully synced commands.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  */
 declare function synced(): void;
 /**
  * Emitted when the Client's RequestHandler receives a response.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param request The data for the request
  */
 declare function rawREST(request: RawRequest): void;
 /**
  * Emitted when a warning is given.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param warning The warning
  */
 declare function warn(warning: Error | string): void;
 /**
  * Emitted when a debug message is given.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param message The debug message
  */
 declare function debug(message: string): void;
 /**
  * Emitted when an error occurred
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param err The error thrown
  */
 declare function error(err: Error): void;
 /**
  * Emitted when a request failed to be verified.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param treq The unverified request
  */
 declare function unverifiedRequest(treq: TransformedRequest): void;
 /**
  * Emitted when an unknown interaction type is encountered.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param interaction The unhandled interaction
  */
 declare function unknownInteraction(interaction: any): void;
 /**
  * Emitted when any interaction is given.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param interaction The interaction
  */
 declare function rawInteraction(interaction: AnyRequestData): void;
 /**
  * Emitted when any request is recieved.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param treq The transformed request
  */
 declare function rawRequest(treq: TransformedRequest): void;
 /**
  * Emitted when a modal interaction is given.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param ctx The modal interaction context
  */
 declare function modalInteraction(ctx: ModalInteractionContext): void;
@@ -1141,7 +1145,7 @@ declare function modalInteraction(ctx: ModalInteractionContext): void;
  * Emitted when a command interaction is given.
  * Only emits if `handleCommandsManually` in {@link SlashCreatorOptions} is true.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param interaction The interaction
  * @param respond The response callback to the interaction
  * @param webserverMode Whether this is from a webserver
@@ -1154,14 +1158,14 @@ declare function commandInteraction(
 /**
  * Emitted when a component interaction is given.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param ctx The component context
  */
 declare function componentInteraction(ctx: ComponentContext): void;
 /**
  * Emitted when a autocomplete interaction is given.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param ctx The autocomplete context
  * @param command The command that is being autocompleted
  */
@@ -1169,22 +1173,22 @@ declare function autocompleteInteraction(ctx: AutocompleteContext, command?: Sla
 /**
  * Emitted when a command is registered.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param command Command that was registered
  * @param creator Creator that the command was registered to
  */
-declare function commandRegister(command: SlashCommand, creator: SlashCreator): void;
+declare function commandRegister(command: SlashCommand, creator: BaseSlashCreator): void;
 /**
  * Emitted when a command is unregistered
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param command Command that was unregistered
  */
 declare function commandUnregister(command: SlashCommand): void;
 /**
  * Emitted when a command is reregistered
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param newCommand New command
  * @param oldCommand Old command
  */
@@ -1192,7 +1196,7 @@ declare function commandReregister(command: SlashCommand, oldCommand: SlashComma
 /**
  * Emitted when a command is blocked.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param command Command that was blocked
  * @param ctx The context of the interaction
  * @param reason Reason that the command was blocked
@@ -1202,7 +1206,7 @@ declare function commandBlock(command: SlashCommand, ctx: CommandContext, reason
 /**
  * Emitted when a command gave an error.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param command Command that gave an error
  * @param err The error given
  * @param ctx The context of the interaction
@@ -1211,7 +1215,7 @@ declare function commandError(command: SlashCommand, err: Error, ctx: CommandCon
 /**
  * Emitted when a command is ran.
  * @event
- * @asMemberOf SlashCreator
+ * @asMemberOf BaseSlashCreator
  * @param command Command that was ran
  * @param promise Promise for the command result
  * @param ctx The context of the interaction

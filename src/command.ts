@@ -1,12 +1,11 @@
 import {
   ApplicationCommandOption,
-  ApplicationCommandPermissions,
   ApplicationCommandType,
   PartialApplicationCommand,
   PermissionNames
 } from './constants';
 import { CommandContext } from './structures/interfaces/commandContext';
-import { SlashCreator } from './creator';
+import { BaseSlashCreator } from './creator';
 import { oneLine, validateOptions } from './util';
 import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
 import { Permissions } from './structures/permissions';
@@ -39,18 +38,8 @@ export class SlashCommand<T = any> {
   readonly deferEphemeral: boolean;
   /** Whether this command is age-restricted. */
   readonly nsfw: boolean;
-  /**
-   * Whether to enable this command for everyone by default.'
-   * @deprecated
-   */
-  readonly defaultPermission: boolean;
   /** Whether to enable this command in direct messages. */
   readonly dmPermission: boolean;
-  /**
-   * The command permissions per guild.
-   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
-   */
-  readonly permissions?: CommandPermissions;
   /**
    * The file path of the command.
    * Used for refreshing the require cache.
@@ -64,16 +53,16 @@ export class SlashCommand<T = any> {
   ids = new Map<string, string>();
 
   /** The creator responsible for this command. */
-  readonly creator: SlashCreator;
+  readonly creator: BaseSlashCreator;
 
-  /** Current throttle objects for the command, mapped by user ID. */
+  /** @private */
   private _throttles = new Map<string, ThrottleObject>();
 
   /**
    * @param creator The instantiating creator.
    * @param opts The options for the command.
    */
-  constructor(creator: SlashCreator, opts: SlashCommandOptions) {
+  constructor(creator: BaseSlashCreator, opts: SlashCommandOptions) {
     if (this.constructor.name === 'SlashCommand') throw new Error('The base SlashCommand cannot be instantiated.');
     this.creator = creator;
 
@@ -92,36 +81,7 @@ export class SlashCommand<T = any> {
     this.throttling = opts.throttling;
     this.unknown = opts.unknown || false;
     this.deferEphemeral = opts.deferEphemeral || false;
-    this.defaultPermission = typeof opts.defaultPermission === 'boolean' ? opts.defaultPermission : true;
     this.dmPermission = typeof opts.dmPermission === 'boolean' ? opts.dmPermission : true;
-    if (opts.permissions) this.permissions = opts.permissions;
-  }
-
-  /**
-   * The JSON for using commands in Discord's API.
-   * @private
-   * @deprecated Use {@link SlashCommand#toCommandJSON} instead.
-   */
-  get commandJSON(): PartialApplicationCommand {
-    return this.type === ApplicationCommandType.CHAT_INPUT
-      ? {
-          name: this.commandName,
-          ...(this.nameLocalizations ? { name_localizations: this.nameLocalizations } : {}),
-          description: this.description,
-          ...(this.descriptionLocalizations ? { description_localizations: this.descriptionLocalizations } : {}),
-          default_permission: this.defaultPermission,
-          type: ApplicationCommandType.CHAT_INPUT,
-          nsfw: this.nsfw,
-          ...(this.options ? { options: this.options } : {})
-        }
-      : {
-          name: this.commandName,
-          ...(this.nameLocalizations ? { name_localizations: this.nameLocalizations } : {}),
-          description: '',
-          type: this.type,
-          nsfw: this.nsfw,
-          default_permission: this.defaultPermission
-        };
   }
 
   /**
@@ -129,22 +89,28 @@ export class SlashCommand<T = any> {
    * @param global Whether the command is global or not.
    */
   toCommandJSON(global = true): PartialApplicationCommand {
-    const hasAnyLocalizations = !!this.nameLocalizations || !!this.descriptionLocalizations;
     return {
-      default_permission: this.defaultPermission,
       default_member_permissions: this.requiredPermissions
         ? new Permissions(this.requiredPermissions).valueOf().toString()
         : null,
       type: this.type,
       name: this.commandName,
-      ...(hasAnyLocalizations ? { name_localizations: this.nameLocalizations || null } : {}),
+      name_localizations: this.nameLocalizations || null,
       description: this.description || '',
-      ...(hasAnyLocalizations ? { description_localizations: this.descriptionLocalizations || null } : {}),
+      description_localizations: this.descriptionLocalizations || null,
       ...(global ? { dm_permission: this.dmPermission } : {}),
       nsfw: this.nsfw,
       ...(this.type === ApplicationCommandType.CHAT_INPUT
         ? {
-            ...(this.options ? { options: this.options } : {})
+            ...(this.options
+              ? {
+                  options: this.options.map((o) => ({
+                    ...o,
+                    name_localizations: o.name_localizations || null,
+                    description_localizations: o.description_localizations || null
+                  }))
+                }
+              : {})
           }
         : {})
     };
@@ -200,14 +166,19 @@ export class SlashCommand<T = any> {
   onBlock(ctx: CommandContext, reason: string, data?: any): any {
     switch (reason) {
       case 'permission': {
-        if (data.response) return ctx.send(data.response, { ephemeral: true });
-        return ctx.send(`You do not have permission to use the \`${this.commandName}\` command.`, { ephemeral: true });
+        if (data.response) return ctx.send({ content: data.response, ephemeral: true });
+        return ctx.send({
+          content: `You do not have permission to use the \`${this.commandName}\` command.`,
+          ephemeral: true
+        });
       }
       case 'throttling': {
-        return ctx.send(
-          `You may not use the \`${this.commandName}\` command again for another ${data.remaining.toFixed(1)} seconds.`,
-          { ephemeral: true }
-        );
+        return ctx.send({
+          content: `You may not use the \`${this.commandName}\` command again for another ${data.remaining.toFixed(
+            1
+          )} seconds.`,
+          ephemeral: true
+        });
       }
       default:
         return null;
@@ -221,7 +192,7 @@ export class SlashCommand<T = any> {
    */
   onError(err: Error, ctx: CommandContext): any {
     if (!ctx.expired && !ctx.initiallyResponded)
-      return ctx.send('An error occurred while running the command.', { ephemeral: true });
+      return ctx.send({ content: 'An error occurred while running the command.', ephemeral: true });
   }
 
   /**
@@ -235,34 +206,32 @@ export class SlashCommand<T = any> {
   onUnload(): any {}
 
   /**
-   * Creates/obtains the throttle object for a user, if necessary.
-   * @param userID ID of the user to throttle for
-   * @private
+   * Called in order to throttle command usages before running.
+   * @param ctx The context being throttled
    */
-  throttle(userID: string): ThrottleObject | null {
+  async throttle(ctx: CommandContext): Promise<ThrottleResult | null> {
     if (!this.throttling) return null;
+    const userID = ctx.user.id;
 
     let throttle = this._throttles.get(userID);
-    if (!throttle) {
+    if (!throttle || throttle.start + this.throttling.duration * 1000 - Date.now() < 0) {
+      if (throttle) clearTimeout(throttle.timeout);
       throttle = {
         start: Date.now(),
         usages: 0,
-        timeout: setTimeout(() => {
-          this._throttles.delete(userID);
-        }, this.throttling.duration * 1000)
+        timeout: setTimeout(() => this._throttles.delete(userID), this.throttling.duration * 1000)
       };
       this._throttles.set(userID, throttle);
     }
 
-    return throttle;
-  }
+    // Return throttle result if the user has been throttled
+    if (throttle.usages + 1 > this.throttling.usages) {
+      const retryAfter = (throttle.start + this.throttling.duration * 1000 - Date.now()) / 1000;
+      return { retryAfter };
+    }
+    throttle.usages++;
 
-  /** Reloads the command. */
-  reload() {
-    if (!this.filePath) throw new Error('Cannot reload a command without a file path defined!');
-    if (require.cache[this.filePath]) delete require.cache[this.filePath];
-    const newCommand = require(this.filePath);
-    this.creator.reregisterCommand(newCommand, this);
+    return null;
   }
 
   /** Unloads the command. */
@@ -375,38 +344,10 @@ export interface SlashCommandOptions {
   unknown?: boolean;
   /** Whether responses from this command should defer ephemeral messages. */
   deferEphemeral?: boolean;
-  /**
-   * Whether to enable this command for everyone by default. `true` by default.
-   * @deprecated Use {@link SlashCommandOptions.requiredPermissions} and {@link SlashCommandOptions.dmPermission} instead.
-   */
-  defaultPermission?: boolean;
   /** Whether to enable this command in direct messages. `true` by default. */
   dmPermission?: boolean;
-  /**
-   * The command permissions per guild
-   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
-   */
-  permissions?: CommandPermissions;
   /** Whether this command is age-restricted. `false` by default. */
   nsfw?: boolean;
-}
-
-/**
- * The command permission for a {@link SlashCommand}.
- * The object is a guild ID mapped to an array of {@link ApplicationCommandPermissions}.
- * @example
- * {
- *   '<guild_id>': [
- *     {
- *       type: ApplicationCommandPermissionType.USER,
- *       id: '<user_id>',
- *       permission: true
- *     }
- *   ]
- * }
- */
-export interface CommandPermissions {
-  [guildID: string]: ApplicationCommandPermissions[];
 }
 
 /** The throttling options for a {@link SlashCommand}. */
@@ -422,4 +363,12 @@ export interface ThrottleObject {
   start: number;
   usages: number;
   timeout: any;
+}
+
+/** @private */
+export interface ThrottleResult {
+  start?: number;
+  limit?: number;
+  remaining?: number;
+  retryAfter: number;
 }

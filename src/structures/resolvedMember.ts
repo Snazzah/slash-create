@@ -7,7 +7,7 @@ import {
   ImageFormats,
   ImageSizeBoundaries
 } from '../constants';
-import { SlashCreator } from '../creator';
+import { BaseSlashCreator } from '../creator';
 import { User } from './user';
 
 /** Represents a resolved member object. */
@@ -36,7 +36,7 @@ export class ResolvedMember {
   readonly guildID: string;
 
   /** The creator of the member class. */
-  private readonly _creator: SlashCreator;
+  private readonly _creator: BaseSlashCreator;
 
   /**
    * @param data The data for the member
@@ -44,7 +44,7 @@ export class ResolvedMember {
    * @param creator The instantiating creator
    * @param guildID The ID of the guild this member belongs to
    */
-  constructor(data: ResolvedMemberData, userData: CommandUser, creator: SlashCreator, guildID: string) {
+  constructor(data: ResolvedMemberData, userData: CommandUser, creator: BaseSlashCreator, guildID: string) {
     this._creator = creator;
 
     if (data.nick) this.nick = data.nick;

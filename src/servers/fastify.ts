@@ -1,13 +1,6 @@
 import { Server, ServerRequestHandler, ServerOptions } from '../server';
 import { MultipartData } from '../util/multipartData';
 
-let fastify: any;
-let symbols: { [key: string]: symbol };
-try {
-  fastify = require('fastify');
-  symbols = require('fastify/lib/symbols');
-} catch {}
-
 /**
  * A server for Fastify applications.
  * @see https://fastify.io
@@ -21,38 +14,18 @@ export class FastifyServer extends Server {
    */
   constructor(app?: any, opts?: ServerOptions) {
     super(opts);
-    if (!fastify) throw new Error('You must have the `fastify` package installed before using this server.');
-    if (!app) {
-      app = fastify.default();
-    } else if (!(symbols.kState in app)) {
-      app = fastify.default(app);
+    try {
+      const fastify = require('fastify');
+      const symbols = require('fastify/lib/symbols');
+      if (!app) {
+        app = fastify.default();
+      } else if (!(symbols.kState in app)) {
+        app = fastify.default(app);
+      }
+    } catch (e) {
+      throw new Error('You must have the `fastify` package installed before using this server.');
     }
     this.app = app;
-  }
-
-  /**
-   * Adds middleware to the Fastify server.
-   * <warn>This requires you to have the 'middie' module registered to the server before using.</warn>
-   * @param middleware The middleware to add.
-   * @see https://www.fastify.io/docs/latest/Middleware/
-   * @deprecated Use server.app.use
-   */
-  addMiddleware(middleware: Function) {
-    // @ts-ignore
-    if ('use' in this.app) this.app.use(middleware);
-    else
-      throw new Error(
-        "In order to use Express-like middleware, you must initialize the server and register the 'middie' module."
-      );
-    return this;
-  }
-
-  /**
-   * Alias for {@link FastifyServer#addMiddleware}
-   * @deprecated Use server.app.use
-   * */
-  use(middleware: Function) {
-    return this.addMiddleware(middleware);
   }
 
   /** @private */

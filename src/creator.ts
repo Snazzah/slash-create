@@ -1,13 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import HTTPS from 'https';
-import {
-  formatAllowedMentions,
-  FormattedAllowedMentions,
-  getFiles,
-  MessageAllowedMentions,
-  oneLine,
-  verifyKey
-} from './util';
+import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions, oneLine } from './util';
 import {
   ImageFormat,
   InteractionType,
@@ -24,7 +16,6 @@ import {
 } from './constants';
 import { SlashCommand } from './command';
 import { TypedEventEmitter } from './util/typedEmitter';
-import { RequestHandler } from './util/requestHandler';
 import { Collection } from './util/collection';
 import { SlashCreatorAPI } from './api';
 import { Server, TransformedRequest, RespondFunction, Response } from './server';
@@ -32,11 +23,11 @@ import { CommandContext } from './structures/interfaces/commandContext';
 import isEqual from 'lodash.isequal';
 import { ComponentContext } from './structures/interfaces/componentContext';
 import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
-import path from 'path';
 import { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
+import { RequestHandler, RESTOptions } from './rest/requestHandler';
 
-/** The main class for using commands and interactions. */
-export class SlashCreator extends (EventEmitter as any as new () => TypedEventEmitter<SlashCreatorEvents>) {
+/** The base class for SlashCreators. */
+export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEventEmitter<SlashCreatorEvents>) {
   /** The options from constructing the creator */
   options: SlashCreatorOptions;
   /** The request handler for the creator */
@@ -45,11 +36,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   readonly api = new SlashCreatorAPI(this);
   /** The commands loaded onto the creator */
   readonly commands = new Collection<string, SlashCommand>();
-  /**
-   * The path where the commands were loaded from
-   * @see #registerCommandsIn
-   */
-  commandsPath?: string;
   /** The server being used in the creator */
   server?: Server;
   /** The client being passed to this creator */
@@ -65,7 +51,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   _modalCallbacks = new Map<string, ModalCallback>();
 
   /** @param opts The options for the creator */
-  constructor(opts: SlashCreatorOptions) {
+  constructor(opts: SlashCreatorOptions, requestHandlerOverrides?: any) {
     // eslint-disable-next-line constructor-super
     super();
 
@@ -91,7 +77,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         latencyThreshold: 30000,
         ratelimiterOffset: 0,
         requestTimeout: 15000,
-        maxSignatureTimestamp: 5000,
         endpointPath: '/interactions',
         serverPort: 8030,
         serverHost: 'localhost'
@@ -100,8 +85,11 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     );
 
     this.allowedMentions = formatAllowedMentions(this.options.allowedMentions as MessageAllowedMentions);
-
-    this.requestHandler = new RequestHandler(this);
+    this.requestHandler = new RequestHandler(this, {
+      ...(this.options.rest ?? {}),
+      token: this.options.token,
+      overrides: requestHandlerOverrides
+    });
     this.api = new SlashCreatorAPI(this);
   }
 
@@ -141,10 +129,10 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     if (slashCommand.unknown) this.unknownCommand = slashCommand;
     else this.commands.set(slashCommand.keyName, slashCommand);
 
-    this.emit('commandRegister', slashCommand, this);
+    this.emit('commandRegister', slashCommand);
     this.emit('debug', `Registered command ${slashCommand.keyName}.`);
 
-    return this;
+    return slashCommand;
   }
 
   /**
@@ -154,9 +142,10 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    */
   registerCommands(commands: any[], ignoreInvalid = false) {
     if (!Array.isArray(commands)) throw new TypeError('Commands must be an Array.');
+    const registeredCommands: SlashCommand<this>[] = [];
     for (const command of commands) {
       try {
-        this.registerCommand(command);
+        registeredCommands.push(this.registerCommand(command));
       } catch (e) {
         if (ignoreInvalid) {
           this.emit('warn', `Skipped an invalid command: ${e}`);
@@ -164,57 +153,22 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         } else throw e;
       }
     }
-    return this;
+    return registeredCommands;
   }
 
   /**
    * Registers all commands in a directory. The files must export a Command class constructor or instance.
    * @param commandsPath The path to the command directory
-   * @param customExtensions An array of custom file extensions (`.js` and `.cjs` are already included)
+   * @param extensionsOrFilter An array of custom file extensions (with `.js` and `.cjs` already included) or a function that filters file names
    * @example
-   * const path = require('path');
-   * creator.registerCommandsIn(path.join(__dirname, 'commands'));
+   * await creator.registerCommandsIn(require('path').join(__dirname, 'commands'));
    */
-  registerCommandsIn(commandPath: string, customExtensions: string[] = []) {
-    const extensions = ['.js', '.cjs', ...customExtensions];
-    const paths = getFiles(commandPath).filter((file) => extensions.includes(path.extname(file)));
-    const commands: any[] = [];
-    for (const filePath of paths) {
-      try {
-        commands.push(require(filePath));
-      } catch (e) {
-        this.emit('error', new Error(`Failed to load command ${filePath}: ${e}`));
-      }
-    }
-    return this.registerCommands(commands, true);
-  }
-
-  /**
-   * Reregisters a command. (does not support changing name, or guild IDs)
-   * @param command New command
-   * @param oldCommand Old command
-   */
-  reregisterCommand(command: any, oldCommand: SlashCommand) {
-    if (typeof command === 'function') command = new command(this);
-    else if (typeof command.default === 'function') command = new command.default(this);
-
-    if (command.creator !== this) throw new Error(`Invalid command object to reregister: ${command}`);
-    const slashCommand = command as SlashCommand;
-
-    oldCommand.onUnload();
-
-    if (!slashCommand.unknown) {
-      if (slashCommand.commandName !== oldCommand.commandName) throw new Error('Command name cannot change.');
-      if (!isEqual(slashCommand.guildIDs, oldCommand.guildIDs)) throw new Error('Command guild IDs cannot change.');
-      this.commands.set(slashCommand.keyName, slashCommand);
-    } else if (this.unknownCommand !== oldCommand) {
-      throw new Error('An unknown command is already registered.');
-    } else {
-      this.unknownCommand = slashCommand;
-    }
-
-    this.emit('commandReregister', slashCommand, oldCommand);
-    this.emit('debug', `Reregistered command ${slashCommand.keyName}.`);
+  async registerCommandsIn(
+    commandPath: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    extensionsOrFilter: string[] | FileFilter = []
+  ): Promise<SlashCommand[]> {
+    throw new Error('registerCommandsIn() is not availble in this environment.');
   }
 
   /**
@@ -257,24 +211,12 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
    * Sync all commands to Discord. This ensures that commands exist when handling them.
    * <warn>This requires you to have your token set in the creator config.</warn>
    */
-  syncCommands(opts?: SyncCommandOptions) {
-    this.syncCommandsAsync(opts)
-      .then(() => this.emit('synced'))
-      .catch((err) => this.emit('error', err));
-    return this;
-  }
-
-  /**
-   * Sync all commands to Discord asyncronously. This ensures that commands exist when handling them.
-   * <warn>This requires you to have your token set in the creator config.</warn>
-   */
-  async syncCommandsAsync(opts?: SyncCommandOptions) {
+  async syncCommands(opts?: SyncCommandOptions) {
     const options = Object.assign(
       {
         deleteCommands: true,
         syncGuilds: true,
-        skipGuildErrors: true,
-        syncPermissions: false
+        skipGuildErrors: true
       },
       opts
     ) as SyncCommandOptions;
@@ -304,8 +246,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     }
 
     this.emit('debug', 'Finished syncing commands');
-
-    if (options.syncPermissions) await this.syncCommandPermissions();
   }
 
   /**
@@ -344,7 +284,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         if (command.onLocaleUpdate) await command.onLocaleUpdate();
         updatePayload.push({
           id: applicationCommand.id,
-          ...(command.toCommandJSON ? command.toCommandJSON(false) : command.commandJSON)
+          ...command.toCommandJSON(false)
         });
         handledCommands.push(command.keyName);
       } else if (deleteCommands) {
@@ -372,9 +312,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     for (const [, command] of unhandledCommands) {
       this.emit('debug', `Creating guild command "${command.commandName}" (type ${command.type}, guild: ${guildID})`);
       if (command.onLocaleUpdate) await command.onLocaleUpdate();
-      updatePayload.push({
-        ...(command.toCommandJSON ? command.toCommandJSON(false) : command.commandJSON)
-      });
+      updatePayload.push(command.toCommandJSON(false));
     }
 
     if (!isEqual(updatePayload, commandsPayload)) {
@@ -417,7 +355,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         if (command.onLocaleUpdate) await command.onLocaleUpdate();
         updatePayload.push({
           id: applicationCommand.id,
-          ...(command.toCommandJSON ? command.toCommandJSON() : command.commandJSON)
+          ...command.toCommandJSON()
         });
       } else if (deleteCommands) {
         this.emit(
@@ -444,9 +382,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     for (const [, command] of unhandledCommands) {
       this.emit('debug', `Creating command "${command.commandName}" (type ${command.type})`);
       if (command.onLocaleUpdate) await command.onLocaleUpdate();
-      updatePayload.push({
-        ...(command.toCommandJSON ? command.toCommandJSON() : command.commandJSON)
-      });
+      updatePayload.push(command.toCommandJSON());
     }
 
     if (!isEqual(updatePayload, commandsPayload)) {
@@ -459,18 +395,6 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
         if (command) command.ids.set('global', newCommand.id);
       }
     }
-  }
-
-  /**
-   * Sync command permissions.
-   * <warn>This requires you to have your token set in the creator config AND have commands already synced previously.</warn>
-   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
-   */
-  async syncCommandPermissions() {
-    this.emit(
-      'warn',
-      'Syncing command permissions has been deprecated and will be removed in the future: https://link.snaz.in/sc-cpd'
-    );
   }
 
   /**
@@ -587,7 +511,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       }
   }
 
-  private _getCommandFromInteraction(interaction: InteractionRequestData | CommandAutocompleteRequestData) {
+  protected _getCommandFromInteraction(interaction: InteractionRequestData | CommandAutocompleteRequestData) {
     return 'guild_id' in interaction
       ? this.commands.find(
           (command) =>
@@ -601,6 +525,11 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
       : this.commands.get(`${interaction.data.type}:global:${interaction.data.name}`);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected async _verify(body: string, signature: string, timestamp: string): Promise<boolean> {
+    throw new Error(`${this.constructor.name} doesn't have a _verify() method.`);
+  }
+
   protected async _onRequest(treq: TransformedRequest, respond: RespondFunction) {
     this.emit('debug', 'Got request');
     this.emit('rawRequest', treq);
@@ -609,24 +538,7 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
     const signature = treq.headers['x-signature-ed25519'] as string;
     const timestamp = treq.headers['x-signature-timestamp'] as string;
 
-    // Check if both signature and timestamp exists, and the timestamp isn't past due.
-    if (
-      !signature ||
-      !timestamp ||
-      parseInt(timestamp) < (Date.now() - (this.options.maxSignatureTimestamp as number)) / 1000
-    ) {
-      this.emit(
-        'debug',
-        'A request failed to be verified due to a bad timestamp. If this error persists, consider increasing maxSignatureTimestamp'
-      );
-      this.emit('unverifiedRequest', treq);
-      return respond({
-        status: 401,
-        body: 'Invalid signature'
-      });
-    }
-
-    const verified = await verifyKey(JSON.stringify(treq.body), signature, timestamp, this.options.publicKey as string);
+    const verified = await this._verify(JSON.stringify(treq.body), signature, timestamp);
 
     if (!verified) {
       this.emit('debug', 'A request failed to be verified');
@@ -720,16 +632,14 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
           }
 
           // Throttle the command
-          const throttle = command.throttle(ctx.user.id);
-          if (throttle && command.throttling && throttle.usages + 1 > command.throttling.usages) {
-            const remaining = (throttle.start + command.throttling.duration * 1000 - Date.now()) / 1000;
-            const data = { throttle, remaining };
+          const throttleResult = await command.throttle(ctx);
+          if (throttleResult) {
+            const data = { throttle: throttleResult, remaining: throttleResult.retryAfter };
             this.emit('commandBlock', command, ctx, 'throttling', data);
             return command.onBlock(ctx, 'throttling', data);
           }
 
           // Run the command
-          if (throttle) throttle.usages++;
           return this._runCommand(command, ctx);
         }
       }
@@ -859,10 +769,8 @@ export class SlashCreator extends (EventEmitter as any as new () => TypedEventEm
   }
 }
 
-export const Creator = SlashCreator;
-
 /**
- * The events typings for the {@link SlashCreator}.
+ * The events typings for the {@link BaseSlashCreator}.
  * @private
  */
 interface SlashCreatorEvents {
@@ -879,7 +787,7 @@ interface SlashCreatorEvents {
   componentInteraction: (ctx: ComponentContext) => void;
   modalInteraction: (ctx: ModalInteractionContext) => void;
   autocompleteInteraction: (ctx: AutocompleteContext, command?: SlashCommand) => void;
-  commandRegister: (command: SlashCommand, creator: SlashCreator) => void;
+  commandRegister: (command: SlashCommand) => void;
   commandUnregister: (command: SlashCommand) => void;
   commandReregister: (command: SlashCommand, oldCommand: SlashCommand) => void;
   commandBlock: (command: SlashCommand, ctx: CommandContext, reason: string, data: any) => void;
@@ -928,16 +836,8 @@ export interface SlashCreatorOptions {
   defaultImageFormat?: ImageFormat;
   /** The default image size to provide user avatars in. */
   defaultImageSize?: number;
-  /** The average latency where SlashCreate will start emitting warnings for. */
-  latencyThreshold?: number;
-  /** A number of milliseconds to offset the ratelimit timing calculations by. */
-  ratelimiterOffset?: number;
-  /** A number of milliseconds before requests are considered timed out. */
-  requestTimeout?: number;
-  /** A number of milliseconds before requests with a timestamp past that time get rejected. */
-  maxSignatureTimestamp?: number;
-  /** A HTTP Agent used to proxy requests */
-  agent?: HTTPS.Agent;
+  /** The options passed to the request handler. */
+  rest?: RESTOptions;
   /** The client to pass to the creator */
   client?: any;
 }
@@ -953,16 +853,16 @@ interface SyncCommandOptions {
    * Guild syncs most likely can error if that guild no longer exists.
    */
   skipGuildErrors?: boolean;
-  /**
-   * Whether to sync command permissions after syncing commands.
-   * @deprecated Command permissions have been deprecated: https://link.snaz.in/sc-cpd
-   */
-  syncPermissions?: boolean;
 }
 
 /** A component callback from {@see MessageInteractionContext#registerComponent}. */
 export type ComponentRegisterCallback = (ctx: ComponentContext) => void;
+
+/** A component callback from {@see ModalSendableContext#sendModal}. */
 export type ModalRegisterCallback = (ctx: ModalInteractionContext) => void;
+
+/** A function to filter files in {@see SlashCreator#registerCommandsIn}. */
+export type FileFilter = (path: string, index: number, array: string[]) => boolean;
 
 /** @hidden */
 interface BaseCallback<T> {

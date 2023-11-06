@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { AnyRequestData } from './constants';
+import type { FileContent } from './rest/requestHandler';
 
 /**
  * The base Server for {@link SlashCreator}.
@@ -74,7 +75,7 @@ export interface Response {
   /** The body of the response. */
   body?: any;
   /** The files of the response. */
-  files?: any[];
+  files?: FileContent[];
 }
 
 /**
@@ -87,7 +88,7 @@ export type RespondFunction = (response: Response) => Promise<void>;
  * The handler for pushing requests to a {@link SlashCreator}.
  * @private
  */
-export type ServerRequestHandler = (treq: TransformedRequest, respond: RespondFunction) => void;
+export type ServerRequestHandler = (treq: TransformedRequest, respond: RespondFunction) => Promise<void>;
 
 /**
  * The handler for pushing interaction events to a {@link SlashCreator}.

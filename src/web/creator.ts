@@ -1,5 +1,6 @@
 import { BaseSlashCreator, SlashCreatorOptions } from '../creator';
 
+// https://gist.github.com/devsnek/77275f6e3f810a9545440931ed314dc1
 function hex2bin(hex: string) {
   const buf = new Uint8Array(Math.ceil(hex.length / 2));
   for (var i = 0; i < buf.length; i++) {
@@ -33,10 +34,6 @@ export class SlashCreator extends BaseSlashCreator {
     return this.#publicKey;
   }
 
-  /**
-   * Validates a payload from Discord against its signature and key.
-   * @see https://gist.github.com/devsnek/77275f6e3f810a9545440931ed314dc1
-   */
   protected async _verify(body: string, signature: string, timestamp: string): Promise<boolean> {
     return await crypto.subtle.verify(
       'NODE-ED25519',

@@ -74,7 +74,7 @@ export class BunServer extends Server {
       ...this._options,
       port,
       hostname: host,
-      fetch: this.fetch.bind(this)
+      fetch: this.fetch
     });
   }
 }

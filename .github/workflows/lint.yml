@@ -53,9 +53,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run ESLint
-        run: pnpm run lint
-          --format @microsoft/eslint-formatter-sarif
-          --output-file eslint-results.sarif
+        run: pnpm run lint:sarif
         continue-on-error: true
 
       - name: Upload analysis results to GitHub

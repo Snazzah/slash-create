@@ -1,6 +1,4 @@
 import { Server, ServerRequestHandler } from '../server';
-// @ts-ignore
-import type { Request as WorkerRequest, ExecutionContext } from '@cloudflare/workers-types';
 
 /**
  * A server for Cloudflare Workers.
@@ -20,7 +18,7 @@ export class CloudflareWorkerServer extends Server {
    * creator.withServer(workerServer);
    * export default workerServer;
    */
-  readonly fetch = async (request: WorkerRequest, env: Record<string, object>, ctx: ExecutionContext) => {
+  readonly fetch = async (request: any, env: any, ctx: any) => {
     if (!this._handler) return new Response('Server has no handler.', { status: 503 });
     if (request.method !== 'POST') return new Response('Server only supports POST requests.', { status: 405 });
     const body = await request.text();
@@ -57,7 +55,7 @@ export class CloudflareWorkerServer extends Server {
           }
         ).catch(reject)
       );
-    }) as Promise<Response>;
+    }) as Promise<any>;
   };
 
   /** @private */

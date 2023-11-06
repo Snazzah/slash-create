@@ -318,7 +318,7 @@ export interface RawRequest {
   files: FileContent[] | undefined;
   latency: number;
   method: string;
-  response: Response;
+  response: any;
   url: URL;
 }
 

@@ -24,14 +24,14 @@ export class BunServer extends Server {
    * creator.withServer(workerServer);
    * export default workerServer;
    */
-  readonly fetch = async (request: Request) => {
+  readonly fetch = async (request: any) => {
     if (!this._handler) return new Response('Server has no handler.', { status: 503 });
     if (request.method !== 'POST') return new Response('Server only supports POST requests.', { status: 405 });
     const body = await request.text();
     return new Promise((resolve, reject) => {
       this._handler!(
         {
-          headers: Object.fromEntries((request as any).headers.entries()),
+          headers: Object.fromEntries(request.headers.entries()),
           body: body ? JSON.parse(body) : body,
           request,
           response: null
@@ -59,7 +59,7 @@ export class BunServer extends Server {
             );
         }
       ).catch(reject);
-    }) as Promise<Response>;
+    }) as Promise<any>;
   };
 
   /** @private */

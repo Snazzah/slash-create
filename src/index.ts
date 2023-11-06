@@ -16,6 +16,7 @@ export * from './rest/DiscordRESTError';
 export * from './rest/requestHandler';
 export * from './rest/sequentialBucket';
 
+export * from './servers/bun';
 export * from './servers/cfworker';
 export * from './servers/lambda';
 export * from './servers/azure';

@@ -18,7 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Additions:
 - Commands can now use the `throttle()` function which takes a CommandContext and allows you to asynchronously ratelimit users before running the command itself.
 - slash-create now has a web export for built-in Cloudflare Worker compatibility.
-- Added the `USE_EXTERNAL_SOUNDS` permission (1 << 46)
+- Support for the Bun runtime with `BunServer`.
+- Added the `USE_EXTERNAL_SOUNDS` permission. (1 << 46)
 ### Fixed:
 - **types**: `min_length` and `max_length` to string options now exists
 ## [5.14.0] - 2023-09-27

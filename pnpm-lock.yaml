@@ -39,7 +39,7 @@ devDependencies:
     version: 4.14.201
   '@types/lodash.isequal':
     specifier: ^4.5.7
-    version: 4.5.7
+    version: 4.5.8
   '@types/mocha':
     specifier: ^10.0.1
     version: 10.0.3
@@ -496,8 +496,8 @@ packages:
     resolution: {integrity: sha512-U3PUjAudAdJBeC2pgN8uTIKgxrb4nlDF3SF0++EldXQvQBGkpFZMSnwQiIoDU77tv45VgNkl/L4ouD+rEomujw==}
     dev: true
 
-  /@types/lodash.isequal@4.5.7:
-    resolution: {integrity: sha512-UJQsb7aW8JU/h3fivQXVRDp9EKi98T9iQcVeTXBxcD4jApgGgbrET/0hVS6vH/YoYpqkcToMU5fSNPEiWVZgDg==}
+  /@types/lodash.isequal@4.5.8:
+    resolution: {integrity: sha512-uput6pg4E/tj2LGxCZo9+y27JNyB2OZuuI/T5F+ylVDYuqICLG2/ktjxx0v6GvVntAf8TvEzeQLcV0ffRirXuA==}
     dependencies:
       '@types/lodash': 4.14.201
     dev: true

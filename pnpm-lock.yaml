@@ -30,7 +30,7 @@ devDependencies:
     version: 8.10.125
   '@types/chai':
     specifier: ^4.3.9
-    version: 4.3.9
+    version: 4.3.11
   '@types/chai-as-promised':
     specifier: ^7.1.7
     version: 7.1.7
@@ -485,11 +485,11 @@ packages:
   /@types/chai-as-promised@7.1.7:
     resolution: {integrity: sha512-APucaP5rlmTRYKtRA6FE5QPP87x76ejw5t5guRJ4y5OgMnwtsvigw7HHhKZlx2MGXLeZd6R/GNZR/IqDHcbtQw==}
     dependencies:
-      '@types/chai': 4.3.9
+      '@types/chai': 4.3.11
     dev: true
 
-  /@types/chai@4.3.9:
-    resolution: {integrity: sha512-69TtiDzu0bcmKQv3yg1Zx409/Kd7r0b5F1PfpYJfSHzLGtB53547V4u+9iqKYsTu/O2ai6KTb0TInNpvuQ3qmg==}
+  /@types/chai@4.3.11:
+    resolution: {integrity: sha512-qQR1dr2rGIHYlJulmr8Ioq3De0Le9E4MJ5AiaeAETJJpndT1uUNHsGFK3L/UIu+rbkQSdj8J/w2bCsBZc/Y5fQ==}
     dev: true
 
   /@types/json-schema@7.0.14:

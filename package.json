@@ -89,7 +89,7 @@
     "rimraf": "^5.0.5",
     "shx": "^0.3.4",
     "ts-docgen": "github:dbots-pkg/ts-docgen#main",
-    "tsx": "^3.14.0",
+    "tsx": "^4.6.2",
     "typedoc": "0.19.2",
     "typedoc-plugin-as-member-of": "^1.0.2",
     "typescript": "4.4.2"

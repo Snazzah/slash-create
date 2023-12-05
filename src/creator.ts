@@ -538,7 +538,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
     const signature = treq.headers['x-signature-ed25519'] as string;
     const timestamp = treq.headers['x-signature-timestamp'] as string;
 
-    const verified = await this._verify(JSON.stringify(treq.body), signature, timestamp);
+    const verified = await this._verify(treq.rawBody || JSON.stringify(treq.body), signature, timestamp);
 
     if (!verified) {
       this.emit('debug', 'A request failed to be verified');

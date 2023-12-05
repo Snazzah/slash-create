@@ -33,7 +33,8 @@ export class AWSLambdaServer extends Server {
         headers: splitHeaders(event.headers),
         body: event.body ? JSON.parse(event.body) : {},
         request: event,
-        response: callback
+        response: callback,
+        rawBody: event.body ?? ''
       },
       async (response) => {
         const responseHeaders = joinHeaders(response.headers);

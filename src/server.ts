@@ -61,6 +61,8 @@ export interface TransformedRequest {
   request: any;
   /** The response class from a Server, depending on what server it is. */
   response: any;
+  /** The raw string of the body. */
+  rawBody?: string;
 }
 
 /**

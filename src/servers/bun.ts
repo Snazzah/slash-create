@@ -34,7 +34,8 @@ export class BunServer extends Server {
           headers: Object.fromEntries(request.headers.entries()),
           body: body ? JSON.parse(body) : body,
           request,
-          response: null
+          response: null,
+          rawBody: body
         },
         async (response) => {
           if (response.files) {

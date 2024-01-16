@@ -27,7 +27,7 @@ devDependencies:
     version: 6.0.1
   '@types/aws-lambda':
     specifier: ^8.10.130
-    version: 8.10.130
+    version: 8.10.131
   '@types/chai':
     specifier: ^4.3.11
     version: 4.3.11
@@ -487,8 +487,8 @@ packages:
       '@sinonjs/commons': 1.8.6
     dev: true
 
-  /@types/aws-lambda@8.10.130:
-    resolution: {integrity: sha512-HxTfLeGvD1wTJqIGwcBCpNmHKenja+We1e0cuzeIDFfbEj3ixnlTInyPR/81zAe0Ss/Ip12rFK6XNeMLVucOSg==}
+  /@types/aws-lambda@8.10.131:
+    resolution: {integrity: sha512-IWmFpqnVDvskYWnNSiu/qlRn80XlIOU0Gy5rKCl/NjhnI95pV8qIHs6L5b+bpHhyzuOSzjLgBcwgFSXrC1nZWA==}
     dev: true
 
   /@types/chai-as-promised@7.1.8:

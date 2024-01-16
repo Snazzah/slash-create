@@ -74,7 +74,7 @@ export class ResolvedMember {
 
   /** The display name for this member. */
   get displayName() {
-    return this.nick || this.user.username;
+    return this.user.globalName || this.user.username;
   }
 
   /** The URL to the member's avatar. */

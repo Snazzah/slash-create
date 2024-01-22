@@ -59,7 +59,7 @@
     "eventemitter3": "^5.0.1",
     "lodash.isequal": "^4.5.0",
     "tweetnacl": "^1.0.3",
-    "undici": "5.28.2"
+    "undici": "6.4.0"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.0.0",

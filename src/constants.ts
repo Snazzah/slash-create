@@ -678,6 +678,7 @@ export interface CommandChannel {
   default_forum_layout?: number;
   default_auto_archive_duration?: number;
   available_tags?: ForumTag[];
+  applied_tags?: string[];
 }
 
 /** Channel metadata for thread-specific channel fields */

@@ -55,6 +55,8 @@ export class Channel {
   readonly defaultAutoArchiveDuration?: number;
   /** The available tags that can be used in posts (Forum channels only) */
   readonly availableTags?: ForumTag[];
+  /** The applied tags of the thread (Threads inside forums only) */
+  readonly appliedTags?: string[];
 
   private _permissionsBitfield?: Permissions;
   private _permissions?: string;
@@ -94,6 +96,7 @@ export class Channel {
     this.defaultForumLayout = data.default_forum_layout;
     this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
     this.availableTags = data.available_tags;
+    this.appliedTags = data.applied_tags;
   }
 
   /** The string that mentions this channel. */

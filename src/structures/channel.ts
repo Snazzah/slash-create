@@ -96,7 +96,7 @@ export class Channel {
     this.defaultForumLayout = data.default_forum_layout;
     this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
     this.availableTags = data.available_tags;
-    this.appliedTags = data.applied_tags
+    this.appliedTags = data.applied_tags;
   }
 
   /** The string that mentions this channel. */

@@ -1,6 +1,8 @@
 import {
   ApplicationCommandOption,
   ApplicationCommandType,
+  ApplicationIntegrationType,
+  InteractionContextType,
   PartialApplicationCommand,
   PermissionNames
 } from './constants';
@@ -38,8 +40,15 @@ export class SlashCommand<T = any> {
   readonly deferEphemeral: boolean;
   /** Whether this command is age-restricted. */
   readonly nsfw: boolean;
-  /** Whether to enable this command in direct messages. */
+  /**
+   * Whether to enable this command in direct messages.
+   * @deprecated Use {@link SlashCommand#contexts} instead.
+   */
   readonly dmPermission: boolean;
+  /** The contexts where this command is available. */
+  readonly integrationTypes: ApplicationIntegrationType[];
+  /** The contexts where this command can be used. */
+  readonly contexts: InteractionContextType[];
   /**
    * The file path of the command.
    * Used for refreshing the require cache.
@@ -81,7 +90,14 @@ export class SlashCommand<T = any> {
     this.throttling = opts.throttling;
     this.unknown = opts.unknown || false;
     this.deferEphemeral = opts.deferEphemeral || false;
-    this.dmPermission = typeof opts.dmPermission === 'boolean' ? opts.dmPermission : true;
+    this.contexts = opts.contexts || [];
+    this.integrationTypes = opts.integrationTypes || [ApplicationIntegrationType.GUILD_INSTALL];
+    this.dmPermission =
+      typeof opts.dmPermission === 'boolean'
+        ? opts.dmPermission
+        : this.contexts.length !== 0
+          ? this.contexts.includes(InteractionContextType.BOT_DM)
+          : true;
   }
 
   /**
@@ -98,7 +114,13 @@ export class SlashCommand<T = any> {
       name_localizations: this.nameLocalizations || null,
       description: this.description || '',
       description_localizations: this.descriptionLocalizations || null,
-      ...(global ? { dm_permission: this.dmPermission } : {}),
+      ...(global
+        ? {
+            dm_permission: this.dmPermission,
+            contexts: this.contexts.length !== 0 ? this.contexts : null,
+            integration_types: this.integrationTypes
+          }
+        : {}),
       nsfw: this.nsfw,
       ...(this.type === ApplicationCommandType.CHAT_INPUT
         ? {
@@ -344,10 +366,17 @@ export interface SlashCommandOptions {
   unknown?: boolean;
   /** Whether responses from this command should defer ephemeral messages. */
   deferEphemeral?: boolean;
-  /** Whether to enable this command in direct messages. `true` by default. */
+  /**
+   * Whether to enable this command in direct messages. `true` by default.
+   * @deprecated Use {@link SlashCommandOptions#contexts} instead.
+   */
   dmPermission?: boolean;
   /** Whether this command is age-restricted. `false` by default. */
   nsfw?: boolean;
+  /** The contexts where this command is available. */
+  integrationTypes?: ApplicationIntegrationType[];
+  /** The contexts where this command can be used. */
+  contexts?: InteractionContextType[];
 }
 
 /** The throttling options for a {@link SlashCommand}. */

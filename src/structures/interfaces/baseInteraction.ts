@@ -2,7 +2,7 @@ import { BaseSlashCreator } from '../../creator';
 import { Member } from '../member';
 import { User } from '../user';
 import { Permissions } from '../permissions';
-import { AppEntitlement, AttachmentData } from '../../constants';
+import { AppEntitlement, ApplicationIntegrationType, AttachmentData, InteractionContextType } from '../../constants';
 import { Collection } from '../../util/collection';
 import { Channel } from '../channel';
 import { Message } from '../message';
@@ -37,6 +37,13 @@ export class BaseInteractionContext {
   readonly appPermissions?: Permissions;
   /** The entitlements the invoking user has. */
   readonly entitlements: AppEntitlement[];
+  /**
+   * The map of owner IDs that this interaction was authorized for.
+   * @see https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object
+   */
+  readonly authorizingIntegrationOwners?: Record<ApplicationIntegrationType, string>;
+  /** The context that this interaction comes from. */
+  readonly context?: InteractionContextType;
 
   /** The resolved users of the interaction. */
   readonly users = new Collection<string, User>();
@@ -69,6 +76,8 @@ export class BaseInteractionContext {
     this.channel = new Channel(data.channel);
     this.appPermissions = data.app_permissions ? new Permissions(BigInt(data.app_permissions)) : undefined;
     this.entitlements = data.entitlements;
+    if (data.authorizing_integration_owners) this.authorizingIntegrationOwners = data.authorizing_integration_owners;
+    if ('context' in data) this.context = data.context;
 
     if (data.data.resolved) {
       if (data.data.resolved.users)

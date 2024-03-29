@@ -141,7 +141,10 @@ export interface PartialApplicationCommand {
   description_localizations?: Record<string, string> | null;
   /** The options for the command. */
   options?: ApplicationCommandOption[];
-  /** Whether to enable this command for everyone by default. */
+  /**
+   * Whether to enable this command for everyone by default.
+   * @deprecated
+   */
   default_permission?: boolean;
   /** Whether to enable this command in direct messages. */
   dm_permission?: boolean | null;
@@ -149,6 +152,10 @@ export interface PartialApplicationCommand {
   default_member_permissions?: string | null;
   /** Whether this command is age-restricted. */
   nsfw?: boolean | null;
+  /** The interaction contexts where this command is available. */
+  integration_types?: ApplicationIntegrationType[];
+  /** The interaction contexts where this command can be used. */
+  contexts?: InteractionContextType[] | null;
   /** The type of application this is representing. `1` by default. */
   type?: ApplicationCommandType;
 }
@@ -292,6 +299,24 @@ export enum ApplicationCommandPermissionType {
   CHANNEL = 3
 }
 
+/** The type of context an interaction can apply to. */
+export enum InteractionContextType {
+  /** Interaction can be used within servers */
+  GUILD = 0,
+  /** Interaction can be used within DMs with the app's bot user */
+  BOT_DM = 1,
+  /**	Interaction can be used within Group DMs and DMs other than the app's bot user */
+  PRIVATE_CHANNEL = 2
+}
+
+/** The type of context an app can install to. */
+export enum ApplicationIntegrationType {
+  /** App is installable to guilds. */
+  GUILD_INSTALL = 0,
+  /** App is installable to users. */
+  USER_INSTALL = 1
+}
+
 /** A permission in a command. */
 export interface ApplicationCommandPermissions {
   id: string;
@@ -370,6 +395,8 @@ export interface DMModalSubmitRequestData {
   message?: MessageData;
   app_permissions?: string;
   entitlements: AppEntitlement[];
+  authorizing_integration_owners?: Record<ApplicationIntegrationType, string>;
+  context?: InteractionContextType;
   data: {
     custom_id: string;
     components: ComponentActionRow[];
@@ -394,6 +421,8 @@ export interface GuildModalSubmitRequestData {
   message?: MessageData;
   app_permissions?: string;
   entitlements: AppEntitlement[];
+  authorizing_integration_owners?: Record<ApplicationIntegrationType, string>;
+  context?: InteractionContextType;
   data: {
     custom_id: string;
     components: ComponentActionRow[];
@@ -422,6 +451,8 @@ export interface DMInteractionRequestData {
   channel: CommandChannel;
   app_permissions?: string;
   entitlements: AppEntitlement[];
+  authorizing_integration_owners?: Record<ApplicationIntegrationType, string>;
+  context?: InteractionContextType;
   data: CommandData;
 }
 
@@ -443,6 +474,8 @@ export interface GuildInteractionRequestData {
   channel: CommandChannel;
   app_permissions?: string;
   entitlements: AppEntitlement[];
+  authorizing_integration_owners?: Record<ApplicationIntegrationType, string>;
+  context?: InteractionContextType;
   data: CommandData;
 }
 

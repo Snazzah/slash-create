@@ -1,4 +1,4 @@
-import { AnyComponent, InteractionType, UserObject } from '../constants';
+import { AnyComponent, ApplicationIntegrationType, InteractionType, UserObject } from '../constants';
 import { EditMessageOptions } from './interfaces/messageInteraction';
 import { BaseSlashCreator } from '../creator';
 import { MessageInteractionContext } from './interfaces/messageInteraction';
@@ -42,8 +42,13 @@ export class Message {
   readonly messageReference?: MessageReference;
   /** The message's webhook ID */
   readonly webhookID: string;
-  /** The interaction this message is apart of */
+  /**
+   * The interaction this message is apart of
+   * @deprecated Discord-imposed deprecation in favor of {@see Message#interactionMetadata}
+   */
   readonly interaction?: MessageInteraction;
+  /** The metadata of the interaction this message is apart of */
+  readonly interactionMetadata?: MessageInteractionMetadata;
 
   /** The context that created the message class */
   private readonly _ctx?: MessageInteractionContext;
@@ -55,6 +60,7 @@ export class Message {
   constructor(data: MessageData, creator: BaseSlashCreator, ctx?: MessageInteractionContext) {
     if (ctx) this._ctx = ctx;
 
+    console.log(data);
     this.id = data.id;
     this.type = data.type;
     this.content = data.content;
@@ -85,6 +91,21 @@ export class Message {
         name: data.interaction.name,
         user: new User(data.interaction.user, creator)
       };
+    if (data.interaction_metadata)
+      this.interactionMetadata = this.#convertInteractionMetadata(data.interaction_metadata);
+  }
+
+  #convertInteractionMetadata(metadata: MessageData['interaction_metadata']): MessageInteractionMetadata | undefined {
+    if (!metadata) return undefined;
+    return {
+      id: metadata.id,
+      type: metadata.type,
+      userID: metadata.user_id,
+      authorizingIntegrationOwners: metadata.authorizing_integration_owners,
+      originalResponseMessageID: metadata.original_response_message_id,
+      interactedMessageID: metadata.interacted_message_id,
+      triggeringInteractionMetadata: this.#convertInteractionMetadata(metadata.triggering_interaction_metadata)
+    };
   }
 
   /**
@@ -108,7 +129,8 @@ export class Message {
   }
 }
 
-/** A message interaction. */
+/**
+ * A message interaction. */
 export interface MessageInteraction {
   /** The ID of the interaction. */
   id: string;
@@ -118,6 +140,24 @@ export interface MessageInteraction {
   name: string;
   /** The user who invoked the interaction. */
   user: User;
+}
+
+/** Th emetadata of a message interaction. */
+export interface MessageInteractionMetadata {
+  /** The ID of the interaction. */
+  id: string;
+  /** The type of interaction. */
+  type: InteractionType;
+  /** The ID of the user who invoked the interaction. */
+  userID: string;
+  /** The IDs of the installation contexts that are related to the interaction. */
+  authorizingIntegrationOwners: Record<ApplicationIntegrationType, string>;
+  /** ID of the original response message, only on follow-up messages. */
+  originalResponseMessageID?: string;
+  /** ID of the message that contained the interactive component that created this interaction. */
+  interactedMessageID?: string;
+  /** Metadata for the interaction that was used to open the modal, for modal submit interactions. */
+  triggeringInteractionMetadata?: MessageInteractionMetadata;
 }
 
 /** A message reference. */
@@ -251,6 +291,22 @@ export interface MessageData {
     type: InteractionType;
     name: string;
     user: UserObject;
+  };
+  interaction_metadata?: {
+    id: string;
+    type: InteractionType;
+    user_id: string;
+    authorizing_integration_owners: Record<ApplicationIntegrationType, string>;
+    original_response_message_id?: string;
+    interacted_message_id?: string;
+    triggering_interaction_metadata?: {
+      id: string;
+      type: InteractionType;
+      user_id: string;
+      authorizing_integration_owners: Record<ApplicationIntegrationType, string>;
+      original_response_message_id?: string;
+      interacted_message_id?: string;
+    };
   };
   webhook_id: string;
   message_reference?: {

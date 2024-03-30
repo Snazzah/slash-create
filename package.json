@@ -1,6 +1,6 @@
 {
   "name": "slash-create",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "description": "Create and sync Discord slash commands!",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",

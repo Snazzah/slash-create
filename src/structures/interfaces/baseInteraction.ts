@@ -76,7 +76,8 @@ export class BaseInteractionContext {
     this.channel = new Channel(data.channel);
     this.appPermissions = data.app_permissions ? new Permissions(BigInt(data.app_permissions)) : undefined;
     this.entitlements = data.entitlements;
-    if (data.authorizing_integration_owners) this.authorizingIntegrationOwners = data.authorizing_integration_owners;
+    if ('authorizing_integration_owners' in data)
+      this.authorizingIntegrationOwners = data.authorizing_integration_owners;
     if ('context' in data) this.context = data.context;
 
     if (data.data.resolved) {

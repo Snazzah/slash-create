@@ -60,7 +60,6 @@ export class Message {
   constructor(data: MessageData, creator: BaseSlashCreator, ctx?: MessageInteractionContext) {
     if (ctx) this._ctx = ctx;
 
-    console.log(data);
     this.id = data.id;
     this.type = data.type;
     this.content = data.content;

@@ -7,6 +7,8 @@ import type { AutocompleteContext } from './structures/interfaces/autocompleteCo
 import type { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
 import type { BaseSlashCreator } from './creator';
 import type { FileContent } from './rest/requestHandler';
+import type { Request } from './rest/request';
+import type { Response } from 'undici';
 
 export const VERSION: string = require('../package.json').version;
 
@@ -342,9 +344,10 @@ export interface RawRequest {
   body: Record<string, any> | undefined;
   files: FileContent[] | undefined;
   latency: number;
-  method: string;
-  response: any;
   url: URL;
+  method: string;
+  response: Response;
+  request: Request;
 }
 
 /** Any interaction request from Discord. */

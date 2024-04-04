@@ -160,9 +160,10 @@ export class SequentialBucket {
         body: request.options.body,
         files: request.options.files,
         latency: latency,
+        url: request.url,
         method: request.method,
-        response: res as any,
-        url: request.url
+        request,
+        response: res
       });
 
     const retryAfter = this.#handle(request, res, latency);

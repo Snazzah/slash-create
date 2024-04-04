@@ -867,6 +867,8 @@ export enum ButtonStyle {
   SUCCESS = 3,
   /** A red button. */
   DESTRUCTIVE = 4,
+  /** A red button. */
+  DANGER = 4,
   /** A gray button with a link icon. */
   LINK = 5
 }

@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [6.1.3] - 2024-04-24
+### Fixed:
+- Updated `undici` to fix a [low severity CVE (CVE-2024-24758)](https://github.com/advisories/GHSA-3787-6prv-h9w3)
 ## [6.1.2] - 2024-04-04
 ### Fixed:
 - Added `DANGER` ButtonStyle in accordance to Discord documentation
@@ -543,7 +546,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v6.1.2...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v6.1.3...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -613,3 +616,4 @@ This release features mostly completed documentation and changes to the packages
 [6.1.0]: https://github.com/Snazzah/slash-create/compare/v6.0.2...v6.1.0
 [6.1.1]: https://github.com/Snazzah/slash-create/compare/v6.1.0...v6.1.1
 [6.1.2]: https://github.com/Snazzah/slash-create/compare/v6.1.1...v6.1.2
+[6.1.3]: https://github.com/Snazzah/slash-create/compare/v6.1.2...v6.1.3

@@ -104,7 +104,7 @@ export class Channel {
     return `<#${this.id}>`;
   }
 
-  /** The permissions the application has in the channel. */
+  /** The computed permissions for the invoking user in the channel, including overwrites, excluding implicit permissions. */
   get permissions() {
     if (!this._permissions) return null;
     if (!this._permissionsBitfield) this._permissionsBitfield = new Permissions(BigInt(this._permissions));

@@ -7,6 +7,7 @@ export * from './creator';
 export * from './server';
 
 export * from './node/creator';
+export * from './node/util';
 
 export * from './util/bitfield';
 export * from './util/collection';

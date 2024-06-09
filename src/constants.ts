@@ -899,11 +899,16 @@ export interface ComponentButton {
   /** The type of component to use. */
   type: ComponentType.BUTTON;
   /** The style of button to show. */
-  style: ButtonStyle.PRIMARY | ButtonStyle.SECONDARY | ButtonStyle.SUCCESS | ButtonStyle.DESTRUCTIVE;
+  style:
+    | ButtonStyle.PRIMARY
+    | ButtonStyle.SECONDARY
+    | ButtonStyle.SUCCESS
+    | ButtonStyle.DESTRUCTIVE
+    | ButtonStyle.DANGER;
   /** The identifier for this button. */
   custom_id: string;
   /** The label of the button. */
-  label: string;
+  label?: string;
   /** The emoji to show inside the button. */
   emoji?: PartialEmoji;
   /** Whether this button will show as disabled. */

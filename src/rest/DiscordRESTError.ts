@@ -19,7 +19,7 @@ export class DiscordRESTError extends Error {
   /**
    * @param req A client request
    * @param res An incoming message from the server
-   * @param response Any {@link Server}s response class
+   * @param response A response's body
    * @param stack The error stack
    */
   constructor(req: Request, res: Response, response: any, stack: string) {
@@ -30,9 +30,9 @@ export class DiscordRESTError extends Error {
     this.response = response;
     this.code = res.status;
 
-    let message = response.message || 'Unknown error';
-    if (response.errors) message += '\n  ' + this.flattenErrors(response.errors).join('\n  ');
-    else {
+    let message = response?.message || 'Unknown error';
+    if (response?.errors) message += '\n  ' + this.flattenErrors(response.errors).join('\n  ');
+    else if (response) {
       const errors = this.flattenErrors(response);
       if (errors.length > 0) message += '\n  ' + errors.join('\n  ');
     }

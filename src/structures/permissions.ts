@@ -31,13 +31,19 @@ const FLAGS: { [perm: string]: bigint } = {
   MANAGE_NICKNAMES: 1n << 27n,
   MANAGE_ROLES: 1n << 28n,
   MANAGE_WEBHOOKS: 1n << 29n,
+  /** @deprecated Use MANAGE_GUILD_EXPRESSIONS instead. */
   MANAGE_EMOJIS_AND_STICKERS: 1n << 30n,
+  MANAGE_GUILD_EXPRESSIONS: 1n << 30n,
   USE_APPLICATION_COMMANDS: 1n << 31n,
   REQUEST_TO_SPEAK: 1n << 32n,
   MANAGE_EVENTS: 1n << 33n,
   MANAGE_THREADS: 1n << 34n,
+  /** @deprecated Use CREATE_PUBLIC_THREADS instead. */
   USE_PUBLIC_THREADS: 1n << 35n,
+  CREATE_PUBLIC_THREADS: 1n << 35n,
+  /** @deprecated Use CREATE_PRIVATE_THREADS instead. */
   USE_PRIVATE_THREADS: 1n << 36n,
+  CREATE_PRIVATE_THREADS: 1n << 36n,
   USE_EXTERNAL_STICKERS: 1n << 37n,
   SEND_MESSAGES_IN_THREADS: 1n << 38n,
   USE_EMBEDDED_ACTIVITIES: 1n << 39n,
@@ -45,7 +51,9 @@ const FLAGS: { [perm: string]: bigint } = {
   VIEW_CREATOR_MONETIZATION_ANALYTICS: 1n << 41n,
   USE_SOUNDBOARD: 1n << 42n,
   USE_EXTERNAL_SOUNDS: 1n << 45n,
-  SEND_VOICE_MESSAGES: 1n << 46n
+  SEND_VOICE_MESSAGES: 1n << 46n,
+  SEND_POLLS: 1n << 49n,
+  USE_EXTERNAL_APPS: 1n << 50n
 };
 
 /**

@@ -50,7 +50,10 @@ export enum InteractionResponseType {
   APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = 8,
   /** Respond to an interaction with a popup modal. */
   MODAL = 9,
-  /** Respond to an interaction with prompt for a premium subscription. */
+  /**
+   * Respond to an interaction with prompt for a premium subscription.
+   * @deprecated Use `ComponentButtonPremium` instead.
+   */
   PREMIUM_REQUIRED = 10
 }
 
@@ -870,7 +873,9 @@ export enum ButtonStyle {
   /** A red button. */
   DANGER = 4,
   /** A gray button with a link icon. */
-  LINK = 5
+  LINK = 5,
+  /** A premium button. */
+  PREMIUM = 6
 }
 
 export enum TextInputStyle {
@@ -892,7 +897,7 @@ export interface ComponentActionRow {
 }
 
 /** Any component button. */
-export type AnyComponentButton = ComponentButton | ComponentButtonLink;
+export type AnyComponentButton = ComponentButton | ComponentButtonLink | ComponentButtonPremium;
 
 /** A regular component button. */
 export interface ComponentButton {
@@ -921,6 +926,14 @@ export interface ComponentButtonLink extends Omit<ComponentButton, 'custom_id' |
   style: ButtonStyle.LINK;
   /** The URL for link buttons. */
   url: string;
+}
+
+/** A component button with a premium sku. */
+export interface ComponentButtonPremium extends Omit<ComponentButton, 'custom_id' | 'label' | 'emoji' | 'style'> {
+  /** The style of button to show. */
+  style: ButtonStyle.PREMIUM;
+  /** The identifier for a purchasable SKU. */
+  sku_id: string;
 }
 
 export interface ComponentSelectMenu {

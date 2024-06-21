@@ -212,6 +212,7 @@ export class MessageInteractionContext extends BaseInteractionContext {
   /**
    * Creates a message that prompts the user for a premium subscription.
    * @returns Whether the message passed
+   * @deprecated Use `ComponentButtonPremium` instead.
    */
   async promptPremium(): Promise<boolean> {
     if (!this.initiallyResponded && !this.deferred) {

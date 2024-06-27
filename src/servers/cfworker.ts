@@ -53,7 +53,8 @@ export class CloudflareWorkerServer extends Server {
                   }
                 })
               );
-          }
+          },
+          { cloudflare: true, ...env }
         ).catch(reject)
       );
     }) as Promise<any>;

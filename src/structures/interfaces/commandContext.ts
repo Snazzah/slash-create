@@ -4,7 +4,7 @@ import { AnyCommandOption, ApplicationCommandType, InteractionRequestData } from
 import { ModalSendableContext } from './modalSendableContext';
 
 /** Context representing a command interaction. */
-export class CommandContext extends ModalSendableContext {
+export class CommandContext<ServerContext extends any = unknown> extends ModalSendableContext {
   /** The full interaction data. */
   readonly data: InteractionRequestData;
 
@@ -24,6 +24,9 @@ export class CommandContext extends ModalSendableContext {
   /** Whether the context is from a webserver. */
   private webserverMode: boolean;
 
+  /** Context passed by the server */
+  readonly serverContext: ServerContext;
+
   /**
    * @param creator The instantiating creator.
    * @param data The interaction data for the context.
@@ -38,7 +41,8 @@ export class CommandContext extends ModalSendableContext {
     respond: RespondFunction,
     webserverMode: boolean,
     deferEphemeral = false,
-    useTimeout = true
+    useTimeout = true,
+    serverContext: ServerContext
   ) {
     super(creator, data, respond);
     this.data = data;
@@ -50,7 +54,7 @@ export class CommandContext extends ModalSendableContext {
     if (data.data.target_id) this.targetID = data.data.target_id;
     this.options = data.data.options ? CommandContext.convertOptions(data.data.options) : {};
     this.subcommands = data.data.options ? CommandContext.getSubcommandArray(data.data.options) : [];
-
+    this.serverContext = serverContext;
     // Auto-defer if no response was given in 2 seconds
     if (useTimeout) this._timeout = setTimeout(() => this.defer(deferEphemeral || false), 2000);
   }

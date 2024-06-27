@@ -194,7 +194,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
     if (this.server.isWebserver) {
       if (!this.options.publicKey) throw new Error('A public key is required to be set when using a webserver.');
       this.server.createEndpoint(this.options.endpointPath as string, this._onRequest.bind(this));
-    } else this.server.handleInteraction((interaction) => this._onInteraction(interaction, null, false));
+    } else this.server.handleInteraction((interaction) => this._onInteraction(interaction, null, false, null));
 
     return this;
   }
@@ -530,7 +530,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
     throw new Error(`${this.constructor.name} doesn't have a _verify() method.`);
   }
 
-  protected async _onRequest(treq: TransformedRequest, respond: RespondFunction) {
+  protected async _onRequest(treq: TransformedRequest, respond: RespondFunction, context?: unknown) {
     this.emit('debug', 'Got request');
     this.emit('rawRequest', treq);
 
@@ -550,11 +550,16 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
     }
 
     try {
-      await this._onInteraction(treq.body, respond, true);
+      await this._onInteraction(treq.body, respond, true, context);
     } catch (e) {}
   }
 
-  protected async _onInteraction(interaction: AnyRequestData, respond: RespondFunction | null, webserverMode: boolean) {
+  protected async _onInteraction(
+    interaction: AnyRequestData,
+    respond: RespondFunction | null,
+    webserverMode: boolean,
+    context: unknown
+  ) {
     this.emit('rawInteraction', interaction);
 
     if (!respond || !webserverMode) respond = this._createGatewayRespond(interaction.id, interaction.token);
@@ -592,7 +597,8 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
               respond,
               webserverMode,
               this.unknownCommand.deferEphemeral,
-              !this.options.disableTimeouts
+              !this.options.disableTimeouts,
+              context
             );
             return this._runCommand(this.unknownCommand, ctx);
           } else if (this.options.unknownCommandResponse)
@@ -620,7 +626,8 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
             respond,
             webserverMode,
             command.deferEphemeral,
-            !this.options.disableTimeouts
+            !this.options.disableTimeouts,
+            context
           );
 
           // Ensure the user has permission to use the command
@@ -740,7 +747,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
     }
   }
 
-  private async _runCommand(command: SlashCommand, ctx: CommandContext) {
+  private async _runCommand<T>(command: SlashCommand, ctx: CommandContext<T>) {
     try {
       this.emit(
         'debug',

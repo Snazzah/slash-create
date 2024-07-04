@@ -54,7 +54,7 @@ export class CloudflareWorkerServer extends Server {
                 })
               );
           },
-          { cloudflare: true, ...env }
+          { server: 'cloudflare', ...env }
         ).catch(reject)
       );
     }) as Promise<any>;

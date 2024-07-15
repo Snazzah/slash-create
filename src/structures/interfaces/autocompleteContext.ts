@@ -5,7 +5,7 @@ import { BaseInteractionContext } from './baseInteraction';
 import { CommandContext } from './commandContext';
 
 /** Represents a autocomplete interaction context. */
-export class AutocompleteContext extends BaseInteractionContext {
+export class AutocompleteContext<ServerContext extends any = unknown> extends BaseInteractionContext<ServerContext> {
   /** The full interaction data. */
   readonly data: CommandAutocompleteRequestData;
   /** The options given to the command. */
@@ -24,9 +24,15 @@ export class AutocompleteContext extends BaseInteractionContext {
    * @param creator The instantiating creator.
    * @param data The interaction data.
    * @param respond The response function for the interaction.
+   * @param serverContext The context of the server.
    */
-  constructor(creator: BaseSlashCreator, data: CommandAutocompleteRequestData, respond: RespondFunction) {
-    super(creator, data);
+  constructor(
+    creator: BaseSlashCreator,
+    data: CommandAutocompleteRequestData,
+    respond: RespondFunction,
+    serverContext: ServerContext
+  ) {
+    super(creator, data, serverContext);
     this._respond = respond;
 
     this.data = data;

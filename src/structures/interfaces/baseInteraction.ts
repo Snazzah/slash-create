@@ -10,9 +10,11 @@ import { ResolvedMember } from '../resolvedMember';
 import { Role } from '../role';
 
 /** Represents a basic interaction context. */
-export class BaseInteractionContext {
+export class BaseInteractionContext<ServerContext extends any = unknown> {
   /** The creator of the interaction request. */
   readonly creator: BaseSlashCreator;
+  /** Context passed by the server */
+  readonly serverContext: ServerContext;
   /** The interaction's token. */
   readonly interactionToken: string;
   /** The interaction's ID. */
@@ -61,9 +63,11 @@ export class BaseInteractionContext {
   /**
    * @param creator The instantiating creator.
    * @param data The interaction data.
+   * @param serverContext The context of the server.
    */
-  constructor(creator: BaseSlashCreator, data: any) {
+  constructor(creator: BaseSlashCreator, data: any, serverContext: ServerContext) {
     this.creator = creator;
+    this.serverContext = serverContext;
 
     this.interactionToken = data.token;
     this.interactionID = data.id;

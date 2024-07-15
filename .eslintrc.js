@@ -15,7 +15,18 @@ module.exports = {
   },
   plugins: ['@typescript-eslint'],
   rules: {
-    'prettier/prettier': 'warn',
+    'prettier/prettier': [
+      'warn',
+      {
+        arrowParens: 'always',
+        semi: true,
+        singleQuote: true,
+        tabWidth: 2,
+        useTabs: false,
+        trailingComma: 'none',
+        printWidth: 120
+      }
+    ],
     'no-cond-assign': [2, 'except-parens'],
     'no-unused-vars': 0,
     '@typescript-eslint/no-unused-vars': 1,

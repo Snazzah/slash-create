@@ -558,7 +558,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
     interaction: AnyRequestData,
     respond: RespondFunction | null,
     webserverMode: boolean,
-    context: unknown
+    serverContext: unknown
   ) {
     this.emit('rawInteraction', interaction);
 
@@ -598,7 +598,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
               webserverMode,
               this.unknownCommand.deferEphemeral,
               !this.options.disableTimeouts,
-              context
+              serverContext
             );
             return this._runCommand(this.unknownCommand, ctx);
           } else if (this.options.unknownCommandResponse)
@@ -627,7 +627,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
             webserverMode,
             command.deferEphemeral,
             !this.options.disableTimeouts,
-            context
+            serverContext
           );
 
           // Ensure the user has permission to use the command
@@ -659,7 +659,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
         );
 
         if (this._componentCallbacks.size || this.listenerCount('componentInteraction') > 0) {
-          const ctx = new ComponentContext(this, interaction, respond, !this.options.disableTimeouts);
+          const ctx = new ComponentContext(this, interaction, respond, !this.options.disableTimeouts, serverContext);
           this.emit('componentInteraction', ctx);
 
           this.cleanRegisteredComponents();
@@ -685,7 +685,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
       }
       case InteractionType.APPLICATION_COMMAND_AUTOCOMPLETE: {
         const command = this._getCommandFromInteraction(interaction);
-        const ctx = new AutocompleteContext(this, interaction, respond);
+        const ctx = new AutocompleteContext(this, interaction, respond, serverContext);
         this.emit('autocompleteInteraction', ctx, command);
 
         if (!command) {
@@ -716,20 +716,25 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
       }
       case InteractionType.MODAL_SUBMIT: {
         try {
-          const context = new ModalInteractionContext(this, interaction, respond, !this.options.disableTimeouts);
-          this.emit('modalInteraction', context);
+          const ctx = new ModalInteractionContext(
+            this,
+            interaction,
+            respond,
+            !this.options.disableTimeouts,
+            serverContext
+          );
+          this.emit('modalInteraction', ctx);
 
           this.cleanRegisteredComponents();
 
-          const modalCallbackKey = `${context.user.id}-${context.customID}`;
-          const globalCallbackKey = `global-${context.customID}`;
+          const modalCallbackKey = `${ctx.user.id}-${ctx.customID}`;
+          const globalCallbackKey = `global-${ctx.customID}`;
           if (this._modalCallbacks.has(modalCallbackKey)) {
-            this._modalCallbacks.get(modalCallbackKey)!.callback(context);
+            this._modalCallbacks.get(modalCallbackKey)!.callback(ctx);
             this._modalCallbacks.delete(modalCallbackKey);
             return;
           }
-          if (this._modalCallbacks.has(globalCallbackKey))
-            this._modalCallbacks.get(modalCallbackKey)!.callback(context);
+          if (this._modalCallbacks.has(globalCallbackKey)) this._modalCallbacks.get(modalCallbackKey)!.callback(ctx);
 
           return;
         } catch (err) {

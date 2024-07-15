@@ -7,7 +7,7 @@ import { formatAllowedMentions, FormattedAllowedMentions } from '../../util';
 import { ModalSendableContext } from './modalSendableContext';
 
 /** Represents an interaction context from a message component. */
-export class ComponentContext extends ModalSendableContext {
+export class ComponentContext<ServerContext extends any = unknown> extends ModalSendableContext<ServerContext> {
   /** The request data. */
   readonly data: MessageComponentRequestData;
 
@@ -25,14 +25,16 @@ export class ComponentContext extends ModalSendableContext {
    * @param data The interaction data for the context.
    * @param respond The response function for the interaction.
    * @param useTimeout Whether to use the acknowledgement timeout.
+   * @param serverContext The context of the server.
    */
   constructor(
     creator: BaseSlashCreator,
     data: MessageComponentRequestData,
     respond: RespondFunction,
-    useTimeout = true
+    useTimeout = true,
+    serverContext: ServerContext
   ) {
-    super(creator, data, respond);
+    super(creator, data, respond, serverContext);
     this.data = data;
 
     this.customID = data.data.custom_id;

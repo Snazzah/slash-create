@@ -29,10 +29,10 @@ jobs:
           version: 9
           run_install: false
 
-      - name: Install Node v16
+      - name: Install Node v18
         uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: 'pnpm'
 
       - name: Install dependencies

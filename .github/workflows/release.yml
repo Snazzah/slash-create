@@ -75,12 +75,10 @@ jobs:
         with:
           node-version: 18.x
           cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Setup .npmrc
-        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
 
       - run: npm publish --provenance --access public
         env:
@@ -106,15 +104,14 @@ jobs:
         with:
           node-version: 18.x
           cache: 'pnpm'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@snazzah'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build Package
         run: pnpm run build && pnpm run gpr
-
-      - name: Setup .npmrc
-        run: echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
 
       - run: pnpm publish --no-git-checks
         env:

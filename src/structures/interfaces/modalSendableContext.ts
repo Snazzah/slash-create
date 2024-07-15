@@ -5,9 +5,11 @@ import { generateID } from '../../util';
 import { MessageInteractionContext } from './messageInteraction';
 
 /** Represents an interaction that can send modals. */
-export class ModalSendableContext extends MessageInteractionContext {
-  constructor(creator: BaseSlashCreator, data: any, respond: RespondFunction) {
-    super(creator, data, respond);
+export class ModalSendableContext<
+  ServerContext extends any = unknown
+> extends MessageInteractionContext<ServerContext> {
+  constructor(creator: BaseSlashCreator, data: any, respond: RespondFunction, serverContext: ServerContext) {
+    super(creator, data, respond, serverContext);
   }
 
   /**

@@ -6,7 +6,9 @@ import { Message, MessageEmbedOptions } from '../message';
 import { BaseInteractionContext } from './baseInteraction';
 
 /** Represents a interaction context that handles messages. */
-export class MessageInteractionContext extends BaseInteractionContext {
+export class MessageInteractionContext<
+  ServerContext extends any = unknown
+> extends BaseInteractionContext<ServerContext> {
   /** Whether the initial response was sent. */
   initiallyResponded = false;
   /** Whether there is a deferred message available. */
@@ -22,9 +24,10 @@ export class MessageInteractionContext extends BaseInteractionContext {
    * @param creator The instantiating creator.
    * @param data The interaction data.
    * @param respond The response function for the interaction.
+   * @param serverContext The context of the server.
    */
-  constructor(creator: BaseSlashCreator, data: any, respond: RespondFunction) {
-    super(creator, data);
+  constructor(creator: BaseSlashCreator, data: any, respond: RespondFunction, serverContext: ServerContext) {
+    super(creator, data, serverContext);
     this._respond = respond;
   }
 

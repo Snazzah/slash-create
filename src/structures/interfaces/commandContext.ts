@@ -4,7 +4,7 @@ import { AnyCommandOption, ApplicationCommandType, InteractionRequestData } from
 import { ModalSendableContext } from './modalSendableContext';
 
 /** Context representing a command interaction. */
-export class CommandContext extends ModalSendableContext {
+export class CommandContext<ServerContext extends any = unknown> extends ModalSendableContext<ServerContext> {
   /** The full interaction data. */
   readonly data: InteractionRequestData;
 
@@ -38,9 +38,10 @@ export class CommandContext extends ModalSendableContext {
     respond: RespondFunction,
     webserverMode: boolean,
     deferEphemeral = false,
-    useTimeout = true
+    useTimeout = true,
+    serverContext: ServerContext
   ) {
-    super(creator, data, respond);
+    super(creator, data, respond, serverContext);
     this.data = data;
     this.webserverMode = webserverMode;
 

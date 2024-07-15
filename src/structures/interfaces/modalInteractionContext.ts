@@ -11,7 +11,9 @@ import { Message } from '../message';
 import { EditMessageOptions, MessageInteractionContext } from './messageInteraction';
 
 /** Represents an interaction context from a modal submission. */
-export class ModalInteractionContext extends MessageInteractionContext {
+export class ModalInteractionContext<
+  ServerContext extends any = unknown
+> extends MessageInteractionContext<ServerContext> {
   /** The request data. */
   readonly data: ModalSubmitRequestData;
   /** The ID of the component to identify its origin from. */
@@ -27,9 +29,16 @@ export class ModalInteractionContext extends MessageInteractionContext {
    * @param data The interaction data for the context.
    * @param respond The response function for the interaction.
    * @param useTimeout Whether to use the deferral timeout.
+   * @param serverContext The context of the server.
    */
-  constructor(creator: BaseSlashCreator, data: ModalSubmitRequestData, respond: RespondFunction, useTimeout = true) {
-    super(creator, data, respond);
+  constructor(
+    creator: BaseSlashCreator,
+    data: ModalSubmitRequestData,
+    respond: RespondFunction,
+    useTimeout = true,
+    serverContext: ServerContext
+  ) {
+    super(creator, data, respond, serverContext);
 
     this.data = data;
     this.customID = data.data.custom_id;

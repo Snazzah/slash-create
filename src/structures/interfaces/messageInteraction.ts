@@ -35,7 +35,7 @@ export class MessageInteractionContext<
    * Fetches a message.
    * @param messageID The ID of the message, defaults to the original message
    */
-  async fetch(messageID = '@original') {
+  async fetch(messageID = '@original'): Promise<Message> {
     const data = await this.creator.api.fetchInteractionMessage(
       this.creator.options.applicationID,
       this.interactionToken,
@@ -130,7 +130,7 @@ export class MessageInteractionContext<
    * @param messageID The message's ID
    * @param content The content of the message
    */
-  async edit(messageID: string, content: string | EditMessageOptions) {
+  async edit(messageID: string, content: string | EditMessageOptions): Promise<Message> {
     if (this.expired) throw new Error('This interaction has expired');
 
     const options = typeof content === 'string' ? { content } : content;

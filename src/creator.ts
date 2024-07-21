@@ -732,10 +732,9 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
           if (this._modalCallbacks.has(modalCallbackKey)) {
             this._modalCallbacks.get(modalCallbackKey)!.callback(ctx);
             this._modalCallbacks.delete(modalCallbackKey);
-            return;
+          } else if (this._modalCallbacks.has(globalCallbackKey)) {
+            this._modalCallbacks.get(globalCallbackKey)!.callback(ctx);
           }
-          if (this._modalCallbacks.has(globalCallbackKey)) this._modalCallbacks.get(modalCallbackKey)!.callback(ctx);
-
           return;
         } catch (err) {
           return this.emit('error', err as Error);

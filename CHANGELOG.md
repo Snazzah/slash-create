@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [6.2.1] - 2024-07-21
+### Fixed:
+- Fixed global modal submit handlers causing errors ([#622](https://github.com/Snazzah/slash-create/pull/622))
 ## [6.2.0] - 2024-07-15
 ### Added:
 - Added Server Context support for servers like Cloudflare Workers ([#621](https://github.com/Snazzah/slash-create/pull/621))
@@ -559,7 +562,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v6.2.0...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v6.2.1...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -632,3 +635,4 @@ This release features mostly completed documentation and changes to the packages
 [6.1.3]: https://github.com/Snazzah/slash-create/compare/v6.1.2...v6.1.3
 [6.1.4]: https://github.com/Snazzah/slash-create/compare/v6.1.3...v6.1.4
 [6.2.0]: https://github.com/Snazzah/slash-create/compare/v6.1.4...v6.2.0
+[6.2.1]: https://github.com/Snazzah/slash-create/compare/v6.2.0...v6.2.1

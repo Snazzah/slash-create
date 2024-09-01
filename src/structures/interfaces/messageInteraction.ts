@@ -236,6 +236,28 @@ export class MessageInteractionContext<
   }
 
   /**
+   * Launches the activity this app is associated with.
+   * @returns Whether the message passed
+   */
+  async launchActivity(): Promise<boolean> {
+    if (!this.initiallyResponded && !this.deferred) {
+      this.initiallyResponded = true;
+      this.deferred = true;
+      clearTimeout(this._timeout);
+      await this._respond({
+        status: 200,
+        body: {
+          type: InteractionResponseType.LAUNCH_ACTIVITY,
+          data: {}
+        }
+      });
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
    * Registers a component callback from the initial message.
    * This unregisters automatically when the context expires.
    * @param custom_id The custom ID of the component to register

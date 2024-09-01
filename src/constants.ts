@@ -54,7 +54,9 @@ export enum InteractionResponseType {
    * Respond to an interaction with prompt for a premium subscription.
    * @deprecated Use `ComponentButtonPremium` instead.
    */
-  PREMIUM_REQUIRED = 10
+  PREMIUM_REQUIRED = 10,
+  /** Launch the activity for this application */
+  LAUNCH_ACTIVITY = 12
 }
 
 /** Message flags for interaction responses. */

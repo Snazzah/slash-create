@@ -85,6 +85,10 @@ export class AutocompleteContext<ServerContext extends any = unknown> extends Ba
 }
 
 export interface AutocompleteChoice {
+  /** The name of the choice. */
   name: string;
+  /** The localiztions for the choice name. */
+  name_localizations?: Record<string, string>;
+  /** The value of the choice, using the value type of the option it belongs to. */
   value: string | number;
 }

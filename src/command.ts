@@ -140,6 +140,7 @@ export class SlashCommand<T = any> {
 
   /**
    * Get a string that mentions the user. Retuens null if the ID is not collected.
+   * @param guild The guild to fetch the ID from.
    */
   getMention(guild?: string) {
     const id = this.ids.get(guild || 'global');

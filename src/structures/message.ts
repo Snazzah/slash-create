@@ -175,6 +175,8 @@ export interface MessageAttachment {
   id: string;
   /** The filename of the attachment. */
   filename: string;
+  /** The title of the attachment. */
+  title?: number;
   /** The attachment's content type. */
   content_type?: string;
   /** The size of the attachment in bytes. */
@@ -187,6 +189,14 @@ export interface MessageAttachment {
   height?: number;
   /** The width of the image, if the attachment was an image. */
   width?: number;
+  /** Whether this attachment is ephemeral. */
+  ephemeral?: boolean;
+  /** The duration of the voice message. */
+  duration_secs?: number;
+  /** Base64 encoded bytearray representing a sampled waveform of the voice message. */
+  waveform?: string;
+  /** The flags of the attachment. */
+  flags?: number;
 }
 
 /** Options to creating a message embed. */

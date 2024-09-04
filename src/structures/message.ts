@@ -14,6 +14,8 @@ export class Message {
   readonly content: string;
   /** The ID of the channel the message is in */
   readonly channelID: string;
+  /** The call ossociated with the message */
+  readonly call?: MessageCall;
   /** The message's components */
   readonly components: AnyComponent[];
   /** The author of the message */
@@ -73,6 +75,7 @@ export class Message {
     this.mentionedEveryone = data.mention_everyone;
     this.tts = data.tts;
     this.pinned = data.pinned;
+    this.call = data.call;
     this.timestamp = Date.parse(data.timestamp);
     if (data.edited_timestamp) this.editedTimestamp = Date.parse(data.edited_timestamp);
     this.flags = data.flags;
@@ -126,6 +129,14 @@ export class Message {
   toString() {
     return `[Message ${this.id}]`;
   }
+}
+
+/** A message-associated call. */
+export interface MessageCall {
+  /** The participants of the call. */
+  participants: string;
+  /** The time the call ended. */
+  ended_timestamp?: string;
 }
 
 /**
@@ -292,6 +303,7 @@ export interface MessageData {
   pinned: boolean;
   mention_everyone: boolean;
   tts: boolean;
+  call?: MessageCall;
   timestamp: string;
   edited_timestamp: string | null;
   flags: number;

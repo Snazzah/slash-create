@@ -16,10 +16,9 @@ export class FastifyServer extends Server {
     super(opts);
     try {
       const fastify = require('fastify');
-      const symbols = require('fastify/lib/symbols');
       if (!app) {
         app = fastify.default();
-      } else if (!(symbols.kState in app)) {
+      } else if (!('initialConfig' in app)) {
         app = fastify.default(app);
       }
     } catch (e) {

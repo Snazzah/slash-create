@@ -94,19 +94,23 @@ export class Message {
         user: new User(data.interaction.user, creator)
       };
     if (data.interaction_metadata)
-      this.interactionMetadata = this.#convertInteractionMetadata(data.interaction_metadata);
+      this.interactionMetadata = this.#convertInteractionMetadata(data.interaction_metadata, creator);
   }
 
-  #convertInteractionMetadata(metadata: MessageData['interaction_metadata']): MessageInteractionMetadata | undefined {
+  #convertInteractionMetadata(
+    metadata: MessageData['interaction_metadata'],
+    creator: BaseSlashCreator
+  ): MessageInteractionMetadata | undefined {
     if (!metadata) return undefined;
     return {
       id: metadata.id,
       type: metadata.type,
-      userID: metadata.user_id,
+      userID: metadata.user.id,
+      user: new User(metadata.user, creator),
       authorizingIntegrationOwners: metadata.authorizing_integration_owners,
       originalResponseMessageID: metadata.original_response_message_id,
       interactedMessageID: metadata.interacted_message_id,
-      triggeringInteractionMetadata: this.#convertInteractionMetadata(metadata.triggering_interaction_metadata)
+      triggeringInteractionMetadata: this.#convertInteractionMetadata(metadata.triggering_interaction_metadata, creator)
     };
   }
 
@@ -158,8 +162,13 @@ export interface MessageInteractionMetadata {
   id: string;
   /** The type of interaction. */
   type: InteractionType;
-  /** The ID of the user who invoked the interaction. */
+  /**
+   * The ID of the user who invoked the interaction.
+   * @deprecated Use user.id
+   */
   userID: string;
+  /** The user who invoked the interaction. */
+  user: User;
   /** The IDs of the installation contexts that are related to the interaction. */
   authorizingIntegrationOwners: Record<ApplicationIntegrationType, string>;
   /** ID of the original response message, only on follow-up messages. */
@@ -316,14 +325,14 @@ export interface MessageData {
   interaction_metadata?: {
     id: string;
     type: InteractionType;
-    user_id: string;
+    user: UserObject;
     authorizing_integration_owners: Record<ApplicationIntegrationType, string>;
     original_response_message_id?: string;
     interacted_message_id?: string;
     triggering_interaction_metadata?: {
       id: string;
       type: InteractionType;
-      user_id: string;
+      user: UserObject;
       authorizing_integration_owners: Record<ApplicationIntegrationType, string>;
       original_response_message_id?: string;
       interacted_message_id?: string;

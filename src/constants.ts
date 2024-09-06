@@ -133,6 +133,14 @@ export enum ChannelType {
   GUILD_FORUM = 15
 }
 
+/** The formats that stickers can be in. */
+export enum StickerFormat {
+  PNG = 1,
+  APNG = 2,
+  LOTTIE = 3,
+  GIF = 4
+}
+
 /**
  * An partial application command in Discord.
  * @private

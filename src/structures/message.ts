@@ -1,4 +1,4 @@
-import { AnyComponent, ApplicationIntegrationType, InteractionType, UserObject } from '../constants';
+import { AnyComponent, ApplicationIntegrationType, InteractionType, StickerFormat, UserObject } from '../constants';
 import { EditMessageOptions } from './interfaces/messageInteraction';
 import { BaseSlashCreator } from '../creator';
 import { MessageInteractionContext } from './interfaces/messageInteraction';
@@ -22,6 +22,8 @@ export class Message {
   readonly author: User;
   /** The message's attachments */
   readonly attachments: MessageAttachment[];
+  /** The message's stickers */
+  readonly stickerItems?: MessageStickerItem[];
   /** The message's embeds */
   readonly embeds: MessageEmbed[];
   /** The message's user mentions */
@@ -77,6 +79,7 @@ export class Message {
     this.pinned = data.pinned;
     this.call = data.call;
     this.timestamp = Date.parse(data.timestamp);
+    if (data.sticker_items) this.stickerItems = data.sticker_items;
     if (data.edited_timestamp) this.editedTimestamp = Date.parse(data.edited_timestamp);
     this.flags = data.flags;
     if (data.message_reference)
@@ -297,6 +300,12 @@ export interface EmbedVideo {
   width?: number;
 }
 
+export interface MessageStickerItem {
+  format_type: StickerFormat;
+  id: string;
+  name: string;
+}
+
 /** @hidden */
 export interface MessageData {
   id: string;
@@ -316,6 +325,7 @@ export interface MessageData {
   timestamp: string;
   edited_timestamp: string | null;
   flags: number;
+  sticker_items?: MessageStickerItem[];
   interaction?: {
     id: string;
     type: InteractionType;

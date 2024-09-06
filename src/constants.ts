@@ -407,7 +407,7 @@ export interface DMModalSubmitRequestData {
   context?: InteractionContextType;
   data: {
     custom_id: string;
-    components: ComponentActionRow[];
+    components: AnyComponent[];
   };
 }
 
@@ -433,7 +433,7 @@ export interface GuildModalSubmitRequestData {
   context?: InteractionContextType;
   data: {
     custom_id: string;
-    components: ComponentActionRow[];
+    components: AnyComponent[];
   };
 }
 

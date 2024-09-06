@@ -1,4 +1,4 @@
-import { ComponentActionRow, InteractionResponseFlags, InteractionResponseType } from '../../constants';
+import { AnyComponent, InteractionResponseFlags, InteractionResponseType } from '../../constants';
 import { BaseSlashCreator, ComponentRegisterCallback } from '../../creator';
 import { RespondFunction } from '../../server';
 import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from '../../util';
@@ -386,7 +386,7 @@ export interface EditMessageOptions {
   /** The attachment(s) to send with the message. */
   files?: MessageFile[];
   /** The components of the message. */
-  components?: ComponentActionRow[];
+  components?: AnyComponent[];
   /** The attachment data of the message. */
   attachments?: MessageAttachmentOptions[];
 }

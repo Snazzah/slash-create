@@ -1,6 +1,7 @@
 import {
-  ComponentActionRow,
+  AnyComponent,
   ComponentTextInput,
+  ComponentType,
   InteractionResponseType,
   ModalSubmitRequestData
 } from '../../constants';
@@ -49,13 +50,20 @@ export class ModalInteractionContext<
     if (useTimeout) this._timeout = setTimeout(() => this.defer(false), 2000);
   }
 
-  static convertComponents(components: ComponentActionRow[]): { [key: string]: string } {
+  static convertComponents(components: AnyComponent[]): { [key: string]: string } {
     const values: { [key: string]: string } = {};
 
-    for (const row of components) {
-      const component = row.components[0] as ComponentTextInput;
+    // TODO If/when selects are available in modals, this needs to adapt for that change
+    for (const component of components) {
+      if (component.type === ComponentType.TEXT_INPUT) {
+        values[component.custom_id] = component.value!;
+        continue;
+      }
 
-      values[component.custom_id] = component.value!;
+      if (component.type !== ComponentType.ACTION_ROW) continue;
+      const childComponent = component.components[0] as ComponentTextInput;
+
+      values[childComponent.custom_id] = childComponent.value!;
     }
 
     return values;

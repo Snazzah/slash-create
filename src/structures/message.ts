@@ -1,8 +1,16 @@
-import { AnyComponent, ApplicationIntegrationType, InteractionType, StickerFormat, UserObject } from '../constants';
+import {
+  AnyComponent,
+  ApplicationIntegrationType,
+  CommandChannel,
+  InteractionType,
+  StickerFormat,
+  UserObject
+} from '../constants';
 import { EditMessageOptions } from './interfaces/messageInteraction';
 import { BaseSlashCreator } from '../creator';
 import { MessageInteractionContext } from './interfaces/messageInteraction';
 import { User } from './user';
+import { Channel } from './channel';
 
 /** Represents a Discord message. */
 export class Message {
@@ -36,6 +44,10 @@ export class Message {
   readonly tts: boolean;
   /** Whether the message is pinned */
   readonly pinned: boolean;
+  /** The approximate position of the message in a thread. */
+  readonly position?: number;
+  /** The thread that was started from this message. */
+  readonly thread?: Channel;
   /** The timestamp of the message */
   readonly timestamp: number;
   /** The timestamp of when the message was last edited */
@@ -45,7 +57,7 @@ export class Message {
   /** The message that this message is referencing */
   readonly messageReference?: MessageReference;
   /** The message's webhook ID */
-  readonly webhookID: string;
+  readonly webhookID?: string;
   /**
    * The interaction this message is apart of
    * @deprecated Discord-imposed deprecation in favor of {@see Message#interactionMetadata}
@@ -71,6 +83,8 @@ export class Message {
     this.components = data.components || [];
     this.author = new User(data.author, creator);
     this.attachments = data.attachments;
+    this.stickerItems = data.sticker_items;
+    if (data.thread) this.thread = new Channel(data.thread);
     this.embeds = data.embeds;
     this.mentions = data.mentions.map((user) => new User(user, creator));
     this.roleMentions = data.mention_roles;
@@ -78,8 +92,8 @@ export class Message {
     this.tts = data.tts;
     this.pinned = data.pinned;
     this.call = data.call;
+    this.position = data.position;
     this.timestamp = Date.parse(data.timestamp);
-    if (data.sticker_items) this.stickerItems = data.sticker_items;
     if (data.edited_timestamp) this.editedTimestamp = Date.parse(data.edited_timestamp);
     this.flags = data.flags;
     if (data.message_reference)
@@ -322,6 +336,8 @@ export interface MessageData {
   mention_everyone: boolean;
   tts: boolean;
   call?: MessageCall;
+  position?: number;
+  thread?: CommandChannel;
   timestamp: string;
   edited_timestamp: string | null;
   flags: number;

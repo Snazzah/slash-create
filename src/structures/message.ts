@@ -138,7 +138,7 @@ export class Message {
 /** A message-associated call. */
 export interface MessageCall {
   /** The participants of the call. */
-  participants: string;
+  participants: string[];
   /** The time the call ended. */
   ended_timestamp?: string;
 }

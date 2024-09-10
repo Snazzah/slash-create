@@ -40,28 +40,30 @@ export class FastifyServer extends Server {
         }
       );
 
-      app.post(path, (req: any, res: any) =>
-        handler(
-          {
-            headers: req.headers,
-            body: req.body,
-            request: req,
-            response: res,
-            rawBody: req.rawBody
-          },
-          async (response) => {
-            res.status(response.status || 200);
-            if (response.headers) res.headers(response.headers);
-            if (response.files) {
-              const data = new MultipartData();
-              res.header('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
-              for (const i in response.files)
-                data.attach(`files[${i}]`, response.files[i].file, response.files[i].name);
-              data.attach('payload_json', JSON.stringify(response.body));
-              res.send(Buffer.concat(data.finish()));
-            } else res.send(response.body);
-          }
-        )
+      app.post(
+        path,
+        (req: any, res: any) =>
+          void handler(
+            {
+              headers: req.headers,
+              body: req.body,
+              request: req,
+              response: res,
+              rawBody: req.rawBody
+            },
+            async (response) => {
+              res.status(response.status || 200);
+              if (response.headers) res.headers(response.headers);
+              if (response.files) {
+                const data = new MultipartData();
+                res.header('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
+                for (const i in response.files)
+                  data.attach(`files[${i}]`, response.files[i].file, response.files[i].name);
+                data.attach('payload_json', JSON.stringify(response.body));
+                res.send(Buffer.concat(data.finish()));
+              } else res.send(response.body);
+            }
+          )
       );
     });
   }

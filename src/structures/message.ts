@@ -56,8 +56,12 @@ export class Message {
   readonly flags: number;
   /** The message that this message is referencing */
   readonly messageReference?: MessageReference;
+  /** The rich-presence embed used in this message */
+  readonly activity?: MessageActivity;
   /** The message's webhook ID */
   readonly webhookID?: string;
+  /** The ID of the application that created this message */
+  readonly applicationID?: string;
   /**
    * The interaction this message is apart of
    * @deprecated Discord-imposed deprecation in favor of {@see Message#interactionMetadata}
@@ -102,7 +106,13 @@ export class Message {
         guildID: data.message_reference.guild_id,
         messageID: data.message_reference.message_id
       };
+    if (data.activity)
+      this.activity = {
+        type: data.activity.type,
+        partyID: data.activity.party_id
+      };
     this.webhookID = data.webhook_id;
+    this.applicationID = data.application_id;
     if (data.interaction)
       this.interaction = {
         id: data.interaction.id,
@@ -204,6 +214,21 @@ export interface MessageReference {
   guildID?: string;
   /** The message ID of the reference. */
   messageID?: string;
+}
+
+/** A message activity. */
+export interface MessageActivity {
+  /** The type of message activity. */
+  type: MessageActivityType;
+  /** The party ID from the rich presence event. */
+  partyID?: string;
+}
+
+export enum MessageActivityType {
+  JOIN = 1,
+  SPECTATE = 2,
+  LISTEN = 3,
+  JOIN_REQUEST = 5
 }
 
 /** A message attachment. */
@@ -364,10 +389,15 @@ export interface MessageData {
       interacted_message_id?: string;
     };
   };
-  webhook_id: string;
+  webhook_id?: string;
+  application_id?: string;
   message_reference?: {
     channel_id: string;
     guild_id?: string;
     message_id?: string;
+  };
+  activity?: {
+    type: MessageActivityType;
+    party_id?: string;
   };
 }

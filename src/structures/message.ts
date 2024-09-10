@@ -95,6 +95,11 @@ export class Message {
     this.mentionedEveryone = data.mention_everyone;
     this.tts = data.tts;
     this.pinned = data.pinned;
+    if (data.call)
+      this.call = {
+        participants: data.call.participants,
+        endedTimestamp: data.call.ended_timestamp
+      };
     this.call = data.call;
     this.position = data.position;
     this.timestamp = Date.parse(data.timestamp);
@@ -167,7 +172,7 @@ export interface MessageCall {
   /** The participants of the call. */
   participants: string[];
   /** The time the call ended. */
-  ended_timestamp?: string;
+  endedTimestamp?: string;
 }
 
 /**
@@ -360,7 +365,10 @@ export interface MessageData {
   pinned: boolean;
   mention_everyone: boolean;
   tts: boolean;
-  call?: MessageCall;
+  call?: {
+    participants: string[];
+    ended_timestamp?: string;
+  };
   position?: number;
   thread?: CommandChannel;
   timestamp: string;

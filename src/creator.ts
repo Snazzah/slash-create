@@ -74,6 +74,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
         handleCommandsManually: false,
         disableTimeouts: false,
         componentTimeouts: false,
+        postCallbacks: false,
         latencyThreshold: 30000,
         ratelimiterOffset: 0,
         requestTimeout: 15000,
@@ -562,7 +563,14 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
   ) {
     this.emit('rawInteraction', interaction);
 
-    if (!respond || !webserverMode) respond = this._createGatewayRespond(interaction.id, interaction.token);
+    // User preferred POSTing callbacks
+    if (this.options.postCallbacks && respond)
+      await respond({
+        status: 202
+      });
+
+    if (!respond || !webserverMode || this.options.postCallbacks)
+      respond = this._createGatewayRespond(interaction.id, interaction.token);
 
     switch (interaction.type) {
       case InteractionType.PING: {
@@ -841,6 +849,11 @@ export interface SlashCreatorOptions {
   disableTimeouts?: boolean;
   /** Whether to enable automatic component timeouts. */
   componentTimeouts?: boolean;
+  /**
+   * Whether to POST callbacks rather than responding via the webserver.
+   * Webservers will serve an immediate 202 to Discord, and will POST an interaction callback later.
+   */
+  postCallbacks?: boolean;
   /** The default allowed mentions for all messages. */
   allowedMentions?: MessageAllowedMentions;
   /** The default format to provide user avatars in. */

@@ -10,7 +10,7 @@ import { CommandContext } from '../../src/structures/interfaces/commandContext';
 import { Message } from '../../src/structures/message';
 import { basicInteraction, creator, editedMessage, followUpMessage, noop } from '../__util__/constants';
 import { deleteMessage, editMessage } from '../__util__/nock';
-const ctx = new CommandContext(creator, basicInteraction, noop, false);
+const ctx = new CommandContext(creator, basicInteraction, noop, false, false, true, null);
 ctx.initiallyResponded = true;
 // @ts-expect-error
 clearTimeout(ctx._timeout);

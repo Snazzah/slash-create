@@ -1,6 +1,6 @@
 import { SlashCommand, SlashCommandOptions } from '../../src/command';
 import { CommandContext } from '../../src/structures/interfaces/commandContext';
-import { SlashCreator } from '../../src/creator';
+import { SlashCreator } from '../../src/node/creator';
 
 export const createBasicCommand = (
   opts: Partial<SlashCommandOptions> = {},

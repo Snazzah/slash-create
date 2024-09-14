@@ -54,6 +54,7 @@ describe('SlashCreator', () => {
         defaultImageSize: 128,
         disableTimeouts: false,
         componentTimeouts: false,
+        postCallbacks: false,
         unknownCommandResponse: true,
         handleCommandsManually: false,
         latencyThreshold: 30000,

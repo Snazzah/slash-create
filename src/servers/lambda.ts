@@ -57,7 +57,7 @@ export class AWSLambdaServer extends Server {
           callback(null, {
             statusCode: response.status || 200,
             headers: responseHeaders,
-            body: JSON.stringify(response.body)
+            body: response.body ? JSON.stringify(response.body) : undefined
           });
         }
       }

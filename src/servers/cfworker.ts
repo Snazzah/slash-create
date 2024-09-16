@@ -45,7 +45,7 @@ export class CloudflareWorkerServer extends Server {
               );
             } else
               resolve(
-                new Response(JSON.stringify(response.body), {
+                new Response(response.body ? JSON.stringify(response.body) : null, {
                   status: response.status || 200,
                   headers: {
                     ...((response.headers || {}) as Record<string, string>),

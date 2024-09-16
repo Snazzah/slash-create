@@ -29,26 +29,29 @@ export class ExpressServer extends Server {
 
   /** @private */
   createEndpoint(path: string, handler: ServerRequestHandler) {
-    this.app.post(path, (req: any, res: any) =>
-      handler(
-        {
-          headers: req.headers,
-          body: req.body,
-          request: req,
-          response: res
-        },
-        async (response) => {
-          res.status(response.status || 200);
-          if (response.headers) for (const key in response.headers) res.set(key, response.headers[key]);
-          if (response.files) {
-            const data = new MultipartData();
-            res.set('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
-            for (const i in response.files) data.attach(`files[${i}]`, response.files[i].file, response.files[i].name);
-            data.attach('payload_json', JSON.stringify(response.body));
-            res.send(Buffer.concat(data.finish()));
-          } else res.send(response.body);
-        }
-      )
+    this.app.post(
+      path,
+      (req: any, res: any) =>
+        void handler(
+          {
+            headers: req.headers,
+            body: req.body,
+            request: req,
+            response: res
+          },
+          async (response) => {
+            res.status(response.status || 200);
+            if (response.headers) for (const key in response.headers) res.set(key, response.headers[key]);
+            if (response.files) {
+              const data = new MultipartData();
+              res.set('Content-Type', 'multipart/form-data; boundary=' + data.boundary);
+              for (const i in response.files)
+                data.attach(`files[${i}]`, response.files[i].file, response.files[i].name);
+              data.attach('payload_json', JSON.stringify(response.body));
+              res.send(Buffer.concat(data.finish()));
+            } else res.send(response.body);
+          }
+        )
     );
   }
 

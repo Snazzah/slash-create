@@ -1,4 +1,10 @@
-import { ApplicationCommand, BulkUpdateCommand, Endpoints, PartialApplicationCommand } from './constants';
+import {
+  ApplicationCommand,
+  BulkUpdateCommand,
+  Endpoints,
+  InteractionCallbackResponse,
+  PartialApplicationCommand
+} from './constants';
 import { BaseSlashCreator } from './creator';
 import type { FileContent } from './rest/requestHandler';
 import type { MessageData } from './structures/message';
@@ -169,17 +175,31 @@ export class SlashCreatorAPI {
    * @param interactionToken The interaction's token.
    * @param body The body to send.
    * @param files The files to send.
+   * @param withResponse Whether to recieve the response of the interaction callback
    */
+  interactionCallback<WithResponse extends boolean = false>(
+    interactionID: string,
+    interactionToken: string,
+    body: any,
+    files?: FileContent[],
+    withResponse?: WithResponse
+  ): Promise<WithResponse extends true ? InteractionCallbackResponse : null>;
   interactionCallback(
     interactionID: string,
     interactionToken: string,
     body: any,
-    files?: FileContent[]
-  ): Promise<unknown> {
+    files?: FileContent[],
+    withResponse = false
+  ): Promise<InteractionCallbackResponse | null> {
     return this._creator.requestHandler.request(
       'POST',
       Endpoints.INTERACTION_CALLBACK(interactionID, interactionToken),
-      { auth: false, body, files }
+      {
+        auth: false,
+        body,
+        files,
+        query: { with_response: withResponse }
+      }
     );
   }
 }

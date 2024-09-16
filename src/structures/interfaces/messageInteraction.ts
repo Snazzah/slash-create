@@ -1,7 +1,17 @@
-import { AnyComponent, InteractionResponseFlags, InteractionResponseType } from '../../constants';
+import {
+  AnyComponent,
+  InitialInteractionResponse,
+  InteractionResponseFlags,
+  InteractionResponseType
+} from '../../constants';
 import { BaseSlashCreator, ComponentRegisterCallback } from '../../creator';
 import { RespondFunction } from '../../server';
-import { formatAllowedMentions, FormattedAllowedMentions, MessageAllowedMentions } from '../../util';
+import {
+  convertCallbackResponse,
+  formatAllowedMentions,
+  FormattedAllowedMentions,
+  MessageAllowedMentions
+} from '../../util';
 import { Message, MessageEmbedOptions } from '../message';
 import { BaseInteractionContext } from './baseInteraction';
 
@@ -49,13 +59,14 @@ export class MessageInteractionContext<
 
   /**
    * Sends a message, if it already made an initial response, this will create a follow-up message.
-   * IF the context has created a deferred message, it will edit that deferred message,
+   * If the context has created a deferred message, it will edit that deferred message,
    * and future calls to this function create follow ups.
-   * This will return a boolean if it's an initial response, otherwise a {@link Message} will be returned.
+   * This will return `true` or a {@link InitialInteractionResponse} if it's an initial response, otherwise a {@link Message} will be returned.
    * Note that when making a follow-up message, the `ephemeral` option is ignored.
    * @param content The content of the message
+   * @returns `true` or a {@link InitialInteractionResponse} if the initial response passed, otherwise a {@link Message} of the follow-up message.
    */
-  async send(content: string | MessageOptions): Promise<boolean | Message> {
+  async send(content: string | MessageOptions): Promise<true | InitialInteractionResponse | Message> {
     if (this.expired) throw new Error('This interaction has expired');
 
     const options = typeof content === 'string' ? { content } : content;
@@ -70,7 +81,7 @@ export class MessageInteractionContext<
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
-      await this._respond({
+      const response = await this._respond({
         status: 200,
         body: {
           type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
@@ -86,7 +97,7 @@ export class MessageInteractionContext<
         },
         files: options.files
       });
-      return true;
+      return response ? convertCallbackResponse(response, this) : true;
     } else if (this.initiallyResponded && this.deferred) return this.editOriginal(content);
     else return this.sendFollowUp(options);
   }
@@ -183,21 +194,22 @@ export class MessageInteractionContext<
       this.interactionToken,
       messageID
     );
-    if (!messageID || messageID === '@original') this.messageID = undefined;
+
+    if (!messageID || messageID === '@original' || messageID === this.messageID) this.messageID = undefined;
   }
 
   /**
    * Creates a deferred message. To users, this will show as
    * "Bot is thinking..." until the deferred message is edited.
    * @param ephemeral Whether to make the deferred message ephemeral.
-   * @returns Whether the deferred message passed
+   * @returns Whether the deferred message passed or the callback response if available
    */
-  async defer(ephemeral = false): Promise<boolean> {
+  async defer(ephemeral = false): Promise<boolean | InitialInteractionResponse> {
     if (!this.initiallyResponded && !this.deferred) {
       this.initiallyResponded = true;
       this.deferred = true;
       clearTimeout(this._timeout);
-      await this._respond({
+      const response = await this._respond({
         status: 200,
         body: {
           type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
@@ -206,7 +218,7 @@ export class MessageInteractionContext<
           }
         }
       });
-      return true;
+      return response ? convertCallbackResponse(response, this) : true;
     }
 
     return false;
@@ -214,22 +226,22 @@ export class MessageInteractionContext<
 
   /**
    * Creates a message that prompts the user for a premium subscription.
-   * @returns Whether the message passed
+   * @returns Whether the message passed or the callback response if available
    * @deprecated Use `ComponentButtonPremium` instead.
    */
-  async promptPremium(): Promise<boolean> {
+  async promptPremium(): Promise<boolean | InitialInteractionResponse> {
     if (!this.initiallyResponded && !this.deferred) {
       this.initiallyResponded = true;
       this.deferred = true;
       clearTimeout(this._timeout);
-      await this._respond({
+      const response = await this._respond({
         status: 200,
         body: {
           type: InteractionResponseType.PREMIUM_REQUIRED,
           data: {}
         }
       });
-      return true;
+      return response ? convertCallbackResponse(response, this) : true;
     }
 
     return false;
@@ -237,21 +249,21 @@ export class MessageInteractionContext<
 
   /**
    * Launches the activity this app is associated with.
-   * @returns Whether the message passed
+   * @returns Whether the message passed or the callback response if available
    */
-  async launchActivity(): Promise<boolean> {
+  async launchActivity(): Promise<boolean | InitialInteractionResponse> {
     if (!this.initiallyResponded && !this.deferred) {
       this.initiallyResponded = true;
       this.deferred = true;
       clearTimeout(this._timeout);
-      await this._respond({
+      const response = await this._respond({
         status: 200,
         body: {
           type: InteractionResponseType.LAUNCH_ACTIVITY,
           data: {}
         }
       });
-      return true;
+      return response ? convertCallbackResponse(response, this) : true;
     }
 
     return false;

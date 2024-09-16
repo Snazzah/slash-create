@@ -544,7 +544,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
     if (!verified) {
       this.emit('debug', 'A request failed to be verified');
       this.emit('unverifiedRequest', treq);
-      return respond({
+      return void respond({
         status: 401,
         body: 'Invalid signature'
       });
@@ -782,9 +782,8 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
   }
 
   private _createGatewayRespond(interactionID: string, token: string): RespondFunction {
-    return async (response: Response) => {
-      await this.api.interactionCallback(interactionID, token, response.body, response.files);
-    };
+    return async (response: Response) =>
+      this.api.interactionCallback(interactionID, token, response.body, response.files, true);
   }
 }
 

@@ -2,12 +2,13 @@ import {
   AnyComponent,
   ComponentTextInput,
   ComponentType,
+  InitialInteractionResponse,
   InteractionResponseType,
   ModalSubmitRequestData
 } from '../../constants';
 import { BaseSlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
-import { formatAllowedMentions, FormattedAllowedMentions } from '../../util';
+import { convertCallbackResponse, formatAllowedMentions, FormattedAllowedMentions } from '../../util';
 import { Message } from '../message';
 import { EditMessageOptions, MessageInteractionContext } from './messageInteraction';
 
@@ -71,30 +72,31 @@ export class ModalInteractionContext<
 
   /**
    * Acknowledges the interaction without replying.
-   * @returns Whether the acknowledgement passed
+   * @returns Whether the acknowledgement passed or the callback response if available
    */
-  async acknowledge(): Promise<boolean> {
+  async acknowledge(): Promise<boolean | InitialInteractionResponse> {
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
-      await this._respond({
+      const response = await this._respond({
         status: 200,
         body: {
           type: InteractionResponseType.DEFERRED_UPDATE_MESSAGE
         }
       });
-      return true;
+      return response ? convertCallbackResponse(response, this) : true;
     }
 
     return false;
   }
 
-  /*
+  /**
    * Edits the message that the component interaction came from.
-   * This will return a boolean if it's an initial response, otherwise a {@link Message} will be returned.
+   * This will return `true` or a {@link InitialInteractionResponse} if it's an initial response, otherwise a {@link Message} will be returned.
    * @param content The content of the message
+   * @returns `true` or a {@link InitialInteractionResponse} if the initial response passed, otherwise a {@link Message} of the parent message.
    */
-  async editParent(content: string | EditMessageOptions): Promise<boolean | Message> {
+  async editParent(content: string | EditMessageOptions): Promise<true | InitialInteractionResponse | Message> {
     if (this.expired) throw new Error('This interaction has expired');
     if (!this.message) throw new Error('This interaction has no message');
 
@@ -110,7 +112,7 @@ export class ModalInteractionContext<
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
-      await this._respond({
+      const response = await this._respond({
         status: 200,
         body: {
           type: InteractionResponseType.UPDATE_MESSAGE,
@@ -123,7 +125,7 @@ export class ModalInteractionContext<
         },
         files: options.files
       });
-      return true;
+      return response ? convertCallbackResponse(response, this) : true;
     } else return this.edit(this.message.id, content);
   }
 }

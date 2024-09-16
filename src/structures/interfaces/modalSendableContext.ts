@@ -1,7 +1,7 @@
-import { AnyComponent, InteractionResponseType } from '../../constants';
+import { AnyComponent, InitialInteractionResponse, InteractionResponseType } from '../../constants';
 import { ModalRegisterCallback, BaseSlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
-import { generateID } from '../../util';
+import { convertCallbackResponse, generateID } from '../../util';
 import { MessageInteractionContext } from './messageInteraction';
 
 /** Represents an interaction that can send modals. */
@@ -18,9 +18,15 @@ export class ModalSendableContext<
    * If a callback is defined, a custom ID will be generated if not defined.
    * @param options The message options
    * @param callback The callback of the modal
-   * @returns The custom ID of the modal
+   * @returns The custom ID of the modal and the callback response if available
    */
-  async sendModal(options: ModalOptions, callback?: ModalRegisterCallback): Promise<string> {
+  async sendModal(
+    options: ModalOptions,
+    callback?: ModalRegisterCallback
+  ): Promise<{
+    customID: string;
+    response: InitialInteractionResponse | null;
+  }> {
     if (this.expired) throw new Error('This interaction has expired');
     if (this.initiallyResponded) throw new Error('This interaction has already responded.');
 
@@ -38,7 +44,7 @@ export class ModalSendableContext<
 
     this.initiallyResponded = true;
     clearTimeout(this._timeout);
-    await this._respond({
+    const response = await this._respond({
       status: 200,
       body: {
         type: InteractionResponseType.MODAL,
@@ -46,7 +52,10 @@ export class ModalSendableContext<
       }
     });
 
-    return options.custom_id!;
+    return {
+      customID: options.custom_id!,
+      response: response ? convertCallbackResponse(response, this) : null
+    };
   }
 }
 

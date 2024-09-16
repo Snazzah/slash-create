@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { AnyRequestData } from './constants';
+import { AnyRequestData, InteractionCallbackResponse } from './constants';
 import type { FileContent } from './rest/requestHandler';
 
 /**
@@ -84,7 +84,7 @@ export interface Response {
  * The response function for a {@link Server}.
  * @private
  */
-export type RespondFunction = (response: Response) => Promise<void>;
+export type RespondFunction = (response: Response) => Promise<InteractionCallbackResponse | void>;
 
 /**
  * The handler for pushing requests to a {@link SlashCreator}.

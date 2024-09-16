@@ -1,9 +1,14 @@
-import { ComponentType, InteractionResponseType, MessageComponentRequestData } from '../../constants';
+import {
+  ComponentType,
+  InitialInteractionResponse,
+  InteractionResponseType,
+  MessageComponentRequestData
+} from '../../constants';
 import { EditMessageOptions } from './messageInteraction';
 import { BaseSlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
 import { Message } from '../message';
-import { formatAllowedMentions, FormattedAllowedMentions } from '../../util';
+import { convertCallbackResponse, formatAllowedMentions, FormattedAllowedMentions } from '../../util';
 import { ModalSendableContext } from './modalSendableContext';
 
 /** Represents an interaction context from a message component. */
@@ -48,19 +53,19 @@ export class ComponentContext<ServerContext extends any = unknown> extends Modal
 
   /**
    * Acknowledges the interaction without replying.
-   * @returns Whether the acknowledgement passed passed
+   * @returns Whether the acknowledgement passed or the callback response if available
    */
-  async acknowledge(): Promise<boolean> {
+  async acknowledge(): Promise<boolean | InitialInteractionResponse> {
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
-      await this._respond({
+      const response = await this._respond({
         status: 200,
         body: {
           type: InteractionResponseType.DEFERRED_UPDATE_MESSAGE
         }
       });
-      return true;
+      return response ? convertCallbackResponse(response, this) : true;
     }
 
     return false;
@@ -68,10 +73,11 @@ export class ComponentContext<ServerContext extends any = unknown> extends Modal
 
   /**
    * Edits the message that the component interaction came from.
-   * This will return a boolean if it's an initial response, otherwise a {@link Message} will be returned.
+   * This will return `true` or a {@link InitialInteractionResponse} if it's an initial response, otherwise a {@link Message} will be returned.
    * @param content The content of the message
+   * @returns `true` or a {@link InitialInteractionResponse} if the initial response passed, otherwise a {@link Message} of the parent message.
    */
-  async editParent(content: string | EditMessageOptions): Promise<boolean | Message> {
+  async editParent(content: string | EditMessageOptions): Promise<boolean | InitialInteractionResponse | Message> {
     if (this.expired) throw new Error('This interaction has expired');
 
     const options = typeof content === 'string' ? { content } : content;
@@ -86,7 +92,7 @@ export class ComponentContext<ServerContext extends any = unknown> extends Modal
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
-      await this._respond({
+      const response = await this._respond({
         status: 200,
         body: {
           type: InteractionResponseType.UPDATE_MESSAGE,
@@ -99,7 +105,7 @@ export class ComponentContext<ServerContext extends any = unknown> extends Modal
         },
         files: options.files
       });
-      return true;
+      return response ? convertCallbackResponse(response, this) : true;
     } else return this.edit(this.message.id, content);
   }
 }

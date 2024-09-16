@@ -1,6 +1,12 @@
-import { AnyCommandOption, CommandAutocompleteRequestData, InteractionResponseType } from '../../constants';
+import {
+  AnyCommandOption,
+  CommandAutocompleteRequestData,
+  InitialInteractionResponse,
+  InteractionResponseType
+} from '../../constants';
 import { BaseSlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
+import { convertCallbackResponse } from '../../util';
 import { BaseInteractionContext } from './baseInteraction';
 import { CommandContext } from './commandContext';
 
@@ -44,19 +50,20 @@ export class AutocompleteContext<ServerContext extends any = unknown> extends Ba
   /**
    * Sends the results of an autocomplete interaction.
    * @param choices The choices to display
+   * @returns boolean or a {@link InitialInteractionResponse} if the response passed
    */
-  async sendResults(choices: AutocompleteChoice[]): Promise<boolean> {
+  async sendResults(choices: AutocompleteChoice[]): Promise<boolean | InitialInteractionResponse> {
     if (this.responded) return false;
 
     this.responded = true;
-    await this._respond({
+    const response = await this._respond({
       status: 200,
       body: {
         type: InteractionResponseType.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT,
         data: { choices }
       }
     });
-    return true;
+    return response ? convertCallbackResponse(response, this) : true;
   }
 
   /** @private */

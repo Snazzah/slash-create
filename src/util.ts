@@ -1,4 +1,11 @@
-import { ApplicationCommandOption, CommandOptionType } from './constants';
+import {
+  ApplicationCommandOption,
+  CommandOptionType,
+  InitialInteractionResponse,
+  InteractionCallbackResponse
+} from './constants';
+import { MessageInteractionContext } from './structures/interfaces/messageInteraction';
+import { BaseInteractionContext, Message } from './web';
 
 export function formatAllowedMentions(
   allowed: MessageAllowedMentions | FormattedAllowedMentions,
@@ -101,6 +108,41 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
 
 export function generateID() {
   return (Date.now() + Math.round(Math.random() * 1000)).toString(36);
+}
+
+export function convertCallbackResponse(
+  response: InteractionCallbackResponse,
+  ctx: BaseInteractionContext
+): InitialInteractionResponse {
+  const result: InitialInteractionResponse = {
+    interaction: {
+      id: response.interaction.id,
+      type: response.interaction.type,
+      activityInstanceID: response.interaction.activity_instance_id,
+      responseMessageID: response.interaction.response_message_id,
+      responseMessageLoading: response.interaction.response_message_loading,
+      responseMessageEphemeral: response.interaction.response_message_ephemeral
+    }
+  };
+
+  const isMessageCtx = ctx instanceof MessageInteractionContext;
+
+  if (response.interaction.response_message_id && isMessageCtx)
+    ctx.messageID = response.interaction.response_message_id;
+
+  if (response.resource) {
+    result.resource = {
+      type: response.resource.type
+    };
+
+    if (response.resource.activity_instance)
+      result.resource.activityInstance = { id: response.resource.activity_instance.id };
+
+    if (response.resource.message)
+      result.resource.message = new Message(response.resource.message, ctx.creator, isMessageCtx ? ctx : undefined);
+  }
+
+  return result;
 }
 
 /**

@@ -2,7 +2,7 @@ import type { SlashCommand } from './command';
 import type { CommandContext } from './structures/interfaces/commandContext';
 import type { RespondFunction, TransformedRequest } from './server';
 import type { ComponentContext } from './structures/interfaces/componentContext';
-import type { MessageData } from './structures/message';
+import type { Message, MessageData } from './structures/message';
 import type { AutocompleteContext } from './structures/interfaces/autocompleteContext';
 import type { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
 import type { BaseSlashCreator } from './creator';
@@ -575,7 +575,7 @@ export interface AppEntitlement {
   guild_id?: string;
   application_id: string;
   type: EntitlementType;
-  consumed: false;
+  consumed: boolean;
   starts_at?: string;
   ends_at?: string;
 }
@@ -639,6 +639,25 @@ export interface AutocompleteData {
  * @private
  */
 export type CommandAutocompleteRequestData = DMCommandAutocompleteRequestData | GuildCommandAutocompleteRequestData;
+
+/* @private **/
+export interface InteractionCallbackResponse {
+  interaction: {
+    id: string;
+    type: InteractionType;
+    activity_instance_id?: string;
+    response_message_id?: string;
+    response_message_loading?: boolean;
+    response_message_ephemeral?: boolean;
+  };
+  resource?: {
+    type: InteractionResponseType;
+    activity_instance?: {
+      id: string;
+    };
+    message?: MessageData;
+  };
+}
 
 /** @private */
 export interface ResolvedMemberData {
@@ -848,6 +867,36 @@ export interface CommandSubcommandOption {
   name: string;
   type?: CommandOptionType.SUB_COMMAND | CommandOptionType.SUB_COMMAND_GROUP;
   options?: AnyCommandOption[];
+}
+
+/** The response to the initial interaction callback. */
+export interface InitialInteractionResponse {
+  /** The interaction associated with this response */
+  interaction: {
+    /** ID of the interaction */
+    id: string;
+    /** The type of the interaction */
+    type: InteractionType;
+    /** The instance ID of the activity if one was launched/joined */
+    activityInstanceID?: string;
+    /** The ID of the message created by the interaction */
+    responseMessageID?: string;
+    /** Whether or not the message is in a loading state */
+    responseMessageLoading?: boolean;
+    /** Whether or not the response message is ephemeral */
+    responseMessageEphemeral?: boolean;
+  };
+  /** The resource created by this interaction response. */
+  resource?: {
+    /** The type of the interaction response */
+    type: InteractionResponseType;
+    /** The activity instance launched by this interaction */
+    activityInstance?: {
+      id: string;
+    };
+    /** The message created by this interaction */
+    message?: Message;
+  };
 }
 
 /** The types of components available. */

@@ -25,7 +25,7 @@ describe('ModalInteractionContext', () => {
           expect(treq.status).to.equal(200);
           done();
         },
-        false,
+        undefined,
         undefined
       );
 
@@ -34,7 +34,7 @@ describe('ModalInteractionContext', () => {
     });
 
     it('assigns properties properly', async () => {
-      const ctx = new ModalInteractionContext(creator, modalInteraction, noop, false, undefined);
+      const ctx = new ModalInteractionContext(creator, modalInteraction, noop, undefined, undefined);
 
       expect(ctx.values).to.deep.equal({ text: 'hi' });
       expect(ctx.customID).to.equal('modal');

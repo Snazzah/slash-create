@@ -36,7 +36,7 @@ describe('ComponentContext', () => {
           expect(treq.status).to.equal(200);
           done();
         },
-        false,
+        undefined,
         undefined
       );
 
@@ -45,7 +45,7 @@ describe('ComponentContext', () => {
     });
 
     it('assigns properties properly', async () => {
-      const ctx = new ComponentContext(creator, basicMessageInteraction, noop, false, undefined);
+      const ctx = new ComponentContext(creator, basicMessageInteraction, noop, undefined, undefined);
       await ctx.acknowledge();
 
       expect(ctx.message.id).to.equal(basicMessageInteraction.message.id);
@@ -54,7 +54,7 @@ describe('ComponentContext', () => {
     });
 
     it('assigns properties properly for select interactions', async () => {
-      const ctx = new ComponentContext(creator, selectMessageInteraction, noop, false, undefined);
+      const ctx = new ComponentContext(creator, selectMessageInteraction, noop, undefined, undefined);
       await ctx.acknowledge();
 
       expect(ctx.message.id).to.equal(selectMessageInteraction.message.id);
@@ -75,7 +75,7 @@ describe('ComponentContext', () => {
           });
           expect(treq.status).to.equal(200);
         },
-        false,
+        undefined,
         undefined
       );
       expect(ctx.initiallyResponded).to.equal(false);
@@ -85,7 +85,7 @@ describe('ComponentContext', () => {
     });
 
     it('returns false when already responded', async () => {
-      const ctx = new ComponentContext(creator, basicMessageInteraction, noop, false, undefined);
+      const ctx = new ComponentContext(creator, basicMessageInteraction, noop, undefined, undefined);
       await ctx.acknowledge();
       await expect(ctx.acknowledge()).to.eventually.equal(false);
     });
@@ -110,7 +110,7 @@ describe('ComponentContext', () => {
           });
           expect(treq.status).to.equal(200);
         },
-        false,
+        undefined,
         undefined
       );
       expect(ctx.initiallyResponded).to.equal(false);
@@ -119,7 +119,7 @@ describe('ComponentContext', () => {
     });
 
     it('edits original message after acknowledging', async () => {
-      const ctx = new ComponentContext(creator, basicMessageInteraction, noop, false, undefined);
+      const ctx = new ComponentContext(creator, basicMessageInteraction, noop, undefined, undefined);
       const scope = editMessage(basicMessageInteraction.message.id, followUpMessage);
 
       await ctx.acknowledge();

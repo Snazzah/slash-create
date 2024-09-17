@@ -38,8 +38,8 @@ describe('CommandContext', () => {
           done();
         },
         false,
-        false,
-        false,
+        undefined,
+        undefined,
         undefined
       );
 
@@ -48,21 +48,21 @@ describe('CommandContext', () => {
     });
 
     describe('For an interaction with no options', () => {
-      const ctx = new CommandContext(creator, basicInteraction, noop, false, false, false, undefined);
+      const ctx = new CommandContext(creator, basicInteraction, noop, false, undefined, undefined, undefined);
 
       it('does not have options in the context', () => expect(ctx.options).to.deep.equal({}));
       it('does not have subcommands in the context', () => expect(ctx.subcommands).to.deep.equal([]));
     });
 
     describe('For an interaction with options', () => {
-      const ctx = new CommandContext(creator, optionsInteraction, noop, false, false, false, undefined);
+      const ctx = new CommandContext(creator, optionsInteraction, noop, false, undefined, undefined, undefined);
 
       it('has options in the context', () => expect(ctx.options).to.deep.equal({ string: 'hi', int: 2, bool: true }));
       it('does not have subcommands in the context', () => expect(ctx.subcommands).to.deep.equal([]));
     });
 
     describe('For an interaction with a sub-command', () => {
-      const ctx = new CommandContext(creator, subCommandInteraction, noop, false, false, false, undefined);
+      const ctx = new CommandContext(creator, subCommandInteraction, noop, false, undefined, undefined, undefined);
 
       it('has an empty options object within the sub-command', () =>
         expect(ctx.options).to.deep.equal({ 'sub-command': {} }));
@@ -70,7 +70,7 @@ describe('CommandContext', () => {
     });
 
     describe('For an interaction with a sub-command group', () => {
-      const ctx = new CommandContext(creator, subCommandGroupInteraction, noop, false, false, false, undefined);
+      const ctx = new CommandContext(creator, subCommandGroupInteraction, noop, false, undefined, undefined, undefined);
 
       it('has an empty options object within the sub-command group', () =>
         expect(ctx.options).to.deep.equal({ 'sub-command-group': { 'sub-command': {} } }));
@@ -79,7 +79,15 @@ describe('CommandContext', () => {
     });
 
     describe('For an interaction with a sub-command with options', () => {
-      const ctx = new CommandContext(creator, subCommandOptionsInteraction, noop, false, false, false, undefined);
+      const ctx = new CommandContext(
+        creator,
+        subCommandOptionsInteraction,
+        noop,
+        false,
+        undefined,
+        undefined,
+        undefined
+      );
 
       it('has options within the sub-command', () =>
         expect(ctx.options).to.deep.equal({ 'sub-command': { string: 'hi', int: 2, bool: true } }));
@@ -87,7 +95,7 @@ describe('CommandContext', () => {
     });
 
     it('assigns properties properly', async () => {
-      const ctx = new CommandContext(creator, basicInteraction, noop, false, false, false, undefined);
+      const ctx = new CommandContext(creator, basicInteraction, noop, false, undefined, undefined, undefined);
       await ctx.defer();
 
       expect(ctx.users.size).to.equal(0);

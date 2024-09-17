@@ -56,6 +56,12 @@ export class DiscordRESTError extends Error {
       if (!(fieldName in errors) || fieldName === 'message' || fieldName === 'code') {
         continue;
       }
+      if (fieldName === '_errors') {
+        messages = messages.concat(
+          errors._errors.map((obj: any) => `${keyPrefix ? `${keyPrefix}: ` : ''}${obj.message}`)
+        );
+        continue;
+      }
       if (errors[fieldName]._errors) {
         messages = messages.concat(
           errors[fieldName]._errors.map((obj: any) => `${keyPrefix + fieldName}: ${obj.message}`)

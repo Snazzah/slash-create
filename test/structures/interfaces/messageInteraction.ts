@@ -22,7 +22,7 @@ import { MessageInteractionContext } from '../../../src/structures/interfaces/me
 describe('MessageInteractionContext', () => {
   describe('constructor', () => {
     it('assigns properties properly', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, noop);
+      const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
       await ctx.defer();
 
       expect(ctx.interactionToken).to.equal(basicInteraction.token);
@@ -37,13 +37,18 @@ describe('MessageInteractionContext', () => {
 
   describe('.defer()', () => {
     it('sends regular deferred messages', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, async (treq) => {
-        expect(treq.body).to.deep.equal({
-          type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
-          data: { flags: 0 }
-        });
-        expect(treq.status).to.equal(200);
-      });
+      const ctx = new MessageInteractionContext(
+        creator,
+        basicInteraction,
+        async (treq) => {
+          expect(treq.body).to.deep.equal({
+            type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+            data: { flags: 0 }
+          });
+          expect(treq.status).to.equal(200);
+        },
+        undefined
+      );
       expect(ctx.initiallyResponded).to.equal(false);
       await expect(ctx.defer()).to.eventually.equal(true);
       expect(ctx.initiallyResponded).to.equal(true);
@@ -51,13 +56,18 @@ describe('MessageInteractionContext', () => {
     });
 
     it('sends ephemeral deferred messages', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, async (treq) => {
-        expect(treq.body).to.deep.equal({
-          type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
-          data: { flags: InteractionResponseFlags.EPHEMERAL }
-        });
-        expect(treq.status).to.equal(200);
-      });
+      const ctx = new MessageInteractionContext(
+        creator,
+        basicInteraction,
+        async (treq) => {
+          expect(treq.body).to.deep.equal({
+            type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+            data: { flags: InteractionResponseFlags.EPHEMERAL }
+          });
+          expect(treq.status).to.equal(200);
+        },
+        undefined
+      );
       expect(ctx.initiallyResponded).to.equal(false);
       await expect(ctx.defer(true)).to.eventually.equal(true);
       expect(ctx.initiallyResponded).to.equal(true);
@@ -65,7 +75,7 @@ describe('MessageInteractionContext', () => {
     });
 
     it('returns false when already deferred', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, noop);
+      const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
       await ctx.defer();
       await expect(ctx.defer()).to.eventually.equal(false);
     });
@@ -73,53 +83,63 @@ describe('MessageInteractionContext', () => {
 
   describe('.send()', () => {
     it('sends regular initial messages', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, async (treq) => {
-        expect(treq.body).to.deep.equal({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            content: 'test content',
-            allowed_mentions: {
-              parse: ['roles', 'users']
-            },
-            embeds: undefined,
-            flags: undefined,
-            tts: undefined,
-            components: undefined,
-            attachments: undefined
-          }
-        });
-        expect(treq.status).to.equal(200);
-      });
+      const ctx = new MessageInteractionContext(
+        creator,
+        basicInteraction,
+        async (treq) => {
+          expect(treq.body).to.deep.equal({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+              content: 'test content',
+              allowed_mentions: {
+                parse: ['roles', 'users']
+              },
+              embeds: undefined,
+              flags: undefined,
+              tts: undefined,
+              components: undefined,
+              attachments: undefined
+            }
+          });
+          expect(treq.status).to.equal(200);
+        },
+        undefined
+      );
       expect(ctx.initiallyResponded).to.equal(false);
       await expect(ctx.send('test content')).to.eventually.equal(true);
       expect(ctx.initiallyResponded).to.equal(true);
     });
 
     it('sends ephemeral messages', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, async (treq) => {
-        expect(treq.body).to.deep.equal({
-          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-          data: {
-            content: 'test content',
-            allowed_mentions: {
-              parse: ['roles', 'users']
-            },
-            embeds: undefined,
-            flags: InteractionResponseFlags.EPHEMERAL,
-            tts: undefined,
-            components: undefined,
-            attachments: undefined
-          }
-        });
-        expect(treq.status).to.equal(200);
-      });
+      const ctx = new MessageInteractionContext(
+        creator,
+        basicInteraction,
+        async (treq) => {
+          expect(treq.body).to.deep.equal({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: {
+              content: 'test content',
+              allowed_mentions: {
+                parse: ['roles', 'users']
+              },
+              embeds: undefined,
+              flags: InteractionResponseFlags.EPHEMERAL,
+              tts: undefined,
+              components: undefined,
+              attachments: undefined
+            }
+          });
+          expect(treq.status).to.equal(200);
+        },
+        undefined
+      );
       expect(ctx.initiallyResponded).to.equal(false);
       await expect(ctx.send({ content: 'test content', ephemeral: true })).to.eventually.equal(true);
       expect(ctx.initiallyResponded).to.equal(true);
     });
 
     it.skip('edits deferred message after sending deferred message', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, noop);
+      const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
       const scope = editMessage('@original', followUpMessage);
 
       await ctx.defer();
@@ -134,7 +154,7 @@ describe('MessageInteractionContext', () => {
     });
 
     it.skip('returns follow-up message after initial response', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, noop);
+      const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
       const scope = createFollowUp(followUpMessage);
 
       await ctx.send('111');
@@ -151,7 +171,7 @@ describe('MessageInteractionContext', () => {
 
   describe('.sendFollowUp()', () => {
     it.skip('sends follow-up messages', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, noop);
+      const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
       const scope = createFollowUp(followUpMessage);
 
       await ctx.defer();
@@ -166,7 +186,7 @@ describe('MessageInteractionContext', () => {
     });
 
     it('throws if creator has no token', async () => {
-      const ctx = new MessageInteractionContext(creatorNoToken, basicInteraction, noop);
+      const ctx = new MessageInteractionContext(creatorNoToken, basicInteraction, noop, undefined);
       await ctx.defer();
       return expect(ctx.sendFollowUp(followUpMessage.content)).to.be.rejected;
     });
@@ -174,7 +194,7 @@ describe('MessageInteractionContext', () => {
 
   describe.skip('.edit()', () => {
     it('edits and returns message', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, noop);
+      const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
       const scope = editMessage('1234', editedMessage);
 
       await ctx.defer();
@@ -191,7 +211,7 @@ describe('MessageInteractionContext', () => {
 
   describe.skip('.editOriginal()', () => {
     it('edits and returns original message', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, noop);
+      const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
       const scope = editMessage('@original', editedMessage);
 
       await ctx.defer();
@@ -208,7 +228,7 @@ describe('MessageInteractionContext', () => {
 
   describe.skip('.delete()', () => {
     it('deletes original message', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, noop);
+      const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
       const scope = deleteMessage('@original');
 
       await ctx.defer();
@@ -218,7 +238,7 @@ describe('MessageInteractionContext', () => {
     });
 
     it('deletes follow-up message', async () => {
-      const ctx = new MessageInteractionContext(creator, basicInteraction, noop);
+      const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
       const scope = deleteMessage('1234');
 
       await ctx.defer();

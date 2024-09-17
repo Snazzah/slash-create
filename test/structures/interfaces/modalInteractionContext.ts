@@ -14,21 +14,27 @@ describe('ModalInteractionContext', () => {
       this.slow(6000);
       const clock = FakeTimers.install();
 
-      new ModalInteractionContext(creator, modalInteraction, async (treq) => {
-        expect(treq.body).to.deep.equal({
-          type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
-          data: { flags: 0 }
-        });
-        expect(treq.status).to.equal(200);
-        done();
-      });
+      new ModalInteractionContext(
+        creator,
+        modalInteraction,
+        async (treq) => {
+          expect(treq.body).to.deep.equal({
+            type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
+            data: { flags: 0 }
+          });
+          expect(treq.status).to.equal(200);
+          done();
+        },
+        false,
+        undefined
+      );
 
       clock.tick(3000);
       clock.uninstall();
     });
 
     it('assigns properties properly', async () => {
-      const ctx = new ModalInteractionContext(creator, modalInteraction, noop);
+      const ctx = new ModalInteractionContext(creator, modalInteraction, noop, false, undefined);
 
       expect(ctx.values).to.deep.equal({ text: 'hi' });
       expect(ctx.customID).to.equal('modal');

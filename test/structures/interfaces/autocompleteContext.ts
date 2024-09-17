@@ -8,7 +8,7 @@ import { AutocompleteContext } from '../../../src/structures/interfaces/autocomp
 describe('AutocompleteContext', () => {
   describe('constructor', () => {
     it('assigns properties properly', async () => {
-      const ctx = new AutocompleteContext(creator, autocompleteInteraction, noop);
+      const ctx = new AutocompleteContext(creator, autocompleteInteraction, noop, undefined);
 
       expect(ctx.options).to.deep.equal({ 'sub-command': { string: 'incomplete str' } });
       expect(ctx.subcommands).to.deep.equal(['sub-command']);

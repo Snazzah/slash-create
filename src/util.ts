@@ -1,7 +1,7 @@
 import {
   ApplicationCommandOption,
   CommandOptionType,
-  InitialInteractionResponse,
+  InitialCallbackResponse,
   InteractionCallbackResponse
 } from './constants';
 import { MessageInteractionContext } from './structures/interfaces/messageInteraction';
@@ -113,8 +113,8 @@ export function generateID() {
 export function convertCallbackResponse(
   response: InteractionCallbackResponse,
   ctx: BaseInteractionContext
-): InitialInteractionResponse {
-  const result: InitialInteractionResponse = {
+): InitialCallbackResponse {
+  const result: InitialCallbackResponse = {
     interaction: {
       id: response.interaction.id,
       type: response.interaction.type,

@@ -2,7 +2,7 @@ import {
   AnyComponent,
   ComponentTextInput,
   ComponentType,
-  InitialInteractionResponse,
+  InitialCallbackResponse,
   InteractionResponseType,
   ModalSubmitRequestData
 } from '../../constants';
@@ -74,7 +74,7 @@ export class ModalInteractionContext<
    * Acknowledges the interaction without replying.
    * @returns Whether the acknowledgement passed or the callback response if available
    */
-  async acknowledge(): Promise<boolean | InitialInteractionResponse> {
+  async acknowledge(): Promise<boolean | InitialCallbackResponse> {
     if (!this.initiallyResponded) {
       this.initiallyResponded = true;
       clearTimeout(this._timeout);
@@ -92,11 +92,11 @@ export class ModalInteractionContext<
 
   /**
    * Edits the message that the component interaction came from.
-   * This will return `true` or a {@link InitialInteractionResponse} if it's an initial response, otherwise a {@link Message} will be returned.
+   * This will return `true` or a {@link InitialCallbackResponse} if it's an initial response, otherwise a {@link Message} will be returned.
    * @param content The content of the message
-   * @returns `true` or a {@link InitialInteractionResponse} if the initial response passed, otherwise a {@link Message} of the parent message.
+   * @returns `true` or a {@link InitialCallbackResponse} if the initial response passed, otherwise a {@link Message} of the parent message.
    */
-  async editParent(content: string | EditMessageOptions): Promise<true | InitialInteractionResponse | Message> {
+  async editParent(content: string | EditMessageOptions): Promise<true | InitialCallbackResponse | Message> {
     if (this.expired) throw new Error('This interaction has expired');
     if (!this.message) throw new Error('This interaction has no message');
 

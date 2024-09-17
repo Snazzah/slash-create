@@ -640,7 +640,7 @@ export interface AutocompleteData {
  */
 export type CommandAutocompleteRequestData = DMCommandAutocompleteRequestData | GuildCommandAutocompleteRequestData;
 
-/* @private **/
+/** @private */
 export interface InteractionCallbackResponse {
   interaction: {
     id: string;
@@ -870,33 +870,43 @@ export interface CommandSubcommandOption {
 }
 
 /** The response to the initial interaction callback. */
-export interface InitialInteractionResponse {
+export interface InitialCallbackResponse {
   /** The interaction associated with this response */
-  interaction: {
-    /** ID of the interaction */
-    id: string;
-    /** The type of the interaction */
-    type: InteractionType;
-    /** The instance ID of the activity if one was launched/joined */
-    activityInstanceID?: string;
-    /** The ID of the message created by the interaction */
-    responseMessageID?: string;
-    /** Whether or not the message is in a loading state */
-    responseMessageLoading?: boolean;
-    /** Whether or not the response message is ephemeral */
-    responseMessageEphemeral?: boolean;
-  };
+  interaction: InitialCallbackResponseInteraction;
   /** The resource created by this interaction response. */
-  resource?: {
-    /** The type of the interaction response */
-    type: InteractionResponseType;
-    /** The activity instance launched by this interaction */
-    activityInstance?: {
-      id: string;
-    };
-    /** The message created by this interaction */
-    message?: Message;
-  };
+  resource?: InitialCallbackResponseResource;
+}
+
+/** The interaction associated with an initial interaction callback response. */
+export interface InitialCallbackResponseInteraction {
+  /** ID of the interaction */
+  id: string;
+  /** The type of the interaction */
+  type: InteractionType;
+  /** The instance ID of the activity if one was launched/joined */
+  activityInstanceID?: string;
+  /** The ID of the message created by the interaction */
+  responseMessageID?: string;
+  /** Whether or not the message is in a loading state */
+  responseMessageLoading?: boolean;
+  /** Whether or not the response message is ephemeral */
+  responseMessageEphemeral?: boolean;
+}
+
+/** The resource created by an interaction. */
+export interface InitialCallbackResponseResource {
+  /** The type of the interaction response */
+  type: InteractionResponseType;
+  /** The activity instance launched by this interaction */
+  activityInstance?: ActivityInstanceResource;
+  /** The message created by this interaction */
+  message?: Message;
+}
+
+/** The activity instance resource created by an interaction. */
+export interface ActivityInstanceResource {
+  /** The instance ID of the activity */
+  id: string;
 }
 
 /** The types of components available. */

@@ -1,6 +1,6 @@
 import {
   AnyComponent,
-  InitialInteractionResponse,
+  InitialCallbackResponse,
   InteractionResponseFlags,
   InteractionResponseType
 } from '../../constants';
@@ -61,12 +61,12 @@ export class MessageInteractionContext<
    * Sends a message, if it already made an initial response, this will create a follow-up message.
    * If the context has created a deferred message, it will edit that deferred message,
    * and future calls to this function create follow ups.
-   * This will return `true` or a {@link InitialInteractionResponse} if it's an initial response, otherwise a {@link Message} will be returned.
+   * This will return `true` or a {@link InitialCallbackResponse} if it's an initial response, otherwise a {@link Message} will be returned.
    * Note that when making a follow-up message, the `ephemeral` option is ignored.
    * @param content The content of the message
-   * @returns `true` or a {@link InitialInteractionResponse} if the initial response passed, otherwise a {@link Message} of the follow-up message.
+   * @returns `true` or a {@link InitialCallbackResponse} if the initial response passed, otherwise a {@link Message} of the follow-up message.
    */
-  async send(content: string | MessageOptions): Promise<true | InitialInteractionResponse | Message> {
+  async send(content: string | MessageOptions): Promise<true | InitialCallbackResponse | Message> {
     if (this.expired) throw new Error('This interaction has expired');
 
     const options = typeof content === 'string' ? { content } : content;
@@ -204,7 +204,7 @@ export class MessageInteractionContext<
    * @param ephemeral Whether to make the deferred message ephemeral.
    * @returns Whether the deferred message passed or the callback response if available
    */
-  async defer(ephemeral = false): Promise<boolean | InitialInteractionResponse> {
+  async defer(ephemeral = false): Promise<boolean | InitialCallbackResponse> {
     if (!this.initiallyResponded && !this.deferred) {
       this.initiallyResponded = true;
       this.deferred = true;
@@ -229,7 +229,7 @@ export class MessageInteractionContext<
    * @returns Whether the message passed or the callback response if available
    * @deprecated Use `ComponentButtonPremium` instead.
    */
-  async promptPremium(): Promise<boolean | InitialInteractionResponse> {
+  async promptPremium(): Promise<boolean | InitialCallbackResponse> {
     if (!this.initiallyResponded && !this.deferred) {
       this.initiallyResponded = true;
       this.deferred = true;
@@ -251,7 +251,7 @@ export class MessageInteractionContext<
    * Launches the activity this app is associated with.
    * @returns Whether the message passed or the callback response if available
    */
-  async launchActivity(): Promise<boolean | InitialInteractionResponse> {
+  async launchActivity(): Promise<boolean | InitialCallbackResponse> {
     if (!this.initiallyResponded && !this.deferred) {
       this.initiallyResponded = true;
       this.deferred = true;

@@ -1,7 +1,7 @@
 import {
   AnyCommandOption,
   CommandAutocompleteRequestData,
-  InitialInteractionResponse,
+  InitialCallbackResponse,
   InteractionResponseType
 } from '../../constants';
 import { BaseSlashCreator } from '../../creator';
@@ -50,9 +50,9 @@ export class AutocompleteContext<ServerContext extends any = unknown> extends Ba
   /**
    * Sends the results of an autocomplete interaction.
    * @param choices The choices to display
-   * @returns boolean or a {@link InitialInteractionResponse} if the response passed
+   * @returns boolean or a {@link InitialCallbackResponse} if the response passed
    */
-  async sendResults(choices: AutocompleteChoice[]): Promise<boolean | InitialInteractionResponse> {
+  async sendResults(choices: AutocompleteChoice[]): Promise<boolean | InitialCallbackResponse> {
     if (this.responded) return false;
 
     this.responded = true;

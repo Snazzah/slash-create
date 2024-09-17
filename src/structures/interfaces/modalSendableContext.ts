@@ -1,4 +1,4 @@
-import { AnyComponent, InitialInteractionResponse, InteractionResponseType } from '../../constants';
+import { AnyComponent, InitialCallbackResponse, InteractionResponseType } from '../../constants';
 import { ModalRegisterCallback, BaseSlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
 import { convertCallbackResponse, generateID } from '../../util';
@@ -25,7 +25,7 @@ export class ModalSendableContext<
     callback?: ModalRegisterCallback
   ): Promise<{
     customID: string;
-    response: InitialInteractionResponse | null;
+    response: InitialCallbackResponse | null;
   }> {
     if (this.expired) throw new Error('This interaction has expired');
     if (this.initiallyResponded) throw new Error('This interaction has already responded.');

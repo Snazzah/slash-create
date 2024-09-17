@@ -2,6 +2,7 @@ import {
   ApplicationCommandOption,
   ApplicationCommandType,
   ApplicationIntegrationType,
+  EntryPointHandlerType,
   InteractionContextType,
   PartialApplicationCommand,
   PermissionNames
@@ -49,6 +50,8 @@ export class SlashCommand<T = any> {
   readonly integrationTypes: ApplicationIntegrationType[];
   /** The contexts where this command can be used. */
   readonly contexts: InteractionContextType[];
+  /** For entry point commands, determines how this command is handled either by the app or Discord */
+  readonly handler?: EntryPointHandlerType;
   /**
    * The file path of the command.
    * Used for refreshing the require cache.
@@ -84,6 +87,7 @@ export class SlashCommand<T = any> {
     if (opts.descriptionLocalizations) this.descriptionLocalizations = opts.descriptionLocalizations;
     this.options = opts.options;
     if (opts.guildIDs) this.guildIDs = typeof opts.guildIDs == 'string' ? [opts.guildIDs] : opts.guildIDs;
+    if (opts.handler) this.handler = opts.handler;
     this.requiredPermissions = opts.requiredPermissions;
     this.forcePermissions = typeof opts.forcePermissions === 'boolean' ? opts.forcePermissions : false;
     this.nsfw = typeof opts.nsfw === 'boolean' ? opts.nsfw : false;
@@ -133,6 +137,11 @@ export class SlashCommand<T = any> {
                   }))
                 }
               : {})
+          }
+        : {}),
+      ...(this.type === ApplicationCommandType.ENTRY_POINT
+        ? {
+            handler: this.handler
           }
         : {})
     };
@@ -387,6 +396,8 @@ export interface SlashCommandOptions {
   integrationTypes?: ApplicationIntegrationType[];
   /** The contexts where this command can be used. */
   contexts?: InteractionContextType[];
+  /** For entry point commands, whether to have the application or Discord handle this command. */
+  handler?: EntryPointHandlerType;
 }
 
 /** The throttling options for a {@link SlashCommand}. */

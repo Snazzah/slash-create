@@ -100,7 +100,17 @@ export enum ApplicationCommandType {
   /** A UI-based command that shows up when you right click or tap on a user */
   USER = 2,
   /** A UI-based command that shows up when you right click or tap on a messages */
-  MESSAGE = 3
+  MESSAGE = 3,
+  /** A UI-based command that represents the primary way to invoke an app's Activity */
+  ENTRY_POINT = 4
+}
+
+/** The types of handlers an entry point supports. */
+export enum EntryPointHandlerType {
+  /** The app handles the interaction using an interaction token */
+  APP_HANDLER = 1,
+  /** Discord handles the interaction by launching an Activity and sending a follow-up message without coordinating with the app */
+  DISCORD_LAUNCH_ACTIVITY = 2
 }
 
 /** The types of channels in Discord channels. */

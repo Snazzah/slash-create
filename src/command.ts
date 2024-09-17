@@ -148,7 +148,7 @@ export class SlashCommand<T = any> {
   }
 
   /**
-   * Get a string that mentions the user. Retuens null if the ID is not collected.
+   * Get a string that mentions the command. Retuens null if the ID is not collected.
    * @param subcommands The subcommands to include in the mention.
    * @param guild The guild to fetch the ID from.
    */

@@ -12,7 +12,7 @@ import {
   FormattedAllowedMentions,
   MessageAllowedMentions
 } from '../../util';
-import { Message, MessageEmbedOptions } from '../message';
+import { CreatePollOptions, Message, MessageEmbedOptions } from '../message';
 import { BaseInteractionContext } from './baseInteraction';
 
 /** Represents a interaction context that handles messages. */
@@ -71,7 +71,8 @@ export class MessageInteractionContext<
 
     const options = typeof content === 'string' ? { content } : content;
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
-    if (!options.content && !options.embeds && !options.files) throw new Error('No valid options were given.');
+    if (!options.content && !options.embeds && !options.files && !options.poll)
+      throw new Error('No valid options were given.');
     if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 
     const allowedMentions = options.allowedMentions
@@ -92,7 +93,8 @@ export class MessageInteractionContext<
             flags: options.flags,
             allowed_mentions: allowedMentions,
             components: options.components,
-            attachments: options.attachments
+            attachments: options.attachments,
+            poll: options.poll
           }
         },
         files: options.files
@@ -111,8 +113,8 @@ export class MessageInteractionContext<
 
     const options = typeof content === 'string' ? { content } : content;
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
-    if (!options.content && !options.embeds && !options.files)
-      throw new Error('Message content, embeds or files need to be given.');
+    if (!options.content && !options.embeds && !options.files && !options.poll)
+      throw new Error('No valid options were given.');
     if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 
     const allowedMentions = options.allowedMentions
@@ -129,7 +131,8 @@ export class MessageInteractionContext<
         allowed_mentions: allowedMentions,
         components: options.components,
         flags: options.flags,
-        attachments: options.attachments
+        attachments: options.attachments,
+        poll: options.poll
       },
       options.files
     );
@@ -146,7 +149,14 @@ export class MessageInteractionContext<
 
     const options = typeof content === 'string' ? { content } : content;
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
-    if (!options.content && !options.embeds && !options.components && !options.files && !options.attachments)
+    if (
+      !options.content &&
+      !options.embeds &&
+      !options.components &&
+      !options.files &&
+      !options.attachments &&
+      !options.poll
+    )
       throw new Error('No valid options were given.');
 
     const allowedMentions = options.allowedMentions
@@ -162,7 +172,8 @@ export class MessageInteractionContext<
         embeds: options.embeds,
         allowed_mentions: allowedMentions,
         components: options.components,
-        attachments: options.attachments
+        attachments: options.attachments,
+        poll: options.poll
       },
       options.files
     );
@@ -401,6 +412,8 @@ export interface EditMessageOptions {
   components?: AnyComponent[];
   /** The attachment data of the message. */
   attachments?: MessageAttachmentOptions[];
+  /** A poll. */
+  poll?: CreatePollOptions;
 }
 
 /** A file within {@link EditMessageOptions}. */

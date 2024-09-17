@@ -3,6 +3,8 @@ import {
   ApplicationIntegrationType,
   CommandChannel,
   InteractionType,
+  PartialEmoji,
+  PollLayoutType,
   StickerFormat,
   UserObject
 } from '../constants';
@@ -11,6 +13,7 @@ import { BaseSlashCreator } from '../creator';
 import { MessageInteractionContext } from './interfaces/messageInteraction';
 import { User } from './user';
 import { Channel } from './channel';
+import { PartialBy } from '../util';
 
 /** Represents a Discord message. */
 export class Message {
@@ -46,6 +49,8 @@ export class Message {
   readonly pinned: boolean;
   /** The approximate position of the message in a thread. */
   readonly position?: number;
+  /** The poll in the message. */
+  readonly poll?: PollObject;
   /** The thread that was started from this message. */
   readonly thread?: Channel;
   /** The timestamp of the message */
@@ -100,7 +105,7 @@ export class Message {
         participants: data.call.participants,
         endedTimestamp: data.call.ended_timestamp
       };
-    this.call = data.call;
+    this.poll = data.poll;
     this.position = data.position;
     this.timestamp = Date.parse(data.timestamp);
     if (data.edited_timestamp) this.editedTimestamp = Date.parse(data.edited_timestamp);
@@ -266,6 +271,55 @@ export interface MessageAttachment {
   flags?: number;
 }
 
+export interface CreatePollOptions {
+  /** The question of the poll. */
+  question: PollMedia;
+  /** The answers of the poll. `answer_id` is optional. */
+  answers: PartialBy<PollAnswer, 'answer_id'>[];
+  /** The duration (in hours) the poll will be open for */
+  duration?: number;
+  /** Whether to allow for multiple options to be selected */
+  allow_multiselect?: boolean;
+  /** The layout type of the poll */
+  layout_type?: PollLayoutType;
+}
+
+export interface PollObject {
+  /** The question of the poll. */
+  question: PollMedia;
+  /** The answers of the poll. */
+  answers: PollAnswer[];
+  /** The expiration of the poll */
+  expiry: string | null;
+  /** Whether you can select multiple options in thie poll */
+  allow_multiselect: boolean;
+  /** The layout type of the poll */
+  layout_type: PollLayoutType;
+  /** The results of the poll if finished */
+  results?: PollResults;
+}
+
+export interface PollResults {
+  is_finalized: boolean;
+  answer_counts: PollAnswerCount[];
+}
+
+export interface PollAnswerCount {
+  id: number;
+  count: number;
+  me_voted: boolean;
+}
+
+export interface PollMedia {
+  text?: string;
+  emoji?: PartialEmoji;
+}
+
+export interface PollAnswer {
+  answer_id: number;
+  poll_media: PollMedia;
+}
+
 /** Options to creating a message embed. */
 export interface MessageEmbedOptions {
   author?: EmbedAuthorOptions;
@@ -369,6 +423,7 @@ export interface MessageData {
     participants: string[];
     ended_timestamp?: string;
   };
+  poll?: PollObject;
   position?: number;
   thread?: CommandChannel;
   timestamp: string;

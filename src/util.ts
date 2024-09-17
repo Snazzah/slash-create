@@ -177,3 +177,6 @@ export interface FormattedAllowedMentions {
   roles?: string[];
   users?: string[];
 }
+
+/** @hidden */
+export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

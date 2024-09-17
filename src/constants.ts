@@ -141,6 +141,11 @@ export enum StickerFormat {
   GIF = 4
 }
 
+/** The layouts polls can be in. */
+export enum PollLayoutType {
+  DEFAULT = 1
+}
+
 /**
  * An partial application command in Discord.
  * @private

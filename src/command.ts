@@ -149,12 +149,13 @@ export class SlashCommand<T = any> {
 
   /**
    * Get a string that mentions the user. Retuens null if the ID is not collected.
+   * @param subcommands The subcommands to include in the mention.
    * @param guild The guild to fetch the ID from.
    */
-  getMention(guild?: string) {
+  getMention(subcommands?: string, guild?: string) {
     const id = this.ids.get(guild || 'global');
     if (!id) return null;
-    return `</${this.commandName}:${id}>`;
+    return `</${this.commandName}${subcommands ? ` ${subcommands}` : ''}:${id}>`;
   }
 
   /**

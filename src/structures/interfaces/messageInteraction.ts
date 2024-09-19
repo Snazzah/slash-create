@@ -432,6 +432,10 @@ export interface MessageAttachmentOptions {
   id: string | number;
   /** The description of the attachment. */
   description?: string;
+  /** The duration, in seconds, of the voice message. */
+  duration_secs?: number;
+  /** A base64-encoded bytearray that represents a sampled waveform. */
+  waveform?: string;
 }
 
 /** The options for {@link MessageInteractionContext#send} and {@link MessageInteractionContext#sendFollowUp}. */

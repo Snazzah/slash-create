@@ -430,6 +430,8 @@ export interface MessageAttachmentOptions {
   name?: string;
   /** The ID of the attachment. For existing attachments, this must be the ID snowflake of the attachment, otherwise, this will be the index of the files being sent to Discord. */
   id: string | number;
+  /** The title of the attachment. */
+  title?: string;
   /** The description of the attachment. */
   description?: string;
   /** The duration, in seconds, of the voice message. */

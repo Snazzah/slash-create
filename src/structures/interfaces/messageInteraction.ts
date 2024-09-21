@@ -172,6 +172,7 @@ export class MessageInteractionContext<
         embeds: options.embeds,
         allowed_mentions: allowedMentions,
         components: options.components,
+        flags: options.flags,
         attachments: options.attachments,
         poll: options.poll
       },
@@ -212,10 +213,16 @@ export class MessageInteractionContext<
   /**
    * Creates a deferred message. To users, this will show as
    * "Bot is thinking..." until the deferred message is edited.
-   * @param ephemeral Whether to make the deferred message ephemeral.
+   * @param ephemeralOrFlags If its a number, the message flags to use, if a boolean, whether to make the deferred message ephemeral.
    * @returns Whether the deferred message passed or the callback response if available
    */
-  async defer(ephemeral = false): Promise<boolean | InitialCallbackResponse> {
+  async defer(ephemeralOrFlags: number | boolean = 0): Promise<boolean | InitialCallbackResponse> {
+    const flags =
+      typeof ephemeralOrFlags === 'boolean'
+        ? ephemeralOrFlags
+          ? InteractionResponseFlags.EPHEMERAL
+          : 0
+        : ephemeralOrFlags;
     if (!this.initiallyResponded && !this.deferred) {
       this.initiallyResponded = true;
       this.deferred = true;
@@ -225,7 +232,7 @@ export class MessageInteractionContext<
         body: {
           type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
           data: {
-            flags: ephemeral ? InteractionResponseFlags.EPHEMERAL : 0
+            flags
           }
         }
       });
@@ -410,6 +417,8 @@ export interface EditMessageOptions {
   files?: MessageFile[];
   /** The components of the message. */
   components?: AnyComponent[];
+  /** The flags to use in the message. */
+  flags?: number;
   /** The attachment data of the message. */
   attachments?: MessageAttachmentOptions[];
   /** A poll. */
@@ -444,8 +453,6 @@ export interface MessageAttachmentOptions {
 export interface MessageOptions extends EditMessageOptions {
   /** Whether to use TTS for the content. */
   tts?: boolean;
-  /** The flags to use in the message. */
-  flags?: number;
   /**
    * Whether or not the message should be ephemeral.
    * Ignored if `flags` is defined.

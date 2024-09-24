@@ -156,13 +156,13 @@ export class Message {
    * @param content The content of the message
    */
   edit(content: string | EditMessageOptions) {
-    if (!this._ctx) throw new Error('This message was not created from a command context.');
+    if (!this._ctx) throw new Error('This message was not created from an interaction context.');
     return this._ctx.edit(this.id, content);
   }
 
   /** Deletes this message. */
   delete() {
-    if (!this._ctx) throw new Error('This message was not created from a command context.');
+    if (!this._ctx) throw new Error('This message was not created from an interaction context.');
     return this._ctx.delete(this.id);
   }
 

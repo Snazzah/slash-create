@@ -16,7 +16,7 @@ import { Channel } from './channel';
 import { PartialBy } from '../util';
 
 /** Represents a Discord message. */
-export class Message {
+export class Message<Kind extends 'snapshot' | '' = ''> {
   /** The message's ID */
   readonly id: string;
   /** The message type */
@@ -30,7 +30,7 @@ export class Message {
   /** The message's components */
   readonly components: AnyComponent[];
   /** The author of the message */
-  readonly author: User;
+  readonly author: Kind extends 'snapshot' ? undefined : User;
   /** The message's attachments */
   readonly attachments: MessageAttachment[];
   /** The message's stickers */
@@ -61,6 +61,8 @@ export class Message {
   readonly flags: number;
   /** The message that this message is referencing */
   readonly messageReference?: MessageReference;
+  /** The message snapshots being associated with the message reference */
+  readonly messageSnapshots?: MessageSnapshot[];
   /** The rich-presence embed used in this message */
   readonly activity?: MessageActivity;
   /** The message's webhook ID */
@@ -82,24 +84,32 @@ export class Message {
    * @param data The data for the message
    * @param ctx The instantiating context
    */
-  constructor(data: MessageData, creator: BaseSlashCreator, ctx?: MessageInteractionContext) {
+  constructor(
+    data: Kind extends 'snapshot'
+      ? PartialBy<MessageData, 'author' | 'tts' | 'mention_everyone' | 'pinned'>
+      : MessageData,
+    creator: BaseSlashCreator,
+    ctx?: MessageInteractionContext
+  ) {
     if (ctx) this._ctx = ctx;
 
     this.id = data.id;
-    this.type = data.type;
+    this.type = data.type ?? 0;
     this.content = data.content;
     this.channelID = data.channel_id;
     this.components = data.components || [];
-    this.author = new User(data.author, creator);
+    this.author = (data.author ? new User(data.author!, creator) : undefined) as Kind extends 'snapshot'
+      ? undefined
+      : User;
     this.attachments = data.attachments;
     this.stickerItems = data.sticker_items;
     if (data.thread) this.thread = new Channel(data.thread);
     this.embeds = data.embeds;
     this.mentions = data.mentions.map((user) => new User(user, creator));
     this.roleMentions = data.mention_roles;
-    this.mentionedEveryone = data.mention_everyone;
-    this.tts = data.tts;
-    this.pinned = data.pinned;
+    this.mentionedEveryone = data.mention_everyone ?? false;
+    this.tts = data.tts ?? false;
+    this.pinned = data.pinned ?? false;
     if (data.call)
       this.call = {
         participants: data.call.participants,
@@ -109,13 +119,25 @@ export class Message {
     this.position = data.position;
     this.timestamp = Date.parse(data.timestamp);
     if (data.edited_timestamp) this.editedTimestamp = Date.parse(data.edited_timestamp);
-    this.flags = data.flags;
+    this.flags = data.flags ?? 0;
     if (data.message_reference)
       this.messageReference = {
         channelID: data.message_reference.channel_id,
         guildID: data.message_reference.guild_id,
-        messageID: data.message_reference.message_id
+        messageID: data.message_reference.message_id,
+        type: data.message_reference.type
       };
+    if (data.message_snapshots)
+      this.messageSnapshots = data.message_snapshots.map((snapshot) => ({
+        message: new Message<'snapshot'>(
+          {
+            id: data.message_reference!.message_id!,
+            channel_id: data.message_reference!.channel_id,
+            ...snapshot.message
+          },
+          creator
+        )
+      }));
     if (data.activity)
       this.activity = {
         type: data.activity.type,
@@ -223,6 +245,14 @@ export interface MessageReference {
   guildID?: string;
   /** The message ID of the reference. */
   messageID?: string;
+  /** The type of message reference. */
+  type: MessageReferenceType;
+}
+
+/** A snapshot of a message. */
+export interface MessageSnapshot {
+  /** The forwarded message. */
+  message: Message<'snapshot'>;
 }
 
 /** A message activity. */
@@ -238,6 +268,11 @@ export enum MessageActivityType {
   SPECTATE = 2,
   LISTEN = 3,
   JOIN_REQUEST = 5
+}
+
+export enum MessageReferenceType {
+  DEFAULT = 0,
+  FORWARD = 1
 }
 
 /** A message attachment. */
@@ -427,7 +462,7 @@ export interface MessageData {
   thread?: CommandChannel;
   timestamp: string;
   edited_timestamp: string | null;
-  flags: number;
+  flags?: number;
   sticker_items?: MessageStickerItem[];
   interaction?: {
     id: string;
@@ -435,6 +470,22 @@ export interface MessageData {
     name: string;
     user: UserObject;
   };
+  message_snapshots?: {
+    message: Pick<
+      MessageData,
+      | 'type'
+      | 'content'
+      | 'embeds'
+      | 'attachments'
+      | 'timestamp'
+      | 'edited_timestamp'
+      | 'flags'
+      | 'mentions'
+      | 'mention_roles'
+      | 'sticker_items'
+      | 'components'
+    >;
+  }[];
   interaction_metadata?: {
     id: string;
     type: InteractionType;
@@ -457,6 +508,7 @@ export interface MessageData {
     channel_id: string;
     guild_id?: string;
     message_id?: string;
+    type: MessageReferenceType;
   };
   activity?: {
     type: MessageActivityType;

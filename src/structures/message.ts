@@ -180,8 +180,7 @@ export interface MessageCall {
   endedTimestamp?: string;
 }
 
-/**
- * A message interaction. */
+/** A message interaction. */
 export interface MessageInteraction {
   /** The ID of the interaction. */
   id: string;
@@ -193,7 +192,7 @@ export interface MessageInteraction {
   user: User;
 }
 
-/** Th emetadata of a message interaction. */
+/** The metadata of a message interaction. */
 export interface MessageInteractionMetadata {
   /** The ID of the interaction. */
   id: string;

@@ -5,6 +5,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [6.3.0] - 2024-09-25
+### Changed:
+- POST callbacks will now return responses as `InitialCallbackResponse`, multiple functions can return this instead of a boolean denoting success
+### Added:
+- SlashCreators using webservers can use the `postCallbacks` option to serve 202s to interactions and POST a callback instead
+- Launching activities with `MessageInteractionContext#launchActivity`
+- Entry points
+- `SlashCommand#getMention`
+- `MessageInteractionContext#defer` now supports using any message flags
+- Support for editing message flags
+- Support for sending polls
+- [types] Updated `MessageAttachmentOptions` to support voice message properties
+- Message classes now support the following:
+  - call objects (`call`)
+  - more thread properties (`position` and `thread`)
+  - polls (`poll`)
+  - `activity`
+  - `applicationID`
+  - message snapshots / forwarded messages (`messageSnapshots`)
+  - stickers (`stickerItems`)
+### Fixed:
+- HTTP errors will now properly format request errors
+- Fastify/Express servers should no longer respond early to some interactions
+- `Message#interactionMetadata` parsing has been updated and fixed to include more data
+- [types] Updated AutocompleteChoice to include `name_localizations`
+- [types] Updated MessageAttachment to include `waveform`, `duration_secs`, `flags`, `title`, and `ephemeral`
+- [types] Updated `Message#components` to be an array of any component rather than just action rows (See https://github.com/discord/discord-api-docs/pull/7115)
 ## [6.2.1] - 2024-07-21
 ### Fixed:
 - Fixed global modal submit handlers causing errors ([#622](https://github.com/Snazzah/slash-create/pull/622))
@@ -562,7 +589,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v6.2.1...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v6.3.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -636,3 +663,4 @@ This release features mostly completed documentation and changes to the packages
 [6.1.4]: https://github.com/Snazzah/slash-create/compare/v6.1.3...v6.1.4
 [6.2.0]: https://github.com/Snazzah/slash-create/compare/v6.1.4...v6.2.0
 [6.2.1]: https://github.com/Snazzah/slash-create/compare/v6.2.0...v6.2.1
+[6.3.0]: https://github.com/Snazzah/slash-create/compare/v6.2.1...v6.3.0

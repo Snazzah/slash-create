@@ -16,7 +16,10 @@ export class CommandContext<ServerContext extends any = unknown> extends ModalSe
   readonly commandID: string;
   /** The ID of the target user/message. */
   readonly targetID?: string;
-  /** The options given to the command. */
+  /**
+   * The options given to the command.
+   * @see https://slash-create.js.org/#/docs/main/latest/general/context-options
+   */
   readonly options: { [key: string]: any };
   /** The subcommands the member used in order. */
   readonly subcommands: string[];

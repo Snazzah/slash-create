@@ -140,7 +140,9 @@ export enum ChannelType {
   /** The channel in a hub containing the listed servers. */
   GUILD_DIRECTORY = 14,
   /** A channel that can only contain threads. */
-  GUILD_FORUM = 15
+  GUILD_FORUM = 15,
+  /** A channel where media can be posted. Can only contain threads, similar to GUILD_FORUM channels. */
+  GUILD_MEDIA = 16
 }
 
 /** The formats that stickers can be in. */

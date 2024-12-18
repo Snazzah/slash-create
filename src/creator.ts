@@ -564,12 +564,12 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
     this.emit('rawInteraction', interaction);
 
     // User preferred POSTing callbacks
-    if (this.options.postCallbacks && respond)
+    if (this.options.postCallbacks && respond && interaction.type !== InteractionType.PING)
       await respond({
         status: 202
       });
 
-    if (!respond || !webserverMode || this.options.postCallbacks)
+    if (!respond || !webserverMode || (this.options.postCallbacks && interaction.type !== InteractionType.PING))
       respond = this._createGatewayRespond(interaction.id, interaction.token);
 
     switch (interaction.type) {

@@ -1,9 +1,4 @@
-import {
-  AnyComponent,
-  InitialCallbackResponse,
-  InteractionResponseFlags,
-  InteractionResponseType
-} from '../../constants';
+import { AnyComponent, InitialCallbackResponse, MessageFlags, InteractionResponseType } from '../../constants';
 import { BaseSlashCreator, ComponentRegisterCallback } from '../../creator';
 import { RespondFunction } from '../../server';
 import {
@@ -71,9 +66,9 @@ export class MessageInteractionContext<
 
     const options = typeof content === 'string' ? { content } : content;
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
-    if (!options.content && !options.embeds && !options.files && !options.poll)
+    if (!options.content && !options.embeds && !options.files && !options.poll && !options.components)
       throw new Error('No valid options were given.');
-    if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
+    if (options.ephemeral && !options.flags) options.flags = MessageFlags.EPHEMERAL;
 
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
@@ -113,9 +108,9 @@ export class MessageInteractionContext<
 
     const options = typeof content === 'string' ? { content } : content;
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
-    if (!options.content && !options.embeds && !options.files && !options.poll)
+    if (!options.content && !options.embeds && !options.files && !options.poll && !options.components)
       throw new Error('No valid options were given.');
-    if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
+    if (options.ephemeral && !options.flags) options.flags = MessageFlags.EPHEMERAL;
 
     const allowedMentions = options.allowedMentions
       ? formatAllowedMentions(options.allowedMentions, this.creator.allowedMentions as FormattedAllowedMentions)
@@ -218,11 +213,7 @@ export class MessageInteractionContext<
    */
   async defer(ephemeralOrFlags: number | boolean = 0): Promise<boolean | InitialCallbackResponse> {
     const flags =
-      typeof ephemeralOrFlags === 'boolean'
-        ? ephemeralOrFlags
-          ? InteractionResponseFlags.EPHEMERAL
-          : 0
-        : ephemeralOrFlags;
+      typeof ephemeralOrFlags === 'boolean' ? (ephemeralOrFlags ? MessageFlags.EPHEMERAL : 0) : ephemeralOrFlags;
     if (!this.initiallyResponded && !this.deferred) {
       this.initiallyResponded = true;
       this.deferred = true;

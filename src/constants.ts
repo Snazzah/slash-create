@@ -61,8 +61,28 @@ export enum InteractionResponseType {
 
 /** Message flags for interaction responses. */
 export enum InteractionResponseFlags {
-  /** Sends a message back to the invoker, similar to messages by Clyde. */
+  /**
+   * Sends a message back to the invoker, similar to messages by Clyde.
+   * @deprecated use MessageFlags.EPHEMERAL
+   */
   EPHEMERAL = 1 << 6
+}
+
+/** Message flags. */
+export enum MessageFlags {
+  CROSSPOSTED = 1 << 0,
+  IS_CROSSPOST = 1 << 1,
+  SUPPRESS_EMBEDS = 1 << 2,
+  SOURCE_MESSAGE_DELETED = 1 << 3,
+  URGENT = 1 << 4,
+  HAS_THREAD = 1 << 5,
+  /** Sends a message back to the invoker, similar to messages by Clyde. */
+  EPHEMERAL = 1 << 6,
+  LOADING = 1 << 7,
+  FAILED_TO_MENTION_SOME_ROLES_IN_THREAD = 1 << 8,
+  SUPPRESS_NOTIFICATIONS = 1 << 12,
+  IS_VOICE_MESSAGE = 1 << 13,
+  HAS_SNAPSHOT = 1 << 14
 }
 
 /**
@@ -943,7 +963,15 @@ export enum ComponentType {
   /** A user/role select component. */
   MENTIONABLE_SELECT = 7,
   /** A channel select component. */
-  CHANNEL_SELECT = 8
+  CHANNEL_SELECT = 8,
+
+  SECTION = 9,
+  TEXT_DISPLAY = 10,
+  THUMBNAIL = 11,
+  MEDIA_GALLERY = 12,
+  FILE = 13,
+  SEPARATOR = 14,
+  CONTAINER = 17
 }
 
 /** The types of component button styles. */
@@ -971,15 +999,94 @@ export enum TextInputStyle {
   PARAGRAPH = 2
 }
 
+export interface UnfurledMediaItem {
+  url: string;
+}
+
+export interface BaseComponent {
+  type: ComponentType;
+  id?: number;
+}
+
+export interface SectionComponent extends BaseComponent {
+  type: ComponentType.SECTION;
+  components: TextDisplayComponent[];
+  accessory: ThumbnailComponent | AnyComponentButton;
+}
+
+export interface TextDisplayComponent extends BaseComponent {
+  type: ComponentType.TEXT_DISPLAY;
+  content: string;
+}
+
+export interface ThumbnailComponent extends BaseComponent {
+  type: ComponentType.THUMBNAIL;
+  media: UnfurledMediaItem;
+  description?: string;
+  spoiler?: boolean;
+}
+
+export interface MediaGalleryItem {
+  media: UnfurledMediaItem;
+  description?: string;
+  spoiler?: boolean;
+}
+export interface MediaGalleryComponent extends BaseComponent {
+  type: ComponentType.MEDIA_GALLERY;
+  items: MediaGalleryItem[];
+}
+
+export enum SeparatorSpacingSize {
+  SMALL = 1,
+  LARGE = 2
+}
+
+export interface SeparatorComponent extends BaseComponent {
+  type: ComponentType.SEPARATOR;
+  divider?: boolean;
+  spacing?: SeparatorSpacingSize;
+}
+
+export interface FileComponent extends BaseComponent {
+  type: ComponentType.FILE;
+  /** Only supports attachment:// references */
+  file: UnfurledMediaItem;
+  spoiler?: boolean;
+}
+export interface ContainerComponent extends BaseComponent {
+  type: ComponentType.CONTAINER;
+  accent_color?: number;
+  spoiler?: boolean;
+  components: (
+    | ComponentActionRow
+    | TextDisplayComponent
+    | SectionComponent
+    | MediaGalleryComponent
+    | SeparatorComponent
+    | FileComponent
+  )[];
+}
+
 /** Any component. */
-export type AnyComponent = ComponentActionRow | AnyComponentButton | ComponentSelectMenu | ComponentTextInput;
+export type AnyComponent =
+  | ComponentActionRow
+  | AnyComponentButton
+  | ComponentSelectMenu
+  | ComponentTextInput
+  | SectionComponent
+  | TextDisplayComponent
+  | SectionComponent
+  | MediaGalleryComponent
+  | SeparatorComponent
+  | FileComponent
+  | ContainerComponent;
 
 /** A row of components. */
 export interface ComponentActionRow {
   /** The type of component to use. */
   type: ComponentType.ACTION_ROW;
   /** The components to show inside this row. */
-  components: (AnyComponentButton | ComponentSelectMenu | ComponentTextInput)[];
+  components: Exclude<AnyComponent, ComponentActionRow>[];
 }
 
 /** Any component button. */

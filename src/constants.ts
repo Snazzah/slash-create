@@ -82,7 +82,9 @@ export enum MessageFlags {
   FAILED_TO_MENTION_SOME_ROLES_IN_THREAD = 1 << 8,
   SUPPRESS_NOTIFICATIONS = 1 << 12,
   IS_VOICE_MESSAGE = 1 << 13,
-  HAS_SNAPSHOT = 1 << 14
+  HAS_SNAPSHOT = 1 << 14,
+  /** This message uses Components V2. */
+  IS_COMPONENTS_V2 = 1 << 15
 }
 
 /**

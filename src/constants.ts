@@ -1126,7 +1126,6 @@ export type AnyComponent =
   | ComponentTextInput
   | SectionComponent
   | TextDisplayComponent
-  | SectionComponent
   | MediaGalleryComponent
   | SeparatorComponent
   | FileComponent

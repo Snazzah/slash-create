@@ -70,18 +70,29 @@ export enum InteractionResponseFlags {
 
 /** Message flags. */
 export enum MessageFlags {
+  /** This message was crossposted. */
   CROSSPOSTED = 1 << 0,
+  /** This message is a crosspost. */
   IS_CROSSPOST = 1 << 1,
+  /** This message has embeds suppressed. */
   SUPPRESS_EMBEDS = 1 << 2,
+  /** This message's source message was deleted. */
   SOURCE_MESSAGE_DELETED = 1 << 3,
+  /** This message is marked as urgent. */
   URGENT = 1 << 4,
+  /** This message has a thread attached. */
   HAS_THREAD = 1 << 5,
-  /** Sends a message back to the invoker, similar to messages by Clyde. */
+  /** This message only shows to the person running the command. */
   EPHEMERAL = 1 << 6,
+  /** This message is loading from a command. */
   LOADING = 1 << 7,
+  /** This message could not mention some roles in a thread. */
   FAILED_TO_MENTION_SOME_ROLES_IN_THREAD = 1 << 8,
+  /** This message has notifcations suppressed. */
   SUPPRESS_NOTIFICATIONS = 1 << 12,
+  /** This message is a voice message. */
   IS_VOICE_MESSAGE = 1 << 13,
+  /** This message has a snapshot, or is a forwarded message. */
   HAS_SNAPSHOT = 1 << 14,
   /** This message uses Components V2. */
   IS_COMPONENTS_V2 = 1 << 15
@@ -1006,35 +1017,56 @@ export interface UnfurledMediaItem {
 }
 
 export interface BaseComponent {
+  /** The type of component to use. */
   type: ComponentType;
+  /** The ID of this component. */
   id?: number;
 }
 
+/** A section component. */
 export interface SectionComponent extends BaseComponent {
+  /** The type of component to use. */
   type: ComponentType.SECTION;
+  /** The components included in this component. */
   components: TextDisplayComponent[];
   accessory: ThumbnailComponent | AnyComponentButton;
 }
 
+/** A text display component. */
 export interface TextDisplayComponent extends BaseComponent {
+  /** The type of component to use. */
   type: ComponentType.TEXT_DISPLAY;
+  /** The contents of the text display. */
   content: string;
 }
 
+/** A thumbnail component. */
 export interface ThumbnailComponent extends BaseComponent {
+  /** The type of component to use. */
   type: ComponentType.THUMBNAIL;
+  /** The thumbnail to display in this component. */
   media: UnfurledMediaItem;
+  /** The description of the thumbnail. */
   description?: string;
+  /** Whether to make the thumbnail a spoiler. */
   spoiler?: boolean;
 }
 
+/** A media gallery item. */
 export interface MediaGalleryItem {
+  /** The media to display in this item. */
   media: UnfurledMediaItem;
+  /** The description of this item. */
   description?: string;
+  /** Whether to make this item a spoiler. */
   spoiler?: boolean;
 }
+
+/** A media gallery component. */
 export interface MediaGalleryComponent extends BaseComponent {
+  /** The type of component to use. */
   type: ComponentType.MEDIA_GALLERY;
+  /** The items to display in the media gallery. */
   items: MediaGalleryItem[];
 }
 
@@ -1044,21 +1076,32 @@ export enum SeparatorSpacingSize {
 }
 
 export interface SeparatorComponent extends BaseComponent {
+  /** The type of component to use. */
   type: ComponentType.SEPARATOR;
+  /** Whether a divider should be displayed in this component. */
   divider?: boolean;
+  /** The spacing size of this separator. */
   spacing?: SeparatorSpacingSize;
 }
 
 export interface FileComponent extends BaseComponent {
+  /** The type of component to use. */
   type: ComponentType.FILE;
-  /** Only supports attachment:// references */
+  /** The file to represent in this component. Only supports attachment:// references. */
   file: UnfurledMediaItem;
+  /** Whether the component contents should be a spoiler. */
   spoiler?: boolean;
 }
+
+/** A container component. */
 export interface ContainerComponent extends BaseComponent {
+  /** The type of component to use. */
   type: ComponentType.CONTAINER;
+  /** The color to show on the side of the container. */
   accent_color?: number;
+  /** Whether the component contents should be a spoiler. */
   spoiler?: boolean;
+  /** The components included in this component. */
   components: (
     | ComponentActionRow
     | TextDisplayComponent

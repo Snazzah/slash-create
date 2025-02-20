@@ -977,13 +977,19 @@ export enum ComponentType {
   MENTIONABLE_SELECT = 7,
   /** A channel select component. */
   CHANNEL_SELECT = 8,
-
+  /** A section component. */
   SECTION = 9,
+  /** A text display component. */
   TEXT_DISPLAY = 10,
+  /** A thumbnail component. */
   THUMBNAIL = 11,
+  /** A media gallery component. */
   MEDIA_GALLERY = 12,
+  /** A file component. */
   FILE = 13,
+  /** A separator component. */
   SEPARATOR = 14,
+  /** A container component. */
   CONTAINER = 17
 }
 

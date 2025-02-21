@@ -6,13 +6,13 @@ import {
   AnyRequestData,
   RawRequest,
   InteractionResponseType,
-  InteractionResponseFlags,
   PartialApplicationCommand,
   BulkUpdateCommand,
   CommandUser,
   InteractionRequestData,
   ApplicationCommandType,
-  CommandAutocompleteRequestData
+  CommandAutocompleteRequestData,
+  MessageFlags
 } from './constants';
 import { SlashCommand } from './command';
 import { TypedEventEmitter } from './util/typedEmitter';
@@ -619,7 +619,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
                     This command no longer exists.
                     This command should no longer show up in an hour if it has been deleted.
                   `,
-                  flags: InteractionResponseFlags.EPHEMERAL
+                  flags: MessageFlags.EPHEMERAL
                 }
               }
             });

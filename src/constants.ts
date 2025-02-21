@@ -1136,7 +1136,7 @@ export interface ComponentActionRow {
   /** The type of component to use. */
   type: ComponentType.ACTION_ROW;
   /** The components to show inside this row. */
-  components: (AnyComponentButton | ComponentSelectMenu)[];
+  components: (AnyComponentButton | ComponentSelectMenu | ComponentTextInput)[];
 }
 
 /** Any component button. */

@@ -321,7 +321,7 @@ export class SlashCommand<T = any> {
       if (opts.name !== opts.name.toLowerCase()) throw new Error('Command name must be lowercase.');
       if (!/^[-_'\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u.test(opts.name))
         throw new RangeError(
-          'Command name must be between 1-32 characters, matching this regex: /^[-_\'\\p{L}\\p{N}\\p{sc=Deva}\\p{sc=Thai}]{1,32}$/'
+          "Command name must be between 1-32 characters, matching this regex: /^[-_'\\p{L}\\p{N}\\p{sc=Deva}\\p{sc=Thai}]{1,32}$/"
         );
 
       if (typeof opts.description !== 'string') throw new TypeError('Command description must be a string.');

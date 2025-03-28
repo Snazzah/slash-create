@@ -71,7 +71,7 @@ export class MessageInteractionContext<
 
     const options = typeof content === 'string' ? { content } : content;
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
-    if (!options.content && !options.embeds && !options.files && !options.poll)
+    if (!options.content && !options.embeds && !options.files && !options.poll && !options.components)
       throw new Error('No valid options were given.');
     if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 
@@ -113,7 +113,7 @@ export class MessageInteractionContext<
 
     const options = typeof content === 'string' ? { content } : content;
     if (typeof options !== 'object') throw new Error('Message options is not an object.');
-    if (!options.content && !options.embeds && !options.files && !options.poll)
+    if (!options.content && !options.embeds && !options.files && !options.poll && !options.components)
       throw new Error('No valid options were given.');
     if (options.ephemeral && !options.flags) options.flags = InteractionResponseFlags.EPHEMERAL;
 

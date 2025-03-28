@@ -319,8 +319,10 @@ export class SlashCommand<T = any> {
     if (typeof opts.name !== 'string') throw new TypeError('Command name must be a string.');
     if (!opts.type || opts.type === ApplicationCommandType.CHAT_INPUT) {
       if (opts.name !== opts.name.toLowerCase()) throw new Error('Command name must be lowercase.');
-      if (!/^[\p{L}_\d-]{1,32}$/u.test(opts.name))
-        throw new RangeError('Command name must be under 32 characters, matching this regex: /^[\\w-]{1,32}$/');
+      if (!/^[-_'\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u.test(opts.name))
+        throw new RangeError(
+          "Command name must be between 1-32 characters, matching this regex: /^[-_'\\p{L}\\p{N}\\p{sc=Deva}\\p{sc=Thai}]{1,32}$/"
+        );
 
       if (typeof opts.description !== 'string') throw new TypeError('Command description must be a string.');
       if (opts.description.length < 1 || opts.description.length > 100)

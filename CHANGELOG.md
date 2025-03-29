@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed:
 - Allow for just `components` in `MessageInteractionContext.send` and `MessageInteractionContext.sendFollowUp`
 - Modal callbacks are now awaited, fixing execution in Cloudflare Workers ([#631](https://github.com/Snazzah/slash-create/pull/631))
+- Invalid command names show the proper regex ([#629](https://github.com/Snazzah/slash-create/pull/629))
 ## [6.3.1] - 2024-12-18
 ### Added:
 - Added GUILD_MEDIA channel type ([#625](https://github.com/Snazzah/slash-create/pull/625))

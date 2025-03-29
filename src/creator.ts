@@ -738,10 +738,10 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
           const modalCallbackKey = `${ctx.user.id}-${ctx.customID}`;
           const globalCallbackKey = `global-${ctx.customID}`;
           if (this._modalCallbacks.has(modalCallbackKey)) {
-            this._modalCallbacks.get(modalCallbackKey)!.callback(ctx);
+            await this._modalCallbacks.get(modalCallbackKey)!.callback(ctx);
             this._modalCallbacks.delete(modalCallbackKey);
           } else if (this._modalCallbacks.has(globalCallbackKey)) {
-            this._modalCallbacks.get(globalCallbackKey)!.callback(ctx);
+            await this._modalCallbacks.get(globalCallbackKey)!.callback(ctx);
           }
           return;
         } catch (err) {

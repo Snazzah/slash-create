@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [6.3.2] - 2025-03-29
+### Fixed:
+- Allow for just `components` in `MessageInteractionContext.send` and `MessageInteractionContext.sendFollowUp`
+- Modal callbacks are now awaited, fixing execution in Cloudflare Workers ([#631](https://github.com/Snazzah/slash-create/pull/631))
 ## [6.3.1] - 2024-12-18
 ### Added:
 - Added GUILD_MEDIA channel type ([#625](https://github.com/Snazzah/slash-create/pull/625))
@@ -595,7 +599,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v6.3.1...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v6.3.2...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -671,3 +675,4 @@ This release features mostly completed documentation and changes to the packages
 [6.2.1]: https://github.com/Snazzah/slash-create/compare/v6.2.0...v6.2.1
 [6.3.0]: https://github.com/Snazzah/slash-create/compare/v6.2.1...v6.3.0
 [6.3.1]: https://github.com/Snazzah/slash-create/compare/v6.3.0...v6.3.1
+[6.3.2]: https://github.com/Snazzah/slash-create/compare/v6.3.1...v6.3.2

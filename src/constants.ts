@@ -451,6 +451,7 @@ export interface GuildModalSubmitRequestData {
   guild_id: string;
   locale?: string;
   guild_locale?: string;
+  guild?: PartialGuild;
   member: CommandMember;
   message?: MessageData;
   app_permissions?: string;
@@ -506,6 +507,7 @@ export interface GuildInteractionRequestData {
   guild_id: string;
   locale?: string;
   guild_locale?: string;
+  guild?: PartialGuild;
   member: CommandMember;
   channel: CommandChannel;
   app_permissions?: string;
@@ -521,6 +523,16 @@ export interface GuildInteractionRequestData {
  * @private
  */
 export type InteractionRequestData = DMInteractionRequestData | GuildInteractionRequestData;
+
+/** The partial guild from an interaction. */
+export interface PartialGuild {
+  /** The ID of the guild. */
+  id: string;
+  /** The preferred locale of the guild. */
+  locale: string;
+  /** The guild's features. */
+  features: string[];
+}
 
 /** The partial message from a message component interaction. */
 export interface PartialMessage {

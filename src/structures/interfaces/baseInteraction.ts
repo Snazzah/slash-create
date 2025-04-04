@@ -39,6 +39,8 @@ export class BaseInteractionContext<ServerContext extends any = unknown> {
   readonly appPermissions?: Permissions;
   /** The entitlements the invoking user has. */
   readonly entitlements: AppEntitlement[];
+  /** The attachment size limit the interaction has. */
+  readonly attachmentSizeLimit: number;
   /**
    * The map of owner IDs that this interaction was authorized for.
    * @see https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object
@@ -80,6 +82,7 @@ export class BaseInteractionContext<ServerContext extends any = unknown> {
     this.channel = new Channel(data.channel);
     this.appPermissions = data.app_permissions ? new Permissions(BigInt(data.app_permissions)) : undefined;
     this.entitlements = data.entitlements;
+    this.attachmentSizeLimit = data.attachment_size_limit;
     if ('authorizing_integration_owners' in data)
       this.authorizingIntegrationOwners = data.authorizing_integration_owners;
     if ('context' in data) this.context = data.context;

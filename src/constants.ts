@@ -430,6 +430,7 @@ export interface DMModalSubmitRequestData {
   entitlements: AppEntitlement[];
   authorizing_integration_owners?: Record<ApplicationIntegrationType, string>;
   context?: InteractionContextType;
+  attachment_size_limit: number;
   data: {
     custom_id: string;
     components: AnyComponent[];
@@ -456,6 +457,7 @@ export interface GuildModalSubmitRequestData {
   entitlements: AppEntitlement[];
   authorizing_integration_owners?: Record<ApplicationIntegrationType, string>;
   context?: InteractionContextType;
+  attachment_size_limit: number;
   data: {
     custom_id: string;
     components: AnyComponent[];
@@ -486,6 +488,7 @@ export interface DMInteractionRequestData {
   entitlements: AppEntitlement[];
   authorizing_integration_owners?: Record<ApplicationIntegrationType, string>;
   context?: InteractionContextType;
+  attachment_size_limit: number;
   data: CommandData;
 }
 
@@ -509,6 +512,7 @@ export interface GuildInteractionRequestData {
   entitlements: AppEntitlement[];
   authorizing_integration_owners?: Record<ApplicationIntegrationType, string>;
   context?: InteractionContextType;
+  attachment_size_limit: number;
   data: CommandData;
 }
 
@@ -554,6 +558,7 @@ export interface DMMessageComponentRequestData {
   channel: CommandChannel;
   app_permissions?: string;
   entitlements: AppEntitlement[];
+  attachment_size_limit: number;
   data: {
     custom_id: string;
     component_type: ComponentType;
@@ -578,6 +583,7 @@ export interface GuildMessageComponentRequestData {
   channel: CommandChannel;
   entitlements: AppEntitlement[];
   app_permissions?: string;
+  attachment_size_limit: number;
   data: {
     custom_id: string;
     component_type: ComponentType;
@@ -621,6 +627,7 @@ export interface DMCommandAutocompleteRequestData {
   user: CommandUser;
   channel: CommandChannel;
   app_permissions?: string;
+  attachment_size_limit: number;
   data: AutocompleteData;
 }
 
@@ -639,6 +646,7 @@ export interface GuildCommandAutocompleteRequestData {
   member: CommandMember;
   channel: CommandChannel;
   app_permissions?: string;
+  attachment_size_limit: number;
   data: AutocompleteData;
 }
 

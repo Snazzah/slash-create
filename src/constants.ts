@@ -59,7 +59,10 @@ export enum InteractionResponseType {
   LAUNCH_ACTIVITY = 12
 }
 
-/** Message flags for interaction responses. */
+/**
+ * Message flags for interaction responses.
+ * @deprecated use MessageFlags
+ */
 export enum InteractionResponseFlags {
   /**
    * Sends a message back to the invoker, similar to messages by Clyde.

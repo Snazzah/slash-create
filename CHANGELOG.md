@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added:
 - Added `attachmentSizeLimit` to interactions
 - Expose `guild` in interaction
+- Components V2 ([#628](https://github.com/Snazzah/slash-create/pull/628))
+### Changed:
+- The `InteractionResponseFlags` enum is now `MessageFlags`, `InteractionResponseFlags` is now deprecated.
 ## [6.3.2] - 2025-03-29
 ### Fixed:
 - Allow for just `components` in `MessageInteractionContext.send` and `MessageInteractionContext.sendFollowUp`

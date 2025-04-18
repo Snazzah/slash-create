@@ -403,7 +403,7 @@ export interface EditMessageOptions {
   /** The embeds of the message. */
   embeds?: MessageEmbedOptions[];
   /** The mentions allowed to be used in this message. */
-  allowedMentions?: MessageAllowedMentions;
+  allowedMentions?: MessageAllowedMentions | FormattedAllowedMentions;
   /** The attachment(s) to send with the message. */
   files?: MessageFile[];
   /** The components of the message. */

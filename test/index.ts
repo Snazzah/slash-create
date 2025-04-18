@@ -32,12 +32,12 @@ describe('[index]', () => {
     expect(slashCreate.FastifyServer).to.be.a('function');
     expect(slashCreate.GCFServer).to.be.a('function');
     expect(slashCreate.GatewayServer).to.be.a('function');
-    expect(slashCreate.InteractionResponseFlags).to.be.a('object');
     expect(slashCreate.InteractionType).to.be.a('object');
     expect(slashCreate.InteractionResponseType).to.be.a('object');
     expect(slashCreate.ApplicationCommandPermissionType).to.be.a('object');
     expect(slashCreate.Member).to.be.a('function');
     expect(slashCreate.Message).to.be.a('function');
+    expect(slashCreate.MessageFlags).to.be.a('object');
     expect(slashCreate.Permissions).to.be.a('function');
     expect(slashCreate.Server).to.be.a('function');
     expect(slashCreate.SlashCommand).to.be.a('function');

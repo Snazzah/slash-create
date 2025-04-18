@@ -7,7 +7,7 @@ import 'mocha';
 const expect = chai.expect;
 import { createFollowUp, deleteMessage, editMessage } from '../../__util__/nock';
 
-import { InteractionResponseFlags, InteractionResponseType } from '../../../src/constants';
+import { MessageFlags, InteractionResponseType } from '../../../src/constants';
 import { Message } from '../../../src/structures/message';
 import {
   creator,
@@ -62,7 +62,7 @@ describe('MessageInteractionContext', () => {
         async (treq) => {
           expect(treq.body).to.deep.equal({
             type: InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE,
-            data: { flags: InteractionResponseFlags.EPHEMERAL }
+            data: { flags: MessageFlags.EPHEMERAL }
           });
           expect(treq.status).to.equal(200);
         },
@@ -124,7 +124,7 @@ describe('MessageInteractionContext', () => {
                 parse: ['roles', 'users']
               },
               embeds: undefined,
-              flags: InteractionResponseFlags.EPHEMERAL,
+              flags: MessageFlags.EPHEMERAL,
               tts: undefined,
               components: undefined,
               attachments: undefined,

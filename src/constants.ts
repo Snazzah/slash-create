@@ -463,6 +463,7 @@ export interface DMModalSubmitRequestData {
   entitlements: AppEntitlement[];
   authorizing_integration_owners?: Record<ApplicationIntegrationType, string>;
   context?: InteractionContextType;
+  attachment_size_limit: number;
   data: {
     custom_id: string;
     components: AnyComponent[];
@@ -483,12 +484,14 @@ export interface GuildModalSubmitRequestData {
   guild_id: string;
   locale?: string;
   guild_locale?: string;
+  guild?: PartialGuild;
   member: CommandMember;
   message?: MessageData;
   app_permissions?: string;
   entitlements: AppEntitlement[];
   authorizing_integration_owners?: Record<ApplicationIntegrationType, string>;
   context?: InteractionContextType;
+  attachment_size_limit: number;
   data: {
     custom_id: string;
     components: AnyComponent[];
@@ -519,6 +522,7 @@ export interface DMInteractionRequestData {
   entitlements: AppEntitlement[];
   authorizing_integration_owners?: Record<ApplicationIntegrationType, string>;
   context?: InteractionContextType;
+  attachment_size_limit: number;
   data: CommandData;
 }
 
@@ -536,12 +540,14 @@ export interface GuildInteractionRequestData {
   guild_id: string;
   locale?: string;
   guild_locale?: string;
+  guild?: PartialGuild;
   member: CommandMember;
   channel: CommandChannel;
   app_permissions?: string;
   entitlements: AppEntitlement[];
   authorizing_integration_owners?: Record<ApplicationIntegrationType, string>;
   context?: InteractionContextType;
+  attachment_size_limit: number;
   data: CommandData;
 }
 
@@ -550,6 +556,16 @@ export interface GuildInteractionRequestData {
  * @private
  */
 export type InteractionRequestData = DMInteractionRequestData | GuildInteractionRequestData;
+
+/** The partial guild from an interaction. */
+export interface PartialGuild {
+  /** The ID of the guild. */
+  id: string;
+  /** The preferred locale of the guild. */
+  locale: string;
+  /** The guild's features. */
+  features: string[];
+}
 
 /** The partial message from a message component interaction. */
 export interface PartialMessage {
@@ -587,6 +603,7 @@ export interface DMMessageComponentRequestData {
   channel: CommandChannel;
   app_permissions?: string;
   entitlements: AppEntitlement[];
+  attachment_size_limit: number;
   data: {
     custom_id: string;
     component_type: ComponentType;
@@ -611,6 +628,7 @@ export interface GuildMessageComponentRequestData {
   channel: CommandChannel;
   entitlements: AppEntitlement[];
   app_permissions?: string;
+  attachment_size_limit: number;
   data: {
     custom_id: string;
     component_type: ComponentType;
@@ -654,6 +672,7 @@ export interface DMCommandAutocompleteRequestData {
   user: CommandUser;
   channel: CommandChannel;
   app_permissions?: string;
+  attachment_size_limit: number;
   data: AutocompleteData;
 }
 
@@ -672,6 +691,7 @@ export interface GuildCommandAutocompleteRequestData {
   member: CommandMember;
   channel: CommandChannel;
   app_permissions?: string;
+  attachment_size_limit: number;
   data: AutocompleteData;
 }
 

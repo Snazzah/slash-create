@@ -2,7 +2,13 @@ import { BaseSlashCreator } from '../../creator';
 import { Member } from '../member';
 import { User } from '../user';
 import { Permissions } from '../permissions';
-import { AppEntitlement, ApplicationIntegrationType, AttachmentData, InteractionContextType } from '../../constants';
+import {
+  AppEntitlement,
+  ApplicationIntegrationType,
+  AttachmentData,
+  InteractionContextType,
+  PartialGuild
+} from '../../constants';
 import { Collection } from '../../util/collection';
 import { Channel } from '../channel';
 import { Message } from '../message';
@@ -27,6 +33,8 @@ export class BaseInteractionContext<ServerContext extends any = unknown> {
   readonly locale?: string;
   /** The guild's perferred locale, if invoked in a guild. */
   readonly guildLocale?: string;
+  /** The guild that the interaction was invoked in. */
+  readonly guild?: PartialGuild;
   /** The member that invoked the interaction. */
   readonly member?: Member;
   /** The user that invoked the interaction. */
@@ -39,6 +47,8 @@ export class BaseInteractionContext<ServerContext extends any = unknown> {
   readonly appPermissions?: Permissions;
   /** The entitlements the invoking user has. */
   readonly entitlements: AppEntitlement[];
+  /** The attachment size limit the interaction has. */
+  readonly attachmentSizeLimit: number;
   /**
    * The map of owner IDs that this interaction was authorized for.
    * @see https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object
@@ -75,11 +85,13 @@ export class BaseInteractionContext<ServerContext extends any = unknown> {
     this.guildID = 'guild_id' in data ? data.guild_id : undefined;
     this.locale = 'locale' in data ? data.locale : undefined;
     this.guildLocale = 'guild_locale' in data ? data.guild_locale : undefined;
+    this.guild = 'guild' in data ? data.guild : undefined;
     this.member = 'guild_id' in data ? new Member(data.member, this.creator, data.guild_id) : undefined;
     this.user = new User('guild_id' in data ? data.member.user : data.user, this.creator);
     this.channel = new Channel(data.channel);
     this.appPermissions = data.app_permissions ? new Permissions(BigInt(data.app_permissions)) : undefined;
     this.entitlements = data.entitlements;
+    this.attachmentSizeLimit = data.attachment_size_limit;
     if ('authorizing_integration_owners' in data)
       this.authorizingIntegrationOwners = data.authorizing_integration_owners;
     if ('context' in data) this.context = data.context;

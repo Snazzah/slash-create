@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed:
 - Fix message flags and attachments not being sent during `.editParent()`
+- Fix null checking data in ratelimit handling
 ## [6.4.0] - 2025-04-18
 ### Added:
 - Added `attachmentSizeLimit` to interactions

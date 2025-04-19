@@ -99,8 +99,10 @@ export class ComponentContext<ServerContext extends any = unknown> extends Modal
           data: {
             content: options.content,
             embeds: options.embeds,
+            flags: options.flags,
             allowed_mentions: allowedMentions,
-            components: options.components
+            components: options.components,
+            attachments: options.attachments
           }
         },
         files: options.files

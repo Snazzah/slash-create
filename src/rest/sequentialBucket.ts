@@ -179,7 +179,7 @@ export class SequentialBucket {
     if (res.status >= 400 && res.status < 500) {
       const data: any = await parseResponse(res);
       if (res.status === 429) {
-        const delay = data.retry_after ? data.retry_after * 1000 : retryAfter;
+        const delay = data?.retry_after ? data.retry_after * 1000 : retryAfter;
         this.#handler.creator?.emit(
           'debug',
           `${parseScope(res.headers.get('x-ratelimit-scope')!)} 429. Retrying in ${delay}ms (${this.id})`

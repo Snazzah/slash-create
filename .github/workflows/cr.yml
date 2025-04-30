@@ -1,0 +1,38 @@
+name: Continuous Releases
+on:
+  pull_request:
+  push:
+    branches:
+      - "**"
+      - "!docs"
+    tags:
+      - "!**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        id: pnpm-install
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install Node v18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm run build
+
+      - run: pnpm dlx pkg-pr-new publish --compact --pnpm

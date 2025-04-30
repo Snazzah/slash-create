@@ -22,7 +22,10 @@
     "url": "https://snazzah.com/"
   },
   "license": "MIT",
-  "repository": "https://github.com/Snazzah/slash-create",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Snazzah/slash-create.git"
+  },
   "bugs": {
     "url": "https://github.com/Snazzah/slash-create/issues"
   },

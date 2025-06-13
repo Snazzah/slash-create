@@ -22,7 +22,6 @@ export class ExpressServer extends Server {
     if (!app) {
       if (!express) throw new Error('You must have the `express` package installed before using this server.');
       app = express();
-      app.use(express.json());
     }
     this.app = app;
   }
@@ -31,6 +30,7 @@ export class ExpressServer extends Server {
   createEndpoint(path: string, handler: ServerRequestHandler) {
     this.app.post(
       path,
+      express.json(),
       (req: any, res: any) =>
         void handler(
           {

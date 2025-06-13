@@ -14,7 +14,6 @@ creator
 
 /**
  * You can also initialize the server with an existing application.
- * If you are doing this with express applications, the express application must already have `express.json()` as middleware.
  */
 
 creator

@@ -40,7 +40,7 @@
     "wrapper"
   ],
   "scripts": {
-    "build": "rimraf lib && tsc",
+    "build": "rimraf lib && tsc && tsx scripts/postbuild",
     "build:prepare": "shx test -d ./lib || npm run build",
     "changelog": "tsx scripts/changelog",
     "docs": "typedoc --json .tmp/typedoc-out.json --excludeExternals --plugin typedoc-plugin-as-member-of && tsx scripts/docs",
@@ -92,7 +92,7 @@
     "rimraf": "^5.0.5",
     "shx": "^0.3.4",
     "ts-docgen": "github:dbots-pkg/ts-docgen#main",
-    "tsx": "^4.7.0",
+    "tsx": "^4.20.3",
     "typedoc": "0.19.2",
     "typedoc-plugin-as-member-of": "^1.0.2",
     "typescript": "4.4.2"

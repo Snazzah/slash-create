@@ -1042,7 +1042,18 @@ export enum TextInputStyle {
 }
 
 export interface UnfurledMediaItem {
+  /** The URL of the media item. */
   url: string;
+  /** The proxied URL of the media item. */
+  proxy_url?: string;
+  /** The height of the image, if any. */
+  height?: number | null;
+  /** The width of the image, if any. */
+  width?: number | null;
+  /** The content type of the media item. */
+  content_type?: string;
+  /** The ID of the uploaded attachment. */
+  attachment_id?: string;
 }
 
 export interface BaseComponent {
@@ -1120,6 +1131,10 @@ export interface FileComponent extends BaseComponent {
   file: UnfurledMediaItem;
   /** Whether the component contents should be a spoiler. */
   spoiler?: boolean;
+  /** The name of the file. */
+  name?: string;
+  /** The size of the file. */
+  size?: number;
 }
 
 /** A container component. */

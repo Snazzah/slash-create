@@ -15,7 +15,7 @@ export class Collection<K, V> extends Map<K, V> {
     if (amount < 0) return this.last(amount * -1);
     amount = Math.min(this.size, amount);
     const iter = this.values();
-    return Array.from({ length: amount }, (): V => iter.next().value);
+    return Array.from({ length: amount }, (): V => iter.next().value!);
   }
 
   /**
@@ -116,7 +116,7 @@ export class Collection<K, V> extends Map<K, V> {
     if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
     const iter = this.entries();
     return Array.from({ length: this.size }, (): T => {
-      const [key, value] = iter.next().value;
+      const [key, value] = iter.next().value!;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       return fn(value, key, this);
     });

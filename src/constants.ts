@@ -794,6 +794,7 @@ export interface UserNameplate {
 /** @private */
 export interface ResolvedRole {
   color: number;
+  colors: RoleColors;
   hoist: boolean;
   id: string;
   icon?: string;
@@ -804,6 +805,32 @@ export interface ResolvedRole {
   position: number;
   unicode_emoji?: string;
   tags?: RoleTags;
+}
+
+/** A role's tags */
+export interface RoleTags {
+  /** The ID of the bot that belongs to the role */
+  bot_id?: string;
+  /** The ID of the integration that belongs to the role */
+  integration_id?: string;
+  /** Whether this is the guild's booster role */
+  premium_subscriber?: null;
+  /** The ID of this role's subscription SKU and listing */
+  subscription_listing_id?: string;
+  /** Whether this role can be purchased */
+  available_for_purchase?: null;
+  /** Whether this is a guild's linked role */
+  guild_connections?: null;
+}
+
+/** A role's colors */
+export interface RoleColors {
+  /** The primary color for the role */
+  primary_color: number;
+  /** The secondary color for the role */
+  secondary_color: number | null;
+  /** The tertiary color for the role */
+  tertiary_color: number | null;
 }
 
 /** @private */
@@ -879,22 +906,6 @@ export interface ForumDefaultReaction {
   emoji_name: string;
   /** The ID of the custom emoji */
   emoji_id: string | null;
-}
-
-/** A role's tags */
-export interface RoleTags {
-  /** The ID of the bot that belongs to the role */
-  bot_id?: string;
-  /** The ID of the integration that belongs to the role */
-  integration_id?: string;
-  /** Whether this is the guild's booster role */
-  premium_subscriber?: null;
-  /** The ID of this role's subscription SKU and listing */
-  subscription_listing_id?: string;
-  /** Whether this role can be purchased */
-  available_for_purchase?: null;
-  /** Whether this is a guild's linked role */
-  guild_connections?: null;
 }
 
 /** @hidden */

@@ -5,6 +5,7 @@ import {
   ImageFormats,
   ImageSizeBoundaries,
   ResolvedRole,
+  RoleColors,
   RoleTags
 } from '../constants';
 import { BaseSlashCreator } from '../creator';
@@ -20,6 +21,8 @@ export class Role {
   readonly position: number;
   /** The role's color integer */
   readonly color: number;
+  /** The role's colors */
+  readonly colors: RoleColors;
   /** Whether the role is being hoisted */
   readonly hoist: boolean;
   /** The role icon hash */
@@ -49,6 +52,7 @@ export class Role {
     this.name = data.name;
     this.position = data.position;
     this.color = data.color;
+    this.colors = data.colors;
     this.hoist = data.hoist;
     if (data.icon) this.icon = data.icon;
     this.managed = data.managed;

@@ -5,6 +5,7 @@ import {
   ImageFormat,
   ImageFormats,
   ImageSizeBoundaries,
+  UserCollectibles,
   UserObject
 } from '../constants';
 import { BaseSlashCreator } from '../creator';
@@ -24,6 +25,8 @@ export class User {
   readonly avatar?: string;
   /** The user's avatar decoration data. */
   readonly avatarDecorationData?: AvatarDecorationData;
+  /** The user's collectibles. */
+  readonly collectibles?: UserCollectibles | null;
   /** Whether the user is a bot. */
   readonly bot: boolean;
 
@@ -46,6 +49,7 @@ export class User {
     this.globalName = data.global_name;
     if (data.avatar) this.avatar = data.avatar;
     if (data.avatar_decoration_data) this.avatarDecorationData = data.avatar_decoration_data;
+    if (data.collectibles) this.collectibles = data.collectibles;
     this._flags = data.public_flags;
     this.bot = data.bot || false;
   }

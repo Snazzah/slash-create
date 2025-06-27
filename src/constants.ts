@@ -758,6 +758,7 @@ export interface CommandUser {
   username: string;
   avatar: string | null;
   avatar_decoration_data: AvatarDecorationData | null;
+  collectibles: UserCollectibles | null;
   global_name: string | null;
   discriminator: string;
   public_flags: number;
@@ -766,6 +767,28 @@ export interface CommandUser {
 export interface AvatarDecorationData {
   sku_id: string;
   asset: string;
+}
+
+export interface UserCollectibles {
+  nameplate: UserNameplate | null;
+}
+
+export interface UserNameplate {
+  sku_id: string;
+  asset: string;
+  label: string;
+  palette:
+    | 'berry'
+    | 'bubble_gum'
+    | 'clover'
+    | 'cobalt'
+    | 'crimson'
+    | 'forest'
+    | 'lemon'
+    | 'sky'
+    | 'teal'
+    | 'violet'
+    | 'white';
 }
 
 /** @private */

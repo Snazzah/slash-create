@@ -20,6 +20,7 @@ export * from '../servers/lambda';
 export * from '../servers/azure';
 export * from '../servers/gateway';
 export * from '../servers/gcf';
+export * from '../servers/generic';
 export * from '../servers/vercel';
 
 export * from '../structures/member';

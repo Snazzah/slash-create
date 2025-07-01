@@ -12,7 +12,7 @@ export class AzureFunctionServer extends Server {
 
   constructor(app: any, target = 'interactions') {
     super({ alreadyListening: true });
-    app.http("interactions", {
+    app.http('interactions', {
       methods: ['POST'],
       authLevel: 'anonymous',
       route: target,
@@ -20,9 +20,9 @@ export class AzureFunctionServer extends Server {
     });
   }
 
-  private async _onRequest(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
-    if (!this._handler) return { status: 503, body: 'Server has no handler'}
-    if (request.method !== 'POST') return { status: 400, body: 'Server only supports POST requests.' }
+  private async _onRequest(request: HttpRequest, context?: InvocationContext): Promise<HttpResponseInit> {
+    if (!this._handler) return { status: 503, body: 'Server has no handler' };
+    if (request.method !== 'POST') return { status: 405, body: 'Server only supports POST requests.' };
     const body = await request.text();
     return new Promise((resolve, reject) => {
       this._handler!(
@@ -30,33 +30,30 @@ export class AzureFunctionServer extends Server {
           headers: Object.fromEntries(request.headers.entries()),
           body: body ? JSON.parse(body) : body,
           request: request,
-          response: null
+          response: null,
+          rawBody: body
         },
         async (response) => {
           if (response.files) {
             const data = new MultipartData();
             for (const i in response.files) data.attach(`files[${i}]`, response.files[i].file, response.files[i].name);
             data.attach('payload_json', JSON.stringify(response.body));
-            resolve(
-              {
-                status: response.status || 200,
-                headers: { 'Content-Type': `multipart/form-data; boundary=${data.boundary}` },
-                body: Buffer.concat(data.finish())
-              }
-            );
+            resolve({
+              status: response.status || 200,
+              headers: { 'Content-Type': `multipart/form-data; boundary=${data.boundary}` },
+              body: Buffer.concat(data.finish())
+            });
           } else {
-            resolve(
-              {
-                status: response.status || 200,
-                headers: { 'Content-Type': 'application/json' },
-                jsonBody: response.body
-              }
-            );
+            resolve({
+              status: response.status || 200,
+              headers: { 'Content-Type': 'application/json' },
+              jsonBody: response.body
+            });
           }
         }
       ).catch(reject);
     }) as Promise<any>;
-  };
+  }
 
   /** @private */
   createEndpoint(path: string, handler: ServerRequestHandler) {

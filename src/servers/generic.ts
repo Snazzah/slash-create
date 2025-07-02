@@ -24,6 +24,7 @@ export class GenericServer extends Server {
     return new Promise((resolve, reject) => {
       this._handler!(
         {
+          // @ts-ignore
           headers: Object.fromEntries(request.headers.entries()),
           body: body ? JSON.parse(body) : body,
           request,

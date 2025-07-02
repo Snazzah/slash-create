@@ -34,7 +34,7 @@ And create a [+server.ts endpoint](https://svelte.dev/docs/kit/routing#server) f
 
 ```ts
 // ./src/routes/interactions/+server.ts
-import endpoint from "$lib/slash";
+import { endpoint } from "$lib/slash";
 
 export async function POST({ request }) {
 	return await endpoint(request);

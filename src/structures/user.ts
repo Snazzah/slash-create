@@ -6,7 +6,8 @@ import {
   ImageFormats,
   ImageSizeBoundaries,
   UserCollectibles,
-  UserObject
+  UserObject,
+  UserPrimaryGuild
 } from '../constants';
 import { BaseSlashCreator } from '../creator';
 import { UserFlags } from './userFlags';
@@ -27,6 +28,8 @@ export class User {
   readonly avatarDecorationData?: AvatarDecorationData;
   /** The user's collectibles. */
   readonly collectibles?: UserCollectibles | null;
+  /** The user's primary guild. */
+  readonly primaryGuild?: UserPrimaryGuild | null;
   /** Whether the user is a bot. */
   readonly bot: boolean;
 
@@ -50,6 +53,7 @@ export class User {
     if (data.avatar) this.avatar = data.avatar;
     if (data.avatar_decoration_data) this.avatarDecorationData = data.avatar_decoration_data;
     if (data.collectibles) this.collectibles = data.collectibles;
+    if (data.primary_guild) this.primaryGuild = data.primary_guild;
     this._flags = data.public_flags;
     this.bot = data.bot || false;
   }

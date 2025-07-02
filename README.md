@@ -2,7 +2,7 @@
 
 <img src="/static/textlogo.png" height="50">
 
-[![NPM version](https://img.shields.io/npm/v/slash-create?maxAge=3600)](https://www.npmjs.com/package/slash-create) [![NPM downloads](https://img.shields.io/npm/dt/slash-create?maxAge=3600)](https://www.npmjs.com/package/slash-create) [![ESLint status](https://github.com/Snazzah/slash-create/workflows/ESLint/badge.svg)](https://github.com/Snazzah/slash-create/actions?query=workflow%3A%22ESLint%22) [![DeepScan grade](https://deepscan.io/api/teams/11596/projects/15103/branches/297399/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=11596&pid=15103&bid=297399) [![discord chat](https://img.shields.io/discord/311027228177727508?logo=discord&logoColor=white)](https://snaz.in/discord)
+[![NPM version](https://img.shields.io/npm/v/slash-create?maxAge=3600)](https://www.npmjs.com/package/slash-create) [![NPM downloads](https://img.shields.io/npm/dt/slash-create?maxAge=3600)](https://www.npmjs.com/package/slash-create) [![Network Dependents](https://dependents.info/Snazzah/slash-create/badge)](https://dependents.info/Snazzah/slash-create) [![ESLint status](https://github.com/Snazzah/slash-create/workflows/ESLint/badge.svg)](https://github.com/Snazzah/slash-create/actions?query=workflow%3A%22ESLint%22) [![DeepScan grade](https://deepscan.io/api/teams/11596/projects/15103/branches/297399/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=11596&pid=15103&bid=297399) [![discord chat](https://img.shields.io/discord/311027228177727508?logo=discord&logoColor=white)](https://snaz.in/discord)
 
 Create and sync [Discord slash commands](https://discord.com/developers/docs/interactions/application-commands).
 

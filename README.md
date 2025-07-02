@@ -47,6 +47,7 @@ In order to use a specific webserver, you will need to install the dependency as
 - `CloudflareWorkerServer`: none, only available in the web export via `slash-create/web`
 - `ExpressServer`: `express`
 - `FastifyServer`: `fastify`
+- `GenericServer`: none, used for frameworks that use the `Request` and `Response` objects
 - `GatewayServer`: none, see [example](https://slash-create.js.org/#/docs/main/latest/examples/discord-bot)
 - `GCFServer`: none technically, meant for use with [`@google-cloud/functions-framework`](https://npm.im/@google-cloud/functions-framework), see [example](https://slash-create.js.org/#/docs/main/latest/examples/gcf)
 - `VercelServer`: none, see [example](https://slash-create.js.org/#/docs/main/latest/examples/vercel)

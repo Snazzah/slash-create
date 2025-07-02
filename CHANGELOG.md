@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added:
 - Added `collectibles` to users
+- Added `primaryGuild` to users (supporting clan badges)
 - Added `colors` to roles (supporting role gradients)
+- Added a Generic server that uses Request/Response classes ([#637](https://github.com/Snazzah/slash-create/pull/637))
 ## [6.4.2] - 2025-06-15
 ### Fixed:
 - Fix express apps being forced to use `express.json` in the entire app ([#633](https://github.com/Snazzah/slash-create/pull/633))

@@ -1,5 +1,5 @@
 
-The Generic Server is primarily suited towards working with frameworks that handle the HTTP Requests and Responses by themselves, such as SvelteKit or SolidStart. As such, the server endpoint effectively becomes a function to process the Request and return a Response that you can pass back to your framework of choice.
+The Generic Server is primarily suited towards working with frameworks that handle the HTTP Requests and Responses by themselves, such as SvelteKit or SolidStart. As such, the server endpoint effectively becomes a function to process the Request and return a Response that you can pass back to your frameworks routing.
 
 # SvelteKit Example
 
@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-Afterwards, you can add the following code to your [library folder](https://svelte.dev/docs/kit/lib) to create a slash instance:
+Afterwards, you can add the following code to your [library folder](https://svelte.dev/docs/kit/lib) to create a global slash instance and export its endpoint:
 
 ```js
 // ./lib/slash.ts

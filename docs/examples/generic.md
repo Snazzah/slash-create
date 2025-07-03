@@ -24,10 +24,12 @@ const slash = new SlashCreator({
 	token: DISCORD_BOT_TOKEN,
 });
 
-slash.withServer(new GenericServer())
+const server = new GenericServer();
+slash.withServer(server);
+
 await creator.registerCommands(Object.values(commands)); // Will run at build-time, syncing commands as it is being deployed.
 
-export const endpoint = (slash.server! as GenericServer).endpoint;
+export const endpoint = server.endpoint;
 ```
 
 And create a [+server.ts endpoint](https://svelte.dev/docs/kit/routing#server) for that slash server to be exposed through.

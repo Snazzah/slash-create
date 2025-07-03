@@ -3,7 +3,7 @@ The Generic Server is primarily suited towards working with frameworks that hand
 
 # SvelteKit Example
 
-You can quickly create a SvelteKit project by running [`npx cv create`](https://svelte.dev/docs/kit/creating-a-project):
+You can quickly create a SvelteKit project by running [`npx sv create`](https://svelte.dev/docs/kit/creating-a-project):
 ```
 npx sv create my-app
 cd my-app

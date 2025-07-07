@@ -30,7 +30,9 @@
       path: gcf.md
     - name: AWS Lambda
       path: lambda.md
-    - name: Azure Functions
+    - name: Azure Functions V3
+      path: azure.md
+    - name: Azure Functions V4
       path: azure.md
     - name: Vercel
       path: vercel.md

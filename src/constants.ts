@@ -758,6 +758,7 @@ export interface CommandUser {
   username: string;
   avatar: string | null;
   avatar_decoration_data: AvatarDecorationData | null;
+  primary_guild?: UserPrimaryGuild | null;
   collectibles: UserCollectibles | null;
   global_name: string | null;
   discriminator: string;
@@ -789,6 +790,13 @@ export interface UserNameplate {
     | 'teal'
     | 'violet'
     | 'white';
+}
+
+export interface UserPrimaryGuild {
+  identity_guild_id: string | null;
+  identity_enabled: boolean | null;
+  tag: string | null;
+  badge: string | null;
 }
 
 /** @private */

@@ -163,7 +163,8 @@ export function getDiscordEpoch(id: string) {
 
 /** The allowed mentions for a {@link Message}. */
 export interface MessageAllowedMentions {
-  everyone: boolean;
+  everyone?: boolean;
+  repliedUser?: boolean;
   roles?: boolean | string[];
   users?: boolean | string[];
 }
@@ -174,6 +175,7 @@ export interface MessageAllowedMentions {
  */
 export interface FormattedAllowedMentions {
   parse: ('everyone' | 'roles' | 'users')[];
+  replied_user?: boolean;
   roles?: string[];
   users?: string[];
 }

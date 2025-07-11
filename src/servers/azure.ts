@@ -43,7 +43,8 @@ export class AzureFunctionServer extends Server {
           context.res!.header('Content-Type', 'application/json');
           context.res!.send(response.body);
         }
-      }
+      },
+      context
     );
   }
 
@@ -70,7 +71,6 @@ export class AzureFunctionV4Server extends Server {
     });
   }
 
-  // eslint-disable-next-line no-unused-vars
   private async _onRequest(request: HttpRequest, context?: InvocationContext): Promise<HttpResponseInit> {
     if (!this._handler) return { status: 503, body: 'Server has no handler' };
     if (request.method !== 'POST') return { status: 405, body: 'Server only supports POST requests.' };
@@ -101,7 +101,8 @@ export class AzureFunctionV4Server extends Server {
               jsonBody: response.body
             });
           }
-        }
+        },
+        context
       ).catch(reject);
     }) as Promise<any>;
   }

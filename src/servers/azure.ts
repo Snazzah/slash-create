@@ -6,6 +6,7 @@ import { MultipartData } from '../util/multipartData';
 /**
  * A server for Azure Function integration
  * @see https://docs.microsoft.com/en-us/azure/azure-functions/
+ * @deprecated Use `AzureFunctionV4Server` as that will supercede this server in the future.
  */
 export class AzureFunctionServer extends Server {
   private _handler?: ServerRequestHandler;

@@ -43,7 +43,7 @@ Now that you created a Function, your folder structure should look like this:
 Open `index.js` and replace its content by this:
 
 ```js
-const { AzureFunctionServerV4, SlashCreator } = require('slash-create');
+const { AzureFunctionV4Server, SlashCreator } = require('slash-create');
 const { app } = require('@azure/functions');
 
 const creator = new SlashCreator({
@@ -54,7 +54,7 @@ const creator = new SlashCreator({
 
 // The first argument is required, but the second argument is the "target" or the name of the export.
 // By default, the target is "interactions".
-creator.withServer(new AzureFunctionServerV4(app))
+creator.withServer(new AzureFunctionV4Server(app))
 
 await creator.registerCommandsIn(path.join(__dirname, 'commands'));
 

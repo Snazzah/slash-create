@@ -1,4 +1,4 @@
-import { AnyComponent, InitialCallbackResponse, InteractionResponseType } from '../../constants';
+import { ComponentActionRow, InitialCallbackResponse, InteractionResponseType, LabelComponent } from '../../constants';
 import { ModalRegisterCallback, BaseSlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
 import { convertCallbackResponse, generateID } from '../../util';
@@ -65,5 +65,5 @@ export interface ModalOptions {
   /** The custom ID of the modal. If a callback is provided but not a custom ID, one will be generated and returned. */
   custom_id?: string;
   /** The components of the modal. */
-  components: AnyComponent[];
+  components: (ComponentActionRow | LabelComponent)[];
 }

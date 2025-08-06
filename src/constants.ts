@@ -1055,7 +1055,9 @@ export enum ComponentType {
   /** A separator component. */
   SEPARATOR = 14,
   /** A container component. */
-  CONTAINER = 17
+  CONTAINER = 17,
+  /** A label component. */
+  LABEL = 18
 }
 
 /** The types of component button styles. */
@@ -1198,6 +1200,13 @@ export interface ContainerComponent extends BaseComponent {
   )[];
 }
 
+export interface LabelComponent {
+  type: ComponentType.LABEL;
+  label: string;
+  description?: string;
+  component: ComponentSelectMenu | ComponentTextInput;
+}
+
 /** Any component. */
 export type AnyComponent =
   | ComponentActionRow
@@ -1209,7 +1218,8 @@ export type AnyComponent =
   | MediaGalleryComponent
   | SeparatorComponent
   | FileComponent
-  | ContainerComponent;
+  | ContainerComponent
+  | LabelComponent;
 
 /** A row of components. */
 export interface ComponentActionRow {
@@ -1310,8 +1320,11 @@ export interface ComponentTextInput {
   type: ComponentType.TEXT_INPUT;
   /** The identifier of the of the input. */
   custom_id: string;
-  /** The label of the input. */
-  label: string;
+  /**
+   * The label of the input.
+   * @deprecated
+   */
+  label?: string;
   /** The style of the input. */
   style: TextInputStyle;
   /** The minimum length of the input. */

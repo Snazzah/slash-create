@@ -1204,7 +1204,7 @@ export interface LabelComponent {
   type: ComponentType.LABEL;
   label: string;
   description?: string;
-  component: ComponentStringSelect | ComponentTextInput;
+  component: ComponentStringSelect | Omit<ComponentTextInput, 'label'>;
 }
 
 /** Any component. */
@@ -1295,6 +1295,8 @@ export interface ComponentStringSelect extends ComponentSelectBase {
   type: ComponentType.STRING_SELECT;
   /** The options to show inside this menu. Only used for string selects. */
   options: ComponentSelectOption[];
+  /** Whether this component is required. Only used in modals. */
+  required?: boolean;
 }
 
 export interface ComponentChannelSelect extends ComponentSelectBase {

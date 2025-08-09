@@ -469,7 +469,7 @@ export interface DMModalSubmitRequestData {
   attachment_size_limit: number;
   data: {
     custom_id: string;
-    components: AnyComponent[];
+    components: (ComponentActionRowResponse | ComponentLabelResponse)[];
   };
 }
 
@@ -497,7 +497,7 @@ export interface GuildModalSubmitRequestData {
   attachment_size_limit: number;
   data: {
     custom_id: string;
-    components: AnyComponent[];
+    components: (ComponentActionRowResponse | ComponentLabelResponse)[];
   };
 }
 
@@ -1204,14 +1204,14 @@ export interface LabelComponent {
   type: ComponentType.LABEL;
   label: string;
   description?: string;
-  component: ComponentSelectMenu | ComponentTextInput;
+  component: ComponentStringSelect | ComponentTextInput;
 }
 
 /** Any component. */
 export type AnyComponent =
   | ComponentActionRow
   | AnyComponentButton
-  | ComponentSelectMenu
+  | AnySelectComponent
   | ComponentTextInput
   | SectionComponent
   | TextDisplayComponent
@@ -1226,7 +1226,7 @@ export interface ComponentActionRow {
   /** The type of component to use. */
   type: ComponentType.ACTION_ROW;
   /** The components to show inside this row. */
-  components: (AnyComponentButton | ComponentSelectMenu | ComponentTextInput)[];
+  components: (AnyComponentButton | AnySelectComponent | ComponentTextInput)[];
 }
 
 /** Any component button. */
@@ -1269,6 +1269,66 @@ export interface ComponentButtonPremium extends Omit<ComponentButton, 'custom_id
   sku_id: string;
 }
 
+export interface ComponentSelectBase {
+  /** The type of component to use. */
+  type:
+    | ComponentType.STRING_SELECT
+    | ComponentType.USER_SELECT
+    | ComponentType.ROLE_SELECT
+    | ComponentType.MENTIONABLE_SELECT
+    | ComponentType.CHANNEL_SELECT;
+  /** Optional component identifier */
+  id?: number;
+  /** The identifier of the of the menu. */
+  custom_id: string;
+  /** The string to show in absence of a selected option. */
+  placeholder?: string;
+  /** The minimum number of items to be chosen. */
+  min_values?: number;
+  /** The maximum number of items to be chosen. */
+  max_values?: number;
+  /** Whether this menu will show as disabled. */
+  disabled?: boolean;
+}
+
+export interface ComponentStringSelect extends ComponentSelectBase {
+  type: ComponentType.STRING_SELECT;
+  /** The options to show inside this menu. Only used for string selects. */
+  options: ComponentSelectOption[];
+}
+
+export interface ComponentChannelSelect extends ComponentSelectBase {
+  type: ComponentType.CHANNEL_SELECT;
+  /** The options to show inside this menu. Only used for string selects. */
+  options: ComponentSelectOption[];
+  /** An array of channel types this select can use. Only used for channel selects. */
+  channel_types?: ChannelType[];
+  /** An array of default values. */
+  default_values?: SelectDefaultValue[];
+}
+
+export interface ComponentUserSelect extends ComponentSelectBase {
+  type: ComponentType.USER_SELECT;
+  /** An array of default values. */
+  default_values?: SelectDefaultValue[];
+}
+
+export interface ComponentRoleSelect extends ComponentSelectBase {
+  type: ComponentType.ROLE_SELECT;
+  /** An array of default values. */
+  default_values?: SelectDefaultValue[];
+}
+
+export interface ComponentMentionableSelect extends ComponentSelectBase {
+  type: ComponentType.MENTIONABLE_SELECT;
+  /** An array of default values. */
+  default_values?: SelectDefaultValue[];
+}
+
+/** Any select component */
+export type AnySelectComponent = ComponentStringSelect | ComponentChannelSelect | ComponentUserSelect | ComponentRoleSelect | ComponentMentionableSelect;
+
+/** @deprecated use `AnySelectComponent` for bettet types. */
 export interface ComponentSelectMenu {
   /** The type of component to use. */
   type:
@@ -1337,6 +1397,41 @@ export interface ComponentTextInput {
   value?: string;
   /** Custom placeholder text if the input is empty. */
   placeholder?: string;
+}
+
+/** @hidden */
+export interface ComponentSelectResponse {
+  type:
+    | ComponentType.STRING_SELECT
+    | ComponentType.USER_SELECT
+    | ComponentType.ROLE_SELECT
+    | ComponentType.MENTIONABLE_SELECT
+    | ComponentType.CHANNEL_SELECT;
+  custom_id: string;
+  id: number;
+  values: string[];
+}
+
+/** @hidden */
+export interface ComponentTextInputResponse {
+  type: ComponentType.TEXT_INPUT,
+  custom_id: string;
+  id: number;
+  value: string;
+}
+
+/** @hidden */
+export interface ComponentLabelResponse {
+  type: ComponentType.LABEL,
+  id: number;
+  component: ComponentSelectResponse | ComponentTextInputResponse
+}
+
+/** @hidden */
+export interface ComponentActionRowResponse {
+  type: ComponentType.ACTION_ROW,
+  id: number;
+  components: [ComponentTextInputResponse]
 }
 
 /** An attachment from an interaction. */

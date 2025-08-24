@@ -1335,7 +1335,7 @@ export type AnySelectComponent =
   | ComponentRoleSelect
   | ComponentMentionableSelect;
 
-/** @deprecated use `AnySelectComponent` for bettet types. */
+/** @deprecated use `AnySelectComponent` for better types. */
 export interface ComponentSelectMenu {
   /** The type of component to use. */
   type:

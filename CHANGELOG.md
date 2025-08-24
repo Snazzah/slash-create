@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added:
 - Updated types to allow for select menus in modals, as well as using a `LabelComponent` as using action rows in modals are now deprecated.
+### Changed:
+- The type `ComponentSelectMenu` is now deprecated in favor of `AnySelectComponent` as each component type is now split out into their own types.
 ## [6.5.0] - 2025-07-17
 ### Added:
 - Added `collectibles` to users

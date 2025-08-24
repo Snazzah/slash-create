@@ -1,6 +1,6 @@
 import {
-  AnyComponent,
-  ComponentTextInput,
+  ComponentActionRowResponse,
+  ComponentLabelResponse,
   ComponentType,
   InitialCallbackResponse,
   InteractionResponseType,
@@ -24,7 +24,7 @@ export class ModalInteractionContext<
   readonly message?: Message;
 
   /** The values defined in the modal submission. */
-  readonly values: { [key: string]: string };
+  readonly values: { [key: string]: string | string[] };
 
   /**
    * @param creator The instantiating creator.
@@ -51,20 +51,20 @@ export class ModalInteractionContext<
     if (useTimeout) this._timeout = setTimeout(() => this.defer(false), 2000);
   }
 
-  static convertComponents(components: AnyComponent[]): { [key: string]: string } {
-    const values: { [key: string]: string } = {};
+  static convertComponents(components: (ComponentActionRowResponse | ComponentLabelResponse)[]): {
+    [key: string]: string | string[];
+  } {
+    const values: { [key: string]: string | string[] } = {};
+    console.log(JSON.stringify(components, null, 2));
 
-    // TODO If/when selects are available in modals, this needs to adapt for that change
     for (const component of components) {
-      if (component.type === ComponentType.TEXT_INPUT) {
-        values[component.custom_id] = component.value!;
-        continue;
+      if (component.type === ComponentType.ACTION_ROW) {
+        const childComponent = component.components[0];
+        values[childComponent.custom_id] = childComponent.value!;
+      } else if (component.type === ComponentType.LABEL) {
+        values[component.component.custom_id] =
+          'values' in component.component ? component.component.values : component.component.value;
       }
-
-      if (component.type !== ComponentType.ACTION_ROW) continue;
-      const childComponent = component.components[0] as ComponentTextInput;
-
-      values[childComponent.custom_id] = childComponent.value!;
     }
 
     return values;

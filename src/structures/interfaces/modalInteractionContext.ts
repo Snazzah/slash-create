@@ -1,8 +1,6 @@
 import {
-  AnyComponent,
   ComponentActionRowResponse,
   ComponentLabelResponse,
-  ComponentTextInput,
   ComponentType,
   InitialCallbackResponse,
   InteractionResponseType,
@@ -53,7 +51,9 @@ export class ModalInteractionContext<
     if (useTimeout) this._timeout = setTimeout(() => this.defer(false), 2000);
   }
 
-  static convertComponents(components: (ComponentActionRowResponse | ComponentLabelResponse)[]): { [key: string]: string | string[] } {
+  static convertComponents(components: (ComponentActionRowResponse | ComponentLabelResponse)[]): {
+    [key: string]: string | string[];
+  } {
     const values: { [key: string]: string | string[] } = {};
     console.log(JSON.stringify(components, null, 2));
 
@@ -62,7 +62,8 @@ export class ModalInteractionContext<
         const childComponent = component.components[0];
         values[childComponent.custom_id] = childComponent.value!;
       } else if (component.type === ComponentType.LABEL) {
-        values[component.component.custom_id] = 'values' in component.component ? component.component.values : component.component.value;
+        values[component.component.custom_id] =
+          'values' in component.component ? component.component.values : component.component.value;
       }
     }
 

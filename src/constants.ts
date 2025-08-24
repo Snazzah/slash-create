@@ -1328,7 +1328,12 @@ export interface ComponentMentionableSelect extends ComponentSelectBase {
 }
 
 /** Any select component */
-export type AnySelectComponent = ComponentStringSelect | ComponentChannelSelect | ComponentUserSelect | ComponentRoleSelect | ComponentMentionableSelect;
+export type AnySelectComponent =
+  | ComponentStringSelect
+  | ComponentChannelSelect
+  | ComponentUserSelect
+  | ComponentRoleSelect
+  | ComponentMentionableSelect;
 
 /** @deprecated use `AnySelectComponent` for bettet types. */
 export interface ComponentSelectMenu {
@@ -1416,7 +1421,7 @@ export interface ComponentSelectResponse {
 
 /** @hidden */
 export interface ComponentTextInputResponse {
-  type: ComponentType.TEXT_INPUT,
+  type: ComponentType.TEXT_INPUT;
   custom_id: string;
   id: number;
   value: string;
@@ -1424,16 +1429,16 @@ export interface ComponentTextInputResponse {
 
 /** @hidden */
 export interface ComponentLabelResponse {
-  type: ComponentType.LABEL,
+  type: ComponentType.LABEL;
   id: number;
-  component: ComponentSelectResponse | ComponentTextInputResponse
+  component: ComponentSelectResponse | ComponentTextInputResponse;
 }
 
 /** @hidden */
 export interface ComponentActionRowResponse {
-  type: ComponentType.ACTION_ROW,
+  type: ComponentType.ACTION_ROW;
   id: number;
-  components: [ComponentTextInputResponse]
+  components: [ComponentTextInputResponse];
 }
 
 /** An attachment from an interaction. */

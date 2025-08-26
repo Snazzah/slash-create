@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [6.6.0] - 2025-08-26
 ### Added:
 - Updated types to allow for select menus in modals, as well as using a `LabelComponent` as using action rows in modals are now deprecated.
-- Added the `PIN_MESSAGES` permission
+- `ModalInteractionContext` can now also have string arrays for those selects.
+- Added the `PIN_MESSAGES` permission.
 ### Changed:
 - The type `ComponentSelectMenu` is now deprecated in favor of `AnySelectComponent` as each component type is now split out into their own types.
 ## [6.5.0] - 2025-07-17

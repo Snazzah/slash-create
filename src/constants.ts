@@ -1301,8 +1301,6 @@ export interface ComponentStringSelect extends ComponentSelectBase {
 
 export interface ComponentChannelSelect extends ComponentSelectBase {
   type: ComponentType.CHANNEL_SELECT;
-  /** The options to show inside this menu. Only used for string selects. */
-  options: ComponentSelectOption[];
   /** An array of channel types this select can use. Only used for channel selects. */
   channel_types?: ChannelType[];
   /** An array of default values. */

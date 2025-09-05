@@ -1279,7 +1279,7 @@ export interface ComponentSelectBase {
     | ComponentType.CHANNEL_SELECT;
   /** Optional component identifier */
   id?: number;
-  /** The identifier of the of the menu. */
+  /** The identifier of the of the select. */
   custom_id: string;
   /** The string to show in absence of a selected option. */
   placeholder?: string;
@@ -1287,13 +1287,13 @@ export interface ComponentSelectBase {
   min_values?: number;
   /** The maximum number of items to be chosen. */
   max_values?: number;
-  /** Whether this menu will show as disabled. */
+  /** Whether this select will show as disabled. */
   disabled?: boolean;
 }
 
 export interface ComponentStringSelect extends ComponentSelectBase {
   type: ComponentType.STRING_SELECT;
-  /** The options to show inside this menu. */
+  /** The options to show inside this select. */
   options: ComponentSelectOption[];
   /** Whether this component is required. Only used in modals. */
   required?: boolean;

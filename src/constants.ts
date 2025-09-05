@@ -1293,7 +1293,7 @@ export interface ComponentSelectBase {
 
 export interface ComponentStringSelect extends ComponentSelectBase {
   type: ComponentType.STRING_SELECT;
-  /** The options to show inside this menu. Only used for string selects. */
+  /** The options to show inside this menu. */
   options: ComponentSelectOption[];
   /** Whether this component is required. Only used in modals. */
   required?: boolean;
@@ -1301,7 +1301,7 @@ export interface ComponentStringSelect extends ComponentSelectBase {
 
 export interface ComponentChannelSelect extends ComponentSelectBase {
   type: ComponentType.CHANNEL_SELECT;
-  /** An array of channel types this select can use. Only used for channel selects. */
+  /** An array of channel types this select can use. */
   channel_types?: ChannelType[];
   /** An array of default values. */
   default_values?: SelectDefaultValue[];

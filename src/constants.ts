@@ -1204,7 +1204,7 @@ export interface LabelComponent {
   type: ComponentType.LABEL;
   label: string;
   description?: string;
-  component: ComponentStringSelect | Omit<ComponentTextInput, 'label'>;
+  component: AnySelectComponent | Omit<ComponentTextInput, 'label'>;
 }
 
 /** Any component. */

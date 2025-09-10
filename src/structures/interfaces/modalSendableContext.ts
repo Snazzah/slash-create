@@ -1,4 +1,10 @@
-import { ComponentActionRow, InitialCallbackResponse, InteractionResponseType, LabelComponent, TextDisplayComponent } from '../../constants';
+import {
+  ComponentActionRow,
+  InitialCallbackResponse,
+  InteractionResponseType,
+  LabelComponent,
+  TextDisplayComponent
+} from '../../constants';
 import { ModalRegisterCallback, BaseSlashCreator } from '../../creator';
 import { RespondFunction } from '../../server';
 import { convertCallbackResponse, generateID } from '../../util';

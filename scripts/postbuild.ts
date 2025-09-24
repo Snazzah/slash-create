@@ -5,5 +5,5 @@ const filePath = join(__dirname, '../lib/node/creator.js');
 
 fs.writeFileSync(
   filePath,
-  fs.readFileSync(filePath, { encoding: 'utf-8' }).replace('require(filePath)', '(await import(filePath)).default')
+  fs.readFileSync(filePath, { encoding: 'utf-8' }).replace('require((0, node_url_1.pathToFileURL)(filePath))', '(await import((0, node_url_1.pathToFileURL)(filePath))).default')
 );

@@ -1057,7 +1057,9 @@ export enum ComponentType {
   /** A container component. */
   CONTAINER = 17,
   /** A label component. */
-  LABEL = 18
+  LABEL = 18,
+  /** A file upload component. */
+  FILE_UPLOAD = 19
 }
 
 /** The types of component button styles. */
@@ -1204,7 +1206,7 @@ export interface LabelComponent {
   type: ComponentType.LABEL;
   label: string;
   description?: string;
-  component: AnySelectComponent | Omit<ComponentTextInput, 'label'>;
+  component: AnySelectComponent | ComponentFileUpload | Omit<ComponentTextInput, 'label'>;
 }
 
 /** Any component. */
@@ -1219,7 +1221,8 @@ export type AnyComponent =
   | SeparatorComponent
   | FileComponent
   | ContainerComponent
-  | LabelComponent;
+  | LabelComponent
+  | ComponentFileUpload;
 
 /** A row of components. */
 export interface ComponentActionRow {
@@ -1402,6 +1405,21 @@ export interface ComponentTextInput {
   value?: string;
   /** Custom placeholder text if the input is empty. */
   placeholder?: string;
+}
+
+export interface ComponentFileUpload {
+  /** The type of component to use. */
+  type: ComponentType.FILE_UPLOAD;
+  /** Optional component identifier */
+  id?: number;
+  /** The identifier of the of the input. */
+  custom_id: string;
+  /** The minimum files that should be uploaded. */
+  min_values?: number;
+  /** The maximum files that should be uploaded. */
+  max_values?: number;
+  /** Whether this component is required to be filled. */
+  required?: boolean;
 }
 
 /** @hidden */

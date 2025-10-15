@@ -55,7 +55,6 @@ export class ModalInteractionContext<
     [key: string]: string | string[];
   } {
     const values: { [key: string]: string | string[] } = {};
-    console.log(JSON.stringify(components, null, 2));
 
     for (const component of components) {
       if (component.type === ComponentType.ACTION_ROW) {

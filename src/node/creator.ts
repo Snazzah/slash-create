@@ -1,6 +1,7 @@
 import { fetch, FormData } from 'undici';
 import { Blob } from 'node:buffer';
 import { extname } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { BaseSlashCreator, FileFilter, SlashCreatorOptions } from '../creator';
 import { getFiles } from '../node/util';
 import nacl from 'tweetnacl';
@@ -29,7 +30,8 @@ export class SlashCreator extends BaseSlashCreator {
     const commands: any[] = [];
     for (const filePath of filteredFiles) {
       try {
-        commands.push(require(filePath));
+        // @ts-ignore This gets replaced in the post-build
+        commands.push(require(pathToFileURL(filePath)));
       } catch (e) {
         this.emit('error', new Error(`Failed to load command ${filePath}: ${e}`));
       }

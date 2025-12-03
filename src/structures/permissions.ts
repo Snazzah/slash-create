@@ -54,7 +54,8 @@ const FLAGS: { [perm: string]: bigint } = {
   SEND_VOICE_MESSAGES: 1n << 46n,
   SEND_POLLS: 1n << 49n,
   USE_EXTERNAL_APPS: 1n << 50n,
-  PIN_MESSAGES: 1n << 51n
+  PIN_MESSAGES: 1n << 51n,
+  BYPASS_SLOWMODE: 1n << 52n
 };
 
 /**

@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [6.7.1] - 2025-12-05
+### Added:
+- Added `BYPASS_SLOWMODE` permission
+### Fixed:
+- Fixed types for selects not all having `required` in them for modals
 ## [6.7.0] - 2025-10-24
 ### Added:
 - File uploads in modals ([#644](https://github.com/Snazzah/slash-create/pull/644))
@@ -646,7 +651,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v6.7.0...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v6.7.1...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -733,3 +738,4 @@ This release features mostly completed documentation and changes to the packages
 [6.6.3]: https://github.com/Snazzah/slash-create/compare/v6.6.2...v6.6.3
 [6.6.4]: https://github.com/Snazzah/slash-create/compare/v6.6.3...v6.6.4
 [6.7.0]: https://github.com/Snazzah/slash-create/compare/v6.6.4...v6.7.0
+[6.7.1]: https://github.com/Snazzah/slash-create/compare/v6.7.0...v6.7.1

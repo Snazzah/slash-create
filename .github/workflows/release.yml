@@ -4,6 +4,10 @@ on:
     types: [published]
   workflow_dispatch:
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   tag:
     name: Add/update 'latest' tag
@@ -79,10 +83,7 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
       - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-gpr:
     name: Publish on GPR

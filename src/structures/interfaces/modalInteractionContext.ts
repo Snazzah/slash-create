@@ -24,7 +24,7 @@ export class ModalInteractionContext<
   readonly message?: Message;
 
   /** The values defined in the modal submission. */
-  readonly values: { [key: string]: string | string[] | boolean };
+  readonly values: { [key: string]: string | string[] | boolean | null };
 
   /**
    * @param creator The instantiating creator.

@@ -1059,7 +1059,13 @@ export enum ComponentType {
   /** A label component. */
   LABEL = 18,
   /** A file upload component. */
-  FILE_UPLOAD = 19
+  FILE_UPLOAD = 19,
+  /** A component to group radio options in. */
+  RADIO_GROUP = 21,
+  /** A component to group checkboxes in. */
+  CHECKBOX_GROUP = 22,
+  /** A checkbox component. */
+  CHECKBOX = 23
 }
 
 /** The types of component button styles. */
@@ -1206,7 +1212,13 @@ export interface LabelComponent {
   type: ComponentType.LABEL;
   label: string;
   description?: string;
-  component: AnySelectComponent | ComponentFileUpload | Omit<ComponentTextInput, 'label'>;
+  component:
+    | AnySelectComponent
+    | ComponentFileUpload
+    | RadioGroupComponent
+    | CheckboxGroupComponent
+    | CheckboxComponent
+    | Omit<ComponentTextInput, 'label'>;
 }
 
 /** Any component. */
@@ -1222,7 +1234,10 @@ export type AnyComponent =
   | FileComponent
   | ContainerComponent
   | LabelComponent
-  | ComponentFileUpload;
+  | ComponentFileUpload
+  | RadioGroupComponent
+  | CheckboxGroupComponent
+  | CheckboxComponent;
 
 /** A row of components. */
 export interface ComponentActionRow {
@@ -1420,6 +1435,59 @@ export interface ComponentFileUpload {
   max_values?: number;
   /** Whether this component is required to be filled. */
   required?: boolean;
+}
+
+export interface RadioGroupComponent {
+  /** The type of component to use. */
+  type: ComponentType.RADIO_GROUP;
+  /** Optional component identifier */
+  id?: number;
+  /** The identifier of the of the input. */
+  custom_id: string;
+  /** Th eoptions for this group. */
+  options: RadioGroupOption[];
+  /** Whether this component is required to be filled. */
+  required?: boolean;
+}
+
+export interface RadioGroupOption {
+  value: string;
+  label: string;
+  description?: string;
+  default?: boolean;
+}
+
+export interface CheckboxGroupComponent {
+  /** The type of component to use. */
+  type: ComponentType.CHECKBOX_GROUP;
+  /** Optional component identifier */
+  id?: number;
+  /** The identifier of the of the input. */
+  custom_id: string;
+  options: CheckboxGroupOption[];
+  /** The minimum options to be checked. */
+  min_values?: number;
+  /** The maximum options to be checked. */
+  max_values?: number;
+  required?: boolean;
+}
+
+export interface CheckboxGroupOption {
+  value: string;
+  label: string;
+  description?: string;
+  default?: boolean;
+}
+
+export interface CheckboxComponent {
+  /** The type of component to use. */
+  type: ComponentType.CHECKBOX;
+  /** Optional component identifier */
+  id?: number;
+  /** The identifier of the of the input. */
+  custom_id: string;
+  /** The default state of this checkbox. */
+  default?: boolean;
 }
 
 /** @hidden */

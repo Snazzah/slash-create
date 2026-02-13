@@ -74,16 +74,16 @@ jobs:
           version: 9
           run_install: false
 
-      - name: Install Node v18
+      - name: Install Node v24
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 24.x
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - run: npm publish --provenance --access public
+      - run: npm publish
 
   publish-gpr:
     name: Publish on GPR
@@ -100,10 +100,10 @@ jobs:
           version: 9
           run_install: false
 
-      - name: Install Node v18
+      - name: Install Node v24
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 24.x
           cache: 'pnpm'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@snazzah'

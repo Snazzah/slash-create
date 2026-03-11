@@ -179,6 +179,9 @@ export class SequentialBucket {
     if (res.status >= 400 && res.status < 500) {
       const data: any = await parseResponse(res);
       if (res.status === 429) {
+        if (attempts >= this.#handler.options.retryLimit!)
+          throw new DiscordRESTError(request, res, data, stackHolder.stack);
+
         const delay = data?.retry_after ? data.retry_after * 1000 : retryAfter;
         this.#handler.creator?.emit(
           'debug',
@@ -187,7 +190,7 @@ export class SequentialBucket {
 
         if (delay) await Mutex.wait(delay);
 
-        return this.#execute(request, attempts);
+        return this.#execute(request, ++attempts);
       }
 
       throw new DiscordRESTError(request, res, data, stackHolder.stack);

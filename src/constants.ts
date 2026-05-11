@@ -1717,7 +1717,7 @@ declare function unknownInteraction(interaction: any): void;
  */
 declare function rawInteraction(interaction: AnyRequestData): void;
 /**
- * Emitted when any request is recieved.
+ * Emitted when any request is received.
  * @event
  * @asMemberOf BaseSlashCreator
  * @param treq The transformed request

@@ -175,7 +175,7 @@ export class SlashCreatorAPI {
    * @param interactionToken The interaction's token.
    * @param body The body to send.
    * @param files The files to send.
-   * @param withResponse Whether to recieve the response of the interaction callback
+   * @param withResponse Whether to receive the response of the interaction callback
    */
   interactionCallback<WithResponse extends boolean = false>(
     interactionID: string,

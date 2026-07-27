@@ -47,7 +47,7 @@
     "lint": "eslint --ext .ts ./src",
     "lint:sarif": "eslint --ext .ts ./src -f @microsoft/sarif -o eslint-results.sarif --quiet",
     "lint:fix": "eslint --ext .ts ./src --fix",
-    "test": "mocha -r tsx --extension ts 'test/**/*.ts'",
+    "test": "mocha -r tsx --extension ts --forbid-pending 'test/**/*.ts'",
     "gpr": "tsx scripts/gpr",
     "prepare": "npm run build:prepare",
     "prepublishOnly": "(shx test -d ./lib || (echo \"lib folder does not exist\" && exit 1)) && npm run lint:fix"
@@ -56,13 +56,13 @@
     "url": "https://github.com/sponsors/Snazzah"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18.17"
   },
   "dependencies": {
+    "dequal": "^2.0.3",
     "eventemitter3": "^5.0.1",
-    "lodash.isequal": "^4.5.0",
     "tweetnacl": "^1.0.3",
-    "undici": "^5.28.4"
+    "undici": "^6.28.0"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
@@ -71,7 +71,6 @@
     "@types/chai": "^4.3.11",
     "@types/chai-as-promised": "^7.1.8",
     "@types/lodash": "^4.14.202",
-    "@types/lodash.isequal": "^4.5.8",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.10.3",
     "@types/sinonjs__fake-timers": "6.0.1",
@@ -79,7 +78,6 @@
     "@typescript-eslint/parser": "^6.19.0",
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
-    "chai-nock": "^1.3.0",
     "colors": "1.4.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
@@ -87,7 +85,6 @@
     "eslint-plugin-prettier": "^5.1.3",
     "fastify": "^4.25.2",
     "mocha": "^10.2.0",
-    "nock": "^13.4.0",
     "prettier": "^3.1.0",
     "rimraf": "^5.0.5",
     "shx": "^0.3.4",

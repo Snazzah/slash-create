@@ -20,7 +20,7 @@ import { Collection } from './util/collection';
 import { SlashCreatorAPI } from './api';
 import { Server, TransformedRequest, RespondFunction, Response } from './server';
 import { CommandContext } from './structures/interfaces/commandContext';
-import isEqual from 'lodash.isequal';
+import { dequal } from 'dequal';
 import { ComponentContext } from './structures/interfaces/componentContext';
 import { AutocompleteContext } from './structures/interfaces/autocompleteContext';
 import { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
@@ -316,7 +316,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
       updatePayload.push(command.toCommandJSON(false));
     }
 
-    if (!isEqual(updatePayload, commandsPayload)) {
+    if (!dequal(updatePayload, commandsPayload)) {
       // Set command IDs for permission syncing
       const updatedCommands = await this.api.updateCommands(updatePayload, guildID);
       const newCommands = updatedCommands.filter(
@@ -386,7 +386,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
       updatePayload.push(command.toCommandJSON());
     }
 
-    if (!isEqual(updatePayload, commandsPayload)) {
+    if (!dequal(updatePayload, commandsPayload)) {
       const updatedCommands = await this.api.updateCommands(updatePayload);
       const newCommands = updatedCommands.filter(
         (newCommand) => !commands.find((command) => command.id === newCommand.id)

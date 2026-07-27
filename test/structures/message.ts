@@ -1,15 +1,13 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import chaiNock from 'chai-nock';
 chai.use(chaiAsPromised);
-chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
 
 import { CommandContext } from '../../src/structures/interfaces/commandContext';
 import { Message } from '../../src/structures/message';
 import { basicInteraction, creator, editedMessage, followUpMessage, noop } from '../__util__/constants';
-import { deleteMessage, editMessage } from '../__util__/nock';
+import { deleteMessage, editMessage } from '../__util__/mockAgent';
 const ctx = new CommandContext(creator, basicInteraction, noop, false, false, true, null);
 ctx.initiallyResponded = true;
 // @ts-expect-error
@@ -45,31 +43,28 @@ describe('Message', () => {
     });
   });
 
-  describe.skip('.edit()', () => {
+  describe('.edit()', () => {
     it('edits and returns message', async () => {
       const message = new Message(followUpMessage, creator, ctx);
-      const scope = editMessage('1234', editedMessage);
+      const request = editMessage('1234', editedMessage);
 
-      const promise = expect(message.edit(editedMessage.content)).to.eventually.be.an.instanceof(Message);
-      await expect(scope).to.have.been.requestedWith({
+      await expect(message.edit(editedMessage.content)).to.eventually.be.an.instanceof(Message);
+      expect(request.body).to.deep.equal({
         allowed_mentions: {
           parse: ['roles', 'users']
         },
         content: editedMessage.content
       });
-      return promise;
     });
   });
 
-  describe.skip('.delete()', () => {
+  describe('.delete()', () => {
     it('deletes message', async () => {
       const message = new Message(followUpMessage, creator, ctx);
-      const scope = deleteMessage('1234');
+      deleteMessage('1234');
 
       await ctx.defer();
-      const promise = expect(message.delete()).to.eventually.be.fulfilled;
-      await expect(scope).to.have.been.requested;
-      return promise;
+      await expect(message.delete()).to.eventually.be.fulfilled;
     });
   });
 });

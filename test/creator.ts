@@ -1,8 +1,6 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import chaiNock from 'chai-nock';
 chai.use(chaiAsPromised);
-chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
 
@@ -13,7 +11,7 @@ import { GCFServer } from '../src/servers/gcf';
 import { ApplicationCommandType } from '../src/constants';
 import { createBasicCommand } from './__util__/commands';
 import { basicCommands } from './__util__/constants';
-import { globalCommands, guildCommands, updateGlobalCommands, updateGuildCommands } from './__util__/nock';
+import { globalCommands, guildCommands, updateGlobalCommands, updateGuildCommands } from './__util__/mockAgent';
 
 describe('SlashCreator', () => {
   describe('constructor', () => {
@@ -151,7 +149,7 @@ describe('SlashCreator', () => {
     });
   });
 
-  describe.skip('.syncCommands()', () => {
+  describe('.syncCommands()', () => {
     it('syncs commands correctly', async () => {
       const creator = new SlashCreator({
         applicationID: '1',
@@ -167,39 +165,18 @@ describe('SlashCreator', () => {
       );
       creator.registerCommand(createBasicCommand({ name: 'to-leave-alone' }));
 
-      const cmdsScope = globalCommands(basicCommands),
-        guildCmdsScope = guildCommands([]),
-        putScope = updateGlobalCommands([
-          {
-            id: '1',
-            name: 'to-update',
-            description: 'description',
-            application_id: '1',
-            version: '1',
-            type: ApplicationCommandType.CHAT_INPUT
-          }
-        ]),
-        putGuildScope = updateGuildCommands([
-          {
-            id: '1',
-            name: 'to-update',
-            description: 'description',
-            application_id: '1',
-            version: '1',
-            type: ApplicationCommandType.CHAT_INPUT
-          }
-        ]);
-
-      const promise = expect(creator.syncCommands()).to.be.fulfilled;
-      await expect(cmdsScope, 'requests commands').to.have.been.requested;
-      await expect(putScope, 'updates commands').to.have.been.requestedWith([
+      const globalUpdate = [
         {
           id: '1',
           default_member_permissions: null,
           dm_permission: false,
           name: 'to-update',
+          name_localizations: null,
           nsfw: false,
           description: 'description',
+          description_localizations: null,
+          contexts: null,
+          integration_types: [0],
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
@@ -207,26 +184,56 @@ describe('SlashCreator', () => {
           default_member_permissions: null,
           dm_permission: true,
           name: 'to-leave-alone',
+          name_localizations: null,
           nsfw: false,
           description: 'description',
+          description_localizations: null,
+          contexts: null,
+          integration_types: [0],
           type: ApplicationCommandType.CHAT_INPUT
         }
-      ]);
-      await expect(guildCmdsScope, 'requests guild commands').to.have.been.requested;
-      await expect(putGuildScope, 'updates guild commands').to.have.been.requestedWith([
+      ];
+      const guildUpdate = [
         {
           default_member_permissions: null,
           name: 'to-create-guild',
+          name_localizations: null,
           nsfw: false,
           description: 'description',
+          description_localizations: null,
+          type: ApplicationCommandType.CHAT_INPUT
+        }
+      ];
+      globalCommands(basicCommands);
+      guildCommands([]);
+      const globalRequest = updateGlobalCommands([
+        {
+          id: '1',
+          name: 'to-update',
+          description: 'description',
+          application_id: '1',
+          version: '1',
           type: ApplicationCommandType.CHAT_INPUT
         }
       ]);
-      return promise;
+      const guildRequest = updateGuildCommands([
+        {
+          id: '1',
+          name: 'to-update',
+          description: 'description',
+          application_id: '1',
+          version: '1',
+          type: ApplicationCommandType.CHAT_INPUT
+        }
+      ]);
+
+      await creator.syncCommands();
+      expect(globalRequest.body).to.deep.equal(globalUpdate);
+      expect(guildRequest.body).to.deep.equal(guildUpdate);
     });
   });
 
-  describe.skip('.syncCommandsIn()', () => {
+  describe('.syncCommandsIn()', () => {
     it('syncs guild commands correctly', async () => {
       const creator = new SlashCreator({
         applicationID: '1',
@@ -237,51 +244,56 @@ describe('SlashCreator', () => {
       creator.registerCommand(createBasicCommand({ name: 'to-update', guildIDs: '123' }));
       creator.registerCommand(createBasicCommand({ name: 'to-leave-alone', guildIDs: '123' }));
 
-      const cmdsScope = guildCommands(basicCommands),
-        putScope = updateGuildCommands([
-          {
-            id: '1',
-            name: 'to-update',
-            description: 'description',
-            guild_id: '123',
-            application_id: '1',
-            version: '1',
-            type: ApplicationCommandType.CHAT_INPUT
-          }
-        ]);
-
-      const promise = expect(creator.syncCommandsIn('123')).to.be.fulfilled;
-      await expect(cmdsScope, 'requests commands').to.have.been.requested;
-      await expect(putScope, 'updates commands').to.have.been.requestedWith([
+      const update = [
         {
           id: '1',
           default_member_permissions: null,
           name: 'to-update',
+          name_localizations: null,
           nsfw: false,
           description: 'description',
+          description_localizations: null,
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
           id: '3',
           default_member_permissions: null,
           name: 'to-leave-alone',
+          name_localizations: null,
           nsfw: false,
           description: 'description',
+          description_localizations: null,
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
           default_member_permissions: null,
           name: 'to-create',
+          name_localizations: null,
           nsfw: false,
           description: 'description',
+          description_localizations: null,
+          type: ApplicationCommandType.CHAT_INPUT
+        }
+      ];
+      guildCommands(basicCommands);
+      const request = updateGuildCommands([
+        {
+          id: '1',
+          name: 'to-update',
+          description: 'description',
+          guild_id: '123',
+          application_id: '1',
+          version: '1',
           type: ApplicationCommandType.CHAT_INPUT
         }
       ]);
-      return promise;
+
+      await expect(creator.syncCommandsIn('123')).to.be.fulfilled;
+      expect(request.body).to.deep.equal(update);
     });
   });
 
-  describe.skip('.syncGlobalCommands()', () => {
+  describe('.syncGlobalCommands()', () => {
     it('syncs global commands correctly', async () => {
       const creator = new SlashCreator({
         applicationID: '1',
@@ -292,27 +304,18 @@ describe('SlashCreator', () => {
       creator.registerCommand(createBasicCommand({ name: 'to-update' }));
       creator.registerCommand(createBasicCommand({ name: 'to-leave-alone' }));
 
-      const cmdsScope = globalCommands(basicCommands),
-        putScope = updateGlobalCommands([
-          {
-            id: '1',
-            name: 'to-update',
-            description: 'description',
-            application_id: '1',
-            version: '1'
-          }
-        ]);
-
-      const promise = expect(creator.syncGlobalCommands()).to.be.fulfilled;
-      await expect(cmdsScope, 'requests commands').to.have.been.requested;
-      await expect(putScope, 'updates commands').to.have.been.requestedWith([
+      const update = [
         {
           id: '1',
           default_member_permissions: null,
           dm_permission: true,
           name: 'to-update',
+          name_localizations: null,
           nsfw: false,
           description: 'description',
+          description_localizations: null,
+          contexts: null,
+          integration_types: [0],
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
@@ -320,24 +323,44 @@ describe('SlashCreator', () => {
           default_member_permissions: null,
           dm_permission: true,
           name: 'to-leave-alone',
+          name_localizations: null,
           nsfw: false,
           description: 'description',
+          description_localizations: null,
+          contexts: null,
+          integration_types: [0],
           type: ApplicationCommandType.CHAT_INPUT
         },
         {
           default_member_permissions: null,
           dm_permission: true,
           name: 'to-create',
+          name_localizations: null,
           nsfw: false,
           description: 'description',
+          description_localizations: null,
+          contexts: null,
+          integration_types: [0],
           type: ApplicationCommandType.CHAT_INPUT
         }
+      ];
+      globalCommands(basicCommands);
+      const request = updateGlobalCommands([
+        {
+          id: '1',
+          name: 'to-update',
+          description: 'description',
+          application_id: '1',
+          version: '1'
+        }
       ]);
-      return promise;
+
+      await expect(creator.syncGlobalCommands()).to.be.fulfilled;
+      expect(request.body).to.deep.equal(update);
     });
   });
 
-  describe.skip('.collectCommandIDs()', () => {
+  describe('.collectCommandIDs()', () => {
     it('collects command IDs', async () => {
       const creator = new SlashCreator({
         applicationID: '1',
@@ -346,11 +369,9 @@ describe('SlashCreator', () => {
 
       creator.registerCommand(createBasicCommand({ name: 'to-update' }));
 
-      const cmdsScope = globalCommands(basicCommands, false);
+      globalCommands(basicCommands, false);
 
-      const promise = expect(creator.collectCommandIDs()).to.eventually.be.fulfilled;
-      await expect(cmdsScope, 'requests global commands').to.have.been.requested;
-      await promise;
+      await creator.collectCommandIDs();
       expect(creator.commands.first()!.ids.get('global')).to.equal('1');
     });
   });

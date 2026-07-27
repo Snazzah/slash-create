@@ -37,7 +37,8 @@ export const user = {
   global_name: 'Clyde',
   avatar: null,
   avatar_decoration_data: null,
-  public_flags: 0
+  public_flags: 0,
+  collectibles: null
 };
 
 export const userAvatar = {
@@ -87,6 +88,7 @@ export const interactionDefaults: InteractionRequestData = {
   channel_id: '00000000000000000',
   guild_id: '00000000000000000',
   entitlements: [],
+  attachment_size_limit: Infinity,
   member: {
     user,
     roles: [],
@@ -131,6 +133,7 @@ export const basicMessageInteraction: MessageComponentRequestData = {
   channel_id: '00000000000000000',
   guild_id: '00000000000000000',
   entitlements: [],
+  attachment_size_limit: Infinity,
   member: {
     user,
     roles: [],
@@ -294,12 +297,12 @@ export const modalInteraction: ModalSubmitRequestData = {
     custom_id: 'modal',
     components: [
       {
+        id: 0,
         type: ComponentType.ACTION_ROW,
         components: [
           {
+            id: 0,
             type: ComponentType.TEXT_INPUT,
-            label: 'text',
-            style: TextInputStyle.SHORT,
             custom_id: 'text',
             value: 'hi'
           }

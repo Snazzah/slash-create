@@ -10,6 +10,7 @@ import { DiscordRESTError } from './DiscordRESTError';
  * @arg res The response.
  */
 async function parseResponse(res: Response) {
+  if (res.status === 204) return null;
   if (res.headers.get('content-type') === 'application/json') return await res.json();
   return null;
 }

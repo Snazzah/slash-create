@@ -1,8 +1,6 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import chaiNock from 'chai-nock';
 chai.use(chaiAsPromised);
-chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
 import FakeTimers from '@sinonjs/fake-timers';

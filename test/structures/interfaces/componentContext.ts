@@ -1,8 +1,6 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import chaiNock from 'chai-nock';
 chai.use(chaiAsPromised);
-chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
 import FakeTimers from '@sinonjs/fake-timers';
@@ -16,7 +14,7 @@ import {
 } from '../../__util__/constants';
 import { ComponentContext } from '../../../src/structures/interfaces/componentContext';
 import { InteractionResponseType } from '../../../src/constants';
-import { editMessage } from '../../__util__/nock';
+import { editMessage } from '../../__util__/mockAgent';
 import { Message } from '../../../src/structures/message';
 
 describe('ComponentContext', () => {
@@ -91,7 +89,7 @@ describe('ComponentContext', () => {
     });
   });
 
-  describe.skip('.editParent()', () => {
+  describe('.editParent()', () => {
     it('updates original message initially', async () => {
       const ctx = new ComponentContext(
         creator,
@@ -105,7 +103,9 @@ describe('ComponentContext', () => {
                 parse: ['roles', 'users']
               },
               embeds: undefined,
-              components: undefined
+              flags: undefined,
+              components: undefined,
+              attachments: undefined
             }
           });
           expect(treq.status).to.equal(200);
@@ -120,17 +120,16 @@ describe('ComponentContext', () => {
 
     it('edits original message after acknowledging', async () => {
       const ctx = new ComponentContext(creator, basicMessageInteraction, noop, undefined, undefined);
-      const scope = editMessage(basicMessageInteraction.message.id, followUpMessage);
+      const request = editMessage(basicMessageInteraction.message.id, followUpMessage);
 
       await ctx.acknowledge();
-      const promise = expect(ctx.editParent(followUpMessage.content)).to.eventually.be.an.instanceof(Message);
-      await expect(scope).to.have.been.requestedWith({
+      await expect(ctx.editParent(followUpMessage.content)).to.eventually.be.an.instanceof(Message);
+      expect(request.body).to.deep.equal({
         allowed_mentions: {
           parse: ['roles', 'users']
         },
         content: followUpMessage.content
       });
-      return promise;
     });
   });
 });

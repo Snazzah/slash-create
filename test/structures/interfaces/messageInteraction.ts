@@ -1,11 +1,9 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import chaiNock from 'chai-nock';
 chai.use(chaiAsPromised);
-chai.use(chaiNock);
 import 'mocha';
 const expect = chai.expect;
-import { createFollowUp, deleteMessage, editMessage } from '../../__util__/nock';
+import { createFollowUp, deleteMessage, editMessage } from '../../__util__/mockAgent';
 
 import { MessageFlags, InteractionResponseType } from '../../../src/constants';
 import { Message } from '../../../src/structures/message';
@@ -140,51 +138,48 @@ describe('MessageInteractionContext', () => {
       expect(ctx.initiallyResponded).to.equal(true);
     });
 
-    it.skip('edits deferred message after sending deferred message', async () => {
+    it('edits deferred message after sending deferred message', async () => {
       const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
-      const scope = editMessage('@original', followUpMessage);
+      const request = editMessage('@original', followUpMessage);
 
       await ctx.defer();
-      const promise = expect(ctx.send(followUpMessage.content)).to.eventually.be.an.instanceof(Message);
-      await expect(scope).to.have.been.requestedWith({
+      await expect(ctx.send(followUpMessage.content)).to.eventually.be.an.instanceof(Message);
+      expect(request.body).to.deep.equal({
         allowed_mentions: {
           parse: ['roles', 'users']
         },
         content: followUpMessage.content
       });
-      return promise;
     });
 
-    it.skip('returns follow-up message after initial response', async () => {
+    it('returns follow-up message after initial response', async () => {
       const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
-      const scope = createFollowUp(followUpMessage);
+      const request = createFollowUp(followUpMessage);
 
       await ctx.send('111');
-      const promise = expect(ctx.send(followUpMessage.content)).to.eventually.be.an.instanceof(Message);
-      await expect(scope).to.have.been.requestedWith({
+      await expect(ctx.send(followUpMessage.content)).to.eventually.be.an.instanceof(Message);
+      expect(request.body).to.deep.equal({
         allowed_mentions: {
           parse: ['roles', 'users']
         },
         content: followUpMessage.content
       });
-      return promise;
     });
   });
 
   describe('.sendFollowUp()', () => {
-    it.skip('sends follow-up messages', async () => {
+    it('sends follow-up messages', async () => {
       const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
-      const scope = createFollowUp(followUpMessage);
+      const request = createFollowUp(followUpMessage);
 
       await ctx.defer();
-      const promise = expect(ctx.sendFollowUp(followUpMessage.content)).to.eventually.be.an.instanceof(Message);
-      await expect(scope).to.have.been.requestedWith({
+      await expect(ctx.sendFollowUp(followUpMessage.content)).to.eventually.be.an.instanceof(Message);
+      expect(request.body).to.deep.equal({
         allowed_mentions: {
           parse: ['roles', 'users']
         },
         content: followUpMessage.content
       });
-      return promise;
     });
 
     it('throws if creator has no token', async () => {
@@ -194,59 +189,53 @@ describe('MessageInteractionContext', () => {
     });
   });
 
-  describe.skip('.edit()', () => {
+  describe('.edit()', () => {
     it('edits and returns message', async () => {
       const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
-      const scope = editMessage('1234', editedMessage);
+      const request = editMessage('1234', editedMessage);
 
       await ctx.defer();
-      const promise = expect(ctx.edit('1234', editedMessage.content)).to.eventually.be.an.instanceof(Message);
-      await expect(scope).to.have.been.requestedWith({
+      await expect(ctx.edit('1234', editedMessage.content)).to.eventually.be.an.instanceof(Message);
+      expect(request.body).to.deep.equal({
         allowed_mentions: {
           parse: ['roles', 'users']
         },
         content: editedMessage.content
       });
-      return promise;
     });
   });
 
-  describe.skip('.editOriginal()', () => {
+  describe('.editOriginal()', () => {
     it('edits and returns original message', async () => {
       const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
-      const scope = editMessage('@original', editedMessage);
+      const request = editMessage('@original', editedMessage);
 
       await ctx.defer();
-      const promise = expect(ctx.editOriginal(editedMessage.content)).to.eventually.be.an.instanceof(Message);
-      await expect(scope).to.have.been.requestedWith({
+      await expect(ctx.editOriginal(editedMessage.content)).to.eventually.be.an.instanceof(Message);
+      expect(request.body).to.deep.equal({
         allowed_mentions: {
           parse: ['roles', 'users']
         },
         content: editedMessage.content
       });
-      return promise;
     });
   });
 
-  describe.skip('.delete()', () => {
+  describe('.delete()', () => {
     it('deletes original message', async () => {
       const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
-      const scope = deleteMessage('@original');
+      deleteMessage('@original');
 
       await ctx.defer();
-      const promise = expect(ctx.delete()).to.eventually.be.fulfilled;
-      await expect(scope).to.have.been.requested;
-      return promise;
+      await expect(ctx.delete()).to.eventually.be.fulfilled;
     });
 
     it('deletes follow-up message', async () => {
       const ctx = new MessageInteractionContext(creator, basicInteraction, noop, undefined);
-      const scope = deleteMessage('1234');
+      deleteMessage('1234');
 
       await ctx.defer();
-      const promise = expect(ctx.delete('1234')).to.eventually.be.fulfilled;
-      await expect(scope).to.have.been.requested;
-      return promise;
+      await expect(ctx.delete('1234')).to.eventually.be.fulfilled;
     });
   });
 });

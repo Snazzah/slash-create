@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [7.0.0] - 2026-07-28
+### Changed:
+- Updated undici
+- Replaced `lodash.isequal` with `dequal`
+- Minimum Node version has been raised to v18.17
 ## [6.8.1] - 2026-03-14
 ### Fixed:
 - Fixed infinite retry loop on repeated 429 rate limit responses ([#651](https://github.com/Snazzah/slash-create/issues/651))
@@ -657,7 +662,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v6.8.1...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v7.0.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -747,3 +752,4 @@ This release features mostly completed documentation and changes to the packages
 [6.7.1]: https://github.com/Snazzah/slash-create/compare/v6.7.0...v6.7.1
 [6.8.0]: https://github.com/Snazzah/slash-create/compare/v6.7.1...v6.8.0
 [6.8.1]: https://github.com/Snazzah/slash-create/compare/v6.8.0...v6.8.1
+[7.0.0]: https://github.com/Snazzah/slash-create/compare/v6.8.1...v7.0.0

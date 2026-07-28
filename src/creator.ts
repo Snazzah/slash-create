@@ -512,6 +512,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
       }
   }
 
+  /** @hidden */
   protected _getCommandFromInteraction(interaction: InteractionRequestData | CommandAutocompleteRequestData) {
     return 'guild_id' in interaction
       ? this.commands.find(
@@ -526,11 +527,13 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
       : this.commands.get(`${interaction.data.type}:global:${interaction.data.name}`);
   }
 
+  /** @hidden */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected async _verify(body: string, signature: string, timestamp: string): Promise<boolean> {
     throw new Error(`${this.constructor.name} doesn't have a _verify() method.`);
   }
 
+  /** @hidden */
   protected async _onRequest(treq: TransformedRequest, respond: RespondFunction, context?: unknown) {
     this.emit('debug', 'Got request');
     this.emit('rawRequest', treq);
@@ -555,6 +558,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
     } catch (e) {}
   }
 
+  /** @hidden */
   protected async _onInteraction(
     interaction: AnyRequestData,
     respond: RespondFunction | null,
@@ -759,6 +763,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
     }
   }
 
+  /** @hidden */
   private async _runCommand<T>(command: SlashCommand, ctx: CommandContext<T>) {
     try {
       this.emit(
@@ -781,6 +786,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
     }
   }
 
+  /** @hidden */
   private _createGatewayRespond(interactionID: string, token: string): RespondFunction {
     return async (response: Response) =>
       this.api.interactionCallback(interactionID, token, response.body, response.files, true);

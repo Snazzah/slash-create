@@ -1,11 +1,4 @@
-import type { SlashCommand } from './command';
-import type { CommandContext } from './structures/interfaces/commandContext';
-import type { RespondFunction, TransformedRequest } from './server';
-import type { ComponentContext } from './structures/interfaces/componentContext';
 import type { Message, MessageData } from './structures/message';
-import type { AutocompleteContext } from './structures/interfaces/autocompleteContext';
-import type { ModalInteractionContext } from './structures/interfaces/modalInteractionContext';
-import type { BaseSlashCreator } from './creator';
 import type { FileContent } from './rest/requestHandler';
 import type { Request } from './rest/request';
 import type { Response } from 'undici';
@@ -779,17 +772,7 @@ export interface UserNameplate {
   asset: string;
   label: string;
   palette:
-    | 'berry'
-    | 'bubble_gum'
-    | 'clover'
-    | 'cobalt'
-    | 'crimson'
-    | 'forest'
-    | 'lemon'
-    | 'sky'
-    | 'teal'
-    | 'violet'
-    | 'white';
+    'berry' | 'bubble_gum' | 'clover' | 'cobalt' | 'crimson' | 'forest' | 'lemon' | 'sky' | 'teal' | 'violet' | 'white';
 }
 
 export interface UserPrimaryGuild {
@@ -941,10 +924,7 @@ export interface CommandData {
 
 /** @private */
 export type AnyCommandOption =
-  | CommandStringOption
-  | CommandIntegerOption
-  | CommandBooleanOption
-  | CommandSubcommandOption;
+  CommandStringOption | CommandIntegerOption | CommandBooleanOption | CommandSubcommandOption;
 
 /** @private */
 export interface CommandStringOption {
@@ -1256,11 +1236,7 @@ export interface ComponentButton {
   type: ComponentType.BUTTON;
   /** The style of button to show. */
   style:
-    | ButtonStyle.PRIMARY
-    | ButtonStyle.SECONDARY
-    | ButtonStyle.SUCCESS
-    | ButtonStyle.DESTRUCTIVE
-    | ButtonStyle.DANGER;
+    ButtonStyle.PRIMARY | ButtonStyle.SECONDARY | ButtonStyle.SUCCESS | ButtonStyle.DESTRUCTIVE | ButtonStyle.DANGER;
   /** The identifier for this button. */
   custom_id: string;
   /** The label of the button. */
@@ -1650,163 +1626,3 @@ export const Endpoints = {
   GUILD_MEMBER_AVATAR: (guildID: string, memberID: string, memberAvatar: string) =>
     `/guilds/${guildID}/users/${memberID}/avatars/${memberAvatar}`
 };
-
-// BaseSlashCreator events for documentation.
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-/**
- * Emitted when Discord pings the interaction endpoint.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param user The user that requested the ping
- */
-declare function ping(user?: CommandUser): void;
-/**
- * Emitted when the creator successfully synced commands.
- * @event
- * @asMemberOf BaseSlashCreator
- */
-declare function synced(): void;
-/**
- * Emitted when the Client's RequestHandler receives a response.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param request The data for the request
- */
-declare function rawREST(request: RawRequest): void;
-/**
- * Emitted when a warning is given.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param warning The warning
- */
-declare function warn(warning: Error | string): void;
-/**
- * Emitted when a debug message is given.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param message The debug message
- */
-declare function debug(message: string): void;
-/**
- * Emitted when an error occurred
- * @event
- * @asMemberOf BaseSlashCreator
- * @param err The error thrown
- */
-declare function error(err: Error): void;
-/**
- * Emitted when a request failed to be verified.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param treq The unverified request
- */
-declare function unverifiedRequest(treq: TransformedRequest): void;
-/**
- * Emitted when an unknown interaction type is encountered.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param interaction The unhandled interaction
- */
-declare function unknownInteraction(interaction: any): void;
-/**
- * Emitted when any interaction is given.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param interaction The interaction
- */
-declare function rawInteraction(interaction: AnyRequestData): void;
-/**
- * Emitted when any request is received.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param treq The transformed request
- */
-declare function rawRequest(treq: TransformedRequest): void;
-/**
- * Emitted when a modal interaction is given.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param ctx The modal interaction context
- */
-declare function modalInteraction(ctx: ModalInteractionContext): void;
-/**
- * Emitted when a command interaction is given.
- * Only emits if `handleCommandsManually` in {@link SlashCreatorOptions} is true.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param interaction The interaction
- * @param respond The response callback to the interaction
- * @param webserverMode Whether this is from a webserver
- */
-declare function commandInteraction(
-  interaction: InteractionRequestData,
-  respond: RespondFunction,
-  webserverMode: boolean
-): void;
-/**
- * Emitted when a component interaction is given.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param ctx The component context
- */
-declare function componentInteraction(ctx: ComponentContext): void;
-/**
- * Emitted when a autocomplete interaction is given.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param ctx The autocomplete context
- * @param command The command that is being autocompleted
- */
-declare function autocompleteInteraction(ctx: AutocompleteContext, command?: SlashCommand): void;
-/**
- * Emitted when a command is registered.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param command Command that was registered
- * @param creator Creator that the command was registered to
- */
-declare function commandRegister(command: SlashCommand, creator: BaseSlashCreator): void;
-/**
- * Emitted when a command is unregistered
- * @event
- * @asMemberOf BaseSlashCreator
- * @param command Command that was unregistered
- */
-declare function commandUnregister(command: SlashCommand): void;
-/**
- * Emitted when a command is reregistered
- * @event
- * @asMemberOf BaseSlashCreator
- * @param newCommand New command
- * @param oldCommand Old command
- */
-declare function commandReregister(command: SlashCommand, oldCommand: SlashCommand): void;
-/**
- * Emitted when a command is blocked.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param command Command that was blocked
- * @param ctx The context of the interaction
- * @param reason Reason that the command was blocked
- * @param data Additional data associated with the block.
- */
-declare function commandBlock(command: SlashCommand, ctx: CommandContext, reason: string, data: any): void;
-/**
- * Emitted when a command gave an error.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param command Command that gave an error
- * @param err The error given
- * @param ctx The context of the interaction
- */
-declare function commandError(command: SlashCommand, err: Error, ctx: CommandContext): void;
-/**
- * Emitted when a command is ran.
- * @event
- * @asMemberOf BaseSlashCreator
- * @param command Command that was ran
- * @param promise Promise for the command result
- * @param ctx The context of the interaction
- */
-declare function commandRun(command: SlashCommand, promise: Promise<any>, ctx: CommandContext): void;

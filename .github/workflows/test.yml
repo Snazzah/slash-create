@@ -8,6 +8,7 @@ on:
       - "src/**"
       - "test/**"
       - "package.json"
+      - "pnpm-lock.yaml"
       - ".github/workflows/test.yml"
   pull_request_target:
     branches:
@@ -17,8 +18,11 @@ on:
 
 jobs:
   test:
-    name: Run tests
+    name: Run tests (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 24.x]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,13 +31,13 @@ jobs:
         uses: pnpm/action-setup@v4
         id: pnpm-install
         with:
-          version: 9
+          version: 10.34.5
           run_install: false
 
-      - name: Install Node v18
+      - name: Install Node v${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
       - name: Install dependencies

@@ -787,31 +787,139 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
   }
 }
 
-/**
- * The events typings for the {@link BaseSlashCreator}.
- * @private
- */
-interface SlashCreatorEvents {
-  ping: (user?: CommandUser) => void;
-  synced: () => void;
-  rawREST: (request: RawRequest) => void;
-  warn: (warning: Error | string) => void;
-  debug: (message: string) => void;
-  error: (err: Error) => void;
-  unverifiedRequest: (treq: TransformedRequest) => void;
-  unknownInteraction: (interaction: any) => void;
-  rawInteraction: (interaction: AnyRequestData) => void;
-  commandInteraction: (interaction: InteractionRequestData, respond: RespondFunction, webserverMode: boolean) => void;
-  componentInteraction: (ctx: ComponentContext) => void;
-  modalInteraction: (ctx: ModalInteractionContext) => void;
-  autocompleteInteraction: (ctx: AutocompleteContext, command?: SlashCommand) => void;
-  commandRegister: (command: SlashCommand) => void;
-  commandUnregister: (command: SlashCommand) => void;
-  commandReregister: (command: SlashCommand, oldCommand: SlashCommand) => void;
-  commandBlock: (command: SlashCommand, ctx: CommandContext, reason: string, data: any) => void;
-  commandError: (command: SlashCommand, err: Error, ctx: CommandContext) => void;
-  commandRun: (command: SlashCommand, promise: Promise<any>, ctx: CommandContext) => void;
-  rawRequest: (treq: TransformedRequest) => void;
+/** Events emitted by {@link BaseSlashCreator}. */
+export interface SlashCreatorEvents {
+  /**
+   * Emitted when Discord pings the interaction endpoint.
+   * @event
+   * @param user The user that requested the ping
+   */
+  ping(user?: CommandUser): void;
+  /**
+   * Emitted when the creator successfully synced commands.
+   * @event
+   */
+  synced(): void;
+  /**
+   * Emitted when the creator's request handler receives a response.
+   * @event
+   * @param request The data for the request
+   */
+  rawREST(request: RawRequest): void;
+  /**
+   * Emitted when a warning is given.
+   * @event
+   * @param warning The warning
+   */
+  warn(warning: Error | string): void;
+  /**
+   * Emitted when a debug message is given.
+   * @event
+   * @param message The debug message
+   */
+  debug(message: string): void;
+  /**
+   * Emitted when an error occurs.
+   * @event
+   * @param err The error thrown
+   */
+  error(err: Error): void;
+  /**
+   * Emitted when a request fails verification.
+   * @event
+   * @param treq The unverified request
+   */
+  unverifiedRequest(treq: TransformedRequest): void;
+  /**
+   * Emitted when an unknown interaction type is encountered.
+   * @event
+   * @param interaction The unhandled interaction
+   */
+  unknownInteraction(interaction: any): void;
+  /**
+   * Emitted when any interaction is received.
+   * @event
+   * @param interaction The interaction
+   */
+  rawInteraction(interaction: AnyRequestData): void;
+  /**
+   * Emitted when any request is received.
+   * @event
+   * @param treq The transformed request
+   */
+  rawRequest(treq: TransformedRequest): void;
+  /**
+   * Emitted when a modal interaction is received.
+   * @event
+   * @param ctx The modal interaction context
+   */
+  modalInteraction(ctx: ModalInteractionContext): void;
+  /**
+   * Emitted when a command interaction is received.
+   * Only emitted when {@link SlashCreatorOptions.handleCommandsManually} is true.
+   * @event
+   * @param interaction The interaction
+   * @param respond The response callback to the interaction
+   * @param webserverMode Whether this is from a webserver
+   */
+  commandInteraction(interaction: InteractionRequestData, respond: RespondFunction, webserverMode: boolean): void;
+  /**
+   * Emitted when a component interaction is received.
+   * @event
+   * @param ctx The component context
+   */
+  componentInteraction(ctx: ComponentContext): void;
+  /**
+   * Emitted when an autocomplete interaction is received.
+   * @event
+   * @param ctx The autocomplete context
+   * @param command The command that is being autocompleted
+   */
+  autocompleteInteraction(ctx: AutocompleteContext, command?: SlashCommand): void;
+  /**
+   * Emitted when a command is registered.
+   * @event
+   * @param command The command that was registered
+   */
+  commandRegister(command: SlashCommand): void;
+  /**
+   * Emitted when a command is unregistered.
+   * @event
+   * @param command The command that was unregistered
+   */
+  commandUnregister(command: SlashCommand): void;
+  /**
+   * Emitted when a command is reregistered.
+   * @event
+   * @param command The new command
+   * @param oldCommand The old command
+   */
+  commandReregister(command: SlashCommand, oldCommand: SlashCommand): void;
+  /**
+   * Emitted when a command is blocked.
+   * @event
+   * @param command The command that was blocked
+   * @param ctx The context of the interaction
+   * @param reason The reason that the command was blocked
+   * @param data Additional data associated with the block
+   */
+  commandBlock(command: SlashCommand, ctx: CommandContext, reason: string, data: any): void;
+  /**
+   * Emitted when a command throws an error.
+   * @event
+   * @param command The command that threw the error
+   * @param err The error
+   * @param ctx The context of the interaction
+   */
+  commandError(command: SlashCommand, err: Error, ctx: CommandContext): void;
+  /**
+   * Emitted when a command runs.
+   * @event
+   * @param command The command that ran
+   * @param promise The command result promise
+   * @param ctx The context of the interaction
+   */
+  commandRun(command: SlashCommand, promise: Promise<any>, ctx: CommandContext): void;
 }
 
 /** The options for the {@link SlashCreator}. */

@@ -9,7 +9,11 @@ on:
       - "docs/**"
       - "static/**"
       - "scripts/docs.ts"
+      - "scripts/typedoc-compat.ts"
+      - "scripts/validate-docs.ts"
       - "package.json"
+      - "pnpm-lock.yaml"
+      - "tsconfig.json"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
@@ -26,13 +30,13 @@ jobs:
         uses: pnpm/action-setup@v4
         id: pnpm-install
         with:
-          version: 9
+          version: 10.34.5
           run_install: false
 
-      - name: Install Node v18
+      - name: Install Node v24
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 24.x
           cache: 'pnpm'
 
       - name: Install dependencies

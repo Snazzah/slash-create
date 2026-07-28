@@ -23,11 +23,12 @@ export class SlashCreator extends BaseSlashCreator {
 
   async #getPublicKey() {
     if (this.#publicKey) return this.#publicKey;
-    // @ts-expect-error Node.js needs to know this is a public key
     this.#publicKey = await crypto.subtle.importKey(
       'raw',
       hex2bin(this.options.publicKey!),
-      { name: 'NODE-ED25519', namedCurve: 'NODE-ED25519', public: true },
+      { name: 'NODE-ED25519', namedCurve: 'NODE-ED25519', public: true } as Parameters<
+        typeof crypto.subtle.importKey
+      >[2],
       true,
       ['verify']
     );

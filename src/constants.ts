@@ -1411,6 +1411,8 @@ export interface ComponentFileUpload {
   max_values?: number;
   /** Whether this component is required to be filled. */
   required?: boolean;
+  /** The file types to filter for.  */
+  file_types?: ('image' | 'audio' | 'video' | `.${string}`)[];
 }
 
 export interface RadioGroupComponent {

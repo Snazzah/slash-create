@@ -28,7 +28,7 @@ export class DiscordRESTError extends Error {
     this.req = req;
     this.res = res;
     this.response = response;
-    this.code = res.status;
+    this.code = +response.code || -1;
 
     let message = response?.message || 'Unknown error';
     if (response?.errors) message += '\n  ' + this.flattenErrors(response.errors).join('\n  ');

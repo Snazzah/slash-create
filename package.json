@@ -101,7 +101,7 @@
   },
   "peerDependencies": {
     "express": "^4",
-    "fastify": "^3 || ^4"
+    "fastify": "^3 || ^4 || ^5"
   },
   "peerDependenciesMeta": {
     "express": {

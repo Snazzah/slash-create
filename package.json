@@ -100,7 +100,7 @@
     "typescript": "6.0.3"
   },
   "peerDependencies": {
-    "express": "^4",
+    "express": "^4 || ^5",
     "fastify": "^3 || ^4 || ^5"
   },
   "peerDependenciesMeta": {

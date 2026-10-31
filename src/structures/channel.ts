@@ -11,6 +11,10 @@ export class Channel {
   readonly lastMessageID: string | null;
   /** The channel's flags as a bitfield */
   readonly flags: number;
+  /** The last pinned message was pinned */
+  readonly lastPinTimestamp?: string | null;
+  /** The application id associated with the channel */
+  readonly applicationID?: string | null;
 
   /** The channel's name (Guild channels only) */
   readonly name?: string;
@@ -60,6 +64,8 @@ export class Channel {
 
   private _permissionsBitfield?: Permissions;
   private _permissions?: string;
+  private _appPermissionsBitfield?: Permissions;
+  private _appPermissions?: string;
 
   /**
    * @param data The data for the member
@@ -71,6 +77,8 @@ export class Channel {
     this.type = data.type;
     this.lastMessageID = data.last_message_id || null;
     this.flags = data.flags || 0;
+    this.lastPinTimestamp = data.last_pin_timestamp;
+    this.applicationID = data.application_id;
 
     this.name = data.name;
     this.topic = data.topic;
@@ -80,6 +88,7 @@ export class Channel {
     this.nsfw = data.nsfw;
     this.guildID = data.guild_id;
     this._permissions = data.permissions;
+    this._appPermissions = data.app_permissions;
 
     this.rtcRegion = data.rtc_region;
     this.bitrate = data.bitrate;
@@ -109,6 +118,13 @@ export class Channel {
     if (!this._permissions) return null;
     if (!this._permissionsBitfield) this._permissionsBitfield = new Permissions(BigInt(this._permissions));
     return this._permissionsBitfield;
+  }
+
+  /** The computed permissions for the bot user in the channel, including overwrites, only included when part of the `resolved` data received on an interaction */
+  get appPermissions() {
+    if (!this._appPermissions) return null;
+    if (!this._appPermissionsBitfield) this._appPermissionsBitfield = new Permissions(BigInt(this._appPermissions));
+    return this._appPermissionsBitfield;
   }
 
   /** @hidden */

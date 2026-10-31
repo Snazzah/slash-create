@@ -174,6 +174,20 @@ export enum ChannelType {
   GUILD_MEDIA = 16
 }
 
+/** Channel flags. */
+export enum ChannelFlags {
+  /** This thread is pinned to the top of its parent `GUILD_FORUM` or `GUILD_MEDIA` channel. */
+  PINNED = 1 << 1,
+  /** Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel. */
+  REQUIRE_TAG = 1 << 4,
+  /** Hides the embedded media download options. */
+  HIDE_MEDIA_DOWNLOAD_OPTIONS = 1 << 15,
+  /** This channel's metadata has been obfuscated because the current user cannot view it. */
+  CHANNEL_OBFUSCATED = 1 << 17,
+  /** This channel is a Spoiler Channel i.e. users must opt in to view its contents. */
+  IS_SPOILER_CHANNEL = 1 << 21
+}
+
 /** The formats that stickers can be in. */
 export enum StickerFormat {
   PNG = 1,
@@ -830,12 +844,15 @@ export interface CommandChannel {
   last_message_id: string | null;
   id: string;
   flags: number;
+  last_pin_timestamp?: string | null;
+  application_id?: string | null;
 
   // Guild channels
   topic?: string | null;
   rate_limit_per_user?: number;
   position?: number;
   permissions?: string;
+  app_permissions?: string;
   parent_id?: string | null;
   nsfw?: boolean;
   name?: string;
@@ -867,9 +884,11 @@ export interface CommandChannel {
 export interface ThreadMetadata {
   /** Whether the thread has been locked */
   locked: boolean;
+  /** Whether non-moderators can add other non-moderators to a thread */
+  invitable?: boolean;
   /** The timestamp of when the thread was created */
-  create_timestamp?: string;
-  /** The time, in minutes, of inactivity in the thread until its automatically archived  */
+  create_timestamp?: string | null;
+  /** The time, in minutes, of inactivity in the thread until its automatically archived */
   auto_archive_duration: number;
   /** Whether the thread has been archived */
   archived: boolean;

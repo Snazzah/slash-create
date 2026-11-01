@@ -267,7 +267,8 @@ export enum MessageActivityType {
   JOIN = 1,
   SPECTATE = 2,
   LISTEN = 3,
-  JOIN_REQUEST = 5
+  JOIN_REQUEST = 5,
+  STREAM_REQUEST = 6
 }
 
 export enum MessageReferenceType {
@@ -295,6 +296,10 @@ export interface MessageAttachment {
   height?: number;
   /** The width of the image, if the attachment was an image. */
   width?: number;
+  /** Thumbhash placeholder (if image or video) */
+  placeholder?: string;
+  /** Version of the placeholder (if image or video) */
+  placeholder_version?: number;
   /** Whether this attachment is ephemeral. */
   ephemeral?: boolean;
   /** The duration of the voice message. */
@@ -303,6 +308,29 @@ export interface MessageAttachment {
   waveform?: string;
   /** The flags of the attachment. */
   flags?: number;
+}
+
+/** Attachment flags. */
+export enum AttachmentFlags {
+  /** this attachment is a Clip from a stream */
+  IS_CLIP = 1 << 0,
+  /** this attachment is the thumbnail of a thread in a media channel, displayed in the grid but not on the message */
+  IS_THUMBNAIL = 1 << 1,
+  /**
+   * this attachment has been edited using the remix feature on mobile
+   * @deprecated
+   */
+  IS_REMIX = 1 << 2,
+  /** this attachment was marked as a spoiler and is blurred until clicked */
+  IS_SPOILER = 1 << 3,
+  /** this attachment was flagged as explicit by Discord's content scanning */
+  CONTAINS_EXPLICIT_CONTENT = 1 << 4,
+  /** this attachment is an animated image */
+  IS_ANIMATED = 1 << 5,
+  /** this attachment was flagged as gore by Discord's content scanning */
+  CONTAINS_GORE_CONTENT = 1 << 6,
+  /** this attachment was flagged as self-harm by Discord's content scanning */
+  CONTAINS_SELF_HARM_CONTENT = 1 << 7
 }
 
 export interface CreatePollOptions {
@@ -377,6 +405,27 @@ export interface MessageEmbed extends Omit<MessageEmbedOptions, 'footer' | 'imag
   thumbnail?: EmbedImage;
   type: string;
   video?: EmbedVideo;
+  /** components that make up the embed, only present on `components` type embeds. */
+  components?: AnyComponent[];
+  flags?: number;
+}
+
+/** Embed flags. */
+export enum EmbedFlags {
+  /** this embed's media was flagged as explicit by Discord's content scanning */
+  CONTAINS_EXPLICIT_CONTENT = 1 << 4,
+  /** this embed is a fallback for a reply to an activity card */
+  IS_CONTENT_INVENTORY_ENTRY = 1 << 5,
+  /** this embed's media was flagged as gore by Discord's content scanning */
+  CONTAINS_GORE_CONTENT = 1 << 6,
+  /** this embed's media was flagged as self-harm by Discord's content scanning */
+  CONTAINS_SELF_HARM_CONTENT = 1 << 7
+}
+
+/** Embed media flags. */
+export enum EmbedMediaFlags {
+  /** this image is animated */
+  IS_ANIMATED = 1 << 5
 }
 
 export interface EmbedAuthor extends EmbedAuthorOptions {
@@ -414,6 +463,11 @@ export interface EmbedImage extends EmbedImageOptions {
   height?: number;
   proxy_url?: string;
   width?: number;
+  content_type?: string;
+  placeholder?: string;
+  placeholder_version?: number;
+  description?: string;
+  flags?: number;
 }
 
 export interface EmbedImageOptions {
@@ -430,6 +484,11 @@ export interface EmbedVideo {
   url?: string;
   proxy_url?: string;
   width?: number;
+  content_type?: string;
+  placeholder?: string;
+  placeholder_version?: number;
+  description?: string;
+  flags?: number;
 }
 
 export interface MessageStickerItem {

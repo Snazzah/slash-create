@@ -438,6 +438,8 @@ export interface MessageAttachmentOptions {
   duration_secs?: number;
   /** A base64-encoded bytearray that represents a sampled waveform. */
   waveform?: string;
+  /** Whether the attachment should be marked as a spoiler and blurred until clicked, this sets the `IS_SPOILER` attachment flag */
+  is_spoiler?: boolean;
 }
 
 /** The options for {@link MessageInteractionContext#send} and {@link MessageInteractionContext#sendFollowUp}. */

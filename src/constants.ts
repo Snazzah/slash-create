@@ -256,14 +256,12 @@ export interface ApplicationCommand extends PartialApplicationCommand {
   version: string;
 }
 
+/** A file type to filter for; can be `image`, `video`, `audio`, or any dot-prefixed extension such as `.pdf` */
+export type FileTypeFilter = 'image' | 'audio' | 'video' | `.${string}`;
+
 export interface ApplicationCommandOptionBase {
   /** The type of option this one is. */
-  type:
-    | CommandOptionType.BOOLEAN
-    | CommandOptionType.USER
-    | CommandOptionType.ROLE
-    | CommandOptionType.MENTIONABLE
-    | CommandOptionType.ATTACHMENT;
+  type: CommandOptionType.BOOLEAN | CommandOptionType.USER | CommandOptionType.ROLE | CommandOptionType.MENTIONABLE;
   /** The name of the option. */
   name: string;
   /** The localiztions for the option name. */
@@ -344,6 +342,16 @@ export interface ApplicationCommandOptionLimitedString extends Omit<ApplicationC
   max_length?: number;
 }
 
+/**
+ * @private
+ */
+export interface ApplicationCommandOptionAttachment extends Omit<ApplicationCommandOptionBase, 'type'> {
+  /** The type of option this one is. */
+  type: CommandOptionType.ATTACHMENT;
+  /** File types to filter for; can be `image`, `video`, `audio`, or any dot-prefixed extension such as `.pdf`; max 10 */
+  file_types?: FileTypeFilter[];
+}
+
 /** An option in an application command. */
 export type ApplicationCommandOption =
   | ApplicationCommandOptionBase
@@ -352,7 +360,8 @@ export type ApplicationCommandOption =
   | ApplicationCommandOptionAutocompletable
   | ApplicationCommandOptionChannel
   | ApplicationCommandOptionLimitedNumber
-  | ApplicationCommandOptionLimitedString;
+  | ApplicationCommandOptionLimitedString
+  | ApplicationCommandOptionAttachment;
 
 /** A choice for a user to pick from. */
 export interface ApplicationCommandOptionChoice {
@@ -653,12 +662,28 @@ export interface AppEntitlement {
   guild_id?: string;
   application_id: string;
   type: EntitlementType;
-  consumed: boolean;
-  starts_at?: string;
-  ends_at?: string;
+  deleted: boolean;
+  consumed?: boolean;
+  starts_at: string | null;
+  ends_at: string | null;
 }
 
 export enum EntitlementType {
+  /** Entitlement was purchased by user */
+  PURCHASE = 1,
+  /** Entitlement for Discord Nitro subscription */
+  PREMIUM_SUBSCRIPTION = 2,
+  /** Entitlement was gifted by developer */
+  DEVELOPER_GIFT = 3,
+  /** Entitlement was purchased by a dev in application test mode */
+  TEST_MODE_PURCHASE = 4,
+  /** Entitlement was granted when the SKU was free */
+  FREE_PURCHASE = 5,
+  /** Entitlement was gifted by another user */
+  USER_GIFT = 6,
+  /** Entitlement was claimed by user for free as a Nitro Subscriber */
+  PREMIUM_PURCHASE = 7,
+  /** Entitlement was purchased as an app subscription */
   APPLICATION_SUBSCRIPTION = 8
 }
 
@@ -1101,10 +1126,40 @@ export interface UnfurledMediaItem {
   height?: number | null;
   /** The width of the image, if any. */
   width?: number | null;
+  /** Thumbhash placeholder (if image or video) */
+  placeholder?: string;
+  /** Version of the placeholder (if image or video) */
+  placeholder_version?: number;
   /** The content type of the media item. */
   content_type?: string;
+  /** Unfurled media item flags combined as a bitfield */
+  flags?: number;
+  /** Results of Discord's content scanning, if the media item has been scanned */
+  content_scan_metadata?: ContentScanMetadata;
   /** The ID of the uploaded attachment. */
   attachment_id?: string;
+}
+
+/** Unfurled media item flags. */
+export enum UnfurledMediaItemFlags {
+  /** This image is animated */
+  IS_ANIMATED = 1 << 0
+}
+
+/** The results of Discord's content scanning. */
+export interface ContentScanMetadata {
+  /** Content scan metadata flags combined as a bitfield */
+  flags: number;
+}
+
+/** Content scan metadata flags. */
+export enum ContentScanMetadataFlags {
+  /** This media was flagged as explicit by Discord's content scanning */
+  IS_EXPLICIT_CONTENT = 1 << 0,
+  /** This media was flagged as gore by Discord's content scanning */
+  IS_GORE_CONTENT = 1 << 1,
+  /** This media was flagged as self-harm by Discord's content scanning */
+  IS_SELF_HARM_CONTENT = 1 << 2
 }
 
 export interface BaseComponent {
@@ -1431,7 +1486,7 @@ export interface ComponentFileUpload {
   /** Whether this component is required to be filled. */
   required?: boolean;
   /** The file types to filter for.  */
-  file_types?: ('image' | 'audio' | 'video' | `.${string}`)[];
+  file_types?: FileTypeFilter[];
 }
 
 export interface RadioGroupComponent {
@@ -1540,11 +1595,18 @@ export interface AttachmentData {
   proxy_url: string;
   /** Whether the attachment is ephemeral */
   ephermal?: boolean;
+  /** Attachment flags combined as a bitfield */
+  flags?: number;
 
   /** The height of the attachment. */
   height?: number;
   /** The width of the attachment. */
   width?: number;
+
+  /** Thumbhash placeholder (if image or video) */
+  placeholder?: string;
+  /** Version of the placeholder (if image or video) */
+  placeholder_version?: number;
 
   /** The base64-encoded byte array of the voice messsage's waveform */
   waveform?: string;

@@ -18,7 +18,9 @@ const FLAGS: { [perm: string]: number } = {
   BUG_HUNTER_LEVEL_2: 1 << 14,
   // 1 << 15,
   VERIFIED_BOT: 1 << 16,
-  EARLY_VERIFIED_BOT_DEVELOPER: 1 << 17
+  EARLY_VERIFIED_BOT_DEVELOPER: 1 << 17,
+  CERTIFIED_MODERATOR: 1 << 18,
+  BOT_HTTP_INTERACTIONS: 1 << 19
 };
 
 /** Data structure that makes it easy to interact with a {@link User#flags} bitfield. */

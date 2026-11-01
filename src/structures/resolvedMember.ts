@@ -1,6 +1,8 @@
 import {
+  AvatarDecorationData,
   CommandUser,
   ResolvedMemberData,
+  UserCollectibles,
   CDN_URL,
   Endpoints,
   ImageFormat,
@@ -16,8 +18,8 @@ export class ResolvedMember {
   readonly id: string;
   /** The member's nickname */
   readonly nick?: string;
-  /** The timestamp the member joined the guild */
-  readonly joinedAt: number;
+  /** The timestamp of when the user joined the guild */
+  readonly joinedAt?: number;
   /** An array of role IDs that the user has. */
   readonly roles: string[];
   /** The time of when this member boosted the server. */
@@ -30,6 +32,12 @@ export class ResolvedMember {
   readonly pending: boolean;
   /** The member's guild avatar hash */
   readonly avatar?: string;
+  /** The member's guild banner hash */
+  readonly banner?: string;
+  /** The member's avatar decoration data. */
+  readonly avatarDecorationData?: AvatarDecorationData;
+  /** The member's collectibles. */
+  readonly collectibles?: UserCollectibles;
   /** The user object for this member */
   readonly user: User;
   /** The ID of the guild this member belongs to. */
@@ -48,7 +56,7 @@ export class ResolvedMember {
     this._creator = creator;
 
     if (data.nick) this.nick = data.nick;
-    this.joinedAt = Date.parse(data.joined_at);
+    if (data.joined_at) this.joinedAt = Date.parse(data.joined_at);
     this.roles = data.roles;
     if (data.premium_since) this.premiumSince = Date.parse(data.premium_since);
     if (data.communication_disabled_until)
@@ -59,6 +67,9 @@ export class ResolvedMember {
 
     this.id = userData.id;
     if (data.avatar) this.avatar = data.avatar;
+    if (data.banner) this.banner = data.banner;
+    if (data.avatar_decoration_data) this.avatarDecorationData = data.avatar_decoration_data;
+    if (data.collectibles) this.collectibles = data.collectibles;
     this.user = new User(userData, creator);
   }
 

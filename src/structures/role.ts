@@ -19,9 +19,12 @@ export class Role {
   readonly name: string;
   /** The role's position */
   readonly position: number;
-  /** The role's color integer */
+  /**
+   * integer representation of hexadecimal color code
+   * @deprecated Use {@link Role#colors} instead.
+   */
   readonly color: number;
-  /** The role's colors */
+  /** the role's colors */
   readonly colors: RoleColors;
   /** Whether the role is being hoisted */
   readonly hoist: boolean;
@@ -35,6 +38,8 @@ export class Role {
   readonly unicodeEmoji?: string;
   /** The role's tags */
   readonly tags?: RoleTags;
+  /** The role flags */
+  readonly flags: number;
 
   /** The creator of the role class. */
   private _creator: BaseSlashCreator;
@@ -60,6 +65,7 @@ export class Role {
     if (data.unicode_emoji) this.unicodeEmoji = data.unicode_emoji;
     this._permissions = data.permissions;
     if (data.tags) this.tags = data.tags;
+    this.flags = data.flags;
   }
 
   /** The URL of the role icon. */
@@ -92,7 +98,7 @@ export class Role {
 
   /** The role's color in hexadecimal, with a leading hashtag */
   get colorHex() {
-    return `#${this.color.toString(16).padStart(6, '0')}`;
+    return `#${this.colors.primary_color.toString(16).padStart(6, '0')}`;
   }
 
   /** The permissions the member has. */

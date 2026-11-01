@@ -767,13 +767,16 @@ export interface InteractionCallbackResponse {
 /** @private */
 export interface ResolvedMemberData {
   avatar?: string;
+  banner?: string | null;
   roles: string[];
   flags: number;
   premium_since: string | null;
   communication_disabled_until: string | null;
   pending: boolean;
   nick: string | null;
-  joined_at: string;
+  joined_at: string | null;
+  avatar_decoration_data?: AvatarDecorationData | null;
+  collectibles?: UserCollectibles | null;
 }
 
 /** @private */
@@ -823,6 +826,7 @@ export interface UserPrimaryGuild {
 
 /** @private */
 export interface ResolvedRole {
+  /** @deprecated */
   color: number;
   colors: RoleColors;
   hoist: boolean;
@@ -835,6 +839,13 @@ export interface ResolvedRole {
   position: number;
   unicode_emoji?: string;
   tags?: RoleTags;
+  flags: number;
+}
+
+/** Role flags. */
+export enum RoleFlags {
+  /** role can be selected by members in an onboarding prompt */
+  IN_PROMPT = 1 << 0
 }
 
 /** A role's tags */

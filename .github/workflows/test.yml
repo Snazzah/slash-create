@@ -4,12 +4,6 @@ on:
     branches:
       - "*"
       - "!docs"
-    paths:
-      - "src/**"
-      - "test/**"
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - ".github/workflows/test.yml"
   pull_request_target:
     branches:
       - "*"

@@ -814,7 +814,17 @@ export interface UserNameplate {
   asset: string;
   label: string;
   palette:
-    'berry' | 'bubble_gum' | 'clover' | 'cobalt' | 'crimson' | 'forest' | 'lemon' | 'sky' | 'teal' | 'violet' | 'white';
+    | 'berry'
+    | 'bubble_gum'
+    | 'clover'
+    | 'cobalt'
+    | 'crimson'
+    | 'forest'
+    | 'lemon'
+    | 'sky'
+    | 'teal'
+    | 'violet'
+    | 'white';
 }
 
 export interface UserPrimaryGuild {
@@ -979,7 +989,10 @@ export interface CommandData {
 
 /** @private */
 export type AnyCommandOption =
-  CommandStringOption | CommandIntegerOption | CommandBooleanOption | CommandSubcommandOption;
+  | CommandStringOption
+  | CommandIntegerOption
+  | CommandBooleanOption
+  | CommandSubcommandOption;
 
 /** @private */
 export interface CommandStringOption {
@@ -1321,7 +1334,11 @@ export interface ComponentButton {
   type: ComponentType.BUTTON;
   /** The style of button to show. */
   style:
-    ButtonStyle.PRIMARY | ButtonStyle.SECONDARY | ButtonStyle.SUCCESS | ButtonStyle.DESTRUCTIVE | ButtonStyle.DANGER;
+    | ButtonStyle.PRIMARY
+    | ButtonStyle.SECONDARY
+    | ButtonStyle.SUCCESS
+    | ButtonStyle.DESTRUCTIVE
+    | ButtonStyle.DANGER;
   /** The identifier for this button. */
   custom_id: string;
   /** The label of the button. */

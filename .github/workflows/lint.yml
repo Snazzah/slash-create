@@ -1,4 +1,4 @@
-name: ESLint
+name: Lint
 on:
   push:
     branches:
@@ -6,7 +6,8 @@ on:
       - "!docs"
     paths:
       - "src/**"
-      - "eslint.config.js"
+      - ".oxlintrc.json"
+      - ".oxfmtrc.json"
       - "package.json"
       - "pnpm-lock.yaml"
       - ".github/workflows/lint.yml"
@@ -40,12 +41,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run ESLint
+      - name: Run oxlint
         run: pnpm run lint:sarif
         continue-on-error: true
 
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: eslint-results.sarif
+          sarif_file: oxlint-results.sarif
           wait-for-processing: true
+
+      - name: Check formatting
+        run: pnpm run format:check

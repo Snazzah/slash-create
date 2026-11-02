@@ -13,4 +13,4 @@ webpack/
 testing/
 .idea/
 lib/
-eslint-results.sarif
+oxlint-results.sarif

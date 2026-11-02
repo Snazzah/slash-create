@@ -286,7 +286,8 @@ export class SlashCommand<T = any> {
    * Runs the command.
    * @param ctx The context of the interaction
    */
-  async run(ctx: CommandContext): Promise<any> { // eslint-disable-line @typescript-eslint/no-unused-vars, prettier/prettier
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async run(ctx: CommandContext): Promise<any> {
     throw new Error(`${this.constructor.name} doesn't have a run() method.`);
   }
 
@@ -294,7 +295,8 @@ export class SlashCommand<T = any> {
    * Runs an autocomplete function.
    * @param ctx The context of the interaction
    */
-  async autocomplete(ctx: AutocompleteContext): Promise<any> { // eslint-disable-line @typescript-eslint/no-unused-vars, prettier/prettier
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async autocomplete(ctx: AutocompleteContext): Promise<any> {
     throw new Error(`${this.constructor.name} doesn't have a autocomplete() method.`);
   }
 

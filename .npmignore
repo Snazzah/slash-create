@@ -18,15 +18,13 @@ scripts/
 static/
 docs/
 src/
-eslint-results.sarif
+oxlint-results.sarif
 
 # NPM ignore
-.eslintrc.json
-.eslintrc.js
-.eslintignore
+.oxlintrc.json
+.oxfmtrc.json
 .editorconfig
 .mergify.yml
-.prettierrc
 .gitattributes
 .gitignore
 .github/

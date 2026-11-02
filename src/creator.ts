@@ -165,6 +165,7 @@ export class BaseSlashCreator extends (EventEmitter as any as new () => TypedEve
    * await creator.registerCommandsIn(require('path').join(__dirname, 'commands'));
    */
   async registerCommandsIn(
+    // oxlint-disable-next-line no-unused-vars
     commandPath: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     extensionsOrFilter: string[] | FileFilter = []

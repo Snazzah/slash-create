@@ -5,6 +5,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [7.1.0] - 2026-11-02
+### Added:
+- Added `ChannelFlags` as well as `lastPinTimestamp`, `applicationID` and `appPermissions` to channels
+- Added `banner`, `avatarDecorationData` and `collectibles` to members
+- Added `flags` and `RoleFlags` to roles
+- Added `CERTIFIED_MODERATOR` and `BOT_HTTP_INTERACTIONS` user flags
+- Added `file_types` to attachment command options and file upload components
+- Added missing attachment, embed and unfurled media item types and flags
+### Changed:
+- Express v5 and Fastify v5 are now allowed as peer dependencies ([#654](https://github.com/Snazzah/slash-create/pull/654), [#655](https://github.com/Snazzah/slash-create/pull/655))
+- `ResolvedMember.joinedAt` is now optional
+- `Role.color` is now deprecated in favor of `Role.colors`
+### Fixed:
+- `DiscordRESTError.code` now uses the error code from Discord instead of the HTTP status
 ## [7.0.0] - 2026-07-28
 ### Changed:
 - Updated undici
@@ -662,7 +676,7 @@ This release features mostly completed documentation and changes to the packages
 ## [0.1.0] - 2020-12-15
 - Initial release.
 
-[Unreleased]: https://github.com/Snazzah/slash-create/compare/v7.0.0...HEAD
+[Unreleased]: https://github.com/Snazzah/slash-create/compare/v7.1.0...HEAD
 [0.1.0]: https://github.com/Snazzah/slash-create/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Snazzah/slash-create/compare/v0.1.0...v0.2.0
 [1.0.0]: https://github.com/Snazzah/slash-create/compare/v0.2.0...v1.0.0
@@ -753,3 +767,4 @@ This release features mostly completed documentation and changes to the packages
 [6.8.0]: https://github.com/Snazzah/slash-create/compare/v6.7.1...v6.8.0
 [6.8.1]: https://github.com/Snazzah/slash-create/compare/v6.8.0...v6.8.1
 [7.0.0]: https://github.com/Snazzah/slash-create/compare/v6.8.1...v7.0.0
+[7.1.0]: https://github.com/Snazzah/slash-create/compare/v7.0.0...v7.1.0

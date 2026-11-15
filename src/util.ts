@@ -59,8 +59,8 @@ export function validateOptions(options: ApplicationCommandOption[], prefix = 'o
 
     if (typeof option.name !== 'string') throwError(TypeError, i, 'Option name must be a string.');
     if (option.name !== option.name.toLowerCase()) throwError(Error, i, 'Option name must be lowercase.');
-    if (!/^[\p{L}_\d-]{1,32}$/u.test(option.name))
-      throwError(RangeError, i, 'Option name must must be under 32 characters, matching this regex: /^[\\w-]{1,32}$/');
+    if (option.name.length < 1 || option.name.length > 32)
+      throwError(RangeError, i, 'Option name must be between 1-32 characters.');
     if (typeof option.description !== 'string') throwError(TypeError, i, 'Option description must be a string.');
     if (option.description.length < 1 || option.description.length > 100)
       throwError(RangeError, i, 'Option description must be under 100 characters.');

@@ -23,6 +23,7 @@ describe('[index]', () => {
     expect(slashCreate.ComponentType).to.be.a('object');
     expect(slashCreate.TextInputStyle).to.be.a('object');
     expect(slashCreate.ButtonStyle).to.be.a('object');
+    expect(slashCreate.MenuActionItemStyle).to.be.a('object');
     expect(slashCreate.Constants).to.be.a('object');
     expect(slashCreate.Context).to.be.a('function');
     expect(slashCreate.Creator).to.be.a('function');

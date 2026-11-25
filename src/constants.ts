@@ -1113,7 +1113,11 @@ export enum ComponentType {
   /** A component to group checkboxes in. */
   CHECKBOX_GROUP = 22,
   /** A checkbox component. */
-  CHECKBOX = 23
+  CHECKBOX = 23,
+  /** An overflow menu component. */
+  OVERFLOW_MENU = 25,
+  /** A menu action item component, used inside overflow menus. */
+  MENU_ACTION_ITEM = 26
 }
 
 /** The types of component button styles. */
@@ -1132,6 +1136,16 @@ export enum ButtonStyle {
   LINK = 5,
   /** A premium button. */
   PREMIUM = 6
+}
+
+/** The types of menu action item styles. */
+export enum MenuActionItemStyle {
+  /** A default menu action item. */
+  DEFAULT = 1,
+  /** A red menu action item. */
+  DANGER = 2,
+  /** A menu action item with a link. */
+  LINK = 3
 }
 
 export enum TextInputStyle {
@@ -1199,7 +1213,7 @@ export interface SectionComponent extends BaseComponent {
   type: ComponentType.SECTION;
   /** The components included in this component. */
   components: TextDisplayComponent[];
-  accessory: ThumbnailComponent | AnyComponentButton;
+  accessory: ThumbnailComponent | AnyComponentButton | OverflowMenuComponent;
 }
 
 /** A text display component. */
@@ -1315,14 +1329,16 @@ export type AnyComponent =
   | ComponentFileUpload
   | RadioGroupComponent
   | CheckboxGroupComponent
-  | CheckboxComponent;
+  | CheckboxComponent
+  | OverflowMenuComponent
+  | AnyMenuActionItemComponent;
 
 /** A row of components. */
 export interface ComponentActionRow {
   /** The type of component to use. */
   type: ComponentType.ACTION_ROW;
   /** The components to show inside this row. */
-  components: (AnyComponentButton | AnySelectComponent | ComponentTextInput)[];
+  components: (AnyComponentButton | AnySelectComponent | ComponentTextInput | OverflowMenuComponent)[];
 }
 
 /** Any component button. */
@@ -1363,6 +1379,51 @@ export interface ComponentButtonPremium extends Omit<ComponentButton, 'custom_id
   style: ButtonStyle.PREMIUM;
   /** The identifier for a purchasable SKU. */
   sku_id: string;
+}
+
+/** An overflow menu component. Requires the `IS_COMPONENTS_V2` message flag. */
+export interface OverflowMenuComponent extends BaseComponent {
+  /** The type of component to use. */
+  type: ComponentType.OVERFLOW_MENU;
+  /** The groups of menu action items to show inside this menu. */
+  groups: OverflowMenuGroup[];
+}
+
+/** A group of menu action items inside an overflow menu. */
+export interface OverflowMenuGroup {
+  /** The label of this group. */
+  label?: string;
+  /** The menu action items included in this group. */
+  components: AnyMenuActionItemComponent[];
+}
+
+/** Any menu action item component. */
+export type AnyMenuActionItemComponent = MenuActionItemComponent | MenuActionItemLinkComponent;
+
+/** A regular menu action item component. */
+export interface MenuActionItemComponent extends BaseComponent {
+  /** The type of component to use. */
+  type: ComponentType.MENU_ACTION_ITEM;
+  /** The style of menu action item to show. */
+  style: MenuActionItemStyle.DEFAULT | MenuActionItemStyle.DANGER;
+  /** The identifier for this menu action item. */
+  custom_id: string;
+  /** The label of the menu action item. */
+  label: string;
+  /** The description of the menu action item. */
+  description?: string;
+  /** The emoji to show inside the menu action item. */
+  emoji?: PartialEmoji;
+  /** Whether this menu action item will show as disabled. */
+  disabled?: boolean;
+}
+
+/** A menu action item component with a link. */
+export interface MenuActionItemLinkComponent extends Omit<MenuActionItemComponent, 'custom_id' | 'style'> {
+  /** The style of menu action item to show. */
+  style: MenuActionItemStyle.LINK;
+  /** The URL for link menu action items. */
+  url: string;
 }
 
 export interface ComponentSelectBase {
